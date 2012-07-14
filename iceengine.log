@@ -1,0 +1,327 @@
+1 [2012-Jul-14 00:48:53.370736] [0x15a4a40] [debug] A debug severity message
+1 [2012-Jul-14 00:48:54.735475] [0x13eca40] [debug] A debug severity message
+1 [2012-Jul-14 00:48:54.966666] [0x1c05a40] [debug] A debug severity message
+1 [2012-Jul-14 00:48:55.181846] [0x113aa40] [debug] A debug severity message
+1 [2012-Jul-14 00:48:55.372706] [0x1d4ea40] [debug] A debug severity message
+1 [2012-Jul-14 00:51:45.351202] [0x722a40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:51:45.351421] [0x722a40] [debug] create window.
+1 [2012-Jul-14 00:54:02.281845] [0x1d99a40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:54:02.282066] [0x1d99a40] [debug] create window.
+1 [2012-Jul-14 00:54:14.977699] [0xbcea40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:54:14.977918] [0xbcea40] [debug] create window.
+3 [2012-Jul-14 00:54:14.982464] [0xbcea40] [debug] look for mode with requested resolution.
+1 [2012-Jul-14 00:54:33.782995] [0x171ca40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:54:33.783212] [0x171ca40] [debug] create window.
+3 [2012-Jul-14 00:54:33.785936] [0x171ca40] [debug] look for mode with requested resolution.
+1 [2012-Jul-14 00:54:36.950902] [0x14b9a40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:54:36.951124] [0x14b9a40] [debug] create window.
+3 [2012-Jul-14 00:54:36.954220] [0x14b9a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:54:36.954365] [0x14b9a40] [debug] look for mode with requested resolution.
+1 [2012-Jul-14 00:55:00.758668] [0xb8ea40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:55:00.758883] [0xb8ea40] [debug] create window.
+3 [2012-Jul-14 00:55:00.761957] [0xb8ea40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:55:00.762103] [0xb8ea40] [debug] look for mode with requested resolution.
+5 [2012-Jul-14 00:55:00.762171] [0xb8ea40] [error] No mode found!
+1 [2012-Jul-14 00:55:23.871157] [0x1a1ea40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:55:23.871373] [0x1a1ea40] [debug] create window.
+3 [2012-Jul-14 00:55:23.874806] [0x1a1ea40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:55:23.874952] [0x1a1ea40] [debug] look for mode with requested resolution.
+5 [2012-Jul-14 00:55:23.875020] [0x1a1ea40] [error] No mode found!
+1 [2012-Jul-14 00:56:35.548133] [0x191da40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:56:35.548353] [0x191da40] [debug] create window.
+3 [2012-Jul-14 00:56:35.551538] [0x191da40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:56:35.551683] [0x191da40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 00:56:35.551768] [0x191da40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 00:56:35.551830] [0x191da40] [error] No mode found!
+1 [2012-Jul-14 00:57:27.926936] [0x1b7ba40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:57:27.927150] [0x1b7ba40] [debug] create window.
+3 [2012-Jul-14 00:57:27.930330] [0x1b7ba40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:57:27.930477] [0x1b7ba40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 00:57:27.930557] [0x1b7ba40] [debug] look for mode with requested resolution.
+1 [2012-Jul-14 00:58:35.979672] [0xbbba40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:58:35.979886] [0xbbba40] [debug] create window.
+3 [2012-Jul-14 00:58:35.983282] [0xbbba40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:58:35.983427] [0xbbba40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 00:58:35.983511] [0xbbba40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 00:58:35.994396] [0xbbba40] [debug] create a GLX context.
+1 [2012-Jul-14 00:59:52.803696] [0xb6fa40] [debug] Initializing engine test...
+2 [2012-Jul-14 00:59:52.803918] [0xb6fa40] [debug] create window.
+3 [2012-Jul-14 00:59:52.807083] [0xb6fa40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 00:59:52.807229] [0xb6fa40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 00:59:52.807312] [0xb6fa40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 00:59:52.818210] [0xb6fa40] [debug] create a GLX context.
+7 [2012-Jul-14 00:59:52.818385] [0xb6fa40] [debug] 19866076480
+1 [2012-Jul-14 01:00:03.809004] [0x11b5a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:00:03.809220] [0x11b5a40] [debug] create window.
+3 [2012-Jul-14 01:00:03.812349] [0x11b5a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:00:03.812608] [0x11b5a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:00:03.812711] [0x11b5a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:00:03.823361] [0x11b5a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:00:03.823508] [0x11b5a40] [debug] 19866076480
+1 [2012-Jul-14 01:00:06.664626] [0x1fa9a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:00:06.664840] [0x1fa9a40] [debug] create window.
+3 [2012-Jul-14 01:00:06.668062] [0x1fa9a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:00:06.668202] [0x1fa9a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:00:06.668284] [0x1fa9a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:00:06.679033] [0x1fa9a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:00:06.679185] [0x1fa9a40] [debug] 20362839360x1fada60
+1 [2012-Jul-14 01:00:43.024575] [0x10e4a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:00:43.024801] [0x10e4a40] [debug] create window.
+3 [2012-Jul-14 01:00:43.028311] [0x10e4a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:00:43.028465] [0x10e4a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:00:43.028642] [0x10e4a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:00:43.039385] [0x10e4a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:00:43.039536] [0x10e4a40] [debug] display_: 0x10e8a60
+1 [2012-Jul-14 01:00:56.896909] [0x1581a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:00:56.897129] [0x1581a40] [debug] create window.
+3 [2012-Jul-14 01:00:56.900552] [0x1581a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:00:56.900696] [0x1581a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:00:56.900777] [0x1581a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:00:56.909450] [0x1581a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:00:56.909501] [0x1581a40] [debug] vi: 0
+1 [2012-Jul-14 01:02:57.446202] [0x120ba40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:02:57.446420] [0x120ba40] [debug] create window.
+3 [2012-Jul-14 01:02:57.450773] [0x120ba40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:02:57.450930] [0x120ba40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:02:57.451012] [0x120ba40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:02:57.459545] [0x120ba40] [debug] create a GLX context.
+7 [2012-Jul-14 01:02:57.459672] [0x120ba40] [debug] vi: 0x121f380
+8 [2012-Jul-14 01:02:57.487092] [0x120ba40] [debug] create a color map.
+9 [2012-Jul-14 01:02:57.589187] [0x120ba40] [debug] create scene manager.
+10 [2012-Jul-14 01:02:57.589338] [0x120ba40] [debug] create camera.
+11 [2012-Jul-14 01:02:57.589431] [0x120ba40] [debug] initialize keyboard and mouse.
+12 [2012-Jul-14 01:02:57.591904] [0x120ba40] [debug] add keyboard and mouse listeners...
+13 [2012-Jul-14 01:02:57.591936] [0x120ba40] [debug] Running engine...
+1 [2012-Jul-14 01:09:54.938690] [0xf46a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:09:54.938908] [0xf46a40] [debug] create window.
+3 [2012-Jul-14 01:09:54.942956] [0xf46a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:09:54.943105] [0xf46a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:09:54.943189] [0xf46a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:09:54.951276] [0xf46a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:09:54.980912] [0xf46a40] [debug] create a color map.
+8 [2012-Jul-14 01:09:55.040228] [0xf46a40] [debug] create scene manager.
+9 [2012-Jul-14 01:09:55.040319] [0xf46a40] [debug] create camera.
+10 [2012-Jul-14 01:09:55.040359] [0xf46a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:09:55.042480] [0xf46a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:09:55.042542] [0xf46a40] [debug] Running engine...
+1 [2012-Jul-14 01:13:00.759048] [0x1c69a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:13:00.759272] [0x1c69a40] [debug] create window.
+3 [2012-Jul-14 01:13:00.762329] [0x1c69a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:13:00.762476] [0x1c69a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:13:00.762558] [0x1c69a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:13:00.775650] [0x1c69a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:13:00.805930] [0x1c69a40] [debug] create a color map.
+8 [2012-Jul-14 01:13:00.859894] [0x1c69a40] [debug] create scene manager.
+9 [2012-Jul-14 01:13:00.859987] [0x1c69a40] [debug] create camera.
+10 [2012-Jul-14 01:13:00.860035] [0x1c69a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:13:00.862180] [0x1c69a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:13:00.862291] [0x1c69a40] [debug] Running engine...
+1 [2012-Jul-14 01:18:47.654394] [0x15e0a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:18:47.654607] [0x15e0a40] [debug] create window.
+3 [2012-Jul-14 01:18:47.658334] [0x15e0a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:18:47.658481] [0x15e0a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:18:47.658564] [0x15e0a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:18:47.667120] [0x15e0a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:18:47.696555] [0x15e0a40] [debug] create a color map.
+8 [2012-Jul-14 01:18:47.754556] [0x15e0a40] [debug] create scene manager.
+9 [2012-Jul-14 01:18:47.754634] [0x15e0a40] [debug] create camera.
+10 [2012-Jul-14 01:18:47.754668] [0x15e0a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:18:47.756241] [0x15e0a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:18:47.756296] [0x15e0a40] [debug] Running engine...
+1 [2012-Jul-14 01:19:55.875577] [0x9f2a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:19:55.875799] [0x9f2a40] [debug] create window.
+3 [2012-Jul-14 01:19:55.879632] [0x9f2a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:19:55.879780] [0x9f2a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:19:55.879864] [0x9f2a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:19:55.893953] [0x9f2a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:19:55.923073] [0x9f2a40] [debug] create a color map.
+8 [2012-Jul-14 01:19:56.002459] [0x9f2a40] [debug] create scene manager.
+9 [2012-Jul-14 01:19:56.002659] [0x9f2a40] [debug] create camera.
+10 [2012-Jul-14 01:19:56.002758] [0x9f2a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:19:56.005615] [0x9f2a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:19:56.005767] [0x9f2a40] [debug] Running engine...
+1 [2012-Jul-14 01:21:17.643418] [0x25afa40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:21:17.643644] [0x25afa40] [debug] create window.
+3 [2012-Jul-14 01:21:17.647095] [0x25afa40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:21:17.647251] [0x25afa40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:21:17.647336] [0x25afa40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:21:17.655450] [0x25afa40] [debug] create a GLX context.
+7 [2012-Jul-14 01:21:17.682112] [0x25afa40] [debug] create a color map.
+8 [2012-Jul-14 01:21:17.744779] [0x25afa40] [debug] create scene manager.
+9 [2012-Jul-14 01:21:17.744960] [0x25afa40] [debug] create camera.
+10 [2012-Jul-14 01:21:17.745071] [0x25afa40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:21:17.748268] [0x25afa40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:21:17.748414] [0x25afa40] [debug] Running engine...
+1 [2012-Jul-14 01:21:43.608688] [0x2550a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:21:43.608920] [0x2550a40] [debug] create window.
+3 [2012-Jul-14 01:21:43.611957] [0x2550a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:21:43.612123] [0x2550a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:21:43.612207] [0x2550a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:21:43.620776] [0x2550a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:21:43.649111] [0x2550a40] [debug] create a color map.
+8 [2012-Jul-14 01:21:43.718578] [0x2550a40] [debug] create scene manager.
+9 [2012-Jul-14 01:21:43.718763] [0x2550a40] [debug] create camera.
+10 [2012-Jul-14 01:21:43.718862] [0x2550a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:21:43.722113] [0x2550a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:21:43.722262] [0x2550a40] [debug] Running engine...
+1 [2012-Jul-14 01:24:56.091314] [0x2157a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:24:56.091538] [0x2157a40] [debug] create window.
+3 [2012-Jul-14 01:24:56.095043] [0x2157a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:24:56.095196] [0x2157a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:24:56.095280] [0x2157a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:24:56.104167] [0x2157a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:24:56.134404] [0x2157a40] [debug] create a color map.
+8 [2012-Jul-14 01:24:56.214227] [0x2157a40] [debug] create scene manager.
+9 [2012-Jul-14 01:24:56.214408] [0x2157a40] [debug] create camera.
+10 [2012-Jul-14 01:24:56.214513] [0x2157a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:24:56.217454] [0x2157a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:24:56.217575] [0x2157a40] [debug] Running engine...
+1 [2012-Jul-14 01:25:16.205497] [0xe06a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:25:16.205715] [0xe06a40] [debug] create window.
+3 [2012-Jul-14 01:25:16.208839] [0xe06a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:25:16.208984] [0xe06a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:25:16.209066] [0xe06a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:25:16.217558] [0xe06a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:25:16.250839] [0xe06a40] [debug] create a color map.
+8 [2012-Jul-14 01:25:16.320041] [0xe06a40] [debug] create scene manager.
+9 [2012-Jul-14 01:25:16.320231] [0xe06a40] [debug] create camera.
+10 [2012-Jul-14 01:25:16.320318] [0xe06a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:25:16.321910] [0xe06a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:25:16.322032] [0xe06a40] [debug] Running engine...
+1 [2012-Jul-14 01:29:03.938372] [0x1d24a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:29:03.938587] [0x1d24a40] [debug] create window.
+3 [2012-Jul-14 01:29:03.941713] [0x1d24a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:29:03.941867] [0x1d24a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:29:03.941949] [0x1d24a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:29:03.950793] [0x1d24a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:29:03.982835] [0x1d24a40] [debug] create a color map.
+8 [2012-Jul-14 01:29:04.077021] [0x1d24a40] [debug] create scene manager.
+9 [2012-Jul-14 01:29:04.077222] [0x1d24a40] [debug] create camera.
+10 [2012-Jul-14 01:29:04.077322] [0x1d24a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:29:04.080231] [0x1d24a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:29:04.080363] [0x1d24a40] [debug] Running engine...
+1 [2012-Jul-14 01:30:13.946666] [0xf80a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:30:13.946885] [0xf80a40] [debug] create window.
+3 [2012-Jul-14 01:30:13.949985] [0xf80a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:30:13.950131] [0xf80a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:30:13.950213] [0xf80a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:30:13.958960] [0xf80a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:30:13.992252] [0xf80a40] [debug] create a color map.
+8 [2012-Jul-14 01:30:14.075118] [0xf80a40] [debug] create scene manager.
+9 [2012-Jul-14 01:30:14.075346] [0xf80a40] [debug] create camera.
+10 [2012-Jul-14 01:30:14.075447] [0xf80a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:30:14.078035] [0xf80a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:30:14.078183] [0xf80a40] [debug] Running engine...
+13 [2012-Jul-14 01:30:22.436303] [0xf80a40] [debug] look for mode with requested resolution.
+14 [2012-Jul-14 01:30:22.436387] [0xf80a40] [debug] Mode found: 3840 x 1080
+15 [2012-Jul-14 01:30:22.436407] [0xf80a40] [debug] look for mode with requested resolution.
+16 [2012-Jul-14 01:30:22.444678] [0xf80a40] [debug] create a GLX context.
+17 [2012-Jul-14 01:30:22.446323] [0xf80a40] [debug] create a color map.
+1 [2012-Jul-14 01:31:07.887241] [0x1e82a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:31:07.887477] [0x1e82a40] [debug] create window.
+3 [2012-Jul-14 01:31:07.890946] [0x1e82a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:31:07.891092] [0x1e82a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:31:07.891175] [0x1e82a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:31:07.903494] [0x1e82a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:31:07.933772] [0x1e82a40] [debug] create a color map.
+8 [2012-Jul-14 01:31:08.025272] [0x1e82a40] [debug] create scene manager.
+9 [2012-Jul-14 01:31:08.025478] [0x1e82a40] [debug] create camera.
+10 [2012-Jul-14 01:31:08.025579] [0x1e82a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:31:08.028464] [0x1e82a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:31:08.028615] [0x1e82a40] [debug] Running engine...
+1 [2012-Jul-14 01:33:50.908091] [0xfcba40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:33:50.908310] [0xfcba40] [debug] create window.
+3 [2012-Jul-14 01:33:50.911609] [0xfcba40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:33:50.911759] [0xfcba40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:33:50.911843] [0xfcba40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:33:50.920047] [0xfcba40] [debug] create a GLX context.
+7 [2012-Jul-14 01:33:50.954098] [0xfcba40] [debug] create a color map.
+8 [2012-Jul-14 01:33:51.014446] [0xfcba40] [debug] create scene manager.
+9 [2012-Jul-14 01:33:51.014653] [0xfcba40] [debug] create camera.
+10 [2012-Jul-14 01:33:51.014758] [0xfcba40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:33:51.017431] [0xfcba40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:33:51.017558] [0xfcba40] [debug] Running engine...
+1 [2012-Jul-14 01:34:21.841715] [0xe08a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:34:21.841937] [0xe08a40] [debug] create window.
+3 [2012-Jul-14 01:34:21.845966] [0xe08a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:34:21.846117] [0xe08a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:34:21.846199] [0xe08a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:34:21.853242] [0xe08a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:34:21.882621] [0xe08a40] [debug] create a color map.
+8 [2012-Jul-14 01:34:21.958454] [0xe08a40] [debug] create scene manager.
+9 [2012-Jul-14 01:34:21.958531] [0xe08a40] [debug] create camera.
+10 [2012-Jul-14 01:34:21.958563] [0xe08a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:34:21.960606] [0xe08a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:34:21.960704] [0xe08a40] [debug] Running engine...
+1 [2012-Jul-14 01:39:31.240749] [0x2601a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:39:31.240975] [0x2601a40] [debug] create window.
+3 [2012-Jul-14 01:39:31.244342] [0x2601a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:39:31.244547] [0x2601a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:39:31.244648] [0x2601a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:39:31.252936] [0x2601a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:39:31.289294] [0x2601a40] [debug] create a color map.
+8 [2012-Jul-14 01:39:31.369366] [0x2601a40] [debug] create scene manager.
+9 [2012-Jul-14 01:39:31.369552] [0x2601a40] [debug] create camera.
+10 [2012-Jul-14 01:39:31.369651] [0x2601a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:39:31.372587] [0x2601a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:39:31.372690] [0x2601a40] [debug] Running engine...
+1 [2012-Jul-14 01:39:39.854567] [0x1d2fa40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:39:39.854804] [0x1d2fa40] [debug] create window.
+3 [2012-Jul-14 01:39:39.858248] [0x1d2fa40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:39:39.858402] [0x1d2fa40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:39:39.858483] [0x1d2fa40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:39:39.866882] [0x1d2fa40] [debug] create a GLX context.
+7 [2012-Jul-14 01:39:39.896371] [0x1d2fa40] [debug] create a color map.
+8 [2012-Jul-14 01:39:39.971290] [0x1d2fa40] [debug] create scene manager.
+9 [2012-Jul-14 01:39:39.971484] [0x1d2fa40] [debug] create camera.
+10 [2012-Jul-14 01:39:39.971584] [0x1d2fa40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:39:39.974261] [0x1d2fa40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:39:39.974411] [0x1d2fa40] [debug] Running engine...
+1 [2012-Jul-14 01:42:56.702002] [0x17aca40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:42:56.702226] [0x17aca40] [debug] create window.
+3 [2012-Jul-14 01:42:56.705239] [0x17aca40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:42:56.705388] [0x17aca40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:42:56.705470] [0x17aca40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:42:56.714103] [0x17aca40] [debug] create a GLX context.
+7 [2012-Jul-14 01:42:56.744267] [0x17aca40] [debug] create a color map.
+8 [2012-Jul-14 01:42:56.829770] [0x17aca40] [debug] create scene manager.
+9 [2012-Jul-14 01:42:56.829968] [0x17aca40] [debug] create camera.
+10 [2012-Jul-14 01:42:56.830072] [0x17aca40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:42:56.833821] [0x17aca40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:42:56.833943] [0x17aca40] [debug] Running engine...
+1 [2012-Jul-14 01:49:18.602331] [0x14efa40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:49:18.602552] [0x14efa40] [debug] create window.
+3 [2012-Jul-14 01:49:18.606096] [0x14efa40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:49:18.606246] [0x14efa40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:49:18.606328] [0x14efa40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:49:18.614707] [0x14efa40] [debug] create a GLX context.
+7 [2012-Jul-14 01:49:18.644135] [0x14efa40] [debug] create a color map.
+8 [2012-Jul-14 01:49:18.731341] [0x14efa40] [debug] create scene manager.
+9 [2012-Jul-14 01:49:18.731537] [0x14efa40] [debug] create camera.
+10 [2012-Jul-14 01:49:18.731642] [0x14efa40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:49:18.734617] [0x14efa40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:49:18.734768] [0x14efa40] [debug] Running engine...
+1 [2012-Jul-14 01:52:24.663001] [0x25c5a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:52:24.663218] [0x25c5a40] [debug] create window.
+3 [2012-Jul-14 01:52:24.666130] [0x25c5a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:52:24.666276] [0x25c5a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:52:24.666357] [0x25c5a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:52:24.674640] [0x25c5a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:52:24.706496] [0x25c5a40] [debug] create a color map.
+8 [2012-Jul-14 01:52:24.769092] [0x25c5a40] [debug] create scene manager.
+9 [2012-Jul-14 01:52:24.769240] [0x25c5a40] [debug] create camera.
+10 [2012-Jul-14 01:52:24.769324] [0x25c5a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:52:24.772359] [0x25c5a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:52:24.772461] [0x25c5a40] [debug] Running engine...
+1 [2012-Jul-14 01:53:24.721761] [0x1381a40] [debug] Initializing engine test...
+2 [2012-Jul-14 01:53:24.721975] [0x1381a40] [debug] create window.
+3 [2012-Jul-14 01:53:24.726039] [0x1381a40] [debug] look for mode with requested resolution.
+4 [2012-Jul-14 01:53:24.726189] [0x1381a40] [debug] Mode found: 3840 x 1080
+5 [2012-Jul-14 01:53:24.726270] [0x1381a40] [debug] look for mode with requested resolution.
+6 [2012-Jul-14 01:53:24.732414] [0x1381a40] [debug] create a GLX context.
+7 [2012-Jul-14 01:53:24.764237] [0x1381a40] [debug] create a color map.
+8 [2012-Jul-14 01:53:24.851860] [0x1381a40] [debug] create scene manager.
+9 [2012-Jul-14 01:53:24.852051] [0x1381a40] [debug] create camera.
+10 [2012-Jul-14 01:53:24.852156] [0x1381a40] [debug] initialize keyboard and mouse.
+11 [2012-Jul-14 01:53:24.856219] [0x1381a40] [debug] add keyboard and mouse listeners...
+12 [2012-Jul-14 01:53:24.856376] [0x1381a40] [debug] Running engine...

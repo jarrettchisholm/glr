@@ -1,0 +1,69 @@
+XInitThreads();
+
+Display *dpy = XOpenDisplay(display_name);
+
+const int
+	screen = DefaultScreen(dpy),
+	depth = DefaultDepth(dpy, screen),
+	screen_width = DisplayWidth(dpy, screen),
+	screen_height = DisplayHeight(dpy, screen);
+
+Visual *visual = DefaultVisual(dpy, screen);
+
+XSetWindowAttributes window_attributes;
+window_attributes.border_pixel = BlackPixel(dpy, screen);
+window_attributes.background_pixel = BlackPixel(dpy, screen);
+window_attributes.backing_store = NotUseful;
+
+const int off_x = (screen_width - width) / 2, off_y = (screen_height - height) / 2;
+
+Window
+	root_window = DefaultRootWindow(dpy),
+	window = XCreateWindow(
+				dpy, root_window,
+				off_x, off_y, width, height, 0, depth,
+				InputOutput, visual,
+				CWBackPixel | CWBorderPixel | CWBackingStore,
+				&window_attributes);
+
+XStoreName(dpy, window, "...");
+
+XSelectInput(dpy, window, KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask);
+
+XSizeHints window_sizehints;
+window_sizehints.flags = PPosition | PMinSize | PMaxSize;
+window_sizehints.x = 0;
+window_sizehints.y = 0;
+window_sizehints.min_width = width;
+window_sizehints.max_width = width;
+window_sizehints.min_height = height;
+window_sizehints.max_height = height;
+XSetWMNormalHints(dpy, window, &window_sizehints);
+
+XClearWindow(dpy, window);
+
+XSync(dpy, false);	// synch up for errors now
+
+XMapRaised(dpy, window);
+
+/* 
+	ogl context stuff,
+	you can use something like if (!glXQueryExtension(dpy, 0, 0)) to check for GLX support
+*/
+int conf[] = {
+	GLX_DOUBLEBUFFER,
+	GLX_RGBA,
+	None
+};
+XVisualInfo *vi = glXChooseVisual(dpy, screen, conf);
+
+if (vi) {
+	glrc = glXCreateContext(dpy, vi, 0, true);
+	if (!glrc)
+		glrc = glXCreateContext(dpy, vi, 0, false);
+		
+	XFree(vi);
+
+	if (glrc)
+		glXMakeCurrent(dpy, window, glrc);
+}

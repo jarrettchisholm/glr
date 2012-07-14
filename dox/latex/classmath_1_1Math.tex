@@ -1,0 +1,183 @@
+\hypertarget{classmath_1_1Math}{
+\section{math::Math Class Reference}
+\label{classmath_1_1Math}\index{math::Math@{math::Math}}
+}
+
+
+{\ttfamily \#include $<$Math.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classmath_1_1Math_a0baef779a970805b859ab68e97f13a9d}{Math} ()
+\item 
+virtual \hyperlink{classmath_1_1Math_a841546dc56f4aa88b380da2ba0211070}{$\sim$Math} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static float \hyperlink{classmath_1_1Math_a6d27f733861106075404b2e1fa2a0cd2}{linearInterp} (float a, float b, float dist)
+\item 
+static float \hyperlink{classmath_1_1Math_aea2ccc706b593ea4f1e8e34b79a3d59c}{cosineInterp} (float a, float b, float dist)
+\item 
+static float \hyperlink{classmath_1_1Math_a48ef0e0dbbcb7a863d2a55c033bdfb38}{cubicInterp} (float a0, float a1, float b1, float b2, float dist)
+\item 
+{\footnotesize template$<$class T $>$ }\\static T \hyperlink{classmath_1_1Math_a0a15a0900bf268a1fa4512a11f0485ba}{max} (T a, T b)
+\item 
+{\footnotesize template$<$class T $>$ }\\static T \hyperlink{classmath_1_1Math_ae45721aabf3738cb54c91499063d2854}{min} (T a, T b)
+\item 
+static int \hyperlink{classmath_1_1Math_ad8e0aaa8846dda2c7df09c999549b1f2}{random} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const int \hyperlink{classmath_1_1Math_a8b8007f82a1fd063ea5ce5dfacbc531e}{RANDOM\_\-MAX} = 32767
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classmath_1_1Math_a0baef779a970805b859ab68e97f13a9d}{
+\index{math::Math@{math::Math}!Math@{Math}}
+\index{Math@{Math}!math::Math@{math::Math}}
+\subsubsection[{Math}]{\setlength{\rightskip}{0pt plus 5cm}math::Math::Math (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classmath_1_1Math_a0baef779a970805b859ab68e97f13a9d}
+\hypertarget{classmath_1_1Math_a841546dc56f4aa88b380da2ba0211070}{
+\index{math::Math@{math::Math}!$\sim$Math@{$\sim$Math}}
+\index{$\sim$Math@{$\sim$Math}!math::Math@{math::Math}}
+\subsubsection[{$\sim$Math}]{\setlength{\rightskip}{0pt plus 5cm}math::Math::$\sim$Math (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classmath_1_1Math_a841546dc56f4aa88b380da2ba0211070}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmath_1_1Math_aea2ccc706b593ea4f1e8e34b79a3d59c}{
+\index{math::Math@{math::Math}!cosineInterp@{cosineInterp}}
+\index{cosineInterp@{cosineInterp}!math::Math@{math::Math}}
+\subsubsection[{cosineInterp}]{\setlength{\rightskip}{0pt plus 5cm}float math::Math::cosineInterp (
+\begin{DoxyParamCaption}
+\item[{float}]{a, }
+\item[{float}]{b, }
+\item[{float}]{dist}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classmath_1_1Math_aea2ccc706b593ea4f1e8e34b79a3d59c}
+Implementation of Cosine Interpolation between 2 values. Basically, gives a smoother result compared to the Linear Interpolation function, but requires a a little more computation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & The starting value \\
+\hline
+{\em b} & The ending value \\
+\hline
+{\em dist} & A value between 0.0 and 1.0; will return a value between a and b\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value between a and b, based on the dist value given 
+\end{DoxyReturn}
+\hypertarget{classmath_1_1Math_a48ef0e0dbbcb7a863d2a55c033bdfb38}{
+\index{math::Math@{math::Math}!cubicInterp@{cubicInterp}}
+\index{cubicInterp@{cubicInterp}!math::Math@{math::Math}}
+\subsubsection[{cubicInterp}]{\setlength{\rightskip}{0pt plus 5cm}float math::Math::cubicInterp (
+\begin{DoxyParamCaption}
+\item[{float}]{a0, }
+\item[{float}]{a1, }
+\item[{float}]{b1, }
+\item[{float}]{b2, }
+\item[{float}]{dist}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classmath_1_1Math_a48ef0e0dbbcb7a863d2a55c033bdfb38}
+Implementation of Cubic Interpolation between 2 values. Basically, gives a smoother result compared to the Cosine Interpolation function, but requires a a bunch more computation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a0} & The value before the starting value \\
+\hline
+{\em a1} & The starting value \\
+\hline
+{\em b1} & The ending value \\
+\hline
+{\em b2} & The value after the starting value \\
+\hline
+{\em dist} & A value between 0.0 and 1.0; will return a value between a1 and b1\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value between a and b, based on the dist value given 
+\end{DoxyReturn}
+\hypertarget{classmath_1_1Math_a6d27f733861106075404b2e1fa2a0cd2}{
+\index{math::Math@{math::Math}!linearInterp@{linearInterp}}
+\index{linearInterp@{linearInterp}!math::Math@{math::Math}}
+\subsubsection[{linearInterp}]{\setlength{\rightskip}{0pt plus 5cm}float math::Math::linearInterp (
+\begin{DoxyParamCaption}
+\item[{float}]{a, }
+\item[{float}]{b, }
+\item[{float}]{dist}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classmath_1_1Math_a6d27f733861106075404b2e1fa2a0cd2}
+Implementation of Linear Interpolation between 2 values.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & The starting value \\
+\hline
+{\em b} & The ending value \\
+\hline
+{\em dist} & A value between 0.0 and 1.0; will return a value between a and b\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value between a and b, based on the dist value given 
+\end{DoxyReturn}
+\hypertarget{classmath_1_1Math_a0a15a0900bf268a1fa4512a11f0485ba}{
+\index{math::Math@{math::Math}!max@{max}}
+\index{max@{max}!math::Math@{math::Math}}
+\subsubsection[{max}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ static T math::Math::max (
+\begin{DoxyParamCaption}
+\item[{T}]{a, }
+\item[{T}]{b}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static\mbox{]}}}}
+\label{classmath_1_1Math_a0a15a0900bf268a1fa4512a11f0485ba}
+Compares a and b and returns the greater of the two. \hypertarget{classmath_1_1Math_ae45721aabf3738cb54c91499063d2854}{
+\index{math::Math@{math::Math}!min@{min}}
+\index{min@{min}!math::Math@{math::Math}}
+\subsubsection[{min}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ static T math::Math::min (
+\begin{DoxyParamCaption}
+\item[{T}]{a, }
+\item[{T}]{b}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, static\mbox{]}}}}
+\label{classmath_1_1Math_ae45721aabf3738cb54c91499063d2854}
+Compares a and b and returns the lesser of the two. \hypertarget{classmath_1_1Math_ad8e0aaa8846dda2c7df09c999549b1f2}{
+\index{math::Math@{math::Math}!random@{random}}
+\index{random@{random}!math::Math@{math::Math}}
+\subsubsection[{random}]{\setlength{\rightskip}{0pt plus 5cm}int math::Math::random (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classmath_1_1Math_ad8e0aaa8846dda2c7df09c999549b1f2}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classmath_1_1Math_a8b8007f82a1fd063ea5ce5dfacbc531e}{
+\index{math::Math@{math::Math}!RANDOM\_\-MAX@{RANDOM\_\-MAX}}
+\index{RANDOM\_\-MAX@{RANDOM\_\-MAX}!math::Math@{math::Math}}
+\subsubsection[{RANDOM\_\-MAX}]{\setlength{\rightskip}{0pt plus 5cm}const int {\bf math::Math::RANDOM\_\-MAX} = 32767\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classmath_1_1Math_a8b8007f82a1fd063ea5ce5dfacbc531e}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+src/common/math/\hyperlink{Math_8h}{Math.h}\item 
+src/common/math/\hyperlink{Math_8cpp}{Math.cpp}\end{DoxyCompactItemize}

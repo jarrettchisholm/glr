@@ -1,0 +1,264 @@
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode}{
+\section{icee::engine::CameraSceneNode Class Reference}
+\label{classicee_1_1engine_1_1CameraSceneNode}\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+}
+
+
+{\ttfamily \#include $<$CameraSceneNode.h$>$}
+
+Inheritance diagram for icee::engine::CameraSceneNode:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classicee_1_1engine_1_1CameraSceneNode}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classicee_1_1engine_1_1CameraSceneNode_a47864782b299cff14008cce8d586aaf0}{CameraSceneNode} ()
+\item 
+\hyperlink{classicee_1_1engine_1_1CameraSceneNode_a3d44228ffc351233d40f9baeb223c094}{CameraSceneNode} (\hyperlink{classvmath_1_1Vector3f}{vmath::Vector3f} position, \hyperlink{classvmath_1_1Vector3f}{vmath::Vector3f} lookAt, bool active=true)
+\item 
+virtual \hyperlink{classicee_1_1engine_1_1CameraSceneNode_abd6c6784830e182983ce55b08a37a1ab}{$\sim$CameraSceneNode} ()
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a230b6af4d2c61341e7146e901c25e8be}{render} ()
+\item 
+virtual const \hyperlink{classvmath_1_1Vector3f}{vmath::Vector3f} \& \hyperlink{classicee_1_1engine_1_1CameraSceneNode_ae6e8b374b9e726d97fe693014fca1c81}{getLookAt} ()
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a8c0d4458f9587dd4aade5e60ddeeafbe}{setLookAt} (const \hyperlink{classvmath_1_1Vector3f}{vmath::Vector3f} \&newLookAt)
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_ac5d5e2204f5448375c9e830eb67e5cea}{move} (\hyperlink{classicee_1_1engine_1_1ICameraSceneNode_a47efe47a91708ebed42249f6304309ae}{MOVE\_\-DIRECTION} dir, bool enabled)
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a0f69fecc9d1153eb15fc1118a6efa28d}{rotateX} (\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} degrees)
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a5f2142852ab5aea21af731097a9ce9bf}{rotateY} (\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} degrees)
+\item 
+virtual void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a267404d1f0eba71120ffc7c9950bfbd4}{tick} (\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} time)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_ad57a1c47b456258354be6f53228fe936}{clearMovementBuffer} ()
+\item 
+void \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a1862166f71fa916a43301842b3ca0880}{initialize} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classvmath_1_1Vector3f}{vmath::Vector3f} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a00597c8ba8fc79c1bb808c64203c1da7}{lookAt\_\-}
+\item 
+\hyperlink{classicee_1_1engine_1_1Quaternion}{Quaternion} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a76cea9ace1709b595c18c00a62c99ccf}{rotation\_\-}
+\item 
+\hyperlink{namespacecompatibility_afc3ea6dfbdda98c9d2615b235b140a18}{sint32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_af34e0abb4aced603e5bc3cc1aa478f77}{prevX\_\-}
+\item 
+\hyperlink{namespacecompatibility_afc3ea6dfbdda98c9d2615b235b140a18}{sint32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a6689e5b044be84a1537526497eb9da25}{prevY\_\-}
+\item 
+\hyperlink{namespacecompatibility_a451d9cfd3da606a663aa298356f0b5a5}{char8} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_abe8f42a5901d3c4483fe8a992ba49579}{movement\_\-} \mbox{[}\hyperlink{classicee_1_1engine_1_1ICameraSceneNode_aeb9040df9d774467ed2a8c82b0f434d6}{NUM\_\-MOVE\_\-DIRECTIONS}\mbox{]}
+\item 
+\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a54660e34759b36a182c21df9e3d1154e}{moveSpeed\_\-}
+\item 
+\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a2b27e6aae2a4cd1868aeb1a274636d8b}{rotSpeed\_\-}
+\item 
+\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a88594483a4aa500a2ced3781a2179e78}{xRot\_\-}
+\item 
+\hyperlink{namespacecompatibility_a32a2d006ac2172c0f859370287f0104c}{float32} \hyperlink{classicee_1_1engine_1_1CameraSceneNode_a47c1195747ae82d087fb380fce092dbd}{yRot\_\-}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a47864782b299cff14008cce8d586aaf0}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!CameraSceneNode@{CameraSceneNode}}
+\index{CameraSceneNode@{CameraSceneNode}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{CameraSceneNode}]{\setlength{\rightskip}{0pt plus 5cm}icee::engine::CameraSceneNode::CameraSceneNode (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a47864782b299cff14008cce8d586aaf0}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a3d44228ffc351233d40f9baeb223c094}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!CameraSceneNode@{CameraSceneNode}}
+\index{CameraSceneNode@{CameraSceneNode}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{CameraSceneNode}]{\setlength{\rightskip}{0pt plus 5cm}icee::engine::CameraSceneNode::CameraSceneNode (
+\begin{DoxyParamCaption}
+\item[{{\bf vmath::Vector3f}}]{position, }
+\item[{{\bf vmath::Vector3f}}]{lookAt, }
+\item[{bool}]{active = {\ttfamily true}}
+\end{DoxyParamCaption}
+)}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a3d44228ffc351233d40f9baeb223c094}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_abd6c6784830e182983ce55b08a37a1ab}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!$\sim$CameraSceneNode@{$\sim$CameraSceneNode}}
+\index{$\sim$CameraSceneNode@{$\sim$CameraSceneNode}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{$\sim$CameraSceneNode}]{\setlength{\rightskip}{0pt plus 5cm}icee::engine::CameraSceneNode::$\sim$CameraSceneNode (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_abd6c6784830e182983ce55b08a37a1ab}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_ad57a1c47b456258354be6f53228fe936}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!clearMovementBuffer@{clearMovementBuffer}}
+\index{clearMovementBuffer@{clearMovementBuffer}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{clearMovementBuffer}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::clearMovementBuffer (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_ad57a1c47b456258354be6f53228fe936}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_ae6e8b374b9e726d97fe693014fca1c81}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!getLookAt@{getLookAt}}
+\index{getLookAt@{getLookAt}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{getLookAt}]{\setlength{\rightskip}{0pt plus 5cm}const {\bf vmath::Vector3f} \& icee::engine::CameraSceneNode::getLookAt (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_ae6e8b374b9e726d97fe693014fca1c81}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_a4cb57ce68580cac469fb3b5b0a76ce59}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a1862166f71fa916a43301842b3ca0880}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!initialize@{initialize}}
+\index{initialize@{initialize}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{initialize}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::initialize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a1862166f71fa916a43301842b3ca0880}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_ac5d5e2204f5448375c9e830eb67e5cea}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!move@{move}}
+\index{move@{move}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{move}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::move (
+\begin{DoxyParamCaption}
+\item[{{\bf MOVE\_\-DIRECTION}}]{dir, }
+\item[{bool}]{enabled}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_ac5d5e2204f5448375c9e830eb67e5cea}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_a8f71e3eb97bbad32482358b712aa7e1a}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a230b6af4d2c61341e7146e901c25e8be}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!render@{render}}
+\index{render@{render}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{render}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::render (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a230b6af4d2c61341e7146e901c25e8be}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_af4996793cf1cc2d0ccdf541e94ac9609}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a0f69fecc9d1153eb15fc1118a6efa28d}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!rotateX@{rotateX}}
+\index{rotateX@{rotateX}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{rotateX}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::rotateX (
+\begin{DoxyParamCaption}
+\item[{{\bf float32}}]{degrees}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a0f69fecc9d1153eb15fc1118a6efa28d}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_a2555d17b958bd2f412139daeb73c9e27}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a5f2142852ab5aea21af731097a9ce9bf}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!rotateY@{rotateY}}
+\index{rotateY@{rotateY}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{rotateY}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::rotateY (
+\begin{DoxyParamCaption}
+\item[{{\bf float32}}]{degrees}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a5f2142852ab5aea21af731097a9ce9bf}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_af3a40b3f41e7eac5d45acbabacac9258}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a8c0d4458f9587dd4aade5e60ddeeafbe}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!setLookAt@{setLookAt}}
+\index{setLookAt@{setLookAt}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{setLookAt}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::setLookAt (
+\begin{DoxyParamCaption}
+\item[{const {\bf vmath::Vector3f} \&}]{newLookAt}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a8c0d4458f9587dd4aade5e60ddeeafbe}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_ad19ccccd889c46a18ff7cc8e09fda813}{icee::engine::ICameraSceneNode}.
+
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a267404d1f0eba71120ffc7c9950bfbd4}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!tick@{tick}}
+\index{tick@{tick}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{tick}]{\setlength{\rightskip}{0pt plus 5cm}void icee::engine::CameraSceneNode::tick (
+\begin{DoxyParamCaption}
+\item[{{\bf float32}}]{time}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}virtual\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a267404d1f0eba71120ffc7c9950bfbd4}
+
+
+Implements \hyperlink{classicee_1_1engine_1_1ICameraSceneNode_a06dcb1ef06cfb323a088936f066d875e}{icee::engine::ICameraSceneNode}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a00597c8ba8fc79c1bb808c64203c1da7}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!lookAt\_\-@{lookAt\_\-}}
+\index{lookAt\_\-@{lookAt\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{lookAt\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf vmath::Vector3f} {\bf icee::engine::CameraSceneNode::lookAt\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a00597c8ba8fc79c1bb808c64203c1da7}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_abe8f42a5901d3c4483fe8a992ba49579}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!movement\_\-@{movement\_\-}}
+\index{movement\_\-@{movement\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{movement\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf char8} {\bf icee::engine::CameraSceneNode::movement\_\-}\mbox{[}{\bf NUM\_\-MOVE\_\-DIRECTIONS}\mbox{]}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_abe8f42a5901d3c4483fe8a992ba49579}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a54660e34759b36a182c21df9e3d1154e}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!moveSpeed\_\-@{moveSpeed\_\-}}
+\index{moveSpeed\_\-@{moveSpeed\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{moveSpeed\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf float32} {\bf icee::engine::CameraSceneNode::moveSpeed\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a54660e34759b36a182c21df9e3d1154e}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_af34e0abb4aced603e5bc3cc1aa478f77}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!prevX\_\-@{prevX\_\-}}
+\index{prevX\_\-@{prevX\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{prevX\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf sint32} {\bf icee::engine::CameraSceneNode::prevX\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_af34e0abb4aced603e5bc3cc1aa478f77}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a6689e5b044be84a1537526497eb9da25}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!prevY\_\-@{prevY\_\-}}
+\index{prevY\_\-@{prevY\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{prevY\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf sint32} {\bf icee::engine::CameraSceneNode::prevY\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a6689e5b044be84a1537526497eb9da25}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a76cea9ace1709b595c18c00a62c99ccf}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!rotation\_\-@{rotation\_\-}}
+\index{rotation\_\-@{rotation\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{rotation\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Quaternion} {\bf icee::engine::CameraSceneNode::rotation\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a76cea9ace1709b595c18c00a62c99ccf}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a2b27e6aae2a4cd1868aeb1a274636d8b}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!rotSpeed\_\-@{rotSpeed\_\-}}
+\index{rotSpeed\_\-@{rotSpeed\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{rotSpeed\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf float32} {\bf icee::engine::CameraSceneNode::rotSpeed\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a2b27e6aae2a4cd1868aeb1a274636d8b}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a88594483a4aa500a2ced3781a2179e78}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!xRot\_\-@{xRot\_\-}}
+\index{xRot\_\-@{xRot\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{xRot\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf float32} {\bf icee::engine::CameraSceneNode::xRot\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a88594483a4aa500a2ced3781a2179e78}
+\hypertarget{classicee_1_1engine_1_1CameraSceneNode_a47c1195747ae82d087fb380fce092dbd}{
+\index{icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}!yRot\_\-@{yRot\_\-}}
+\index{yRot\_\-@{yRot\_\-}!icee::engine::CameraSceneNode@{icee::engine::CameraSceneNode}}
+\subsubsection[{yRot\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf float32} {\bf icee::engine::CameraSceneNode::yRot\_\-}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classicee_1_1engine_1_1CameraSceneNode_a47c1195747ae82d087fb380fce092dbd}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+src/engine/\hyperlink{CameraSceneNode_8h}{CameraSceneNode.h}\item 
+src/engine/\hyperlink{CameraSceneNode_8cpp}{CameraSceneNode.cpp}\end{DoxyCompactItemize}

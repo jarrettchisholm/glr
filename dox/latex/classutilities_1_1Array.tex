@@ -1,0 +1,355 @@
+\hypertarget{classutilities_1_1Array}{
+\section{utilities::Array$<$ T $>$ Class Template Reference}
+\label{classutilities_1_1Array}\index{utilities::Array@{utilities::Array}}
+}
+
+
+{\ttfamily \#include $<$Array.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classutilities_1_1Array_a36ea069b42679efcfa85315814037845}{Array} ()
+\item 
+\hyperlink{classutilities_1_1Array_a1d2796509cf762943acda6928bad0105}{Array} (\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} size)
+\item 
+virtual \hyperlink{classutilities_1_1Array_a2044f11af57ed32ffd7c32859b8a422a}{$\sim$Array} ()
+\item 
+T \& \hyperlink{classutilities_1_1Array_a7a950f93d6aa81c728dc4077fc1ca229}{get} (\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} index)
+\item 
+T \& \hyperlink{classutilities_1_1Array_ae6ce076bb8eeda8a4b47be804144b931}{first} ()
+\item 
+T \& \hyperlink{classutilities_1_1Array_a8195132a3d87ca22dd85835779c2004d}{last} ()
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_a70ae221403b021a5153e98b6ca462fe3}{firstPos} ()
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_aeb02289c0b7abb4e05804c4bbd6dad50}{lastPos} ()
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_aa22c59e159ed1231c4259fef00c516ba}{put} (T \&element)
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_a03c2f682efc6ddb4a9335b6705074411}{put} (T \&element, \hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} index)
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_afff43b9291e14459d766aa2198957935}{push\_\-back} (T \&element)
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_afd8ca415457f6f80df84df434f794d61}{push\_\-front} (T \&element)
+\item 
+T $\ast$ \hyperlink{classutilities_1_1Array_a0afb4cb3ddd8df9baf9eb2ab368487e6}{remove} (\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} index)
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_af58620515c146b816896bc452cc322c7}{resize} (\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} newSize)
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_a6966400b958a33d8a9f9407fb3758d26}{shift} (\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} amount)
+\item 
+void \hyperlink{classutilities_1_1Array_a7386319f6251d24fe29dcaa188219408}{pack} ()
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_a11ed0767a3195ffb0a5a696ab5791189}{numElements} ()
+\item 
+\hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_abd1f453f78da95540b08ae85f617c7bb}{size} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const \hyperlink{namespacecompatibility_a51e8fe2956b4f39fe1fae96cec0d8393}{uint32} \hyperlink{classutilities_1_1Array_a0ec9a6526288ee39d905b1caf79b0ddd}{MAX\_\-SIZE} = 4096
+\end{DoxyCompactItemize}
+\subsubsection*{template$<$class T$>$ class utilities::Array$<$ T $>$}
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classutilities_1_1Array_a36ea069b42679efcfa85315814037845}{
+\index{utilities::Array@{utilities::Array}!Array@{Array}}
+\index{Array@{Array}!utilities::Array@{utilities::Array}}
+\subsubsection[{Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf utilities::Array}$<$ T $>$::{\bf Array} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a36ea069b42679efcfa85315814037845}
+Default constructor. \hypertarget{classutilities_1_1Array_a1d2796509cf762943acda6928bad0105}{
+\index{utilities::Array@{utilities::Array}!Array@{Array}}
+\index{Array@{Array}!utilities::Array@{utilities::Array}}
+\subsubsection[{Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf utilities::Array}$<$ T $>$::{\bf Array} (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32}}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a1d2796509cf762943acda6928bad0105}
+Constructor, allowing a custom size for the array to start with.
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & The size the array should start with. This value must be $>$=0 and $<$= MAX\_\-SIZE. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classutilities_1_1Array_a2044f11af57ed32ffd7c32859b8a422a}{
+\index{utilities::Array@{utilities::Array}!$\sim$Array@{$\sim$Array}}
+\index{$\sim$Array@{$\sim$Array}!utilities::Array@{utilities::Array}}
+\subsubsection[{$\sim$Array}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ virtual {\bf utilities::Array}$<$ T $>$::$\sim${\bf Array} (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline, virtual\mbox{]}}}}
+\label{classutilities_1_1Array_a2044f11af57ed32ffd7c32859b8a422a}
+Destructor. Note that each non-\/null element in the array has its destructor called. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classutilities_1_1Array_ae6ce076bb8eeda8a4b47be804144b931}{
+\index{utilities::Array@{utilities::Array}!first@{first}}
+\index{first@{first}!utilities::Array@{utilities::Array}}
+\subsubsection[{first}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T\& {\bf utilities::Array}$<$ T $>$::first (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_ae6ce076bb8eeda8a4b47be804144b931}
+Returns the first element in the array.
+
+\begin{DoxyReturn}{Returns}
+Reference to the first element in the array. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a70ae221403b021a5153e98b6ca462fe3}{
+\index{utilities::Array@{utilities::Array}!firstPos@{firstPos}}
+\index{firstPos@{firstPos}!utilities::Array@{utilities::Array}}
+\subsubsection[{firstPos}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::firstPos (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a70ae221403b021a5153e98b6ca462fe3}
+Returns the index of the first element in the array.
+
+\begin{DoxyReturn}{Returns}
+The index of the first element in the array, or -\/1 if not found. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a7a950f93d6aa81c728dc4077fc1ca229}{
+\index{utilities::Array@{utilities::Array}!get@{get}}
+\index{get@{get}!utilities::Array@{utilities::Array}}
+\subsubsection[{get}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T\& {\bf utilities::Array}$<$ T $>$::get (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32}}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a7a950f93d6aa81c728dc4077fc1ca229}
+Returns the element at 'index'.
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the element at 'index'. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a8195132a3d87ca22dd85835779c2004d}{
+\index{utilities::Array@{utilities::Array}!last@{last}}
+\index{last@{last}!utilities::Array@{utilities::Array}}
+\subsubsection[{last}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T\& {\bf utilities::Array}$<$ T $>$::last (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a8195132a3d87ca22dd85835779c2004d}
+Returns the last element in the array.
+
+\begin{DoxyReturn}{Returns}
+Reference to the last element in the array. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_aeb02289c0b7abb4e05804c4bbd6dad50}{
+\index{utilities::Array@{utilities::Array}!lastPos@{lastPos}}
+\index{lastPos@{lastPos}!utilities::Array@{utilities::Array}}
+\subsubsection[{lastPos}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::lastPos (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_aeb02289c0b7abb4e05804c4bbd6dad50}
+Returns the index of the last element in the array.
+
+\begin{DoxyReturn}{Returns}
+The index of the last element in the array, or -\/1 if not found. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a11ed0767a3195ffb0a5a696ab5791189}{
+\index{utilities::Array@{utilities::Array}!numElements@{numElements}}
+\index{numElements@{numElements}!utilities::Array@{utilities::Array}}
+\subsubsection[{numElements}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::numElements (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a11ed0767a3195ffb0a5a696ab5791189}
+Return the total number of elements in the array.
+
+\begin{DoxyReturn}{Returns}
+The number of elements in the array. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a7386319f6251d24fe29dcaa188219408}{
+\index{utilities::Array@{utilities::Array}!pack@{pack}}
+\index{pack@{pack}!utilities::Array@{utilities::Array}}
+\subsubsection[{pack}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ void {\bf utilities::Array}$<$ T $>$::pack (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a7386319f6251d24fe29dcaa188219408}
+Packs all elements together and shifts them to the front of the array. This eliminates all empty space between elements and ensures the first element starts at index '0'. This function also ensures that the order of the elements remains intact. \hypertarget{classutilities_1_1Array_afff43b9291e14459d766aa2198957935}{
+\index{utilities::Array@{utilities::Array}!push\_\-back@{push\_\-back}}
+\index{push\_\-back@{push\_\-back}!utilities::Array@{utilities::Array}}
+\subsubsection[{push\_\-back}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::push\_\-back (
+\begin{DoxyParamCaption}
+\item[{T \&}]{element}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_afff43b9291e14459d766aa2198957935}
+Adds element to the back of the array (element is added after the last element in the array). Note that the runtime for this method is O(1) best case and O(n) worst case (array resizing).
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index where the element was added, or -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_afd8ca415457f6f80df84df434f794d61}{
+\index{utilities::Array@{utilities::Array}!push\_\-front@{push\_\-front}}
+\index{push\_\-front@{push\_\-front}!utilities::Array@{utilities::Array}}
+\subsubsection[{push\_\-front}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::push\_\-front (
+\begin{DoxyParamCaption}
+\item[{T \&}]{element}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_afd8ca415457f6f80df84df434f794d61}
+Adds element to the front of the array. Note that the runtime for this method is always O(n).
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index where the element was added, -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a03c2f682efc6ddb4a9335b6705074411}{
+\index{utilities::Array@{utilities::Array}!put@{put}}
+\index{put@{put}!utilities::Array@{utilities::Array}}
+\subsubsection[{put}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::put (
+\begin{DoxyParamCaption}
+\item[{T \&}]{element, }
+\item[{{\bf uint32}}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a03c2f682efc6ddb4a9335b6705074411}
+Adds element at the array index 'index'. Note that the runtime for this method is O(1) best case and O(n) worst case. Also, if index is greater than the current capacity of the array, the array will grow to accommodate the index (unless index $>$ MAX\_\-SIZE). This method will replace any element that is currently at 'index' without deletion, which may lead to memory leaks. Be sure to check the location is empty before adding an element with this method.
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & The element to add \\
+\hline
+{\em index} & The index in the array that the reference to element is to be put\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index where the element was added, or -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_aa22c59e159ed1231c4259fef00c516ba}{
+\index{utilities::Array@{utilities::Array}!put@{put}}
+\index{put@{put}!utilities::Array@{utilities::Array}}
+\subsubsection[{put}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::put (
+\begin{DoxyParamCaption}
+\item[{T \&}]{element}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_aa22c59e159ed1231c4259fef00c516ba}
+Adds element to the first available slot in the array. Note that the runtime for this method is O(1) best case and O(n) worst case.
+
+
+\begin{DoxyParams}{Parameters}
+{\em element} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The index where the element was added, or -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a0afb4cb3ddd8df9baf9eb2ab368487e6}{
+\index{utilities::Array@{utilities::Array}!remove@{remove}}
+\index{remove@{remove}!utilities::Array@{utilities::Array}}
+\subsubsection[{remove}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ T$\ast$ {\bf utilities::Array}$<$ T $>$::remove (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32}}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a0afb4cb3ddd8df9baf9eb2ab368487e6}
+Remove the element at index and return it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pointer to the element. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_af58620515c146b816896bc452cc322c7}{
+\index{utilities::Array@{utilities::Array}!resize@{resize}}
+\index{resize@{resize}!utilities::Array@{utilities::Array}}
+\subsubsection[{resize}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::resize (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32}}]{newSize}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_af58620515c146b816896bc452cc322c7}
+Resize the array to the newly specified size. This function does not move any of the elements, it only increases the capacity of the array. Also, the array cannot be made larger than MAX\_\-SIZE, and cannot be made smaller than the number of elements already in the array (including the empty space between elements in the array). If newSize is already the same size as the array, this function makes no changes to the array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em newSize} & The new size the array will be after the function executes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, or -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_a6966400b958a33d8a9f9407fb3758d26}{
+\index{utilities::Array@{utilities::Array}!shift@{shift}}
+\index{shift@{shift}!utilities::Array@{utilities::Array}}
+\subsubsection[{shift}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::shift (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32}}]{amount}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_a6966400b958a33d8a9f9407fb3758d26}
+Shift all elements in the array by 'amount'. Note that this function will increase the array size as necessary. If the array would exceed its maximum size after the shift, it returns -\/1 and does not perform the shift.
+
+
+\begin{DoxyParams}{Parameters}
+{\em amount} & The amount to shift elements to the right by. Expects a value $>$= 0.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, or -\/1 on error. 
+\end{DoxyReturn}
+\hypertarget{classutilities_1_1Array_abd1f453f78da95540b08ae85f617c7bb}{
+\index{utilities::Array@{utilities::Array}!size@{size}}
+\index{size@{size}!utilities::Array@{utilities::Array}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ {\bf uint32} {\bf utilities::Array}$<$ T $>$::size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classutilities_1_1Array_abd1f453f78da95540b08ae85f617c7bb}
+Return the total size of the array (i.e. the maximum number of elements that can be stored in the array at the current size).
+
+\begin{DoxyReturn}{Returns}
+The total size of the array. 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classutilities_1_1Array_a0ec9a6526288ee39d905b1caf79b0ddd}{
+\index{utilities::Array@{utilities::Array}!MAX\_\-SIZE@{MAX\_\-SIZE}}
+\index{MAX\_\-SIZE@{MAX\_\-SIZE}!utilities::Array@{utilities::Array}}
+\subsubsection[{MAX\_\-SIZE}]{\setlength{\rightskip}{0pt plus 5cm}template$<$class T $>$ const {\bf uint32} {\bf utilities::Array}$<$ T $>$::{\bf MAX\_\-SIZE} = 4096\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{classutilities_1_1Array_a0ec9a6526288ee39d905b1caf79b0ddd}
+
+
+The documentation for this class was generated from the following file:\begin{DoxyCompactItemize}
+\item 
+src/common/utilities/\hyperlink{Array_8h}{Array.h}\end{DoxyCompactItemize}
