@@ -10,11 +10,20 @@
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
 
+#include <stdlib.h>
+
+#include <GL/glut.h>
+
+// assimp include files. These three are usually needed.
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 namespace icee {
 
 namespace engine {
 
-DefaultSceneNode::DefaultSceneNode() {
+DefaultSceneNode::DefaultSceneNode() {	
 	vertices.push_back(-2.0f); // x
 	vertices.push_back(-2.0f); // y
 	vertices.push_back(-18.0f); // z

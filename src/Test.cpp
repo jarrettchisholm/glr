@@ -30,7 +30,7 @@ int main() {
 	icee::engine::IOS* os = icee::engine::IceGraphicsEngine::createIOSObject();
 	os->initialize();
 	BOOST_LOG_TRIVIAL(debug) << "create window.";
-	icee::engine::IIceWindow* window = os->createWindow(3840, 1080, 24, true, false);
+	icee::engine::IIceWindow* window = os->createWindow(1024, 768, 24, false, false);
 
 	BOOST_LOG_TRIVIAL(debug) << "create scene manager.";
 	icee::engine::ISceneManager* smgr = window->getSceneManager();

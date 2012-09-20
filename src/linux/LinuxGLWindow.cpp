@@ -67,26 +67,30 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 	display_ = XOpenDisplay(0);
 	screen_ = DefaultScreen(display_);
 	XF86VidModeQueryVersion(display_, &vmMajor, &vmMinor);
-	printf("XF86 VideoMode extension version %d.%d\n", vmMajor, vmMinor);
+	BOOST_LOG_TRIVIAL(debug) << "XF86 VideoMode extension version " << vmMajor << "." << vmMinor;
 	XF86VidModeGetAllModeLines(display_, screen_, &modeNum, &modes);
 
 	// save desktop-resolution before switching modes (make a copy of the XF86VidModeModeInfo)
 	originalMode_ = XF86VidModeModeInfo(*modes[0]);
-	BOOST_LOG_TRIVIAL(debug) << "look for mode with requested resolution.";
+	BOOST_LOG_TRIVIAL(debug) << "searching for mode with resolution " << width << " x " << height;
 	// look for mode with requested resolution
 	for (i = 0; i < modeNum; i++) {
 		BOOST_LOG_TRIVIAL(debug) << "Mode found: " << modes[i]->hdisplay << " x " << modes[i]->vdisplay;
-		if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
+		if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height)) {
 			bestMode = i;
+		}
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "look for mode with requested resolution.";
 	// error check
 	if (bestMode == -1) {
 		// todo: improve error handling...
-		BOOST_LOG_TRIVIAL(error) << "No mode found!";
+		BOOST_LOG_TRIVIAL(error) << "Mode with requested resolution not found!";
 		return -1;
+	} else {
+		BOOST_LOG_TRIVIAL(debug) << "Mode chosen: " << modes[bestMode]->hdisplay << " x " << modes[bestMode]->vdisplay;
 	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Requested depth is " << depth_;
 
 	// choose our window attributes
 	/* attributes for a single buffered visual in RGBA format with at least
@@ -104,13 +108,13 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 	if (vi == NULL) {
 		vi = glXChooseVisual(display_, screen_, attrListSgl);
 		doubleBuffered_ = False;
-		printf("singlebuffered rendering will be used, no doublebuffering available\n");
+		BOOST_LOG_TRIVIAL(debug) << "singlebuffered rendering will be used, no doublebuffering available.";
 	} else {
 		doubleBuffered_ = True;
-		printf("doublebuffered rendering available\n");
+		BOOST_LOG_TRIVIAL(debug) << "doublebuffered rendering available.";
 	}
 	glXQueryVersion(display_, &glxMajor, &glxMinor);
-	printf("GLX-Version %d.%d\n", glxMajor, glxMinor);
+	BOOST_LOG_TRIVIAL(debug) << "GLX-Version " << glxMajor << "." << glxMinor;
 
 	if (vi == NULL) {
 		BOOST_LOG_TRIVIAL(error) << "Visual display is not set (value is NULL)!";
@@ -132,7 +136,7 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 		XF86VidModeSetViewPort(display_, screen_, 0, 0);
 		dpyWidth = modes[bestMode]->hdisplay;
 		dpyHeight = modes[bestMode]->vdisplay;
-		printf("resolution %dx%d\n", dpyWidth, dpyHeight);
+		BOOST_LOG_TRIVIAL(debug) << "resolution " << dpyWidth << "x" << dpyHeight;
 		XFree(modes);
 
 		// set window attributes
@@ -165,10 +169,11 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 	// connect the glx-context to the window
 	glXMakeCurrent(display_, window_, context_);
 	glEnable(GL_DEPTH_TEST);
-	if (glXIsDirect(display_, context_))
-		printf("DRI enabled\n");
-	else
-		printf("no DRI available\n");
+	if (glXIsDirect(display_, context_)) {
+		BOOST_LOG_TRIVIAL(debug) << "DRI enabled.";
+	} else {
+		BOOST_LOG_TRIVIAL(debug) << "no DRI available.";
+	}
 
 	return 0;
 }
@@ -178,7 +183,7 @@ void LinuxGLWindow::destroy() {
 
 	if (context_) {
 		if (!glXMakeCurrent(display_, None, NULL)) {
-			printf("Could not release drawing context.\n");
+			BOOST_LOG_TRIVIAL(warning) << "Could not release drawing context!";
 		}
 
 		// destroy the context
