@@ -12,6 +12,7 @@
 #define LINUXGLWINDOW_H_
 
 #include "../engine/IceGLWindow.h"
+#include "../engine/AssetManager.h"
 
 /* printf */
 #include <stdio.h>
@@ -84,6 +85,8 @@ private:
 	XF86VidModeModeInfo originalMode_;
 
 	bool inWindowedState_;
+	
+	icee::engine::AssetManager asset_manager;
 };
 
 }

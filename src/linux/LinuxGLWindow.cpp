@@ -174,6 +174,10 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 	} else {
 		BOOST_LOG_TRIVIAL(debug) << "no DRI available.";
 	}
+	
+	BOOST_LOG_TRIVIAL(debug) << "Loading model...";
+	//icee::engine::AssetManager asset_manager = icee::engine::AssetManager();
+	asset_manager.loadAsset("../models/PlainsWolf/Model Formats/X/PlainsWolf.x");
 
 	return 0;
 }
@@ -212,6 +216,8 @@ sint32 LinuxGLWindow::initialize() {
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	
+	glEnable(GL_LIGHTING);
 
 	// we use resizeGL once to set up our initial perspective
 	resize(width_, height_);
@@ -362,6 +368,8 @@ void LinuxGLWindow::render() {
 	beginRender();
 
 	sMgr_->drawAll();
+	
+	asset_manager.drawAll();
 
 	endRender();
 }

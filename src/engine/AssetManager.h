@@ -26,7 +26,7 @@ public:
 	AssetManager();
 	virtual ~AssetManager();
 
-	int loadasset(const char* path);
+	int loadAsset(const char* path);
 	void recursive_render (const aiScene *sc, const aiNode* nd);
 	
 	void drawAll();
@@ -44,6 +44,9 @@ private:
 	
 	#define aisgl_min(x,y) (x<y?x:y)
 	#define aisgl_max(x,y) (y>x?y:x)
+	
+	// temporary method
+	void setLighting();
 	
 };
 

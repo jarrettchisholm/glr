@@ -23,8 +23,6 @@ AssetManager::AssetManager() {
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
 	aiAttachLogStream(&stream);
 	
-	//angle = 0.f;
-	
 }
 
 AssetManager::~AssetManager() {
@@ -39,7 +37,7 @@ AssetManager::~AssetManager() {
 	aiDetachAllLogStreams();
 }
 
-int AssetManager::loadasset(const char* path)
+int AssetManager::loadAsset(const char* path)
 {
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
@@ -55,7 +53,7 @@ int AssetManager::loadasset(const char* path)
 	return 1;
 }
 
-void AssetManager::recursive_render (const aiScene *sc, const aiNode* nd)
+void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd)
 {
 	unsigned int i;
 	unsigned int n = 0, t;
@@ -117,10 +115,10 @@ void AssetManager::drawAll()
 {
 	float tmp;
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
 
 	// rotate it around the y axis
 	//glRotatef(angle,0.f,1.f,0.f);
@@ -130,7 +128,7 @@ void AssetManager::drawAll()
 	tmp = aisgl_max(scene_max.y - scene_min.y,tmp);
 	tmp = aisgl_max(scene_max.z - scene_min.z,tmp);
 	tmp = 1.f / tmp;
-	glScalef(tmp, tmp, tmp);
+	//glScalef(tmp, tmp, tmp);
 
         // center the model
 	glTranslatef( -scene_center.x, -scene_center.y, -scene_center.z );
@@ -139,6 +137,9 @@ void AssetManager::drawAll()
         // fill it with scene contents
 	if(scene_list == 0) {
 	    scene_list = glGenLists(1);
+	    
+	    setLighting();
+	    
 	    glNewList(scene_list, GL_COMPILE);
             // now begin at the root node of the imported data and traverse
             // the scenegraph by multiplying subsequent local transforms
@@ -149,9 +150,22 @@ void AssetManager::drawAll()
 
 	glCallList(scene_list);
 
-	//glutSwapBuffers();
-
 	//do_motion();
+}
+
+// temporary method
+void AssetManager::setLighting() {
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+	glClearColor (0.0, 0.0, 0.0, 0.0);
+	glShadeModel (GL_SMOOTH);
+	
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	
+	glEnable(GL_LIGHT0);
 }
 
 
