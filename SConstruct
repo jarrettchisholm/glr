@@ -29,10 +29,11 @@ libraries = [
 ]
 library_paths = ['../lwinputsystem/build']
 
-env = Environment()
+env = Environment(CCFLAGS=[])
 
 # Set our g++ compiler flags
 env.Append( CPPFLAGS=['-I"../lwinputsystem/src/engine"'] )
 
 # Tell SCons the program to build
-env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
+#env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
+env.StaticLibrary('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
