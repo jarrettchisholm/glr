@@ -1,5 +1,7 @@
 # IceEngine SConstruct file
 
+import os
+
 # Tell SCons to create our build files in the 'build' directory
 VariantDir('build', 'src', duplicate=0)
 
@@ -32,7 +34,12 @@ library_paths = ['../lwinputsystem/build']
 env = Environment(CCFLAGS=[])
 
 # Set our g++ compiler flags
-env.Append( CPPFLAGS=['-I"../lwinputsystem/src/engine"'] )
+cpp_flags = ['-I"../lwinputsystem/src/engine"']
+
+if (os.name == "nt" or os.name == "win32"):
+	cpp_flags.append( '-I"C:\lib\Assimp\include"' )
+
+env.Append( CPPFLAGS = cpp_flags )
 
 # Tell SCons the program to build
 #env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)

@@ -33,8 +33,8 @@ public:
 	
 private:
 	// the global Assimp scene object
-	const aiScene* scene = 0;
-	uint32 scene_list = 0;
+	const aiScene* scene;
+	uint32 scene_list;
 	aiVector3D scene_min, scene_max, scene_center;
 	
 	aiLogStream stream;
