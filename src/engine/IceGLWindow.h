@@ -12,6 +12,10 @@
 #include "DefaultSceneNode.h"
 #include "DefaultSceneManager.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
 
