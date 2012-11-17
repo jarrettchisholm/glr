@@ -8,16 +8,19 @@
 #ifndef ICEGLWINDOW_H_
 #define ICEGLWINDOW_H_
 
-#include "IIceWindow.h"
-#include "DefaultSceneNode.h"
-#include "DefaultSceneManager.h"
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
+
+#include "IIceWindow.h"
+#include "DefaultSceneNode.h"
+#include "DefaultSceneManager.h"
+
+//#include "gui/IGUI.h"
+#include "gui/GUI.h"
 
 namespace icee {
 
@@ -27,6 +30,7 @@ using namespace compatibility;
 
 class IceGLWindow: public IIceWindow {
 private:
+	GUI* gui_;
 
 protected:
 	DefaultSceneManager* sMgr_;
@@ -51,6 +55,8 @@ public:
 	virtual uint32 getDepth();
 
 	virtual ISceneManager* getSceneManager();
+	
+	virtual IGUI* createHtmlGui();
 };
 
 }

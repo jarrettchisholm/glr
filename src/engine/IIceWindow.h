@@ -8,11 +8,13 @@
 #ifndef IICEWINDOW_H_
 #define IICEWINDOW_H_
 
+#include <string>
+
 #include "../common/compatibility/Types.h"
 
 #include "ISceneManager.h"
 
-#include <string>
+#include "gui/IGUI.h"
 
 namespace icee {
 
@@ -36,6 +38,8 @@ public:
 	virtual bool blah() = 0;
 
 	virtual ISceneManager* getSceneManager() = 0;
+	
+	virtual IGUI* createHtmlGui() = 0;
 
 protected:
 	sint32 x_, y_;

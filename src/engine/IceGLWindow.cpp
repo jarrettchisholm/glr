@@ -9,6 +9,8 @@
 
 #include "GL/glu.h"
 
+#include <boost/log/trivial.hpp>
+
 namespace icee {
 
 namespace engine {
@@ -35,7 +37,7 @@ void IceGLWindow::resize(uint32 width, uint32 height) {
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 200.0f);
+	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 2000.0f);
 	glMatrixMode(GL_MODELVIEW);
 
 	width_ = width;
@@ -59,6 +61,9 @@ sint32 IceGLWindow::handleEvents() {
 }
 
 void IceGLWindow::render() {
+	BOOST_LOG_TRIVIAL(debug) << "render in IceGLWindow.";
+	if (gui_)
+		gui_->render();
 }
 
 uint32 IceGLWindow::getWidth() {
@@ -75,6 +80,19 @@ uint32 IceGLWindow::getDepth() {
 
 ISceneManager* IceGLWindow::getSceneManager() {
 	return sMgr_;
+}
+
+IGUI* IceGLWindow::createHtmlGui() {
+	gui_ = new GUI();
+	
+	int result = gui_->initialize();
+	
+	if (result < 0) {
+		delete gui_;
+		return 0;		
+	}
+	
+	return gui_;
 }
 
 }

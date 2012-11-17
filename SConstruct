@@ -14,6 +14,7 @@ source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common
 source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
 
 source_files = source_files + Glob('build/engine/*.cpp', 'build/engine/*.h')
+source_files = source_files + Glob('build/engine/gui/*.cpp', 'build/engine/gui/*.h')
 source_files = source_files + Glob('build/linux/*.cpp', 'build/linux/*.h')
 source_files = source_files + Glob('build/osx/*.cpp', 'build/osx/*.h')
 source_files = source_files + Glob('build/windows/*.cpp', 'build/windows/*.h')
