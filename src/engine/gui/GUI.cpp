@@ -20,6 +20,8 @@
 #include "IGUIComponent.h"
 #include "HtmlGuiComponent.h"
 
+#include "../../common/utilities/ImageLoader.h"
+
 #define DEBUG_PAINT true
 
 namespace icee {
@@ -60,6 +62,19 @@ int GUI::initialize() {
     window->resize(width, height);
     std::string url = "http://yahoo.ca";
     window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
+    
+    glGenTextures(1, &textureid);
+    glBindTexture(GL_TEXTURE_2D, textureid);
+    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    
+    utilities::ImageLoader il;
+    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion.png");
+    BOOST_LOG_TRIVIAL(debug) << "GUI::initialize: image: " << image->width << "x" << image->height;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->bits);
+    //glTexImage2D( GL_TEXTURE_2D, 0, 3, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib), 0, GL_RGB, GL_UNSIGNED_BYTE, bits );
+    
+    delete image;
 	
 	return 0;
 }
@@ -69,8 +84,6 @@ void GUI::destroy() {
 }
 	
 void GUI::render() {
-	BOOST_LOG_TRIVIAL(debug) << "GUI render.";
-	
 	//glClear( GL_COLOR_BUFFER_BIT );
 
     //glColor3f(1.f, 1.f, 1.f);
@@ -85,15 +98,25 @@ void GUI::render() {
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
 	
-	// display
-	BOOST_LOG_TRIVIAL(debug) << "drawing rectangle.";
-	
+	// display	
 	glBegin(GL_QUADS);
-	    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f, -1.f, 0.f);
-	    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f,  1.f, 0.f);
-	    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f,  1.f, 0.f);
-	    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f, -1.f, 0.f);
+	    //glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
+	    //glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
+	    //glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
+	    //glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
     glEnd();
+    
+    glBindTexture(GL_TEXTURE_2D, textureid);
+	glBegin(GL_QUADS);
+	     //glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0);
+	     //glTexCoord2f(1.0, 0.0); glVertex3f(10.0, 0.0, 0.0);
+	     //glTexCoord2f(1.0, 1.0); glVertex3f(10.0, 10.0, 0.0);
+	     //glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 10.0, 0.0);
+	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
+	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
+	glEnd();
     
     /*
     glBegin(GL_QUADS);
@@ -109,7 +132,7 @@ void GUI::render() {
 	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glBindTexture(GL_TEXTURE_2D, web_texture);
 	
-	//Berkelium::update();	
+	Berkelium::update();	
 	
 	// release
 	//glBindTexture(GL_TEXTURE_2D, 0);
@@ -162,7 +185,7 @@ void GUI::onPaint(Berkelium::Window* wini,
         fclose(outfile);
 		*/
 		
-		
+		BOOST_LOG_TRIVIAL(debug) << "WTF?!";
 		bool updated = mapOnPaintToTexture(
 			wini, bitmap_in, bitmap_rect, num_copy_rects, copy_rects,
 			dx, dy, scroll_rect,
@@ -197,7 +220,7 @@ bool GUI::mapOnPaintToTexture(
     bool ignore_partial,
     char* scroll_buffer) {
 	
-	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture";
+	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width;
 
     glBindTexture(GL_TEXTURE_2D, dest_texture);
 

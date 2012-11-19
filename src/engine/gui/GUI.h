@@ -41,6 +41,8 @@ private:
     unsigned int web_texture;
     // Buffer used to store data for scrolling
     char* scroll_buffer;
+    
+    GLuint textureid;
 
 	bool mapOnPaintToTexture(
 		Berkelium::Window *wini,

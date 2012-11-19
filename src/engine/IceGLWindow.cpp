@@ -61,7 +61,6 @@ sint32 IceGLWindow::handleEvents() {
 }
 
 void IceGLWindow::render() {
-	BOOST_LOG_TRIVIAL(debug) << "render in IceGLWindow.";
 	if (gui_)
 		gui_->render();
 }
