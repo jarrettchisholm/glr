@@ -367,12 +367,12 @@ void LinuxGLWindow::endRender() {
 void LinuxGLWindow::render() {
 	beginRender();
 	
-	IceGLWindow::render();
-
 	sMgr_->drawAll();
 	
 	asset_manager.drawAll();
-
+	
+	IceGLWindow::render();
+	
 	endRender();
 }
 

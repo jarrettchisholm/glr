@@ -71,9 +71,9 @@ void GUI::destroy() {
 void GUI::render() {
 	BOOST_LOG_TRIVIAL(debug) << "GUI render.";
 	
-	glClear( GL_COLOR_BUFFER_BIT );
+	//glClear( GL_COLOR_BUFFER_BIT );
 
-    glColor3f(1.f, 1.f, 1.f);
+    //glColor3f(1.f, 1.f, 1.f);
 	
 	// Black out the page
 	//unsigned char black = 0;
@@ -86,19 +86,30 @@ void GUI::render() {
 	glBindTexture(GL_TEXTURE_2D, web_texture);
 	
 	// display
+	BOOST_LOG_TRIVIAL(debug) << "drawing rectangle.";
+	
 	glBegin(GL_QUADS);
-    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f, -1.f, 0.f);
-    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f,  1.f, 0.f);
-    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f,  1.f, 0.f);
-    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f, -1.f, 0.f);
+	    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f, -1.f, 0.f);
+	    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f,  1.f, 0.f);
+	    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f,  1.f, 0.f);
+	    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f, -1.f, 0.f);
     glEnd();
     
+    /*
+    glBegin(GL_QUADS);
+	    glVertex3f(-1.f, -1.f, 0.f);
+	    glVertex3f(-1.f,  1.f, 0.f);
+	    glVertex3f( 1.f,  1.f, 0.f);
+	    glVertex3f( 1.f, -1.f, 0.f);
+    glEnd();
+    */
+    
     // bind
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glBindTexture(GL_TEXTURE_2D, web_texture);
+	//glEnable (GL_BLEND);
+	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBindTexture(GL_TEXTURE_2D, web_texture);
 	
-	Berkelium::update();	
+	//Berkelium::update();	
 	
 	// release
 	//glBindTexture(GL_TEXTURE_2D, 0);
