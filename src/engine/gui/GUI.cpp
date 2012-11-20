@@ -60,6 +60,7 @@ int GUI::initialize() {
     //MyDelegate* delegate = new MyDelegate();
     window->setDelegate(this);
     window->resize(width, height);
+    window->setTransparent(true);
     std::string url = "http://yahoo.ca";
     window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
@@ -142,6 +143,17 @@ void GUI::testDrawTest1() {
 }
 
 void GUI::testDrawTestBerkelium() {
+	glDisable(GL_LIGHTING);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	
+	//Glfloat global_ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_TEXTURE_2D );
@@ -149,20 +161,26 @@ void GUI::testDrawTestBerkelium() {
 	
 	// display	
 	glBegin(GL_QUADS);
-	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f, -10.f, 0.f);
-	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f,  10.f, 0.f);
-	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f,  10.f, 0.f);
-	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f, -10.f, 0.f);
+	    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f, -1.f, 0.f);
+	    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f,  1.f, 0.f);
+	    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f,  1.f, 0.f);
+	    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f, -1.f, 0.f);
     glEnd();
     
     // wait a bit before calling Berkelium::update() again
-    if (testint > 20) {
+    if (testint > 10) {
 		BOOST_LOG_TRIVIAL(debug) << "calling update";
 		Berkelium::update();
 		testint = -1;
 	}
 	
 	testint++;
+	
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
 }
 
 void GUI::onPaint(Berkelium::Window* wini,
@@ -258,6 +276,24 @@ bool GUI::mapOnPaintToTexture(
     glBindTexture(GL_TEXTURE_2D, dest_texture);
 
     const int kBytesPerPixel = 4;
+    
+    
+    // TESTING BEGIN
+    //int length = strlen((char*)bitmap_in);
+    int theMax = bitmap_rect.right() * bitmap_rect.bottom();
+    int length = theMax*kBytesPerPixel;
+    unsigned char* bitmap_in_copy = new unsigned char[length]();
+    //strncpy((char*)bitmap_in_copy, (char*)bitmap_in, length);
+    
+    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: theMax: " << theMax << " (" << length << ")";
+    for(int j= 0; j < theMax; j++) {
+		bitmap_in_copy[j*4+0] = bitmap_in[j*4+0];
+		bitmap_in_copy[j*4+1] = bitmap_in[j*4+1];
+		bitmap_in_copy[j*4+2] = bitmap_in[j*4+2];
+		bitmap_in_copy[j*4+3] = 0;
+		//std::cout<<j<<": "<<bitmap_in[j*4+0]<<"**"<<bitmap_in[j*4+1]<<"**"<<bitmap_in[j*4+2]<<"**"<<bitmap_in[j*4+3]<<std::endl;
+	}
+	// TESTING END
 
     // If we've reloaded the page and need a full update, ignore updates
     // until a full one comes in.  This handles out of date updates due to
@@ -270,9 +306,10 @@ bool GUI::mapOnPaintToTexture(
             return false;
         }
 
-		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0";
+		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0a";
         glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in);
         ignore_partial = false;
+        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0b";
         return true;
     }
     
