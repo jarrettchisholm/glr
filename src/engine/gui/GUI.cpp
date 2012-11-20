@@ -290,7 +290,7 @@ bool GUI::mapOnPaintToTexture(
 		bitmap_in_copy[j*4+0] = bitmap_in[j*4+0];
 		bitmap_in_copy[j*4+1] = bitmap_in[j*4+1];
 		bitmap_in_copy[j*4+2] = bitmap_in[j*4+2];
-		bitmap_in_copy[j*4+3] = 0;
+		bitmap_in_copy[j*4+3] = bitmap_in[j*4+3];//0;
 		//std::cout<<j<<": "<<bitmap_in[j*4+0]<<"**"<<bitmap_in[j*4+1]<<"**"<<bitmap_in[j*4+2]<<"**"<<bitmap_in[j*4+3]<<std::endl;
 	}
 	// TESTING END
@@ -307,7 +307,7 @@ bool GUI::mapOnPaintToTexture(
         }
 
 		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0a";
-        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in);
+        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in_copy);
         ignore_partial = false;
         BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0b";
         return true;
@@ -414,7 +414,7 @@ bool GUI::mapOnPaintToTexture(
         for(int jj = 0; jj < hig; jj++) {
             memcpy(
                 scroll_buffer + jj*wid*kBytesPerPixel,
-                bitmap_in + (left + (jj+top)*bitmap_rect.width())*kBytesPerPixel,
+                bitmap_in_copy + (left + (jj+top)*bitmap_rect.width())*kBytesPerPixel,
                 wid*kBytesPerPixel
                 );
         }
