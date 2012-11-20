@@ -60,6 +60,12 @@ private:
         const unsigned char *bitmap_in, const Berkelium::Rect &bitmap_rect,
         size_t num_copy_rects, const Berkelium::Rect* copy_rects,
         int dx, int dy, const Berkelium::Rect& scroll_rect);
+        
+    void testLoadTexture();
+    void testDrawTest1();
+    void testDrawTestBerkelium();
+    int testint;
+    bool needs_full_refresh;
 };
 
 }

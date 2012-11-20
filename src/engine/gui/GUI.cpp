@@ -42,8 +42,6 @@ int GUI::initialize() {
 		return -1;
 	}
 	
-	scroll_buffer = new char[width*(height+1)*4];
-	
 	// Create texture to hold rendered view
 	glGenTextures(1, &web_texture);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
@@ -57,25 +55,20 @@ int GUI::initialize() {
     width = 600;
     height = 600;
     
+    scroll_buffer = new char[width*(height+1)*4];
+    
     //MyDelegate* delegate = new MyDelegate();
     window->setDelegate(this);
     window->resize(width, height);
     std::string url = "http://yahoo.ca";
     window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
-    glGenTextures(1, &textureid);
-    glBindTexture(GL_TEXTURE_2D, textureid);
-    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     
-    utilities::ImageLoader il;
-    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion.png");
-    BOOST_LOG_TRIVIAL(debug) << "GUI::initialize: image: " << image->width << "x" << image->height;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->bits);
-    //glTexImage2D( GL_TEXTURE_2D, 0, 3, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib), 0, GL_RGB, GL_UNSIGNED_BYTE, bits );
+    // testing only!
+    testLoadTexture();
     
-    delete image;
-	
+    needs_full_refresh = true;
+    
 	return 0;
 }
 
@@ -94,19 +87,48 @@ void GUI::render() {
 	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &black);
 	
 	// bind
-	glEnable (GL_BLEND);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glBindTexture(GL_TEXTURE_2D, web_texture);
 	
-	// display	
-	glBegin(GL_QUADS);
-	    //glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
-	    //glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
-	    //glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
-	    //glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
-    glEnd();
     
-    glBindTexture(GL_TEXTURE_2D, textureid);
+    // bind
+	//glEnable (GL_BLEND);
+	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBindTexture(GL_TEXTURE_2D, web_texture);
+	
+	
+	
+	// release
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	
+	//testDrawTest1();
+	testDrawTestBerkelium();
+}
+
+void GUI::testLoadTexture() {
+	glBindTexture(GL_TEXTURE_2D, textureid);
+    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    
+    utilities::ImageLoader il;
+    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion.jpg");
+    //utilities::Image* image = il.loadImageData("/tmp/chromium_render_1353369478_10.ppm");
+    BOOST_LOG_TRIVIAL(debug) << "GUI::initialize: image: " << image->width << "x" << image->height;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+ 
+	GLenum huboError = glGetError();
+	if(huboError){
+ 
+		BOOST_LOG_TRIVIAL(debug) << "GUI::initialize: error loading texture in opengl";
+	}
+    
+    delete image;
+}
+
+void GUI::testDrawTest1() {
+	glEnable( GL_TEXTURE_2D );
+	
+	glBindTexture(GL_TEXTURE_2D, textureid);
 	glBegin(GL_QUADS);
 	     //glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0);
 	     //glTexCoord2f(1.0, 0.0); glVertex3f(10.0, 0.0, 0.0);
@@ -117,25 +139,30 @@ void GUI::render() {
 	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
 	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
 	glEnd();
-    
-    /*
-    glBegin(GL_QUADS);
-	    glVertex3f(-1.f, -1.f, 0.f);
-	    glVertex3f(-1.f,  1.f, 0.f);
-	    glVertex3f( 1.f,  1.f, 0.f);
-	    glVertex3f( 1.f, -1.f, 0.f);
+}
+
+void GUI::testDrawTestBerkelium() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable( GL_TEXTURE_2D );
+	glBindTexture(GL_TEXTURE_2D, web_texture);
+	
+	// display	
+	glBegin(GL_QUADS);
+	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f, -10.f, 0.f);
+	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f, -10.f, 0.f);
     glEnd();
-    */
     
-    // bind
-	//glEnable (GL_BLEND);
-	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBindTexture(GL_TEXTURE_2D, web_texture);
+    // wait a bit before calling Berkelium::update() again
+    if (testint > 20) {
+		BOOST_LOG_TRIVIAL(debug) << "calling update";
+		Berkelium::update();
+		testint = -1;
+	}
 	
-	Berkelium::update();	
-	
-	// release
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	testint++;
 }
 
 void GUI::onPaint(Berkelium::Window* wini,
@@ -185,13 +212,19 @@ void GUI::onPaint(Berkelium::Window* wini,
         fclose(outfile);
 		*/
 		
-		BOOST_LOG_TRIVIAL(debug) << "WTF?!";
+		
 		bool updated = mapOnPaintToTexture(
 			wini, bitmap_in, bitmap_rect, num_copy_rects, copy_rects,
 			dx, dy, scroll_rect,
-			web_texture, width, height, false, scroll_buffer
+			web_texture, width, height, needs_full_refresh, scroll_buffer
 		);
-		 
+		
+		
+		if (updated) {
+            needs_full_refresh = false;
+            //glutPostRedisplay();
+        }
+        
 }
 
 /** Handles an onPaint call by mapping the results into an OpenGL texture. The
@@ -220,7 +253,7 @@ bool GUI::mapOnPaintToTexture(
     bool ignore_partial,
     char* scroll_buffer) {
 	
-	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width;
+	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
 
     glBindTexture(GL_TEXTURE_2D, dest_texture);
 
@@ -237,11 +270,13 @@ bool GUI::mapOnPaintToTexture(
             return false;
         }
 
-        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0,
-            GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in);
+		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0";
+        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in);
         ignore_partial = false;
         return true;
     }
+    
+    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 1";
 
 
     // Now, we first handle scrolling. We need to do this first since it
@@ -317,7 +352,7 @@ bool GUI::mapOnPaintToTexture(
         }
     }
 
-	
+	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 2";
     if (DEBUG_PAINT) {
       std::cout << (void*)wini << " Bitmap rect: w="
                 << bitmap_rect.width()<<", h="<<bitmap_rect.height()
@@ -326,17 +361,19 @@ bool GUI::mapOnPaintToTexture(
                 <<std::endl;
     }
     
+    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 3";
     for (size_t i = 0; i < num_copy_rects; i++) {
         int wid = copy_rects[i].width();
         int hig = copy_rects[i].height();
         int top = copy_rects[i].top() - bitmap_rect.top();
         int left = copy_rects[i].left() - bitmap_rect.left();
+        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 4";
         
         if (DEBUG_PAINT) {
             std::cout << (void*)wini << " Copy rect: w=" << wid << ", h=" << hig << ", ("
                       << top << "," << left << ")" << std::endl;
         }
-        
+        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 5";
         for(int jj = 0; jj < hig; jj++) {
             memcpy(
                 scroll_buffer + jj*wid*kBytesPerPixel,
@@ -344,7 +381,7 @@ bool GUI::mapOnPaintToTexture(
                 wid*kBytesPerPixel
                 );
         }
-
+		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 6";
         // Finally, we perform the main update, just copying the rect that is
         // marked as dirty but not from scrolled data.
         glTexSubImage2D(GL_TEXTURE_2D, 0,
@@ -352,9 +389,12 @@ bool GUI::mapOnPaintToTexture(
                         wid, hig,
                         GL_BGRA, GL_UNSIGNED_BYTE, scroll_buffer
             );
+        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 7";
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    
+    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 8";
 
     return true;
 }
