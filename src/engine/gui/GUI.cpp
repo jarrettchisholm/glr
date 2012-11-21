@@ -61,7 +61,7 @@ int GUI::initialize() {
     window->setDelegate(this);
     window->resize(width, height);
     window->setTransparent(true);
-    std::string url = "file:///home/jarrett/projects/berkelium/test.html";
+    std::string url = "file:///home/jarrett/projects/icebreak/dark_horizon/data/test.html";
     window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
     
