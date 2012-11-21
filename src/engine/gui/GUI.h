@@ -66,6 +66,7 @@ private:
     void testDrawTestBerkelium();
     int testint;
     bool needs_full_refresh;
+    bool webTextureReady_;
 };
 
 }

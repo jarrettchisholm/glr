@@ -52,8 +52,8 @@ int GUI::initialize() {
     Berkelium::Window* window = Berkelium::Window::create(context);
     delete context;
     
-    width = 600;
-    height = 600;
+    width = 1024;
+    height = 768;
     
     scroll_buffer = new char[width*(height+1)*4];
     
@@ -61,13 +61,15 @@ int GUI::initialize() {
     window->setDelegate(this);
     window->resize(width, height);
     window->setTransparent(true);
-    std::string url = "http://yahoo.ca";
+    std::string url = "file:///home/jarrett/projects/berkelium/test.html";
     window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
     
     // testing only!
-    testLoadTexture();
+    //testLoadTexture();
     
+    testint = 31;
+    webTextureReady_ = false;
     needs_full_refresh = true;
     
 	return 0;
@@ -78,28 +80,6 @@ void GUI::destroy() {
 }
 	
 void GUI::render() {
-	//glClear( GL_COLOR_BUFFER_BIT );
-
-    //glColor3f(1.f, 1.f, 1.f);
-	
-	// Black out the page
-	//unsigned char black = 0;
-	//glBindTexture(GL_TEXTURE_2D, web_texture);
-	//glTexImage2D(GL_TEXTURE_2D, 0, 3, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &black);
-	
-	// bind
-	
-    
-    // bind
-	//glEnable (GL_BLEND);
-	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBindTexture(GL_TEXTURE_2D, web_texture);
-	
-	
-	
-	// release
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	
 	//testDrawTest1();
 	testDrawTestBerkelium();
 }
@@ -110,8 +90,7 @@ void GUI::testLoadTexture() {
 	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     
     utilities::ImageLoader il;
-    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion.jpg");
-    //utilities::Image* image = il.loadImageData("/tmp/chromium_render_1353369478_10.ppm");
+    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion2.png");
     BOOST_LOG_TRIVIAL(debug) << "GUI::initialize: image: " << image->width << "x" << image->height;
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
     
@@ -126,111 +105,73 @@ void GUI::testLoadTexture() {
     delete image;
 }
 
-void GUI::testDrawTest1() {
+void GUI::testDrawTest1() {	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_TEXTURE_2D );
 	
 	glBindTexture(GL_TEXTURE_2D, textureid);
 	glBegin(GL_QUADS);
-	     //glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0);
-	     //glTexCoord2f(1.0, 0.0); glVertex3f(10.0, 0.0, 0.0);
-	     //glTexCoord2f(1.0, 1.0); glVertex3f(10.0, 10.0, 0.0);
-	     //glTexCoord2f(0.0, 1.0); glVertex3f(0.0, 10.0, 0.0);
 	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
 	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
 	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
 	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
 	glEnd();
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 }
 
 void GUI::testDrawTestBerkelium() {
-	glDisable(GL_LIGHTING);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	
-	//Glfloat global_ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable( GL_TEXTURE_2D );
-	glBindTexture(GL_TEXTURE_2D, web_texture);
-	
-	// display	
-	glBegin(GL_QUADS);
-	    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f, -1.f, 0.f);
-	    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f,  1.f, 0.f);
-	    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f,  1.f, 0.f);
-	    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f, -1.f, 0.f);
-    glEnd();
+	if (webTextureReady_) {
+		glDisable(GL_LIGHTING);
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glLoadIdentity();
+		
+		glColor3f(1.0, 1.0, 1.0);
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable( GL_TEXTURE_2D );
+		glBindTexture(GL_TEXTURE_2D, web_texture);
+		
+		// display	
+		glBegin(GL_QUADS);
+		    glTexCoord2f(0.f, 1.f); glVertex3f(-1.f, -1.f, 0.f);
+		    glTexCoord2f(0.f, 0.f); glVertex3f(-1.f,  1.f, 0.f);
+		    glTexCoord2f(1.f, 0.f); glVertex3f( 1.f,  1.f, 0.f);
+		    glTexCoord2f(1.f, 1.f); glVertex3f( 1.f, -1.f, 0.f);
+	    glEnd();
+	    
+	    glBindTexture(GL_TEXTURE_2D, 0);
+	    glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+		
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glPopMatrix();
+		glEnable(GL_LIGHTING);
+    }
     
     // wait a bit before calling Berkelium::update() again
-    if (testint > 10) {
+    if (testint > 30) {
 		BOOST_LOG_TRIVIAL(debug) << "calling update";
 		Berkelium::update();
 		testint = -1;
 	}
 	
 	testint++;
-	
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	glEnable(GL_LIGHTING);
 }
 
 void GUI::onPaint(Berkelium::Window* wini,
 	const unsigned char *bitmap_in, const Berkelium::Rect &bitmap_rect,
 	size_t num_copy_rects, const Berkelium::Rect* copy_rects,
 	int dx, int dy, const Berkelium::Rect& scroll_rect) {
-		
-		/*
-		std::string mURL = "http://google.ca";
-		std::cout << "*** onPaint "<<mURL<<std::endl;
-        static int call_count = 0;
-        FILE *outfile;
-        {
-            std::ostringstream os;
-			os <<
-#ifdef _WIN32
-				getenv("TEMP") << "\\"
-#else
-				"/tmp/"
-#endif
-				<< "chromium_render_" << time(NULL) << "_" << (call_count++) << ".ppm";
-            std::string str (os.str());
-            outfile = fopen(str.c_str(), "wb");
-			if(outfile == NULL) {
-				std::cout << "*** cant open file "<<str<<std::endl;
-				return;
-			}
-        }
-        const int width = bitmap_rect.width();
-        const int height = bitmap_rect.height();
-
-        fprintf(outfile, "P6 %d %d 255\n", width, height);
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                unsigned char r,g,b,a;
-		b = *(bitmap_in++);
-		g = *(bitmap_in++);
-		r = *(bitmap_in++);
-		a = *(bitmap_in++);
-                fputc(r, outfile);  // Red
-                //fputc(255-a, outfile);  // Alpha
-                fputc(g, outfile);  // Green
-                fputc(b, outfile);  // Blue
-                //(pixel >> 24) & 0xff;  // Alpha
-            }
-        }
-        fclose(outfile);
-		*/
-		
-		
 		bool updated = mapOnPaintToTexture(
 			wini, bitmap_in, bitmap_rect, num_copy_rects, copy_rects,
 			dx, dy, scroll_rect,
@@ -240,7 +181,7 @@ void GUI::onPaint(Berkelium::Window* wini,
 		
 		if (updated) {
             needs_full_refresh = false;
-            //glutPostRedisplay();
+            webTextureReady_ = true;
         }
         
 }
@@ -276,24 +217,6 @@ bool GUI::mapOnPaintToTexture(
     glBindTexture(GL_TEXTURE_2D, dest_texture);
 
     const int kBytesPerPixel = 4;
-    
-    
-    // TESTING BEGIN
-    //int length = strlen((char*)bitmap_in);
-    int theMax = bitmap_rect.right() * bitmap_rect.bottom();
-    int length = theMax*kBytesPerPixel;
-    unsigned char* bitmap_in_copy = new unsigned char[length]();
-    //strncpy((char*)bitmap_in_copy, (char*)bitmap_in, length);
-    
-    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: theMax: " << theMax << " (" << length << ")";
-    for(int j= 0; j < theMax; j++) {
-		bitmap_in_copy[j*4+0] = bitmap_in[j*4+0];
-		bitmap_in_copy[j*4+1] = bitmap_in[j*4+1];
-		bitmap_in_copy[j*4+2] = bitmap_in[j*4+2];
-		bitmap_in_copy[j*4+3] = bitmap_in[j*4+3];//0;
-		//std::cout<<j<<": "<<bitmap_in[j*4+0]<<"**"<<bitmap_in[j*4+1]<<"**"<<bitmap_in[j*4+2]<<"**"<<bitmap_in[j*4+3]<<std::endl;
-	}
-	// TESTING END
 
     // If we've reloaded the page and need a full update, ignore updates
     // until a full one comes in.  This handles out of date updates due to
@@ -306,14 +229,10 @@ bool GUI::mapOnPaintToTexture(
             return false;
         }
 
-		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0a";
-        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in_copy);
+        glTexImage2D(GL_TEXTURE_2D, 0, kBytesPerPixel, dest_texture_width, dest_texture_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, bitmap_in);
         ignore_partial = false;
-        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 0b";
         return true;
     }
-    
-    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 1";
 
 
     // Now, we first handle scrolling. We need to do this first since it
@@ -414,7 +333,7 @@ bool GUI::mapOnPaintToTexture(
         for(int jj = 0; jj < hig; jj++) {
             memcpy(
                 scroll_buffer + jj*wid*kBytesPerPixel,
-                bitmap_in_copy + (left + (jj+top)*bitmap_rect.width())*kBytesPerPixel,
+                bitmap_in + (left + (jj+top)*bitmap_rect.width())*kBytesPerPixel,
                 wid*kBytesPerPixel
                 );
         }
