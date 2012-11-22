@@ -26,7 +26,7 @@ int HtmlGuiComponent::initialize() {
 }
 
 void HtmlGuiComponent::destroy() {
-	
+	this->setVisible(false);
 }
 
 int HtmlGuiComponent::setContents(std::string contents) {
