@@ -56,7 +56,7 @@ public:
 
 	virtual ISceneManager* getSceneManager();
 	
-	virtual IGUI* createHtmlGui();
+	virtual IGUI* getHtmlGui();
 };
 
 }

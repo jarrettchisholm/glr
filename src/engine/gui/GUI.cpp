@@ -49,7 +49,7 @@ int GUI::initialize() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	
 	Berkelium::Context* context = Berkelium::Context::create();
-    Berkelium::Window* window = Berkelium::Window::create(context);
+    window_ = Berkelium::Window::create(context);
     delete context;
     
     width = 1024;
@@ -58,15 +58,42 @@ int GUI::initialize() {
     scroll_buffer = new char[width*(height+1)*4];
     
     //MyDelegate* delegate = new MyDelegate();
-    window->setDelegate(this);
-    window->resize(width, height);
-    window->setTransparent(true);
+    window_->setDelegate(this);
+    window_->resize(width, height);
+    window_->setTransparent(true);
     std::string url = "file:///home/jarrett/projects/icebreak/dark_horizon/data/test.html";
-    window->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
+    window_->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
     
     // testing only!
     //testLoadTexture();
+    
+    // TESTING CALLBACKS START
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutCallback"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), false));
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutCallbackSync"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), true));
+	window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest"),
+        Berkelium::Script::Variant::emptyObject());
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest.someArray"),
+        Berkelium::Script::Variant::emptyArray());
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest.someArray[0]"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), false));
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest.someArray[1]"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), true));
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest.nullValue"),
+        Berkelium::Script::Variant());
+    window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"glutObjectTest.stringValue"),
+        Berkelium::Script::Variant("Hello, World!"));
+	// TESTING CALLBACKS END
     
     testint = 31;
     webTextureReady_ = false;
@@ -76,7 +103,12 @@ int GUI::initialize() {
 }
 
 void GUI::destroy() {
-	 Berkelium::destroy();
+	window_ = 0;
+	Berkelium::destroy();
+}
+
+void GUI::update() {
+	window_->executeJavascript( Berkelium::WideString::point_to(L"update();") );
 }
 	
 void GUI::render() {
@@ -166,6 +198,37 @@ void GUI::testDrawTestBerkelium() {
 	}
 	
 	testint++;
+}
+
+void GUI::onCrashed(Berkelium::Window *win) {
+	std::cout << "*** onCrashed " << std::endl;
+}
+
+void GUI::onUnresponsive(Berkelium::Window *win) {
+	std::cout << "*** onUnresponsive " << std::endl;
+}
+
+void GUI::onScriptAlert(Berkelium::Window *win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool &success, Berkelium::WideString &value) {
+	std::wcout << L"*** onScriptAlert " << message << std::endl;
+}
+
+void GUI::onJavascriptCallback(Berkelium::Window *win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant *args, size_t numArgs) {
+	std::cout << "*** onJavascriptCallback at URL " << url << ", "
+			  << (replyMsg?"synchronous":"async") << std::endl;
+	std::wcout << L"    Function name: " << funcName << std::endl;
+	for (size_t i = 0; i < numArgs; i++) {
+		Berkelium::WideString jsonStr = toJSON(args[i]);
+		std::wcout << L"    Argument " << i << ": ";
+		if (args[i].type() == Berkelium::Script::Variant::JSSTRING) {
+			std::wcout << L"(string) " << args[i].toString() << std::endl;
+		} else {
+			std::wcout << jsonStr << std::endl;
+		}
+		Berkelium::Script::toJSON_free(jsonStr);
+	}
+	if (replyMsg) {
+		win->synchronousScriptReturn(replyMsg, numArgs ? args[0] : Berkelium::Script::Variant());
+	}
 }
 
 void GUI::onPaint(Berkelium::Window* wini,
@@ -360,7 +423,7 @@ bool GUI::mapOnPaintToTexture(
 /**
  * TESTING - Need to actually implement this properly (i.e. own the pointer, etc)
  */ 
-IGUIComponent* GUI::load(std::string filename) {
+IGUIComponent* GUI::loadFromFile(std::string filename) {
 	HtmlGuiComponent* comp = new HtmlGuiComponent();
 	comp->setContents("<html><body>himom</body></html>");
 	
@@ -371,6 +434,22 @@ IGUIComponent* GUI::load(std::string filename) {
 	}
 	
 	return comp;
+}
+
+IGUIComponent* GUI::loadFromData(std::string data) {
+	HtmlGuiComponent* comp = new HtmlGuiComponent();
+	comp->setContents( data );
+	
+	if (comp->initialize() < 0) {
+		comp->destroy();
+		delete comp;
+		return 0;
+	}
+	
+	return comp;
+}
+
+int GUI::release(IGUIComponent*) {
 	
 }
 

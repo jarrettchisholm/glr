@@ -16,6 +16,7 @@
 #include <berkelium/Window.hpp>
 #include <berkelium/Rect.hpp>
 #include <berkelium/WindowDelegate.hpp>
+#include "berkelium/ScriptUtil.hpp"
 
 #include "IGUI.h"
 
@@ -31,8 +32,11 @@ public:
 	virtual int initialize();
 	virtual void destroy();
 	
+	virtual void update();
 	virtual void render();
-	virtual IGUIComponent* load(std::string filename);
+	virtual IGUIComponent* loadFromFile(std::string filename);
+	virtual IGUIComponent* loadFromData(std::string data);
+	virtual int release(IGUIComponent*);
 	
 private:
 	// Width and height of our window.
@@ -43,6 +47,8 @@ private:
     char* scroll_buffer;
     
     GLuint textureid;
+    
+    Berkelium::Window* window_;
 
 	bool mapOnPaintToTexture(
 		Berkelium::Window *wini,
@@ -60,6 +66,11 @@ private:
         const unsigned char *bitmap_in, const Berkelium::Rect &bitmap_rect,
         size_t num_copy_rects, const Berkelium::Rect* copy_rects,
         int dx, int dy, const Berkelium::Rect& scroll_rect);
+	
+	virtual void onCrashed(Berkelium::Window *win);
+    virtual void onUnresponsive(Berkelium::Window *win);
+	virtual void onScriptAlert(Berkelium::Window *win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool &success, Berkelium::WideString &value);
+	virtual void onJavascriptCallback(Berkelium::Window *win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant *args, size_t numArgs);
         
     void testLoadTexture();
     void testDrawTest1();

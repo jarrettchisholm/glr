@@ -39,7 +39,7 @@ public:
 
 	virtual ISceneManager* getSceneManager() = 0;
 	
-	virtual IGUI* createHtmlGui() = 0;
+	virtual IGUI* getHtmlGui() = 0;
 
 protected:
 	sint32 x_, y_;
