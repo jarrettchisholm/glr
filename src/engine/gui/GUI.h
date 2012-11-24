@@ -23,26 +23,35 @@
 namespace icee {
 
 namespace engine {
+	
+using namespace compatibility;
 
 class GUI : public IGUI,  public Berkelium::WindowDelegate {
 public:
 	GUI();
 	virtual ~GUI();
 	
-	virtual int initialize();
+	virtual sint32 initialize();
 	virtual void destroy();
+	
+	virtual void mouseMoved(sint32 xPos, sint32 yPos);
+	virtual void mouseButton(uint32 buttonID, bool down, sint32 clickCount=1);
+	virtual void mouseWheel(sint32 xScroll, sint32 yScroll);
+	
+	virtual void textEvent(const wchar_t *evt, size_t evtLength);
+	virtual void keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode);
 	
 	virtual void update();
 	virtual void render();
 	virtual IGUIComponent* loadFromFile(std::string filename);
 	virtual IGUIComponent* loadFromData(std::string data);
-	virtual int release(IGUIComponent*);
+	virtual sint32 release(IGUIComponent*);
 	
 private:
 	// Width and height of our window.
-    unsigned int width, height;
+    uint32 width, height;
 	// Storage for a texture
-    unsigned int web_texture;
+    uint32 web_texture;
     // Buffer used to store data for scrolling
     char* scroll_buffer;
     
@@ -75,7 +84,7 @@ private:
     void testLoadTexture();
     void testDrawTest1();
     void testDrawTestBerkelium();
-    int testint;
+    sint32 testint;
     bool needs_full_refresh;
     bool webTextureReady_;
 };

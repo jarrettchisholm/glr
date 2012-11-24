@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <cstring>
 
 #include <berkelium/Berkelium.hpp>
 #include <berkelium/Context.hpp>
@@ -61,7 +62,7 @@ int GUI::initialize() {
     window_->setDelegate(this);
     window_->resize(width, height);
     window_->setTransparent(true);
-    std::string url = "file:///home/jarrett/projects/icebreak/dark_horizon/data/test.html";
+    std::string url = "file:///home/jarrett/projects/chisholmsoft/dark_horizon/data/test.html";
     window_->navigateTo(Berkelium::URLString::point_to(url.data(), url.length()));
     
     
@@ -105,6 +106,56 @@ int GUI::initialize() {
 void GUI::destroy() {
 	window_ = 0;
 	Berkelium::destroy();
+}
+
+void GUI::mouseMoved(sint32 xPos, sint32 yPos) {
+	
+}
+
+void GUI::mouseButton(uint32 buttonID, bool down, sint32 clickCount) {
+	
+}
+
+void GUI::mouseWheel(sint32 xScroll, sint32 yScroll) {
+	
+}
+	
+void GUI::textEvent(const wchar_t *evt, size_t evtLength) {
+	std::cout << "TEXT EVENT: " << evt << std::endl;
+	if ( wcsncmp(evt, L"`", evtLength) == 0 || wcsncmp(evt, L"~", evtLength) == 0 ) {
+		/*
+		 *	if( $('#console').hasClass('hidden') ) {
+		 *		$('#console').removeClass('hidden');
+		 *	} else {
+		 *		$('#console').addClass('hidden');
+		 *	} 
+		 */ 
+		window_->executeJavascript( Berkelium::WideString::point_to(
+			L"if( $('#console').hasClass('hidden') ) {"
+			"	$('#console').removeClass('hidden');"
+			"	$('#console').addClass('visible');"
+			"	$('#console').click();"
+			"} else {"
+			"	$('#console').addClass('hidden');"
+			"	$('#console').removeClass('visible');"
+			"}"
+			) );
+	} else {
+		std::cout << "HERE 1 " << (char*)evt << std::endl;
+		window_->focus();
+		wchar_t outchars[2];
+        outchars[0] = evt[0];
+        outchars[1] = 0;
+        std::cout << "HERE 2 " << outchars[0] << std::endl;
+		window_->textEvent(outchars, 1);
+	}
+}
+
+void GUI::keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode) {
+	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
+	window_->focus();
+	window_->keyEvent(pressed, mods, vk_code, scancode);
+	
 }
 
 void GUI::update() {
@@ -191,7 +242,7 @@ void GUI::testDrawTestBerkelium() {
     }
     
     // wait a bit before calling Berkelium::update() again
-    if (testint > 30) {
+    if (testint > 10) {
 		BOOST_LOG_TRIVIAL(debug) << "calling update";
 		Berkelium::update();
 		testint = -1;
