@@ -153,8 +153,27 @@ void GUI::textEvent(const wchar_t *evt, size_t evtLength) {
 
 void GUI::keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode) {
 	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
-	window_->focus();
-	window_->keyEvent(pressed, mods, vk_code, scancode);
+	
+	if ( vk_code == '`' || vk_code == '~' ) {
+		window_->executeJavascript( Berkelium::WideString::point_to(
+			L"if( $('#console').hasClass('hidden') ) {"
+			"	$('#console').removeClass('hidden');"
+			"	$('#console').addClass('visible');"
+			"	$('#console').click();"
+			"} else {"
+			"	$('#console').addClass('hidden');"
+			"	$('#console').removeClass('visible');"
+			"}"
+			) );
+	} else {	
+		//window_->focus();
+		wchar_t outchars[2];
+        outchars[0] = vk_code;
+        outchars[1] = 0;
+        std::cout << "HERE 2 " << outchars[0] << std::endl;
+		window_->textEvent(outchars, 1);
+		//window_->keyEvent(pressed, mods, vk_code, scancode);
+	}
 	
 }
 
@@ -242,11 +261,11 @@ void GUI::testDrawTestBerkelium() {
     }
     
     // wait a bit before calling Berkelium::update() again
-    if (testint > 10) {
+    //if (testint > 3) {
 		BOOST_LOG_TRIVIAL(debug) << "calling update";
 		Berkelium::update();
 		testint = -1;
-	}
+	//}
 	
 	testint++;
 }
