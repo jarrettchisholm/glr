@@ -18,9 +18,12 @@ public:
 	}
 	;
 	
-	virtual int initialize() = 0;
-	virtual void destroy() = 0;
+	virtual int load() = 0;
+	virtual void unload() = 0;
 	
+	virtual void executeScript(std::wstring script) = 0;
+	
+	virtual bool isVisible() = 0;
 	virtual void setVisible(bool isVisible) = 0;
 };
 

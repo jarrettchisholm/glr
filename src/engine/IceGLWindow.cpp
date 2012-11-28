@@ -83,7 +83,7 @@ ISceneManager* IceGLWindow::getSceneManager() {
 
 IGUI* IceGLWindow::getHtmlGui() {
 	gui_ = new GUI();
-	
+
 	int result = gui_->initialize();
 	
 	if (result < 0) {
