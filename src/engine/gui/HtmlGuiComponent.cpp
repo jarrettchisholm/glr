@@ -58,10 +58,6 @@ int HtmlGuiComponent::load() {
     //std::string url = "file:///home/jarrett/projects/chisholmsoft/dark_horizon/data/test.html";
     window_->navigateTo(Berkelium::URLString::point_to(url_.data(), url_.length()));
     
-    
-    // testing only!
-    //testLoadTexture();
-    
     // TESTING CALLBACKS START
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutCallback"),
@@ -192,46 +188,7 @@ void HtmlGuiComponent::update() {
 
 
 void HtmlGuiComponent::render() {
-	//testDrawTest1();
 	testDrawTestBerkelium();
-}
-
-void HtmlGuiComponent::testLoadTexture() {
-	glBindTexture(GL_TEXTURE_2D, textureid);
-    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-    
-    utilities::ImageLoader il;
-    utilities::Image* image = il.loadImageData("/home/jarrett/projects/icebreak/dark_horizon/data/oblivion2.png");
-    BOOST_LOG_TRIVIAL(debug) << "HtmlGuiComponent::initialize: image: " << image->width << "x" << image->height;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
- 
-	GLenum huboError = glGetError();
-	if(huboError){
- 
-		BOOST_LOG_TRIVIAL(debug) << "HtmlGuiComponent::initialize: error loading texture in opengl";
-	}
-    
-    delete image;
-}
-
-void HtmlGuiComponent::testDrawTest1() {	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable( GL_TEXTURE_2D );
-	
-	glBindTexture(GL_TEXTURE_2D, textureid);
-	glBegin(GL_QUADS);
-	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
-	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
-	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
-	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
-	glEnd();
-	
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
 }
 
 void HtmlGuiComponent::testDrawTestBerkelium() {

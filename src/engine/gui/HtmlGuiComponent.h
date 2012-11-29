@@ -69,8 +69,6 @@ private:
     // Buffer used to store data for scrolling
     char* scroll_buffer;
     
-    GLuint textureid;
-    
     Berkelium::Window* window_;
 
 	bool mapOnPaintToTexture(

@@ -5,14 +5,13 @@
  *      Author: jarrett
  */
 
-#include "AssetManager.h"
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
-/* gl.h we need OpenGL */
-#include <GL/gl.h>
+#include "AssetManager.h"
+
+#include "../common/utilities/ImageLoader.h"
 
 
 namespace icee {
@@ -41,11 +40,41 @@ AssetManager::~AssetManager() {
 	aiDetachAllLogStreams();
 }
 
+void AssetManager::testLoadTexture() {
+	glBindTexture(GL_TEXTURE_2D, textureid_);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // If the u,v coordinates overflow the range 0,1 the image is repeated
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // i don't combine the color with the original surface color, use only the texture map.
+    
+    utilities::ImageLoader il;
+    utilities::Image* image = il.loadImageData("/home/jarrett/projects/chisholmsoft/models/Crea2.jpg");
+    BOOST_LOG_TRIVIAL(debug) << "AssetManager::testLoadTexture: image: " << image->width << "x" << image->height;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+    
+    // And create 2d mipmaps for the minifying function
+    //gluBuild2DMipmaps(GL_TEXTURE_2D, 4, infoheader.biWidth, infoheader.biHeight, GL_RGBA, GL_UNSIGNED_BYTE, l_texture);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+ 
+	GLenum huboError = glGetError();
+	if(huboError){
+ 
+		BOOST_LOG_TRIVIAL(debug) << "HtmlGuiComponent::initialize: error loading texture in opengl";
+	}
+    
+    delete image;
+}
+
 int AssetManager::loadAsset(const char* path)
 {
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
 	scene = aiImportFile(path,aiProcessPreset_TargetRealtime_MaxQuality);
+
+	testLoadTexture();
 
 	if (scene) {
 		//get_bounding_box(&scene_min,&scene_max);
@@ -57,8 +86,26 @@ int AssetManager::loadAsset(const char* path)
 	return 1;
 }
 
-void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd)
-{
+void AssetManager::testDrawTest1() {	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable( GL_TEXTURE_2D );
+	
+	glBindTexture(GL_TEXTURE_2D, textureid_);
+	glBegin(GL_QUADS);
+	    glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
+	    glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
+	    glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
+	glEnd();
+	
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
+}
+
+void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd) {
+	//testDrawTest1();
+	
 	unsigned int i;
 	unsigned int n = 0, t;
 	aiMatrix4x4 m = nd->mTransformation;
@@ -67,6 +114,7 @@ void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd)
 	aiTransposeMatrix4(&m);
 	glPushMatrix();
 	glMultMatrixf((float*)&m);
+	
 
 	// draw all meshes assigned to this node
 	for (; n < nd->mNumMeshes; ++n) {
@@ -91,6 +139,11 @@ void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd)
 				default: face_mode = GL_POLYGON; break;
 			}
 
+			//glEnable(GL_BLEND);
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			//glEnable( GL_TEXTURE_2D );
+			//glBindTexture(GL_TEXTURE_2D, textureid_);
+
 			glBegin(face_mode);
 
 			for(i = 0; i < face->mNumIndices; i++) {
@@ -103,9 +156,13 @@ void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd)
 			}
 
 			glEnd();
+			
+			//glDisable(GL_TEXTURE_2D);
+			//glDisable(GL_BLEND);
 		}
 
 	}
+	
 
 	// draw all children
 	for (n = 0; n < nd->mNumChildren; ++n) {
