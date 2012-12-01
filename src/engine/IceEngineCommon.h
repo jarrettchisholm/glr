@@ -16,7 +16,6 @@
 #include "ISceneManager.h"
 #include "ISceneNode.h"
 #include "ICameraSceneNode.h"
-#include "AssetManager.h"
 //#include "IInputListener.h"
 
 #include "gui/IGUI.h"

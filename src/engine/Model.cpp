@@ -16,25 +16,18 @@ Model::Model() {
 	
 }
 
-Model::Model(std::string filename) {
-	
+Model::Model( std::shared_ptr<aiScene> scene ) {
+	loadMeshes(scene);
+	loadTextures(scene);
+	loadMaterials(scene);
+	loadAnimations(scene);
 }
 
-Model::~Model() {
-	//no need to delete pointers in it manually here. (Pointers point to textureIds deleted in next step)
-	textureIdMap_.clear();
-
-	// clear texture ids
-	if (textureIds_) {
-		delete[] textureIds_;
-		textureIds_ = 0;
-	}
-	
-	destroyAILogger();
+Model::~Model() {	
+	//destroyAILogger();
 }
 
-void AssetManager::render()
-{
+void Model::render() {
 	float tmp;
 
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,7 +59,7 @@ void AssetManager::render()
             // now begin at the root node of the imported data and traverse
             // the scenegraph by multiplying subsequent local transforms
             // together on GL's matrix stack.
-	    recursive_render(scene, scene->mRootNode);
+	    recursive_render(scene_, scene_->mRootNode);
 	    glEndList();
 	}
 
@@ -75,7 +68,7 @@ void AssetManager::render()
 	//do_motion();
 }
 
-void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd) {
+void Model::recursive_render(std::shared_ptr<aiScene> scene, const aiNode* nd) {
 	//testDrawTest1();
 	
 	unsigned int i;
@@ -92,7 +85,7 @@ void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd) {
 	for (; n < nd->mNumMeshes; ++n) {
 		const aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
-		apply_material(sc->mMaterials[mesh->mMaterialIndex]);
+		apply_material(scene->mMaterials[mesh->mMaterialIndex]);
 
 		if(mesh->mNormals == NULL) {
 			glDisable(GL_LIGHTING);
@@ -156,7 +149,7 @@ void AssetManager::recursive_render(const aiScene *sc, const aiNode* nd) {
 
 	// draw all children
 	for (n = 0; n < nd->mNumChildren; ++n) {
-		recursive_render(sc, nd->mChildren[n]);
+		recursive_render(scene, nd->mChildren[n]);
 	}
 
 	glPopMatrix();
@@ -233,8 +226,58 @@ void Model::apply_material(const aiMaterial *mtl)
 		glDisable(GL_CULL_FACE);
 }
 
+void ModelManager::loadTextures(std::shared_ptr<aiScene> scene) {
+	if (scene->HasTextures()) {
+		BOOST_LOG_TRIVIAL(debug) << "Support for meshes with embedded textures is not implemented";
+		exit 1;
+	}
+
+	/* getTexture Filenames and Numb of Textures */
+	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
+		int texIndex = 0;
+		aiReturn texFound = AI_SUCCESS;
+
+		aiString path;	// filename
+
+		while (texFound == AI_SUCCESS) {
+			texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
+			if ( textureMap_[path.data] == 0 ) {
+				//fill map with textures, pointers still NULL yet
+				textureMap_[path.data] = 0;
+				texIndex++;
+			}
+		}
+	}
+	
+	int numTextures = textureMap_.size();
+	
+	/* create and fill array with GL texture ids */
+	//textureIds_ = new GLuint[numTextures];
+	/* Texture name generation */
+	//glGenTextures(numTextures, textureIds_);
+	
+	std::map<std::string, GLuint*>::iterator itr = textureMap_.begin();
+	
+	for (sint32 i = 0; i < numTextures; i++) {
+		//save IL image ID
+		std::string filename = (*itr).first;  // get filename
+		
+		Texture* texture = TextureManager::getInstance()->getTexture(filename);
+		
+		if (texture == 0) {
+			BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
+		}
+		
+		// save texture for filename in map
+		(*itr).second =  texture;
+		
+		itr++;
+	}
+	
+}
+
 // temporary method
-void AssetManager::setLighting() {
+void Model::setLighting() {
 	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat mat_shininess[] = { 50.0 };
 	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };

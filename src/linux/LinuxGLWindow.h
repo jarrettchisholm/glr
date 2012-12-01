@@ -12,7 +12,7 @@
 #define LINUXGLWINDOW_H_
 
 #include "../engine/IceGLWindow.h"
-#include "../engine/AssetManager.h"
+#include "../engine/TextureManager.h"
 
 /* printf */
 #include <stdio.h>
@@ -86,7 +86,7 @@ private:
 
 	bool inWindowedState_;
 	
-	icee::engine::AssetManager asset_manager;
+	icee::engine::TextureManager textureManager_;
 };
 
 }

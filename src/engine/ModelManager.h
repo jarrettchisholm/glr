@@ -8,7 +8,9 @@
 #ifndef MODELMANAGER_H_
 #define MODELMANAGER_H_
 
+#include <memory>
 #include <string>
+#include <map>
 
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
@@ -41,7 +43,7 @@ public:
 private:
 	aiLogStream stream;
 	
-	GLuint textureid_;
+	std::map< std::string, std::unique_ptr<Model> > models_;
 	
 	
 };

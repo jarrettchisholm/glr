@@ -24,8 +24,31 @@ TextureManager::TextureManager() {
 TextureManager::~TextureManager() {
 }
 
-Texture* TextureManager::loadTexture(const std::string filename) {
+Texture* TextureManager::getTexture(const std::string filename) {
+	BOOST_LOG_TRIVIAL(debug) << "Loading texture...";
 	
+	if (textures_[filename] != 0) {
+		BOOST_LOG_TRIVIAL(debug) << "Texture found.";
+		return textures_[filename].get();
+	}
+	
+	std::string basepath = "/home/jarrett/projects/chisholmsoft/models/";
+	
+	utilities::ImageLoader il;
+    utilities::Image* image = il.loadImageData(basepath + filename);
+    
+    if (image == 0) {
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load texture.";
+		return 0;
+	}
+    
+    BOOST_LOG_TRIVIAL(debug) << "TextureManager::getTexture: image: " << image->width << "x" << image->height;
+	
+	textures_[filename] = std::unique_ptr<Texture>( new Texture(image) );
+	
+	delete image;
+	
+	return textures_[filename].get();
 }
 
 }

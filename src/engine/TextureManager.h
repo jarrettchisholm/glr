@@ -8,6 +8,8 @@
 #ifndef TEXTUREMANAGER_H_
 #define TEXTUREMANAGER_H_
 
+#include <memory>
+#include <map>
 #include <string>
 
 /* gl.h we need OpenGL */
@@ -28,9 +30,10 @@ public:
 	TextureManager();
 	virtual ~TextureManager();
 
-	Texture* loadTexture(const std::string filename);
+	Texture* getTexture(const std::string filename);
 	
 private:
+	std::map< std::string, std::unique_ptr<Texture> > textures_;
 	
 };
 

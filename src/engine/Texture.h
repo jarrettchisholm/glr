@@ -1,5 +1,5 @@
 /*
- * Texure.h
+ * Texture.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -8,16 +8,26 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include "../common/utilities/ImageLoader.h"
+
+#include "../common/compatibility/Types.h"
+
 namespace icee {
 
 namespace engine {
 
-class Texure {
-public:
-	Texure();
-	virtual ~Texure();
+using namespace compatibility;
 
-protected:
+class Texture {
+public:
+	Texture();
+	Texture(utilities::Image* image);
+	virtual ~Texture();
+
+private:
+	GLuint textureId_;
+
+	void loadTexture();
 };
 
 }

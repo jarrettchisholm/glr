@@ -36,7 +36,10 @@ library_paths = ['../lwis/build']
 env = Environment(ENV = os.environ, CCFLAGS=[]) 
 
 # Set our g++ compiler flags
-cpp_flags = ['-I"../lwis/src/engine"']
+cpp_flags = [
+'-std=gnu++0x',
+'-I"../lwis/src/engine"'
+]
 
 if (os.name == "nt" or os.name == "win32"):
 	cpp_flags.append( '-I"C:\lib\Assimp\include"' )

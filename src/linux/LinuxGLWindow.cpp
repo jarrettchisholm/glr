@@ -174,11 +174,6 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 	} else {
 		BOOST_LOG_TRIVIAL(debug) << "no DRI available.";
 	}
-	
-	BOOST_LOG_TRIVIAL(debug) << "Loading model...";
-	//icee::engine::AssetManager asset_manager = icee::engine::AssetManager();
-	//asset_manager.loadAsset("../models/PlainsWolf/Model Formats/X/PlainsWolf.x");
-	asset_manager.loadAsset("../models/creature.obj");
 
 	return 0;
 }
