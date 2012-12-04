@@ -14,9 +14,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <glm/glm.hpp>
+
+#include "../common/compatibility/Types.h"
+
 namespace icee {
 
 namespace engine {
+
+using namespace compatibility;
 
 class Material {
 public:
@@ -24,6 +30,17 @@ public:
 	virtual ~Material();
 
 private:
+	GLenum fill_mode_;
+	sint32 ret1_, ret2_;
+	glm::vec4 diffuse_;
+	glm::vec4 specular_;
+	glm::vec4 ambient_;
+	glm::vec4 emission_;
+	float32 shininess_, strength_;
+	sint32 two_sided_;
+	sint32 wireframe_;
+	uint32 max_;	// changed: to unsigned
+
 	void bind();
 };
 
