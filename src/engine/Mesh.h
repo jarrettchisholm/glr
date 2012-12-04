@@ -33,6 +33,8 @@ class Mesh {
 public:
 	Mesh(const aiMesh* mesh);
 	virtual ~Mesh();
+	
+	void render();
 
 private:
 	std::vector< glm::vec3 > vertices_;

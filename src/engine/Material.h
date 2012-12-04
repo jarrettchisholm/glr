@@ -8,16 +8,23 @@
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 
+#include <GL/gl.h>
+
+#include <assimp/cimport.h>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 namespace icee {
 
 namespace engine {
 
 class Material {
 public:
-	Material();
+	Material(const aiMaterial* mtl);
 	virtual ~Material();
 
-protected:
+private:
+	void bind();
 };
 
 }

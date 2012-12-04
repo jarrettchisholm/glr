@@ -55,6 +55,10 @@ Mesh::Mesh(const aiMesh* mesh) {
 Mesh::~Mesh() {
 }
 
+void Mesh::render() {
+	
+}
+
 
 }
 

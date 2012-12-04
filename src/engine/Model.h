@@ -46,10 +46,10 @@ protected:
 	// the global Assimp scene object
 	//std::shared_ptr<aiScene> scene_;
 	
-	std::map<std::string, Mesh*> meshMap_;
-	std::map<std::string, Texture*> textureMap_;
-	std::map<std::string, Material*> materialMap_;
-	std::map<std::string, Animation*> animationMap_;
+	std::vector<Mesh*> meshes_;
+	std::vector<Texture*> textures_;
+	std::vector<Material*> materials_;
+	std::vector<Animation*> animations_;
 	
 	uint32 scene_list;
 	aiVector3D scene_min, scene_max, scene_center;

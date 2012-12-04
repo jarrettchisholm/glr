@@ -28,8 +28,8 @@ Model::~Model() {
 }
 
 void Model::render() {
-	for (uint32 i=0; i < meshMap_.size(); i++) {
-		meshMap_[i].render();
+	for (uint32 i=0; i < meshes_.size(); i++) {
+		meshes_[i]->render();
 	}
 	
 	/*
@@ -66,7 +66,8 @@ void Model::render() {
 	*/
 }
 
-void Model::recursive_render(std::shared_ptr<aiScene> scene, const aiNode* nd) {
+void Model::recursive_render(const aiScene* scene, const aiNode* nd) {
+	/*
 	//testDrawTest1();
 	
 	unsigned int i;
@@ -151,8 +152,10 @@ void Model::recursive_render(std::shared_ptr<aiScene> scene, const aiNode* nd) {
 	}
 
 	glPopMatrix();
+	*/
 }
 
+/*
 void Model::apply_material(const aiMaterial *mtl)
 {
 	float c[4];
@@ -223,6 +226,7 @@ void Model::apply_material(const aiMaterial *mtl)
 	else
 		glDisable(GL_CULL_FACE);
 }
+*/
 
 void ModelManager::loadMeshes(std::shared_ptr<aiScene> scene) {
 	
@@ -233,7 +237,7 @@ void ModelManager::loadMeshesRecursive(std::shared_ptr<aiScene> scene, const aiN
 	// get all meshes assigned to this node
 	for (uint32 n = 0; n < node->mNumMeshes; n++) {
 		// create new mesh
-		meshMap_[filename] = new Mesh( scene->mMeshes[node->mMeshes[n]] );
+		meshes_[n] = new Mesh( scene->mMeshes[node->mMeshes[n]] );
 	}
 	
 
