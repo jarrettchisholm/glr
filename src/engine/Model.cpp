@@ -28,15 +28,12 @@ Model::~Model() {
 }
 
 void Model::render() {
+	for (uint32 i=0; i < meshMap_.size(); i++) {
+		meshMap_[i].render();
+	}
+	
+	/*
 	float tmp;
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-
-	// rotate it around the y axis
-	//glRotatef(angle,0.f,1.f,0.f);
 
 	// scale the whole asset to fit into our view frustum 
 	tmp = scene_max.x-scene_min.x;
@@ -66,6 +63,7 @@ void Model::render() {
 	glCallList(scene_list);
 
 	//do_motion();
+	*/
 }
 
 void Model::recursive_render(std::shared_ptr<aiScene> scene, const aiNode* nd) {
@@ -226,6 +224,25 @@ void Model::apply_material(const aiMaterial *mtl)
 		glDisable(GL_CULL_FACE);
 }
 
+void ModelManager::loadMeshes(std::shared_ptr<aiScene> scene) {
+	
+	loadMeshesRecursive(scene_, scene_->mRootNode);
+}
+
+void ModelManager::loadMeshesRecursive(std::shared_ptr<aiScene> scene, const aiNode* node) {
+	// get all meshes assigned to this node
+	for (uint32 n = 0; n < node->mNumMeshes; n++) {
+		// create new mesh
+		meshMap_[filename] = new Mesh( scene->mMeshes[node->mMeshes[n]] );
+	}
+	
+
+	// draw all children
+	for (uint32 n = 0; n < node->mNumChildren; n++) {
+		recursive_render(scene, node->mChildren[n]);
+	}
+}
+
 void ModelManager::loadTextures(std::shared_ptr<aiScene> scene) {
 	if (scene->HasTextures()) {
 		BOOST_LOG_TRIVIAL(debug) << "Support for meshes with embedded textures is not implemented";
@@ -274,6 +291,14 @@ void ModelManager::loadTextures(std::shared_ptr<aiScene> scene) {
 		itr++;
 	}
 	
+}
+
+void ModelManager::loadMaterials(std::shared_ptr<aiScene> scene) {
+	// TODO: implement	
+}
+
+void ModelManager::loadAnimations(std::shared_ptr<aiScene> scene) {
+	// TODO: implement	
 }
 
 // temporary method
