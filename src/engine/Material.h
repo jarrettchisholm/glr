@@ -38,6 +38,7 @@ private:
 	glm::vec4 emission_;
 	float32 shininess_, strength_;
 	sint32 two_sided_;
+	sint32 two_sided_true_;
 	sint32 wireframe_;
 	uint32 max_;	// changed: to unsigned
 

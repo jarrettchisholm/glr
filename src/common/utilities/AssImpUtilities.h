@@ -20,12 +20,6 @@ namespace utilities {
 
 using namespace compatibility;
 
-struct Image {
-	char* data;
-	int width;
-	int height;
-};
-
 class AssImpUtilities {
 public:
 	AssImpUtilities() {}
