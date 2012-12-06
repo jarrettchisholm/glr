@@ -27,6 +27,8 @@ public:
 	virtual ICameraSceneNode* addCameraFPS(vmath::Vector3f position, vmath::Vector3f lookAt,
 			uint32 speed, uint32 rotationSpeed);
 	virtual void drawAll();
+	
+	virtual IModelManager* getModelManager();
 };
 
 }

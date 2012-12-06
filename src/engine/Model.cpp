@@ -7,6 +7,8 @@
 
 #include "Model.h"
 
+#include "TextureManager.h"
+
 namespace icee {
 
 namespace engine {
@@ -16,7 +18,7 @@ Model::Model() {
 	
 }
 
-Model::Model( std::shared_ptr<aiScene> scene ) {
+Model::Model( const aiScene* scene ) {
 	loadMeshes(scene);
 	loadTextures(scene);
 	loadMaterials(scene);
@@ -66,8 +68,8 @@ void Model::render() {
 	*/
 }
 
+/*
 void Model::recursive_render(const aiScene* scene, const aiNode* nd) {
-	/*
 	//testDrawTest1();
 	
 	unsigned int i;
@@ -152,8 +154,9 @@ void Model::recursive_render(const aiScene* scene, const aiNode* nd) {
 	}
 
 	glPopMatrix();
-	*/
+
 }
+*/
 
 /*
 void Model::apply_material(const aiMaterial *mtl)
@@ -228,29 +231,20 @@ void Model::apply_material(const aiMaterial *mtl)
 }
 */
 
-void ModelManager::loadMeshes(std::shared_ptr<aiScene> scene) {
-	
-	loadMeshesRecursive(scene_, scene_->mRootNode);
-}
-
-void ModelManager::loadMeshesRecursive(std::shared_ptr<aiScene> scene, const aiNode* node) {
+void Model::loadMeshes(const aiScene* scene) {
 	// get all meshes assigned to this node
-	for (uint32 n = 0; n < node->mNumMeshes; n++) {
+	for (uint32 n = 0; n < scene->mNumMeshes; n++) {
 		// create new mesh
-		meshes_[n] = new Mesh( scene->mMeshes[node->mMeshes[n]] );
-	}
-	
-
-	// draw all children
-	for (uint32 n = 0; n < node->mNumChildren; n++) {
-		recursive_render(scene, node->mChildren[n]);
+		meshes_[n] = new Mesh( scene->mMeshes[n] );
+		materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
+		textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	}
 }
 
-void ModelManager::loadTextures(std::shared_ptr<aiScene> scene) {
+void Model::loadTextures(const aiScene* scene) {
 	if (scene->HasTextures()) {
 		BOOST_LOG_TRIVIAL(debug) << "Support for meshes with embedded textures is not implemented";
-		exit 1;
+		exit(1);
 	}
 
 	/* getTexture Filenames and Numb of Textures */
@@ -262,46 +256,24 @@ void ModelManager::loadTextures(std::shared_ptr<aiScene> scene) {
 
 		while (texFound == AI_SUCCESS) {
 			texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
-			if ( textureMap_[path.data] == 0 ) {
-				//fill map with textures, pointers still NULL yet
-				textureMap_[path.data] = 0;
-				texIndex++;
+			
+			Texture* texture = TextureManager::getInstance()->getTexture( path.data );
+			if (texture == 0) {
+				BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
 			}
+			
+			textures_[m] = texture;
 		}
-	}
-	
-	int numTextures = textureMap_.size();
-	
-	/* create and fill array with GL texture ids */
-	//textureIds_ = new GLuint[numTextures];
-	/* Texture name generation */
-	//glGenTextures(numTextures, textureIds_);
-	
-	std::map<std::string, GLuint*>::iterator itr = textureMap_.begin();
-	
-	for (sint32 i = 0; i < numTextures; i++) {
-		//save IL image ID
-		std::string filename = (*itr).first;  // get filename
-		
-		Texture* texture = TextureManager::getInstance()->getTexture(filename);
-		
-		if (texture == 0) {
-			BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
-		}
-		
-		// save texture for filename in map
-		(*itr).second =  texture;
-		
-		itr++;
-	}
-	
+	}	
 }
 
-void ModelManager::loadMaterials(std::shared_ptr<aiScene> scene) {
-	// TODO: implement	
+void Model::loadMaterials(const aiScene* scene) {
+	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
+		materials_[m] = std::unique_ptr<Material>( new Material(scene->mMaterials[m]) );
+	}
 }
 
-void ModelManager::loadAnimations(std::shared_ptr<aiScene> scene) {
+void Model::loadAnimations(const aiScene* scene) {
 	// TODO: implement	
 }
 

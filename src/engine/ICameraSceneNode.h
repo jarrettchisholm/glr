@@ -31,6 +31,13 @@ public:
 	enum LOOK_DIRECTION {
 		LOOK_DIR_UP = 0, LOOK_DIR_DOWN = 1, LOOK_DIR_LEFT = 2, LOOK_DIR_RIGHT = 3
 	};
+	
+	/**
+	 * Does not implement the attach method.
+	 */ 
+	virtual void attach(IModel* model) {
+	}
+	;
 
 	// new methods
 	virtual const vmath::Vector3f& getLookAt() = 0;

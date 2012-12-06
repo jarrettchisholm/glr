@@ -10,6 +10,7 @@
 
 #include "ISceneNode.h"
 #include "ICameraSceneNode.h"
+#include "IModelManager.h"
 
 #include "../common/compatibility/Types.h"
 
@@ -30,6 +31,8 @@ public:
 	virtual ICameraSceneNode* addCamera(vmath::Vector3f position, vmath::Vector3f lookAt) = 0;
 	virtual ICameraSceneNode* addCameraFPS(vmath::Vector3f position, vmath::Vector3f lookAt, uint32 speed, uint32 rotationSpeed) = 0;
 	virtual void drawAll() = 0;
+	
+	virtual IModelManager* getModelManager() = 0;
 
 protected:
 	std::vector<ISceneNode*> sceneNodes_;

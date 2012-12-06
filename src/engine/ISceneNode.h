@@ -8,8 +8,12 @@
 #ifndef ISCENENODE_H_
 #define ISCENENODE_H_
 
-#include "../vmath/Vector3f.h"
 #include <vector>
+
+#include "../vmath/Vector3f.h"
+
+#include "IModel.h"
+
 
 namespace icee {
 
@@ -24,6 +28,7 @@ public:
 		pos_ = vmath::Vector3f(0, 0, 0);
 
 		active_ = true;
+		isVisible_ = true;
 	}
 	;
 
@@ -46,6 +51,12 @@ public:
 	const bool isActive() const {
 		return active_;
 	}
+	
+	virtual void attach(IModel* model) = 0;
+	
+	void setVisible(bool isVisible) {
+		isVisible_ = isVisible;
+	}
 
 	std::vector<float32> vertices;
 
@@ -57,6 +68,7 @@ protected:
 	vmath::Vector3f pos_;
 
 	bool active_;
+	bool isVisible_;
 
 };
 

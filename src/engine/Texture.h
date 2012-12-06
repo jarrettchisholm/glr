@@ -8,6 +8,8 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include <GL/gl.h>
+
 #include "../common/utilities/ImageLoader.h"
 
 #include "../common/compatibility/Types.h"
@@ -27,7 +29,7 @@ public:
 private:
 	GLuint textureId_;
 
-	void loadTexture();
+	void loadTexture(utilities::Image* image);
 };
 
 }

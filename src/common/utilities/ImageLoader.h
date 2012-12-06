@@ -29,7 +29,11 @@ public:
 	ImageLoader() {}
 	virtual ~ImageLoader() {}
 	
-	Image* loadImageData(char* filename) {
+	Image* loadImageData(const std::string filename) {
+		return loadImageData( filename.c_str() );
+	}
+	
+	Image* loadImageData(const char* filename) {
 		BOOST_LOG_TRIVIAL(debug) <<"Loading image.";
 		FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(filename,0);
 		FIBITMAP* imagen = FreeImage_Load(formato, filename);

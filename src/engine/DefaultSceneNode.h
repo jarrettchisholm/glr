@@ -19,6 +19,7 @@ public:
 	DefaultSceneNode();
 	virtual ~DefaultSceneNode();
 
+	virtual void attach(IModel* model);
 	void render();
 };
 

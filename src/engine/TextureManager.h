@@ -29,10 +29,16 @@ class TextureManager {
 public:
 	TextureManager();
 	virtual ~TextureManager();
+	TextureManager(TextureManager const&);
+	TextureManager& operator=(TextureManager const&);
+	
+	static TextureManager* getInstance();
 
 	Texture* getTexture(const std::string filename);
 	
 private:
+	static TextureManager* textureManager_;
+
 	std::map< std::string, std::unique_ptr<Texture> > textures_;
 	
 };

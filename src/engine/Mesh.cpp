@@ -48,7 +48,7 @@ Mesh::Mesh(const aiMesh* mesh) {
 													mesh->mColors[0][vertexIndex].r
 												);
 			
-		}
+		}		
 	}
 }
 

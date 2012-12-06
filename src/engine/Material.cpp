@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include "../common/utilities/AssImpUtilities.h"
 
 #include "Material.h"
@@ -55,7 +57,7 @@ Material::Material(const aiMaterial* mtl) {
 
 	max_ = 1;
 	if(AI_SUCCESS == aiGetMaterialIntegerArray(mtl, AI_MATKEY_ENABLE_WIREFRAME, &wireframe_, &max_))
-		fill_mode_ = wireframe ? GL_LINE : GL_FILL;
+		fill_mode_ = wireframe_ ? GL_LINE : GL_FILL;
 	else
 		fill_mode_ = GL_FILL;
 
@@ -67,13 +69,13 @@ Material::~Material() {
 }
 
 void Material::bind() {
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse_);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient_);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission_);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(diffuse_));
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(specular_));
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, glm::value_ptr(ambient_));
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glm::value_ptr(emission_));
 	
 
-	if((ret1 == AI_SUCCESS) && (ret2 == AI_SUCCESS))
+	if((ret1_ == AI_SUCCESS) && (ret2_ == AI_SUCCESS))
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess_ * strength_);
 	else {
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
@@ -82,7 +84,7 @@ void Material::bind() {
 		temp[1] = 0.0f;
 		temp[2] = 0.0f;
 		temp[3] = 0.0f;
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, temp);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(temp));
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, fill_mode_);

@@ -16,18 +16,12 @@
 
 #include <stdlib.h>
 
-#include <GL/glut.h>
-
-// assimp include files. These three are usually needed.
-#include <assimp/cimport.h>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 namespace icee {
 
 namespace engine {
 
-DefaultSceneNode::DefaultSceneNode() {	
+DefaultSceneNode::DefaultSceneNode() {
+	/*
 	vertices.push_back(-2.0f); // x
 	vertices.push_back(-2.0f); // y
 	vertices.push_back(-18.0f); // z
@@ -39,12 +33,19 @@ DefaultSceneNode::DefaultSceneNode() {
 	vertices.push_back(0.0f);
 	vertices.push_back(2.0f);
 	vertices.push_back(-18.0f);
+	*/
 }
 
 DefaultSceneNode::~DefaultSceneNode() {
 }
 
+void DefaultSceneNode::attach(IModel* model) {
+	
+}
+
 void DefaultSceneNode::render() {
+	
+	/*
 	// enable the vertex array
 	glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -56,6 +57,7 @@ void DefaultSceneNode::render() {
 
 	// finally, disable the vertex array
 	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
 }
 
 }

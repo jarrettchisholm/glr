@@ -18,6 +18,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "IModel.h"
+
 #include "Mesh.h"
 #include "Texture.h"
 #include "Material.h"
@@ -31,25 +33,28 @@ namespace engine {
 
 using namespace compatibility;
 
-class Model {
+class Model : public IModel {
 public:
 	Model();
-	Model( std::shared_ptr<aiScene> scene );
+	Model( const aiScene* scene );
 	virtual ~Model();
 	
-	void render();
+	virtual void render();
 
 protected:
 	#define aisgl_min(x,y) (x<y?x:y)
 	#define aisgl_max(x,y) (y>x?y:x)
 	
 	// the global Assimp scene object
-	//std::shared_ptr<aiScene> scene_;
+	//const aiScene* scene_;
 	
 	std::vector<Mesh*> meshes_;
 	std::vector<Texture*> textures_;
-	std::vector<Material*> materials_;
+	std::vector< std::unique_ptr<Material> > materials_;
 	std::vector<Animation*> animations_;
+	
+	std::vector<uint32> textureMap_;
+	std::vector<uint32> materialMap_;
 	
 	uint32 scene_list;
 	aiVector3D scene_min, scene_max, scene_center;
@@ -58,12 +63,14 @@ protected:
 	// temporary method
 	void setLighting();
 	
-	void loadMeshes(std::shared_ptr<aiScene> scene);
-	void loadTextures(std::shared_ptr<aiScene> scene);
-	void loadMaterials(std::shared_ptr<aiScene> scene);
-	void loadAnimations(std::shared_ptr<aiScene> scene);
+	void loadMeshes(const aiScene* scene);
+	void loadTextures(const aiScene* scene);
+	void loadMaterials(const aiScene* scene);
+	void loadAnimations(const aiScene* scene);
 	
-	void recursive_render(const aiScene *sc, const aiNode* nd);
+	//void loadMeshesRecursive(const aiScene* scene, const aiNode* node);
+	
+	//void recursive_render(const aiScene *sc, const aiNode* nd);
 
 };
 

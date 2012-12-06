@@ -365,7 +365,7 @@ void LinuxGLWindow::render() {
 	
 	sMgr_->drawAll();
 	
-	asset_manager.drawAll();
+	//asset_manager.drawAll();
 	
 	IceGLWindow::render();
 	

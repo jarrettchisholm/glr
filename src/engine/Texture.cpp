@@ -1,5 +1,5 @@
 /*
- * Texure.cpp
+ * Texture.cpp
  *
  *  Created on: 2012-11-29
  *      Author: jarrett
@@ -12,11 +12,11 @@ namespace icee {
 
 namespace engine {
 
-Texture::Texure(utilities::Image* image) {
+Texture::Texture(utilities::Image* image) {
 	loadTexture(image);
 }
 
-Texture::~Texure() {
+Texture::~Texture() {
 }
 
 void Texture::loadTexture(utilities::Image* image) {	

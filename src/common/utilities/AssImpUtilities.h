@@ -14,6 +14,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <glm/glm.hpp>
+
 #include "../compatibility/Types.h"
 
 namespace utilities {
@@ -25,11 +27,11 @@ public:
 	AssImpUtilities() {}
 	virtual ~AssImpUtilities() {}
 	
-	static void color4_to_float4(const aiColor4D *c, float f[4]) {
-		f[0] = c->r;
-		f[1] = c->g;
-		f[2] = c->b;
-		f[3] = c->a;
+	static void color4_to_float4(const aiColor4D *c, glm::vec4 v) {
+		v[0] = c->r;
+		v[1] = c->g;
+		v[2] = c->b;
+		v[3] = c->a;
 	}
 	
 	static void set_float4(float f[4], float a, float b, float c, float d) {

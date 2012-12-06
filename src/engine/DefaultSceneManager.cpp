@@ -9,6 +9,7 @@
 
 #include "CameraSceneNode.h"
 #include "DefaultSceneNode.h"
+#include "ModelManager.h"
 
 namespace icee {
 
@@ -65,6 +66,10 @@ void DefaultSceneManager::drawAll() {
 	for (uint32 i = 0; i < sceneNodes_.size(); i++) {
 		sceneNodes_[i]->render();
 	}
+}
+
+IModelManager* DefaultSceneManager::getModelManager() {
+	return ModelManager::getInstance();
 }
 
 }

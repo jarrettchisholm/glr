@@ -35,6 +35,18 @@ ModelManager::~ModelManager() {
 	aiDetachAllLogStreams();
 }
 
+ModelManager::ModelManager(ModelManager const&) {
+}
+
+ModelManager* ModelManager::modelManager_ = 0;
+ModelManager* ModelManager::getInstance() {
+	if (ModelManager::modelManager_ == 0)
+		ModelManager::modelManager_ = new ModelManager();
+
+	return ModelManager::modelManager_;
+}
+
+/*
 void ModelManager::testLoadTexture() {
 	glBindTexture(GL_TEXTURE_2D, textureid_);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // If the u,v coordinates overflow the range 0,1 the image is repeated
@@ -61,13 +73,14 @@ void ModelManager::testLoadTexture() {
     
     delete image;
 }
+*/
 
 /**
  * 
  * @returns The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
  * the ModelManager.
  */ 
-Model* ModelManager::loadModel(const std::string filename) {
+IModel* ModelManager::loadModel(const std::string filename) {
 	BOOST_LOG_TRIVIAL(debug) << "Loading model...";
 	
 	if (models_[filename] != 0) {
@@ -79,7 +92,7 @@ Model* ModelManager::loadModel(const std::string filename) {
 	
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
-	aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	
 	if (scene == 0) {
 		BOOST_LOG_TRIVIAL(debug) << "Unable to load model...";
@@ -88,22 +101,23 @@ Model* ModelManager::loadModel(const std::string filename) {
 
 	
 	//get_bounding_box(&scene_min,&scene_max);
-	scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
-	scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
-	scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
+	//scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
+	//scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
+	//scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
 	
-	std::shared_ptr<aiScene> sharedScene = std::shared_ptr<aiScene>(scene);
-	models_[filename] = std::unique_ptr<Model>( new Model(sharedScene) );
+	//std::shared_ptr<aiScene> sharedScene = std::shared_ptr<aiScene>(scene);
+	models_[filename] = std::unique_ptr<Model>( new Model(scene) );
 	
 	// cleanup - calling 'aiReleaseImport' is important, as the library 
 	// keeps internal resources until the scene is freed again. Not 
 	// doing so can cause severe resource leaking.
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
-	aiReleaseImport(sharedScene.get());
+	aiReleaseImport(scene);
 	
 	return models_[filename].get();
 }
 
+/*
 void ModelManager::testDrawTest1() {	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -120,7 +134,7 @@ void ModelManager::testDrawTest1() {
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 }
-
+*/
 
 
 }

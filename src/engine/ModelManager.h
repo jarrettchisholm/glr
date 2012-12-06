@@ -22,6 +22,8 @@
 
 #include "../common/compatibility/Types.h"
 
+#include "IModelManager.h"
+
 #include "Model.h"
 
 namespace icee {
@@ -30,17 +32,23 @@ namespace engine {
 	
 using namespace compatibility;
 
-class ModelManager {
+class ModelManager : public IModelManager {
 public:
 	ModelManager();
 	virtual ~ModelManager();
-
-	Model* loadModel(const std::string path);
-	void testLoadTexture();
+	ModelManager(ModelManager const&);
+	ModelManager& operator=(ModelManager const&);
 	
-	void testDrawTest1();
+	static ModelManager* getInstance();
+
+	IModel* loadModel(const std::string path);
+	
+	//void testLoadTexture();
+	//void testDrawTest1();
 	
 private:
+	static ModelManager* modelManager_;
+
 	aiLogStream stream;
 	
 	std::map< std::string, std::unique_ptr<Model> > models_;
