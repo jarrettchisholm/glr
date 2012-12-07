@@ -19,15 +19,10 @@ Model::Model() {
 }
 
 Model::Model( const aiScene* scene ) {
-	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadMeshes(scene);
-	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadTextures(scene);
-	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadMaterials(scene);
-	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadAnimations(scene);
-	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 }
 
 Model::~Model() {	
@@ -280,7 +275,7 @@ void Model::loadTextures(const aiScene* scene) {
 }
 
 void Model::loadMaterials(const aiScene* scene) {
-	materials_.reserve( scene->mNumMaterials );
+	materials_.resize( scene->mNumMaterials );
 	
 	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
 		BOOST_LOG_TRIVIAL(debug) << "load material..." << m;

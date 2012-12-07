@@ -34,11 +34,10 @@ ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNod
 }
 
 ISceneNode* DefaultSceneManager::addSceneNode(const char* name, ISceneNode* parent, sint32 id) {
-	//SceneNode* node = new SceneNode();
-	//sceneNodes_.push_back(node);
+	DefaultSceneNode* testNode = new DefaultSceneNode();
+	sceneNodes_.push_back(testNode);
 
-	//return node;
-	return 0;
+	return testNode;
 }
 
 ICameraSceneNode* DefaultSceneManager::addCamera(vmath::Vector3f position, vmath::Vector3f lookAt) {
