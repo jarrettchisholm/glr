@@ -16,6 +16,7 @@ namespace icee {
 namespace engine {
 
 Material::Material(const aiMaterial* mtl) {
+	BOOST_LOG_TRIVIAL(debug) << "loading material...";
 	aiColor4D c;
 
 	diffuse_[0] = 0.8f;
@@ -23,7 +24,7 @@ Material::Material(const aiMaterial* mtl) {
 	diffuse_[2] = 0.8f;
 	diffuse_[3] = 1.0f;
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &c))
-		utilities::AssImpUtilities::color4_to_float4(&c, diffuse_);
+		utilities::AssImpUtilities::color4_to_vec4(&c, diffuse_);
 
 	//utilities::AssImpUtilities::set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
 	specular_[0] = 0.0f;
@@ -31,7 +32,7 @@ Material::Material(const aiMaterial* mtl) {
 	specular_[2] = 0.0f;
 	specular_[3] = 1.0f;
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_SPECULAR, &c))
-		utilities::AssImpUtilities::color4_to_float4(&c, specular_);
+		utilities::AssImpUtilities::color4_to_vec4(&c, specular_);
 	
 	//utilities::AssImpUtilities::set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
 	ambient_[0] = 0.2f;
@@ -39,7 +40,7 @@ Material::Material(const aiMaterial* mtl) {
 	ambient_[2] = 0.2f;
 	ambient_[3] = 1.0f;
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_AMBIENT, &c))
-		utilities::AssImpUtilities::color4_to_float4(&c, ambient_);	
+		utilities::AssImpUtilities::color4_to_vec4(&c, ambient_);	
 
 	//utilities::AssImpUtilities::set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
 	emission_[0] = 0.0f;
@@ -47,7 +48,7 @@ Material::Material(const aiMaterial* mtl) {
 	emission_[2] = 0.0f;
 	emission_[3] = 1.0f;
 	if(AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_EMISSIVE, &c))
-		utilities::AssImpUtilities::color4_to_float4(&c, emission_);
+		utilities::AssImpUtilities::color4_to_vec4(&c, emission_);
 
 	max_ = 1;
 	ret1_ = aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess_, &max_);
@@ -63,6 +64,7 @@ Material::Material(const aiMaterial* mtl) {
 
 	max_ = 1;
 	two_sided_true_ = aiGetMaterialIntegerArray(mtl, AI_MATKEY_TWOSIDED, &two_sided_, &max_);
+	BOOST_LOG_TRIVIAL(debug) << "done loading material.";
 }
 
 Material::~Material() {

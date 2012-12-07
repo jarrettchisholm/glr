@@ -27,7 +27,7 @@ public:
 	AssImpUtilities() {}
 	virtual ~AssImpUtilities() {}
 	
-	static void color4_to_float4(const aiColor4D *c, glm::vec4 v) {
+	static void color4_to_vec4(const aiColor4D *c, glm::vec4 v) {
 		v[0] = c->r;
 		v[1] = c->g;
 		v[2] = c->b;

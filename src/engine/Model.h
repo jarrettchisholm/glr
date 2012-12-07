@@ -48,7 +48,7 @@ protected:
 	// the global Assimp scene object
 	//const aiScene* scene_;
 	
-	std::vector<Mesh*> meshes_;
+	std::vector< std::unique_ptr<Mesh> > meshes_;
 	std::vector<Texture*> textures_;
 	std::vector< std::unique_ptr<Material> > materials_;
 	std::vector<Animation*> animations_;

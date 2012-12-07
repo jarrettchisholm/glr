@@ -19,10 +19,15 @@ Model::Model() {
 }
 
 Model::Model( const aiScene* scene ) {
+	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadMeshes(scene);
+	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadTextures(scene);
+	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadMaterials(scene);
+	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 	loadAnimations(scene);
+	BOOST_LOG_TRIVIAL(debug) << "Model 2.";
 }
 
 Model::~Model() {	
@@ -232,11 +237,18 @@ void Model::apply_material(const aiMaterial *mtl)
 */
 
 void Model::loadMeshes(const aiScene* scene) {
-	// get all meshes assigned to this node
+	meshes_.resize( scene->mNumMeshes );
+	materialMap_.resize( scene->mNumMeshes );
+	textureMap_.resize( scene->mNumMeshes );
+	
+	// get all meshes assigned to this node	
 	for (uint32 n = 0; n < scene->mNumMeshes; n++) {
 		// create new mesh
-		meshes_[n] = new Mesh( scene->mMeshes[n] );
+		BOOST_LOG_TRIVIAL(debug) << "S ah 1";
+		meshes_[n] = std::unique_ptr<Mesh>(new Mesh( scene->mMeshes[n] ));
+		BOOST_LOG_TRIVIAL(debug) << "S ah 2";
 		materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
+		BOOST_LOG_TRIVIAL(debug) << "S ah 3";
 		textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	}
 }
@@ -253,23 +265,27 @@ void Model::loadTextures(const aiScene* scene) {
 		aiReturn texFound = AI_SUCCESS;
 
 		aiString path;	// filename
-
-		while (texFound == AI_SUCCESS) {
-			texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
-			
+		texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
+		
+		if (texFound == AI_SUCCESS) {
 			Texture* texture = TextureManager::getInstance()->getTexture( path.data );
 			if (texture == 0) {
 				BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
+			} else {
+				textures_.reserve( textures_.size() + 1);
+				textures_[m] = texture;
 			}
-			
-			textures_[m] = texture;
 		}
 	}	
 }
 
 void Model::loadMaterials(const aiScene* scene) {
+	materials_.reserve( scene->mNumMaterials );
+	
 	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
+		BOOST_LOG_TRIVIAL(debug) << "load material..." << m;
 		materials_[m] = std::unique_ptr<Material>( new Material(scene->mMaterials[m]) );
+		BOOST_LOG_TRIVIAL(debug) << "done loading material " << m;
 	}
 }
 

@@ -19,7 +19,7 @@ Texture::Texture(utilities::Image* image) {
 Texture::~Texture() {
 }
 
-void Texture::loadTexture(utilities::Image* image) {	
+void Texture::loadTexture(utilities::Image* image) {
 	glGenTextures(1, &textureId_);
 
 	glBindTexture(GL_TEXTURE_2D, textureId_);
