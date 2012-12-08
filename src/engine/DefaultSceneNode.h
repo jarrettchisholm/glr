@@ -21,6 +21,9 @@ public:
 
 	virtual void attach(IModel* model);
 	void render();
+	
+private:
+	IModel* model_;
 };
 
 }

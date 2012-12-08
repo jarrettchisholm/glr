@@ -34,13 +34,14 @@ DefaultSceneNode::DefaultSceneNode() {
 	vertices.push_back(2.0f);
 	vertices.push_back(-18.0f);
 	*/
+	model_ = 0;
 }
 
 DefaultSceneNode::~DefaultSceneNode() {
 }
 
 void DefaultSceneNode::attach(IModel* model) {
-	
+	model_ = model;
 }
 
 void DefaultSceneNode::render() {
@@ -58,6 +59,8 @@ void DefaultSceneNode::render() {
 	// finally, disable the vertex array
 	glDisableClientState(GL_VERTEX_ARRAY);
 	*/
+	if (model_ != 0)
+		model_->render();
 }
 
 }
