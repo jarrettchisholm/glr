@@ -16,7 +16,7 @@ namespace icee {
 namespace engine {
 
 Mesh::Mesh(const aiMesh* mesh) {
-	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";	
+	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";
 	for (uint32 t = 0; t < mesh->mNumFaces; ++t) {
 		const aiFace* face = &mesh->mFaces[t];
 		GLenum face_mode;
@@ -30,12 +30,13 @@ Mesh::Mesh(const aiMesh* mesh) {
 		
 		uint32 numIndices = face->mNumIndices;
 		
-		vertices_.reserve( vertices_.size() + numIndices );
-		normals_.reserve( normals_.size() + numIndices );
-		colors_.reserve( colors_.size() + numIndices );
-		
+		vertices_.resize( vertices_.size() + numIndices );
+		normals_.resize( normals_.size() + numIndices );
+		colors_.resize( colors_.size() + numIndices );
+		BOOST_LOG_TRIVIAL(debug) << "size: " << (vertices_.size() + numIndices);
+		//BOOST_LOG_TRIVIAL(debug) << "loading face: " << face->mNumIndices;
 		// go through all vertices in face
-		for(uint32 i = 0; i < face->mNumIndices; i++) {
+		for(uint32 i = 0; i < numIndices; i++) {
 			// get group index for current index
 			int vertexIndex = face->mIndices[i];
 			/*
@@ -63,18 +64,28 @@ Mesh::Mesh(const aiMesh* mesh) {
 													);
 			}
 			
-			
+			BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size() + i;
 			
 		}	
 	}
-	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";	
+	BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size();
+	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 }
 
 Mesh::~Mesh() {
 }
 
 void Mesh::render() {
+	glBegin(GL_TRIANGLES);
 	
+	//BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size();
+	
+	for (uint32 i = 0; i < vertices_.size(); i++) {
+		glNormal3fv( &normals_[i].x );
+		glVertex3fv( &vertices_[i].x );
+	}
+	
+	glEnd();
 }
 
 

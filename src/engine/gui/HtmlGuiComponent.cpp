@@ -229,7 +229,6 @@ void HtmlGuiComponent::testDrawTestBerkelium() {
     
     // wait a bit before calling Berkelium::update() again
     //if (testint > 3) {
-		BOOST_LOG_TRIVIAL(debug) << "calling update";
 		Berkelium::update();
 		testint = -1;
 	//}
