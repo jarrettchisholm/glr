@@ -25,6 +25,8 @@ public:
 	Texture();
 	Texture(utilities::Image* image);
 	virtual ~Texture();
+	
+	void bind();
 
 private:
 	GLuint textureId_;

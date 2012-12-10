@@ -45,6 +45,7 @@ Texture* TextureManager::getTexture(const std::string filename) {
 	
 	std::string basepath = "/home/jarrett/projects/chisholmsoft/models/";
 	
+	BOOST_LOG_TRIVIAL(debug) << "Loading texture image.";
 	utilities::ImageLoader il;
     utilities::Image* image = il.loadImageData(basepath + filename);
     
@@ -55,6 +56,7 @@ Texture* TextureManager::getTexture(const std::string filename) {
     
     BOOST_LOG_TRIVIAL(debug) << "TextureManager::getTexture: image: " << image->width << "x" << image->height;
 	
+	BOOST_LOG_TRIVIAL(debug) << "Creating texture.";
 	textures_[filename] = std::unique_ptr<Texture>( new Texture(image) );
 	
 	delete image;

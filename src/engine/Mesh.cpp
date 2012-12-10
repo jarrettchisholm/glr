@@ -17,6 +17,9 @@ namespace engine {
 
 Mesh::Mesh(const aiMesh* mesh) {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";
+	
+	uint32 currentIndex = 0;
+	
 	for (uint32 t = 0; t < mesh->mNumFaces; ++t) {
 		const aiFace* face = &mesh->mFaces[t];
 		GLenum face_mode;
@@ -30,10 +33,11 @@ Mesh::Mesh(const aiMesh* mesh) {
 		
 		uint32 numIndices = face->mNumIndices;
 		
-		vertices_.resize( vertices_.size() + numIndices );
-		normals_.resize( normals_.size() + numIndices );
-		colors_.resize( colors_.size() + numIndices );
-		BOOST_LOG_TRIVIAL(debug) << "size: " << (vertices_.size() + numIndices);
+		vertices_.resize( currentIndex + numIndices );
+		normals_.resize( currentIndex + numIndices );
+		textureCoordinates_.resize( currentIndex + numIndices );
+		colors_.resize( currentIndex + numIndices );
+		
 		//BOOST_LOG_TRIVIAL(debug) << "loading face: " << face->mNumIndices;
 		// go through all vertices in face
 		for(uint32 i = 0; i < numIndices; i++) {
@@ -48,27 +52,29 @@ Mesh::Mesh(const aiMesh* mesh) {
 				glVertex3fv(&mesh->mVertices[vertexIndex].x);
 			}
 			*/
-				
+			
 			if (mesh->mNormals != 0) {
-				vertices_[vertices_.size() + i]		= glm::vec3( mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z );
-				normals_[normals_.size() + i]		= glm::vec3( mesh->mNormals[vertexIndex].x, mesh->mNormals[vertexIndex].y, mesh->mNormals[vertexIndex].z );
+				vertices_[currentIndex + i]		= glm::vec3( mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z );
+				normals_[currentIndex + i]		= glm::vec3( mesh->mNormals[vertexIndex].x, mesh->mNormals[vertexIndex].y, mesh->mNormals[vertexIndex].z );
+			}
+			
+			if (mesh->HasTextureCoords(0)) {
+				textureCoordinates_[currentIndex + i] = glm::vec2( mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y );
 			}
 			
 			//utilities::AssImpUtilities::color4_to_vec4(&mesh->mColors[0][vertexIndex], colors_[colors_.size() + i]);
 			if (mesh->mColors[0] != 0) {
-				colors_[colors_.size() + i]			= glm::vec4(
+				colors_[currentIndex + i]			= glm::vec4(
 														(float)mesh->mColors[0][vertexIndex].a,
 														(float)mesh->mColors[0][vertexIndex].b,
 														(float)mesh->mColors[0][vertexIndex].g,
 														(float)mesh->mColors[0][vertexIndex].r
 													);
-			}
-			
-			BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size() + i;
-			
-		}	
+			}			
+		}
+		
+		currentIndex += 3;
 	}
-	BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size();
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 }
 
@@ -78,11 +84,10 @@ Mesh::~Mesh() {
 void Mesh::render() {
 	glBegin(GL_TRIANGLES);
 	
-	//BOOST_LOG_TRIVIAL(debug) << "rendering mesh: " << vertices_.size();
-	
 	for (uint32 i = 0; i < vertices_.size(); i++) {
 		glNormal3fv( &normals_[i].x );
 		glVertex3fv( &vertices_[i].x );
+		glTexCoord2fv( &textureCoordinates_[i].x );
 	}
 	
 	glEnd();

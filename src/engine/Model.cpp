@@ -19,9 +19,13 @@ Model::Model() {
 }
 
 Model::Model( const aiScene* scene ) {
+	BOOST_LOG_TRIVIAL(debug) << "load meshes...";
 	loadMeshes(scene);
+	BOOST_LOG_TRIVIAL(debug) << "load textures...";
 	loadTextures(scene);
+	BOOST_LOG_TRIVIAL(debug) << "load materials...";
 	loadMaterials(scene);
+	BOOST_LOG_TRIVIAL(debug) << "load animations...";
 	loadAnimations(scene);
 }
 
@@ -30,7 +34,10 @@ Model::~Model() {
 }
 
 void Model::render() {
+	setLighting();
+	
 	for (uint32 i=0; i < meshes_.size(); i++) {
+		textures_[i]->bind();
 		meshes_[i]->render();
 	}
 	
@@ -239,11 +246,8 @@ void Model::loadMeshes(const aiScene* scene) {
 	// get all meshes assigned to this node	
 	for (uint32 n = 0; n < scene->mNumMeshes; n++) {
 		// create new mesh
-		BOOST_LOG_TRIVIAL(debug) << "S ah 1";
 		meshes_[n] = std::unique_ptr<Mesh>(new Mesh( scene->mMeshes[n] ));
-		BOOST_LOG_TRIVIAL(debug) << "S ah 2";
 		materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
-		BOOST_LOG_TRIVIAL(debug) << "S ah 3";
 		textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	}
 }
@@ -254,27 +258,30 @@ void Model::loadTextures(const aiScene* scene) {
 		exit(1);
 	}
 
+	BOOST_LOG_TRIVIAL(debug) << "Loading textures.";
+
 	/* getTexture Filenames and Numb of Textures */
 	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
-		int texIndex = 0;
 		aiReturn texFound = AI_SUCCESS;
-
 		aiString path;	// filename
-		texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, texIndex, &path);
+
+		texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 		
+		BOOST_LOG_TRIVIAL(debug) << "Loading texture with path: " << path.data;
+
 		if (texFound == AI_SUCCESS) {
 			Texture* texture = TextureManager::getInstance()->getTexture( path.data );
 			if (texture == 0) {
 				BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
 			} else {
-				textures_.reserve( textures_.size() + 1);
+				textures_.resize( textures_.size() + 1);
 				textures_[m] = texture;
 			}
 		}
 	}	
 }
 
-void Model::loadMaterials(const aiScene* scene) {
+void Model::loadMaterials(const aiScene* scene) {	
 	materials_.resize( scene->mNumMaterials );
 	
 	for (uint32 m = 0; m < scene->mNumMaterials; m++) {

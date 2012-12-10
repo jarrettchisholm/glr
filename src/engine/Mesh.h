@@ -39,6 +39,7 @@ public:
 private:
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec3 > normals_;
+	std::vector< glm::vec2 > textureCoordinates_;
 	std::vector< glm::vec4 > colors_;
 	
 	std::string textureFileName_;

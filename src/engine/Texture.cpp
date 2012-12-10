@@ -43,7 +43,16 @@ void Texture::loadTexture(utilities::Image* image) {
 	GLenum huboError = glGetError();
 	if(huboError){
 		BOOST_LOG_TRIVIAL(debug) << "Texture::loadTexture: error loading texture in opengl";
+	} else {
+		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded texture.";
 	}
+}
+
+void Texture::bind() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable( GL_TEXTURE_2D );
+	glBindTexture(GL_TEXTURE_2D, textureId_);
 }
 
 }

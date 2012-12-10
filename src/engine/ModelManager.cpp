@@ -81,7 +81,7 @@ void ModelManager::testLoadTexture() {
  * the ModelManager.
  */ 
 IModel* ModelManager::loadModel(const std::string filename) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading model...";
+	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
 	
 	if (models_[filename] != 0) {
 		BOOST_LOG_TRIVIAL(debug) << "Model found.";
@@ -113,6 +113,8 @@ IModel* ModelManager::loadModel(const std::string filename) {
 	// doing so can cause severe resource leaking.
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
 	aiReleaseImport(scene);
+	
+	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
 	
 	return models_[filename].get();
 }

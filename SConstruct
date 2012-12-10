@@ -38,7 +38,8 @@ env = Environment(ENV = os.environ, CCFLAGS=[])
 # Set our g++ compiler flags
 cpp_flags = [
 '-std=gnu++0x',
-'-I"../lwis/src/engine"'
+'-I"../lwis/src/engine"',
+#'-D_GLIBCXX_DEBUG'
 ]
 
 if (os.name == "nt" or os.name == "win32"):
