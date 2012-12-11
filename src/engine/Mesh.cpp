@@ -82,12 +82,13 @@ Mesh::~Mesh() {
 }
 
 void Mesh::render() {
-	glBegin(GL_TRIANGLES);
+	glBegin( GL_TRIANGLES );
 	
 	for (uint32 i = 0; i < vertices_.size(); i++) {
-		glNormal3fv( &normals_[i].x );
-		glVertex3fv( &vertices_[i].x );
+		//BOOST_LOG_TRIVIAL(debug) << "texCoords: (" << textureCoordinates_[i].x << ", " << textureCoordinates_[i].y << ")";
 		glTexCoord2fv( &textureCoordinates_[i].x );
+		glVertex3fv( &vertices_[i].x );
+		glNormal3fv( &normals_[i].x );
 	}
 	
 	glEnd();
