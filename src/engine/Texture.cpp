@@ -13,7 +13,10 @@ namespace icee {
 namespace engine {
 
 Texture::Texture(utilities::Image* image) {
-	loadTexture(image);
+	if (image == 0)
+		textureId_ = 0;
+	else
+		loadTexture(image);
 }
 
 Texture::~Texture() {
@@ -33,16 +36,11 @@ void Texture::loadTexture(utilities::Image* image) {
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
-
-    // And create 2d mipmaps for the minifying function
-    //gluBuild2DMipmaps(GL_TEXTURE_2D, 4, infoheader.biWidth, infoheader.biHeight, GL_RGBA, GL_UNSIGNED_BYTE, l_texture);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
  
 	// error check
 	GLenum huboError = glGetError();
 	if(huboError){
-		BOOST_LOG_TRIVIAL(debug) << "Texture::loadTexture: error loading texture in opengl";
+		BOOST_LOG_TRIVIAL(error) << "Texture::loadTexture: error loading texture in opengl";
 	} else {
 		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded texture.";
 	}

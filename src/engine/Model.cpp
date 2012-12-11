@@ -37,7 +37,8 @@ void Model::render() {
 	setLighting();
 	
 	for (uint32 i=0; i < meshes_.size(); i++) {
-		textures_[i]->bind();
+		if (textures_[ textureMap_[i] ] != 0)
+			textures_[ textureMap_[i] ]->bind();
 		meshes_[i]->render();
 	}
 	
@@ -272,11 +273,10 @@ void Model::loadTextures(const aiScene* scene) {
 		if (texFound == AI_SUCCESS) {
 			Texture* texture = TextureManager::getInstance()->getTexture( path.data );
 			if (texture == 0) {
-				BOOST_LOG_TRIVIAL(debug) << "Not able to load texture.";
-			} else {
-				textures_.resize( textures_.size() + 1);
-				textures_[m] = texture;
+				BOOST_LOG_TRIVIAL(warning) << "Not able to load texture.";
 			}
+			textures_.resize( textures_.size() + 1);
+			textures_[m] = texture;
 		}
 	}	
 }
