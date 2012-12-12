@@ -50,7 +50,7 @@ Mesh::Mesh(const aiMesh* mesh) {
 			}
 			
 			if (mesh->HasTextureCoords(0)) {
-				textureCoordinates_[currentIndex + i] = glm::vec2( mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y );
+				textureCoordinates_[currentIndex + i] = glm::vec2( mesh->mTextureCoords[0][vertexIndex].x, mesh->mTextureCoords[0][vertexIndex].y );
 			}
 			
 			//utilities::AssImpUtilities::color4_to_vec4(&mesh->mColors[0][vertexIndex], colors_[colors_.size() + i]);
@@ -76,7 +76,7 @@ void Mesh::render() {
 	glBegin( GL_TRIANGLES );
 	
 	for (uint32 i = 0; i < vertices_.size(); i++) {
-		//BOOST_LOG_TRIVIAL(debug) << "texCoords: (" << textureCoordinates_[i].x << ", " << textureCoordinates_[i].y << ")";
+		//BOOST_LOG_TRIVIAL(debug) << "texCoords " << i << ": (" << textureCoordinates_[i].x << ", " << textureCoordinates_[i].y << ")";
 		glTexCoord2fv( &textureCoordinates_[i].x );
 		glNormal3fv( &normals_[i].x );
 		glVertex3fv( &vertices_[i].x );
