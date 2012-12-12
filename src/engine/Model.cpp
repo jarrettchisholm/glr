@@ -261,6 +261,8 @@ void Model::loadTextures(const aiScene* scene) {
 
 	BOOST_LOG_TRIVIAL(debug) << "Loading textures.";
 
+	textures_.resize( scene->mNumMaterials );
+
 	/* getTexture Filenames and Numb of Textures */
 	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
 		aiReturn texFound = AI_SUCCESS;
@@ -275,7 +277,6 @@ void Model::loadTextures(const aiScene* scene) {
 			if (texture == 0) {
 				BOOST_LOG_TRIVIAL(warning) << "Not able to load texture.";
 			}
-			textures_.resize( textures_.size() + 1);
 			textures_[m] = texture;
 		}
 	}	
