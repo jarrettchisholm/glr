@@ -7,7 +7,7 @@
 
 #include "Test.h"
 
-#include "engine/IceEngineCommon.h"
+//#include "engine/IceEngineCommon.h"
 #include <iostream>
 
 #include <boost/log/trivial.hpp>
@@ -26,6 +26,7 @@ sint32 Test::mousePosY = 0;
 bool Test::test = false;
 
 int main() {
+	/*
 	BOOST_LOG_TRIVIAL(debug) << "Initializing engine test...";
 	icee::engine::IOS* os = icee::engine::IceGraphicsEngine::createIOSObject();
 	os->initialize();
@@ -140,6 +141,7 @@ int main() {
 	delete os;
 
 	return 0;
+	*/
 }
 
 void Test::receiveKeyboardEvent(lwis::engine::KEYBOARD_EVENT evt, lwis::engine::KEY key,

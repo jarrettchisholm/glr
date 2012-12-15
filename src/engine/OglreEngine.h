@@ -1,14 +1,16 @@
 /*
- * IceGraphicsEngine.h
+ * OglerEngine.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#ifndef ICEGRAPHICSENGINE_H_
-#define ICEGRAPHICSENGINE_H_
+#ifndef OGLREENGINE_H_
+#define OGLREENGINE_H_
 
-#include "IIceWindow.h"
+#include <memory>
+
+#include "OglreWindow.h"
 #include "IOS.h"
 
 // we require a C++ compiler.
@@ -45,32 +47,35 @@ namespace engine {
 
 using namespace compatibility;
 
-class IceGraphicsEngine {
+class OglreEngine {
 public:
-	static IIceWindow* createWindow(uint32 width = 800, uint32 height = 600,
-			bool fullscreen = false, bool vsync = false);
+	static IOglreWindow* createWindow(uint32 width = 800, uint32 height = 600, bool fullscreen = false, bool vsync = false);
 
 	static IOS* createIOSObject();
 
 private:
+	static bool windowCreated_;
+	static std::unique_ptr<OglreWindow> oglerWindow_;
+
 	/**
 	 * Private.
 	 */
-	IceGraphicsEngine() {
+	OglreEngine() {
+		windowCreated_ = false;
 	}
 	;
 
 	/**
 	 * Private.
 	 */
-	IceGraphicsEngine(const IceGraphicsEngine& iceGE) {
+	OglreEngine(const OglreEngine& iceGE) {
 	}
 	;
 
 	/**
 	 * Private.
 	 */
-	virtual ~IceGraphicsEngine() {
+	virtual ~OglreEngine() {
 	}
 	;
 };
@@ -79,4 +84,4 @@ private:
 
 }
 
-#endif /* ICEGRAPHICSENGINE_H_ */
+#endif /* OGLREENGINE_H_ */

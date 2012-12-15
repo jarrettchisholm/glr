@@ -1,17 +1,17 @@
 /*
- * IceEngineCommon.h
+ * OglreEngineCommon.h
  *
  *  Created on: 2011-05-07
  *      Author: jarrett
  */
 
-#ifndef ICEENGINECOMMON_H_
-#define ICEENGINECOMMON_H_
+#ifndef OGLREENGINECOMMON_H_
+#define OGLREENGINECOMMON_H_
 
 //#include "IIceGraphicsEngine.h"
-#include "IceGraphicsEngine.h"
+#include "OglreEngine.h"
 //#include "IceFactory.h"
-#include "IIceWindow.h"
+#include "IOglreWindow.h"
 
 #include "ISceneManager.h"
 #include "ISceneNode.h"
@@ -22,4 +22,4 @@
 #include "gui/IGUI.h"
 #include "gui/IGUIComponent.h"
 
-#endif /* ICEENGINECOMMON_H_ */
+#endif /* OGLREENGINECOMMON_H_ */
