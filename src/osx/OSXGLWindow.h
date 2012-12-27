@@ -11,7 +11,7 @@
 #ifndef OSXGLWINDOW_H_
 #define OSXGLWINDOW_H_
 
-#include "../engine/IceGLWindow.h"
+#include "../engine/GLWindow.h"
 
 /* printf */
 #include <stdio.h>
@@ -34,7 +34,7 @@ namespace macosx {
 
 using namespace compatibility;
 
-class OSXGLWindow: public icee::engine::IceGLWindow {
+class OSXGLWindow: public icee::engine::GLWindow {
 public:
 	OSXGLWindow();
 	virtual ~OSXGLWindow();

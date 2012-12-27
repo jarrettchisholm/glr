@@ -179,7 +179,7 @@ sint32 LinuxGLWindow::create(uint32 width, uint32 height, uint32 depth, bool ful
 }
 
 void LinuxGLWindow::destroy() {
-	IceGLWindow::destroy();
+	GLWindow::destroy();
 
 	if (context_) {
 		if (!glXMakeCurrent(display_, None, NULL)) {
@@ -202,7 +202,7 @@ void LinuxGLWindow::destroy() {
 
 sint32 LinuxGLWindow::initialize() {
 	// call 'superclasses' initialize function
-	sint32 retVal = icee::engine::IceGLWindow::initialize();
+	sint32 retVal = icee::engine::GLWindow::initialize();
 	if (retVal != 0)
 		return retVal;
 
@@ -367,7 +367,7 @@ void LinuxGLWindow::render() {
 	
 	//asset_manager.drawAll();
 	
-	IceGLWindow::render();
+	GLWindow::render();
 	
 	endRender();
 }

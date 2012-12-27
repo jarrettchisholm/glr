@@ -127,7 +127,7 @@ void OSWindows::renderGL() {
 /*
  * create a window
  */
-icee::engine::IIceWindow* OSWindows::createWindow(uint32 width, uint32 height, uint32 depth,
+icee::engine::IWindow* OSWindows::createWindow(uint32 width, uint32 height, uint32 depth,
 		bool fullscreen, bool vsync) {
 	WindowsGLWindow* lWin = new WindowsGLWindow();
 	if (lWin->create(width, height, depth, fullscreen, vsync) != 0) {

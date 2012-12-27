@@ -11,7 +11,7 @@
 #ifndef LINUXGLWINDOW_H_
 #define LINUXGLWINDOW_H_
 
-#include "../engine/IceGLWindow.h"
+#include "../engine/GLWindow.h"
 #include "../engine/TextureManager.h"
 
 /* printf */
@@ -41,7 +41,7 @@ namespace linuxos {
 
 using namespace compatibility;
 
-class LinuxGLWindow: public icee::engine::IceGLWindow {
+class LinuxGLWindow: public icee::engine::GLWindow {
 public:
 	LinuxGLWindow();
 	virtual ~LinuxGLWindow();

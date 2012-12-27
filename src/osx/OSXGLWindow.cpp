@@ -182,7 +182,7 @@ void OSXGLWindow::destroy() {
 
 sint32 OSXGLWindow::initialize() {
 	// call 'superclasses' initialize function
-	icee::engine::IceGLWindow::initialize();
+	icee::engine::GLWindow::initialize();
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0f);

@@ -11,7 +11,7 @@
 #ifndef WINDOWSGLWINDOW_H_
 #define WINDOWSGLWINDOW_H_
 
-#include "../engine/IceGLWindow.h"
+#include "../engine/GLWindow.h"
 
 /* printf */
 #include <stdio.h>
@@ -27,7 +27,7 @@ namespace windowsos {
 
 using namespace compatibility;
 
-class WindowsGLWindow: public icee::engine::IceGLWindow {
+class WindowsGLWindow: public icee::engine::GLWindow {
 public:
 	WindowsGLWindow();
 	virtual ~WindowsGLWindow();

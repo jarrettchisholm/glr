@@ -1,12 +1,12 @@
 /*
- * IIceWindow.h
+ * IWindow.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#ifndef IICEWINDOW_H_
-#define IICEWINDOW_H_
+#ifndef IWINDOW_H_
+#define IWINDOW_H_
 
 #include <string>
 
@@ -22,9 +22,9 @@ namespace engine {
 
 using namespace compatibility;
 
-class IIceWindow {
+class IWindow {
 public:
-	virtual ~IIceWindow() {
+	virtual ~IWindow() {
 	}
 	;
 
@@ -51,4 +51,4 @@ protected:
 
 }
 
-#endif /* IICEWINDOW_H_ */
+#endif /* IWINDOW_H_ */

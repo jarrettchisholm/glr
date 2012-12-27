@@ -1,11 +1,11 @@
 /*
- * IceGraphicsEngine.cpp
+ * GraphicsEngine.cpp
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#include "IceGraphicsEngine.h"
+#include "GraphicsEngine.h"
 
 namespace icee {
 
@@ -14,7 +14,7 @@ namespace engine {
 /**
  *
  */
-IIceWindow* IceGraphicsEngine::createWindow(uint32 width, uint32 height,
+IWindow* GraphicsEngine::createWindow(uint32 width, uint32 height,
 		bool fullscreen, bool vsync) {
 
 	return 0;
@@ -23,7 +23,7 @@ IIceWindow* IceGraphicsEngine::createWindow(uint32 width, uint32 height,
 /**
  *
  */
-IOS* IceGraphicsEngine::createIOSObject() {
+IOS* GraphicsEngine::createIOSObject() {
 	IOS* retObj = 0;
 #ifdef _WIN32
 	retObj = new icee::windowsos::OSWindows();
