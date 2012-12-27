@@ -12,7 +12,7 @@
 
 #include "GUI.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

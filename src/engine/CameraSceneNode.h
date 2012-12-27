@@ -12,7 +12,7 @@
 #include "Quaternion.h"
 //#include "IInputListener.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

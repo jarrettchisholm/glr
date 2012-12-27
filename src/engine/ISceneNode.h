@@ -15,7 +15,7 @@
 #include "IModel.h"
 
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

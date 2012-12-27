@@ -8,9 +8,13 @@
 #ifndef GLWINDOW_H_
 #define GLWINDOW_H_
 
+#include <memory>
+
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+#include <SFML/Window.hpp>
 
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
@@ -22,7 +26,7 @@
 //#include "gui/IGUI.h"
 #include "gui/GUI.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 
@@ -30,13 +34,14 @@ using namespace compatibility;
 
 class GLWindow: public IWindow {
 private:
-	GUI* gui_;
+	std::unique_ptr<sf::Window> window_;
+	std::unique_ptr<GUI> gui_;
 
 protected:
 	DefaultSceneManager* sMgr_;
 
 public:
-	GLWindow();
+	GLWindow(int width, int height, std::string title);
 	virtual ~GLWindow();
 
 	virtual void* getWindowPointer();

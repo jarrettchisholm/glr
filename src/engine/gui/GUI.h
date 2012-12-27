@@ -16,7 +16,7 @@
 #include "IGUIComponent.h"
 #include "HtmlGuiComponent.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 	

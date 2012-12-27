@@ -12,7 +12,7 @@
 #include "../common/math/Math.h"
 #include <math.h>
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

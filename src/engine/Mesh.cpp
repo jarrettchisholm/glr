@@ -11,7 +11,7 @@
 
 #include "Mesh.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

@@ -11,12 +11,12 @@
 
 #include <boost/log/trivial.hpp>
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 
-GLWindow::GLWindow() {
-
+GLWindow::GLWindow(int width, int height, std::string title) {
+	window_ = std::unique_ptr<sf::Window>(new sf::Window(sf::VideoMode(width, height), title));
 }
 
 GLWindow::~GLWindow() {
@@ -27,7 +27,9 @@ GLWindow::~GLWindow() {
  * Note: Should be over-ridden in subclass!
  */
 void* GLWindow::getWindowPointer() {
-	return 0;
+	sf::WindowHandle handle = window_->getSystemHandle();
+	
+	return (void*)handle;
 }
 
 void GLWindow::resize(uint32 width, uint32 height) {
@@ -82,16 +84,18 @@ ISceneManager* GLWindow::getSceneManager() {
 }
 
 IGUI* GLWindow::getHtmlGui() {
-	gui_ = new GUI();
+	gui_ = std::unique_ptr<GUI>(new GUI());
 
 	int result = gui_->initialize();
 	
 	if (result < 0) {
-		delete gui_;
+		//delete gui_;
+		// TODO: Should I delete the raw pointer?
+		BOOST_LOG_TRIVIAL(warning) << "GUI did not initialize successfully.";
 		return 0;		
 	}
 	
-	return gui_;
+	return gui_.get();
 }
 
 }

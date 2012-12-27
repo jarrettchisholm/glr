@@ -17,7 +17,7 @@
 
 #include <iostream>
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

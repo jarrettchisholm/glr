@@ -11,7 +11,7 @@
 #include "DefaultSceneNode.h"
 #include "ModelManager.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

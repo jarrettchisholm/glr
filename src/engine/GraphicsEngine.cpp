@@ -5,19 +5,29 @@
  *      Author: jarrett
  */
 
+#include <boost/log/trivial.hpp>
+
 #include "GraphicsEngine.h"
 
-namespace icee {
+#include "GLWindow.h"
+
+namespace oglre {
 
 namespace engine {
 
 /**
  *
  */
-IWindow* GraphicsEngine::createWindow(uint32 width, uint32 height,
-		bool fullscreen, bool vsync) {
+std::unique_ptr<IWindow> GraphicsEngine::createWindow(uint32 width, uint32 height, uint32 depth,
+			bool fullscreen, bool vsync) {
 
-	return 0;
+	std::unique_ptr<IWindow> window(new GLWindow(width, height, "SFML Test"));
+	
+	if (window->initialize() < 0) {
+		BOOST_LOG_TRIVIAL(warning) << "Window did not initialize successfully.";
+	}
+	
+	return window;
 }
 
 /**
@@ -25,17 +35,6 @@ IWindow* GraphicsEngine::createWindow(uint32 width, uint32 height,
  */
 IOS* GraphicsEngine::createIOSObject() {
 	IOS* retObj = 0;
-#ifdef _WIN32
-	retObj = new icee::windowsos::OSWindows();
-#endif
-
-#ifdef linux
-	retObj = new icee::linuxos::OSLinux();
-#endif
-
-#ifdef __APPLE__
-	retObj = new icee::macosx::OSX();
-#endif
 
 	return retObj;
 }

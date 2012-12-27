@@ -8,7 +8,7 @@
 #ifndef IGUICOMPONENT_H_
 #define IGUICOMPONENT_H_
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

@@ -23,7 +23,7 @@
 //#include "../../vmath/Vector3f.h"
 
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

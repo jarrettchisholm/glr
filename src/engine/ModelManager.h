@@ -26,7 +26,7 @@
 
 #include "Model.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 	

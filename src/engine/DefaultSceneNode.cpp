@@ -16,7 +16,7 @@
 
 #include <stdlib.h>
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

@@ -8,6 +8,8 @@
 #ifndef GRAPHICSENGINE_H_
 #define GRAPHICSENGINE_H_
 
+#include <memory>
+
 #include "IWindow.h"
 #include "IOS.h"
 
@@ -16,30 +18,7 @@
 #error C++ compiler required.
 #endif
 
-// check if we are using windows
-#ifdef _WIN32
-#include "../windows/Common.h"
-#define SUPPORTED_PLATFORM 1
-#endif
-
-// check if we are using linux
-#ifdef linux
-#include "../linux/Common.h"
-#define SUPPORTED_PLATFORM 1
-#endif
-
-// check if we are using osx
-#ifdef __APPLE__ //__MAC_OS_X_VERSION_MAX_ALLOWED
-#include "../osx/Common.h"
-#define SUPPORTED_PLATFORM 1
-#endif
-
-// error check
-#ifndef SUPPORTED_PLATFORM
-#error Your platform is not supported.
-#endif
-
-namespace icee {
+namespace oglre {
 
 namespace engine {
 
@@ -47,7 +26,7 @@ using namespace compatibility;
 
 class GraphicsEngine {
 public:
-	static IWindow* createWindow(uint32 width = 800, uint32 height = 600,
+	static std::unique_ptr<IWindow> createWindow(uint32 width = 800, uint32 height = 600, uint32 depth = 24,
 			bool fullscreen = false, bool vsync = false);
 
 	static IOS* createIOSObject();

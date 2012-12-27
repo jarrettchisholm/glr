@@ -10,7 +10,7 @@
 
 #include "ISceneNode.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

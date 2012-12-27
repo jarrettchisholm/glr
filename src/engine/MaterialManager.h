@@ -24,7 +24,7 @@
 
 #include "Material.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 	

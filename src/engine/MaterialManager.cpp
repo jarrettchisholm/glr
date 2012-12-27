@@ -12,7 +12,7 @@
 #include "MaterialManager.h"
 
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

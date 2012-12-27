@@ -17,7 +17,7 @@
 
 #define DEBUG_PAINT true
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

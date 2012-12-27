@@ -14,7 +14,7 @@
 
 #include "../common/compatibility/Types.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 	

@@ -14,7 +14,7 @@
 #include "../common/utilities/ImageLoader.h"
 
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 

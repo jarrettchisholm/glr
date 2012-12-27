@@ -11,7 +11,7 @@
 #include "IOS.h"
 #include "DefaultSceneManager.h"
 
-namespace icee {
+namespace oglre {
 
 namespace engine {
 
