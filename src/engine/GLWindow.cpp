@@ -1,11 +1,11 @@
 /*
- * IceGLWindow.cpp
+ * GLWindow.cpp
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#include "IceGLWindow.h"
+#include "GLWindow.h"
 
 #include "GL/glu.h"
 
@@ -15,22 +15,22 @@ namespace icee {
 
 namespace engine {
 
-IceGLWindow::IceGLWindow() {
+GLWindow::GLWindow() {
 
 }
 
-IceGLWindow::~IceGLWindow() {
+GLWindow::~GLWindow() {
 	destroy();
 }
 
 /**
  * Note: Should be over-ridden in subclass!
  */
-void* IceGLWindow::getWindowPointer() {
+void* GLWindow::getWindowPointer() {
 	return 0;
 }
 
-void IceGLWindow::resize(uint32 width, uint32 height) {
+void GLWindow::resize(uint32 width, uint32 height) {
 	/* prevent divide-by-zero */
 	if (height == 0)
 		height = 1;
@@ -44,44 +44,44 @@ void IceGLWindow::resize(uint32 width, uint32 height) {
 	height_ = height;
 }
 
-sint32 IceGLWindow::initialize() {
+sint32 GLWindow::initialize() {
 	sMgr_ = 0;
 	sMgr_ = new DefaultSceneManager();
 
 	return 0;
 }
 
-void IceGLWindow::destroy() {
+void GLWindow::destroy() {
 	if (sMgr_ != 0)
 		delete sMgr_;
 }
 
-sint32 IceGLWindow::handleEvents() {
+sint32 GLWindow::handleEvents() {
 	return 0;
 }
 
-void IceGLWindow::render() {
+void GLWindow::render() {
 	if (gui_)
 		gui_->render();
 }
 
-uint32 IceGLWindow::getWidth() {
+uint32 GLWindow::getWidth() {
 	return width_;
 }
 
-uint32 IceGLWindow::getHeight() {
+uint32 GLWindow::getHeight() {
 	return height_;
 }
 
-uint32 IceGLWindow::getDepth() {
+uint32 GLWindow::getDepth() {
 	return depth_;
 }
 
-ISceneManager* IceGLWindow::getSceneManager() {
+ISceneManager* GLWindow::getSceneManager() {
 	return sMgr_;
 }
 
-IGUI* IceGLWindow::getHtmlGui() {
+IGUI* GLWindow::getHtmlGui() {
 	gui_ = new GUI();
 
 	int result = gui_->initialize();

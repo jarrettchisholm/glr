@@ -1,14 +1,14 @@
 /*
- * IceGraphicsEngine.h
+ * GraphicsEngine.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#ifndef ICEGRAPHICSENGINE_H_
-#define ICEGRAPHICSENGINE_H_
+#ifndef GRAPHICSENGINE_H_
+#define GRAPHICSENGINE_H_
 
-#include "IIceWindow.h"
+#include "IWindow.h"
 #include "IOS.h"
 
 // we require a C++ compiler.
@@ -45,9 +45,9 @@ namespace engine {
 
 using namespace compatibility;
 
-class IceGraphicsEngine {
+class GraphicsEngine {
 public:
-	static IIceWindow* createWindow(uint32 width = 800, uint32 height = 600,
+	static IWindow* createWindow(uint32 width = 800, uint32 height = 600,
 			bool fullscreen = false, bool vsync = false);
 
 	static IOS* createIOSObject();
@@ -56,21 +56,21 @@ private:
 	/**
 	 * Private.
 	 */
-	IceGraphicsEngine() {
+	GraphicsEngine() {
 	}
 	;
 
 	/**
 	 * Private.
 	 */
-	IceGraphicsEngine(const IceGraphicsEngine& iceGE) {
+	GraphicsEngine(const GraphicsEngine& iceGE) {
 	}
 	;
 
 	/**
 	 * Private.
 	 */
-	virtual ~IceGraphicsEngine() {
+	virtual ~GraphicsEngine() {
 	}
 	;
 };
@@ -79,4 +79,4 @@ private:
 
 }
 
-#endif /* ICEGRAPHICSENGINE_H_ */
+#endif /* GRAPHICSENGINE_H_ */

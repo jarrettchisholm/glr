@@ -130,7 +130,7 @@ void OSLinux::renderGL() {
 /*
  * create a window
  */
-icee::engine::IIceWindow* OSLinux::createWindow(uint32 width, uint32 height, uint32 depth,
+icee::engine::IWindow* OSLinux::createWindow(uint32 width, uint32 height, uint32 depth,
 		bool fullscreen, bool vsync) {
 	LinuxGLWindow* lWin = new LinuxGLWindow();
 	if (lWin->create(width, height, depth, fullscreen, vsync) != 0) {

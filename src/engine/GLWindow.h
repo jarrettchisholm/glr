@@ -1,12 +1,12 @@
 /*
- * IceGLWindow.h
+ * GLWindow.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
 
-#ifndef ICEGLWINDOW_H_
-#define ICEGLWINDOW_H_
+#ifndef GLWINDOW_H_
+#define GLWINDOW_H_
 
 #ifdef _WIN32
 #include <windows.h>
@@ -15,7 +15,7 @@
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
 
-#include "IIceWindow.h"
+#include "IWindow.h"
 #include "DefaultSceneNode.h"
 #include "DefaultSceneManager.h"
 
@@ -28,7 +28,7 @@ namespace engine {
 
 using namespace compatibility;
 
-class IceGLWindow: public IIceWindow {
+class GLWindow: public IWindow {
 private:
 	GUI* gui_;
 
@@ -36,8 +36,8 @@ protected:
 	DefaultSceneManager* sMgr_;
 
 public:
-	IceGLWindow();
-	virtual ~IceGLWindow();
+	GLWindow();
+	virtual ~GLWindow();
 
 	virtual void* getWindowPointer();
 
@@ -63,4 +63,4 @@ public:
 
 }
 
-#endif /* ICEGLWINDOW_H_ */
+#endif /* GLWINDOW_H_ */

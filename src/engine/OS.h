@@ -31,7 +31,7 @@ public:
 	/**
 	 *
 	 */
-	virtual IIceWindow* createWindow(uint32 width = 800, uint32 height = 600, uint32 depth = 24,
+	virtual IWindow* createWindow(uint32 width = 800, uint32 height = 600, uint32 depth = 24,
 			bool fullscreen = false, bool vsync = false) {
 		return 0;
 	}

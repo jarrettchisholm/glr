@@ -31,7 +31,7 @@ public:
 
 	virtual sint32 initialize();
 
-	virtual icee::engine::IIceWindow* createWindow(uint32 width = 800, uint32 height = 600,
+	virtual icee::engine::IWindow* createWindow(uint32 width = 800, uint32 height = 600,
 			uint32 depth = 24, bool fullscreen = false, bool vsync = false);
 	void renderGL();
 
