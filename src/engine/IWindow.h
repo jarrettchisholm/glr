@@ -27,8 +27,22 @@ public:
 	virtual ~IWindow() {
 	}
 	;
+	
+#if defined(_WIN32)
+    // Windows
+    typedef HWND* WindowHandle;
+#elif defined(linux) || defined(freebsd)
+    // Unix - X11
+    typedef unsigned long WindowHandle;
+#elif defined(__APPLE__)
+    // Mac OS X - Cocoa
+    typedef void* WindowHandle;
+#endif
 
-	virtual void* getWindowPointer() = 0;
+	typedef void* InternalWindow;
+
+	virtual WindowHandle getWindowHandle() = 0;
+	virtual InternalWindow getInternalWindowPointer() = 0;
 
 	virtual sint32 initialize() = 0;
 	virtual void destroy() = 0;

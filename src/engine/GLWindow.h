@@ -44,12 +44,16 @@ public:
 	GLWindow(int width, int height, std::string title);
 	virtual ~GLWindow();
 
-	virtual void* getWindowPointer();
+	virtual WindowHandle getWindowHandle();
+	virtual IWindow::InternalWindow getInternalWindowPointer();
 
 	virtual void resize(uint32 width, uint32 height);
 	virtual sint32 initialize();
 	virtual void destroy();
 	sint32 handleEvents();
+	
+	void beginRender();
+	void endRender();
 	virtual void render();
 	virtual bool blah() {
 		return false;
@@ -62,6 +66,8 @@ public:
 	virtual ISceneManager* getSceneManager();
 	
 	virtual IGUI* getHtmlGui();
+	
+	void DrawAQuad();
 };
 
 }

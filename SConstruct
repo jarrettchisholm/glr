@@ -25,7 +25,7 @@ libraries = [
 'GL',
 'GLU',
 'Xi',
-'sfml-graphics',
+'sfml-window',
 'assimp',
 'boost_log', 
 'boost_date_time', 

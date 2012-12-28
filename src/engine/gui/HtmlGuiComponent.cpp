@@ -311,7 +311,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
     bool ignore_partial,
     char* scroll_buffer) {
 	
-	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
+	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
 
     glBindTexture(GL_TEXTURE_2D, dest_texture);
 
@@ -407,7 +407,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
         }
     }
 
-	BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 2";
+	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 2";
     if (DEBUG_PAINT) {
       std::cout << (void*)wini << " Bitmap rect: w="
                 << bitmap_rect.width()<<", h="<<bitmap_rect.height()
@@ -416,19 +416,19 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
                 <<std::endl;
     }
     
-    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 3";
+    //BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 3";
     for (size_t i = 0; i < num_copy_rects; i++) {
         int wid = copy_rects[i].width();
         int hig = copy_rects[i].height();
         int top = copy_rects[i].top() - bitmap_rect.top();
         int left = copy_rects[i].left() - bitmap_rect.left();
-        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 4";
+        //BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 4";
         
         if (DEBUG_PAINT) {
             std::cout << (void*)wini << " Copy rect: w=" << wid << ", h=" << hig << ", ("
                       << top << "," << left << ")" << std::endl;
         }
-        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 5";
+        //BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 5";
         for(int jj = 0; jj < hig; jj++) {
             memcpy(
                 scroll_buffer + jj*wid*kBytesPerPixel,
@@ -436,7 +436,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
                 wid*kBytesPerPixel
                 );
         }
-		BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 6";
+		//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 6";
         // Finally, we perform the main update, just copying the rect that is
         // marked as dirty but not from scrolled data.
         glTexSubImage2D(GL_TEXTURE_2D, 0,
@@ -444,12 +444,12 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
                         wid, hig,
                         GL_BGRA, GL_UNSIGNED_BYTE, scroll_buffer
             );
-        BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 7";
+        //BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 7";
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
     
-    BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 8";
+    //BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 8";
 
     return true;
 }
