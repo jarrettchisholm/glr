@@ -27,6 +27,10 @@ std::unique_ptr<IWindow> GraphicsEngine::createWindow(uint32 width, uint32 heigh
 		BOOST_LOG_TRIVIAL(warning) << "Window did not initialize successfully.";
 	}
 	
+	// VERY wierd bug - I can call 'resize' all I want in the GLWindow class - the initial perspective
+	// doesn't seem to get set unless I call it OUTSIDE of the GLWindow class...wtf?
+	window->resize(width, height);
+	
 	return window;
 }
 

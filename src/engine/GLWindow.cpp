@@ -25,17 +25,15 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 	settings.majorVersion = 2;
 	settings.minorVersion = 0;
 	
-	window_ = std::unique_ptr<sf::Window>(
-		new sf::Window(
-			sf::VideoMode(width, height), 
-			title,
-			sf::Style::Default, 
-			settings
-		)
+	window_ = new sf::Window(
+		sf::VideoMode(width, height, 32), 
+		title,
+		sf::Style::Default, 
+		settings
 	);
 	
 	//window_->setVerticalSyncEnabled(true);
-	window_->setActive();
+	//window_->setActive();
 }
 
 GLWindow::~GLWindow() {
@@ -49,13 +47,14 @@ IWindow::WindowHandle GLWindow::getWindowHandle() {
 }
 
 IWindow::InternalWindow GLWindow::getInternalWindowPointer() {
-	return window_.get();
+	return window_;
 }
 
 void GLWindow::resize(uint32 width, uint32 height) {
 	/* prevent divide-by-zero */
 	if (height == 0)
 		height = 1;
+	
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -66,9 +65,7 @@ void GLWindow::resize(uint32 width, uint32 height) {
 	height_ = height;
 }
 
-sint32 GLWindow::initialize() {
-	glEnable(GL_DEPTH_TEST);
-	
+sint32 GLWindow::initialize() {	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	//glClearDepth(1.0f);
@@ -85,7 +82,7 @@ sint32 GLWindow::initialize() {
 	
 	sMgr_ = 0;
 	sMgr_ = new DefaultSceneManager();
-
+	
 	return 0;
 }
 
@@ -132,7 +129,7 @@ void GLWindow::endRender() {
 void GLWindow::render() {
 	beginRender();
 	
-	DrawAQuad();
+	//DrawAQuad();
 	
 	sMgr_->drawAll();
 	
@@ -143,16 +140,6 @@ void GLWindow::render() {
 }
 
 void GLWindow::DrawAQuad() {
-	//glClearColor(1.0, 1.0, 1.0, 1.0);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glOrtho(-1., 1., -1., 1., 1., 20.);
-
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-
 	glTranslatef(-0., -0., -30.);
 
 	glBegin(GL_QUADS);

@@ -34,7 +34,7 @@ using namespace compatibility;
 
 class GLWindow: public IWindow {
 private:
-	std::unique_ptr<sf::Window> window_;
+	sf::Window* window_;
 	std::unique_ptr<GUI> gui_;
 
 protected:
