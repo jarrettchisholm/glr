@@ -59,7 +59,7 @@ void CameraSceneNode::render() {
 		rotation_.getConjugate().fillMatrix(matrix);
 
 		glMultMatrixf(&matrix[0]);
-
+		
 		glTranslatef(-pos_.x, -pos_.y, -pos_.z);
 	}
 }
@@ -128,26 +128,6 @@ void CameraSceneNode::tick(float32 time) {
 	heading.buildFromAxisAngle(0, 1, 0, (yRot_ * time * rotSpeed_) * math::DEGTORAD);
 
 	rotation_ = heading * pitch;
-
-	/*
-	 // rotation
-	 if (xRot_ != 0) {
-	 Quaternion quatRotation = Quaternion();
-	 quatRotation.buildFromAxisAngle(1, 0, 0, (xRot_ * time * rotSpeed_) * math::DEGTORAD);
-	 //quatRotation.normalize();
-	 rotation_ = rotation_ * quatRotation;
-	 xRot_ = 0;
-	 rotation_.normalize();
-	 }
-	 if (yRot_ != 0) {
-	 Quaternion quatRotation = Quaternion();
-	 quatRotation.buildFromAxisAngle(0, 1, 0, (yRot_ * time * rotSpeed_) * math::DEGTORAD);
-	 //quatRotation.normalize();
-	 rotation_ = quatRotation * rotation_;
-	 yRot_ = 0;
-	 rotation_.normalize();
-	 }
-	 */
 }
 
 }

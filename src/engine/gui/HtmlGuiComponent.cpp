@@ -62,28 +62,39 @@ int HtmlGuiComponent::load() {
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutCallback"),
         Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), false));
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutCallbackSync"),
         Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), true));
+        
 	window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest"),
         Berkelium::Script::Variant::emptyObject());
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest.someArray"),
         Berkelium::Script::Variant::emptyArray());
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest.someArray[0]"),
         Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), false));
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest.someArray[1]"),
         Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), true));
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest.nullValue"),
         Berkelium::Script::Variant());
+        
     window_->addBindOnStartLoading(
         Berkelium::WideString::point_to(L"glutObjectTest.stringValue"),
         Berkelium::Script::Variant("Hello, World!"));
 	// TESTING CALLBACKS END
+	
+	window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"cameraGetX"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"cameraGetX"), false));
     
     testint = 31;
     webTextureReady_ = false;
@@ -252,6 +263,14 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window *win, void* replyM
 	std::cout << "*** onJavascriptCallback at URL " << url << ", "
 			  << (replyMsg?"synchronous":"async") << std::endl;
 	std::wcout << L"    Function name: " << funcName << std::endl;
+	
+	const std::wstring funcNameWString(funcName.data(), funcName.length());
+	const std::wstring cameraGetX(L"cameraGetX");
+	
+	if (funcNameWString == cameraGetX) {
+		std::cout << "here dawg" << std::endl;
+	}
+	
 	for (size_t i = 0; i < numArgs; i++) {
 		Berkelium::WideString jsonStr = toJSON(args[i]);
 		std::wcout << L"    Argument " << i << ": ";

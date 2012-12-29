@@ -34,6 +34,7 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 		)
 	);
 	
+	//window_->setVerticalSyncEnabled(true);
 	window_->setActive();
 }
 
@@ -70,9 +71,9 @@ sint32 GLWindow::initialize() {
 	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClearDepth(1.0f);
+	//glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
+	//glDepthFunc(GL_LEQUAL);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
 	glEnable(GL_LIGHTING);
@@ -94,12 +95,9 @@ void GLWindow::destroy() {
 }
 
 sint32 GLWindow::handleEvents() {
-	/*
 	sf::Event event;
 	
-	while (window_->pollEvent(event)) {
-		std::cout << "event type: " << event.type << std::endl;
-		
+	while (window_->pollEvent(event)) {		
 	    // check the type of the event...
 	    switch (event.type) {
 	        // window closed
@@ -109,16 +107,13 @@ sint32 GLWindow::handleEvents() {
 	
 	        // key pressed
 	        case sf::Event::KeyPressed:
-	            //...
 	            break;
 	
 	        // we don't process other types of events
 	        default:
-				
 	            break;
 	    }
 	}
-	*/
 	
 	return 0;
 }
@@ -137,7 +132,7 @@ void GLWindow::endRender() {
 void GLWindow::render() {
 	beginRender();
 	
-	//DrawAQuad();
+	DrawAQuad();
 	
 	sMgr_->drawAll();
 	
@@ -158,7 +153,7 @@ void GLWindow::DrawAQuad() {
 	//glMatrixMode(GL_MODELVIEW);
 	//glLoadIdentity();
 
-	glTranslatef(-0., -0., -100.);
+	glTranslatef(-0., -0., -30.);
 
 	glBegin(GL_QUADS);
 		glColor3f(1., 0., 0.);
