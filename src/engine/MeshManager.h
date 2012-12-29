@@ -20,15 +20,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../common/compatibility/Types.h"
-
 #include "Mesh.h"
 
 namespace oglre {
 
 namespace engine {
-	
-using namespace compatibility;
 
 class MeshManager {
 public:

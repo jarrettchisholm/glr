@@ -50,7 +50,7 @@ IWindow::InternalWindow GLWindow::getInternalWindowPointer() {
 	return window_;
 }
 
-void GLWindow::resize(uint32 width, uint32 height) {
+void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 	/* prevent divide-by-zero */
 	if (height == 0)
 		height = 1;
@@ -65,7 +65,7 @@ void GLWindow::resize(uint32 width, uint32 height) {
 	height_ = height;
 }
 
-sint32 GLWindow::initialize() {	
+glm::detail::int32 GLWindow::initialize() {	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	//glClearDepth(1.0f);
@@ -91,7 +91,7 @@ void GLWindow::destroy() {
 		delete sMgr_;
 }
 
-sint32 GLWindow::handleEvents() {
+glm::detail::int32 GLWindow::handleEvents() {
 	sf::Event event;
 	
 	while (window_->pollEvent(event)) {		
@@ -154,15 +154,15 @@ void GLWindow::DrawAQuad() {
 	glEnd();
 }
 
-uint32 GLWindow::getWidth() {
+glm::detail::uint32 GLWindow::getWidth() {
 	return width_;
 }
 
-uint32 GLWindow::getHeight() {
+glm::detail::uint32 GLWindow::getHeight() {
 	return height_;
 }
 
-uint32 GLWindow::getDepth() {
+glm::detail::uint32 GLWindow::getDepth() {
 	return depth_;
 }
 

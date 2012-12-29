@@ -109,15 +109,15 @@ void HtmlGuiComponent::unload() {
 	Berkelium::destroy();
 }
 
-void HtmlGuiComponent::mouseMoved(sint32 xPos, sint32 yPos) {
+void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos) {
 	
 }
 
-void HtmlGuiComponent::mouseButton(uint32 buttonID, bool down, sint32 clickCount) {
+void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount) {
 	
 }
 
-void HtmlGuiComponent::mouseWheel(sint32 xScroll, sint32 yScroll) {
+void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll) {
 	
 }
 	
@@ -152,7 +152,7 @@ void HtmlGuiComponent::textEvent(const wchar_t *evt, size_t evtLength) {
 	}
 }
 
-void HtmlGuiComponent::keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode) {
+void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode) {
 	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
 	
 	if ( vk_code == '`' || vk_code == '~' ) {

@@ -18,16 +18,10 @@
 
 #include <glm/glm.hpp>
 
-#include "../common/compatibility/Types.h"
-
-//#include "../../vmath/Vector3f.h"
-
 
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class Animation {
 public:

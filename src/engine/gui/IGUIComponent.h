@@ -8,6 +8,8 @@
 #ifndef IGUICOMPONENT_H_
 #define IGUICOMPONENT_H_
 
+#include "glm/glm.hpp"
+
 namespace oglre {
 
 namespace engine {

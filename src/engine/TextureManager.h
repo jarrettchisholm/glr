@@ -15,15 +15,11 @@
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
 
-#include "../common/compatibility/Types.h"
-
 #include "Texture.h"
 
 namespace oglre {
 
 namespace engine {
-	
-using namespace compatibility;
 
 class TextureManager {
 public:

@@ -10,8 +10,6 @@
 
 #include <string>
 
-#include "../common/compatibility/Types.h"
-
 #include "ISceneManager.h"
 
 #include "gui/IGUI.h"
@@ -19,8 +17,6 @@
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class IWindow {
 public:
@@ -44,10 +40,10 @@ public:
 	virtual WindowHandle getWindowHandle() = 0;
 	virtual InternalWindow getInternalWindowPointer() = 0;
 
-	virtual sint32 initialize() = 0;
+	virtual glm::detail::int32 initialize() = 0;
 	virtual void destroy() = 0;
-	virtual void resize(uint32 width, uint32 height) = 0;
-	virtual sint32 handleEvents() = 0;
+	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
+	virtual glm::detail::int32 handleEvents() = 0;
 	virtual void render() = 0;
 	virtual bool blah() = 0;
 
@@ -56,9 +52,9 @@ public:
 	virtual IGUI* getHtmlGui() = 0;
 
 protected:
-	sint32 x_, y_;
-	uint32 width_, height_;
-	uint32 depth_;
+	glm::detail::int32 x_, y_;
+	glm::detail::uint32 width_, height_;
+	glm::detail::uint32 depth_;
 };
 
 }

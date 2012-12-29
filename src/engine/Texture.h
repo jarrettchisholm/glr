@@ -12,13 +12,9 @@
 
 #include "../common/utilities/ImageLoader.h"
 
-#include "../common/compatibility/Types.h"
-
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class Texture {
 public:

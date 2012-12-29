@@ -12,13 +12,9 @@
 #include "ICameraSceneNode.h"
 #include "IModelManager.h"
 
-#include "../common/compatibility/Types.h"
-
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class ISceneManager {
 public:
@@ -26,10 +22,10 @@ public:
 	}
 	;
 
-	virtual ISceneNode* addDefaultSceneNode(const char* name, ISceneNode* parent = 0, sint32 id = -1) = 0;
-	virtual ISceneNode* addSceneNode(const char* name, ISceneNode* parent = 0, sint32 id = -1) = 0;
-	virtual ICameraSceneNode* addCamera(vmath::Vector3f position, vmath::Vector3f lookAt) = 0;
-	virtual ICameraSceneNode* addCameraFPS(vmath::Vector3f position, vmath::Vector3f lookAt, uint32 speed, uint32 rotationSpeed) = 0;
+	virtual ISceneNode* addDefaultSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1) = 0;
+	virtual ISceneNode* addSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1) = 0;
+	virtual ICameraSceneNode* addCamera(glm::vec3 position, glm::vec3 lookAt) = 0;
+	virtual ICameraSceneNode* addCameraFPS(glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) = 0;
 	virtual void drawAll() = 0;
 	
 	virtual IModelManager* getModelManager() = 0;

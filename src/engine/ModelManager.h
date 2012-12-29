@@ -20,8 +20,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../common/compatibility/Types.h"
-
 #include "IModelManager.h"
 
 #include "Model.h"
@@ -29,8 +27,6 @@
 namespace oglre {
 
 namespace engine {
-	
-using namespace compatibility;
 
 class ModelManager : public IModelManager {
 public:

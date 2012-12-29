@@ -10,13 +10,9 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "../compatibility/Types.h"
-
 #include "FreeImage.h"
 
 namespace utilities {
-
-using namespace compatibility;
 
 struct Image {
 	char* data;

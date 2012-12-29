@@ -23,7 +23,7 @@ public:
 	/**
 	 *
 	 */
-	virtual sint32 initialize() {
+	virtual glm::detail::int32 initialize() {
 		return -1;
 	}
 	;
@@ -31,7 +31,7 @@ public:
 	/**
 	 *
 	 */
-	virtual IWindow* createWindow(uint32 width = 800, uint32 height = 600, uint32 depth = 24,
+	virtual IWindow* createWindow(glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
 			bool fullscreen = false, bool vsync = false) {
 		return 0;
 	}

@@ -18,7 +18,7 @@ namespace engine {
 /**
  *
  */
-std::unique_ptr<IWindow> GraphicsEngine::createWindow(uint32 width, uint32 height, uint32 depth,
+std::unique_ptr<IWindow> GraphicsEngine::createWindow(glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
 			bool fullscreen, bool vsync) {
 
 	std::unique_ptr<IWindow> window(new GLWindow(width, height, "SFML Test"));

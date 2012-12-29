@@ -20,16 +20,11 @@
 #include <berkelium/Berkelium.hpp>
 #include <berkelium/Context.hpp>
 
-
-#include "../common/compatibility/Types.h"
-
 #include "IGUIComponent.h"
 
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class HtmlGuiComponent : public IGUIComponent,  public Berkelium::WindowDelegate {
 public:
@@ -39,12 +34,12 @@ public:
 	virtual int load();
 	virtual void unload();
 	
-	virtual void mouseMoved(sint32 xPos, sint32 yPos);
-	virtual void mouseButton(uint32 buttonID, bool down, sint32 clickCount=1);
-	virtual void mouseWheel(sint32 xScroll, sint32 yScroll);
+	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
+	virtual void mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount=1);
+	virtual void mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll);
 	
 	virtual void textEvent(const wchar_t *evt, size_t evtLength);
-	virtual void keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode);
+	virtual void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode);
 	
 	int setContents(std::string contents);
 	int loadContentsFromFile(std::string filename);
@@ -63,9 +58,9 @@ private:
 	std::string url_;
 
 	// Width and height of our window.
-    uint32 width, height;
+    glm::detail::uint32 width, height;
 	// Storage for a texture
-    uint32 web_texture;
+    glm::detail::uint32 web_texture;
     // Buffer used to store data for scrolling
     char* scroll_buffer;
     
@@ -96,7 +91,7 @@ private:
     void testLoadTexture();
     void testDrawTest1();
     void testDrawTestBerkelium();
-    sint32 testint;
+    glm::detail::int32 testint;
     bool needs_full_refresh;
     bool webTextureReady_;
 

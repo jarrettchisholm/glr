@@ -25,7 +25,7 @@ DefaultSceneManager::~DefaultSceneManager() {
 /**
  * FOR TESTING PURPOSES ONLY.
  */
-ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNode* parent, sint32 id) {
+ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNode* parent, glm::detail::int32 id) {
 	DefaultSceneNode* testNode = new DefaultSceneNode();
 	sceneNodes_.push_back(testNode);
 
@@ -33,14 +33,14 @@ ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNod
 	//return 0;
 }
 
-ISceneNode* DefaultSceneManager::addSceneNode(const char* name, ISceneNode* parent, sint32 id) {
+ISceneNode* DefaultSceneManager::addSceneNode(const char* name, ISceneNode* parent, glm::detail::int32 id) {
 	DefaultSceneNode* testNode = new DefaultSceneNode();
 	sceneNodes_.push_back(testNode);
 
 	return testNode;
 }
 
-ICameraSceneNode* DefaultSceneManager::addCamera(vmath::Vector3f position, vmath::Vector3f lookAt) {
+ICameraSceneNode* DefaultSceneManager::addCamera(glm::vec3 position, glm::vec3 lookAt) {
 	CameraSceneNode* node = new CameraSceneNode(position, lookAt);
 
 	std::vector<ISceneNode*>::iterator it;
@@ -53,8 +53,8 @@ ICameraSceneNode* DefaultSceneManager::addCamera(vmath::Vector3f position, vmath
 	return node;
 }
 
-ICameraSceneNode* DefaultSceneManager::addCameraFPS(vmath::Vector3f position,
-		vmath::Vector3f lookAt, uint32 speed, uint32 rotationSpeed) {
+ICameraSceneNode* DefaultSceneManager::addCameraFPS(glm::vec3 position,
+		glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
 	CameraSceneNode* node = new CameraSceneNode();
 	sceneNodes_.push_back(node);
 
@@ -62,7 +62,7 @@ ICameraSceneNode* DefaultSceneManager::addCameraFPS(vmath::Vector3f position,
 }
 
 void DefaultSceneManager::drawAll() {
-	for (uint32 i = 0; i < sceneNodes_.size(); i++) {
+	for (glm::detail::uint32 i = 0; i < sceneNodes_.size(); i++) {
 		sceneNodes_[i]->render();
 	}
 }

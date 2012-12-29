@@ -52,15 +52,15 @@ void GUI::render() {
 	}
 }
 
-void GUI::mouseMoved(sint32 xPos, sint32 yPos) {
+void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos) {
 	
 }
 
-void GUI::mouseButton(uint32 buttonID, bool down, sint32 clickCount) {
+void GUI::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount) {
 	
 }
 
-void GUI::mouseWheel(sint32 xScroll, sint32 yScroll) {
+void GUI::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll) {
 	
 }
 	
@@ -72,7 +72,7 @@ void GUI::textEvent(const wchar_t *evt, size_t evtLength) {
 	}
 }
 
-void GUI::keyEvent(bool pressed, sint32 mods, sint32 vk_code, sint32 scancode) {
+void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode) {
 	for (int i = 0; i < views_.size(); i++) {
 		if (views_.at(i)->isVisible()) {
 			views_.at(i)->keyEvent(pressed, mods, vk_code, scancode);

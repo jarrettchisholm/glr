@@ -8,12 +8,9 @@
 #ifndef ARRAY_H_
 #define ARRAY_H_
 
-#include "../compatibility/Types.h"
 #include "../math/Math.h"
 
 namespace utilities {
-
-using namespace compatibility;
 
 // todo: make sure it works!
 
@@ -33,7 +30,7 @@ public:
 	 *
 	 * @param size The size the array should start with.  This value must be >=0 and <= MAX_SIZE.
 	 */
-	Array(uint32 size) {
+	Array(glm::detail::uint32 size) {
 		arraySize_ = size;
 		if (size < 0 || size > MAX_SIZE)
 			arraySize_ = 1;
@@ -62,7 +59,7 @@ public:
 	 *
 	 * @return Reference to the element at 'index'.
 	 */
-	T& get(uint32 index) {
+	T& get(glm::detail::uint32 index) {
 		return *array_[index];
 	}
 
@@ -105,7 +102,7 @@ public:
 	 *
 	 *	@return The index of the first element in the array, or -1 if not found.
 	 */
-	uint32 firstPos() {
+	glm::detail::uint32 firstPos() {
 		for (int i = 0; i < arraySize_; i++) {
 			if (array_[i] != 0)
 				return i;
@@ -119,7 +116,7 @@ public:
 	 *
 	 *	@return The index of the last element in the array, or -1 if not found.
 	 */
-	uint32 lastPos() {
+	glm::detail::uint32 lastPos() {
 		for (int i = arraySize_ - 1; i >= 0; i--) {
 			if (array_[i] != 0)
 				return i;
@@ -136,7 +133,7 @@ public:
 	 *
 	 * @return The index where the element was added, or -1 on error.
 	 */
-	uint32 put(T& element) {
+	glm::detail::uint32 put(T& element) {
 		// error check
 		if (&element == 0)
 			return -1;
@@ -150,7 +147,7 @@ public:
 			increaseArraySize();
 		}
 
-		uint32 index = 0;
+		glm::detail::uint32 index = 0;
 		// find the first empty slot and put the new element there
 		for (int index = 0; index < arraySize_; index++) {
 			if (array_[index] == 0) {
@@ -177,7 +174,7 @@ public:
 	 *
 	 * @return The index where the element was added, or -1 on error.
 	 */
-	uint32 put(T& element, uint32 index) {
+	glm::detail::uint32 put(T& element, glm::detail::uint32 index) {
 		// error check
 		if (&element == 0 || index < 0 || index > MAX_SIZE)
 			return -1;
@@ -212,7 +209,7 @@ public:
 	 *
 	 * @return The index where the element was added, or -1 on error.
 	 */
-	uint32 push_back(T& element) {
+	glm::detail::uint32 push_back(T& element) {
 		// error check
 		if (&element == 0)
 			return -1;
@@ -226,8 +223,8 @@ public:
 			increaseArraySize();
 		}
 
-		uint32 count = 0;
-		uint32 index = 0;
+		glm::detail::uint32 count = 0;
+		glm::detail::uint32 index = 0;
 		// find index of last element in the array
 		for (; index < arraySize_ && count < numElements_; index++) {
 			if (&array_[index] != 0)
@@ -249,7 +246,7 @@ public:
 	 *
 	 * @return The index where the element was added, -1 on error.
 	 */
-	uint32 push_front(T& element) {
+	glm::detail::uint32 push_front(T& element) {
 		// error check
 		if (&element == 0)
 			return -1;
@@ -271,7 +268,7 @@ public:
 			}
 		}
 
-		uint32 index = 0;
+		glm::detail::uint32 index = 0;
 		// find the first element in the array
 		for (int index = 0; index < arraySize_; index++) {
 			if (&array_[index] != 0) {
@@ -294,7 +291,7 @@ public:
 	 *
 	 *	@return A pointer to the element.
 	 */
-	T* remove(uint32 index) {
+	T* remove(glm::detail::uint32 index) {
 		// error check
 		if (index < 0 || index >= arraySize_)
 			return 0; // null
@@ -308,7 +305,7 @@ public:
 		return element;
 	}
 
-	const static uint32 MAX_SIZE = 4096;
+	const static glm::detail::uint32 MAX_SIZE = 4096;
 	/**
 	 *	Resize the array to the newly specified size.  This function does not move any of the elements, it only increases
 	 *	the capacity of the array.  Also, the array cannot be made larger than MAX_SIZE, and cannot be made smaller than
@@ -319,12 +316,12 @@ public:
 	 *
 	 *	@return 0 on success, or -1 on error.
 	 */
-	uint32 resize(uint32 newSize) {
+	glm::detail::uint32 resize(glm::detail::uint32 newSize) {
 		// error check
 		if (newSize > MAX_SIZE || newSize < numElements_)
 			return -1;
 
-		uint32 count = 0;
+		glm::detail::uint32 count = 0;
 		// make sure new size doesn't cut out any elements
 		for (int i = 0; i < newSize && count < numElements_; i++) {
 			if (&array_[i] != 0)
@@ -357,7 +354,7 @@ public:
 	 *
 	 *	@return 0 on success, or -1 on error.
 	 */
-	uint32 shift(uint32 amount) {
+	glm::detail::uint32 shift(glm::detail::uint32 amount) {
 		// error check
 		if (amount < 0 || (arraySize_ + amount) > MAX_SIZE)
 			return -1;
@@ -366,8 +363,8 @@ public:
 		if (numElements_ == 0)
 			return 0;
 
-		uint32 last = lastPos();
-		uint32 space = arraySize_ - last - 1;
+		glm::detail::uint32 last = lastPos();
+		glm::detail::uint32 space = arraySize_ - last - 1;
 		// check if we need to increase array size to make space for shift
 		if (space < amount) {
 			// error check
@@ -423,7 +420,7 @@ public:
 	 *
 	 * @return The number of elements in the array.
 	 */
-	uint32 numElements() {
+	glm::detail::uint32 numElements() {
 		return numElements_;
 	}
 
@@ -433,12 +430,12 @@ public:
 	 *
 	 * @return The total size of the array.
 	 */
-	uint32 size() {
+	glm::detail::uint32 size() {
 		return arraySize_;
 	}
 
 private:
-	uint32 arraySize_, numElements_;
+	glm::detail::uint32 arraySize_, numElements_;
 	T** array_;
 
 	/**

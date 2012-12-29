@@ -30,8 +30,6 @@ namespace oglre {
 
 namespace engine {
 
-using namespace compatibility;
-
 class GLWindow: public IWindow {
 private:
 	sf::Window* window_;
@@ -47,10 +45,10 @@ public:
 	virtual WindowHandle getWindowHandle();
 	virtual IWindow::InternalWindow getInternalWindowPointer();
 
-	virtual void resize(uint32 width, uint32 height);
-	virtual sint32 initialize();
+	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height);
+	virtual glm::detail::int32 initialize();
 	virtual void destroy();
-	sint32 handleEvents();
+	glm::detail::int32 handleEvents();
 	
 	void beginRender();
 	void endRender();
@@ -59,9 +57,9 @@ public:
 		return false;
 	}
 
-	virtual uint32 getWidth();
-	virtual uint32 getHeight();
-	virtual uint32 getDepth();
+	virtual glm::detail::uint32 getWidth();
+	virtual glm::detail::uint32 getHeight();
+	virtual glm::detail::uint32 getDepth();
 
 	virtual ISceneManager* getSceneManager();
 	

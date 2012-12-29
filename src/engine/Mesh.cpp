@@ -18,9 +18,9 @@ namespace engine {
 Mesh::Mesh(const aiMesh* mesh) {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";
 	
-	uint32 currentIndex = 0;
+	glm::detail::uint32 currentIndex = 0;
 	
-	for (uint32 t = 0; t < mesh->mNumFaces; ++t) {
+	for (glm::detail::uint32 t = 0; t < mesh->mNumFaces; ++t) {
 		const aiFace* face = &mesh->mFaces[t];
 		GLenum face_mode;
 	
@@ -31,7 +31,7 @@ Mesh::Mesh(const aiMesh* mesh) {
 			default: face_mode = GL_POLYGON; break;
 		}
 		
-		uint32 numIndices = face->mNumIndices;
+		glm::detail::uint32 numIndices = face->mNumIndices;
 		
 		vertices_.resize( currentIndex + numIndices );
 		normals_.resize( currentIndex + numIndices );
@@ -40,7 +40,7 @@ Mesh::Mesh(const aiMesh* mesh) {
 		
 		//BOOST_LOG_TRIVIAL(debug) << "loading face: " << face->mNumIndices;
 		// go through all vertices in face
-		for(uint32 i = 0; i < numIndices; i++) {
+		for(glm::detail::uint32 i = 0; i < numIndices; i++) {
 			// get group index for current index
 			int vertexIndex = face->mIndices[i];
 			/*
@@ -84,7 +84,7 @@ Mesh::~Mesh() {
 void Mesh::render() {
 	glBegin( GL_TRIANGLES );
 	
-	for (uint32 i = 0; i < vertices_.size(); i++) {
+	for (glm::detail::uint32 i = 0; i < vertices_.size(); i++) {
 		//BOOST_LOG_TRIVIAL(debug) << "texCoords " << i << ": (" << textureCoordinates_[i].x << ", " << textureCoordinates_[i].y << ")";
 		glTexCoord2fv( &textureCoordinates_[i].x );
 		glNormal3fv( &normals_[i].x );

@@ -25,13 +25,9 @@
 #include "Material.h"
 #include "Animation.h"
 
-#include "../common/compatibility/Types.h"
-
 namespace oglre {
 
 namespace engine {
-
-using namespace compatibility;
 
 class Model : public IModel {
 public:
@@ -53,10 +49,10 @@ protected:
 	std::vector< std::unique_ptr<Material> > materials_;
 	std::vector<Animation*> animations_;
 	
-	std::vector<uint32> textureMap_;
-	std::vector<uint32> materialMap_;
+	std::vector<glm::detail::uint32> textureMap_;
+	std::vector<glm::detail::uint32> materialMap_;
 	
-	uint32 scene_list;
+	glm::detail::uint32 scene_list;
 	aiVector3D scene_min, scene_max, scene_center;
 	
 

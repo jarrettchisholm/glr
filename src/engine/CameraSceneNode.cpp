@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#include "glm/gtc/type_ptr.hpp"
+
 #include "CameraSceneNode.h"
 
 #include "../common/math/Math.h"
@@ -22,14 +24,14 @@ namespace oglre {
 namespace engine {
 
 CameraSceneNode::CameraSceneNode() {
-	setLookAt(vmath::Vector3f(1, 1, 1));
-	setPosition(vmath::Vector3f(0, 0, 0));
+	setLookAt(glm::vec3(1, 1, 1));
+	setPosition(glm::vec3(0, 0, 0));
 	active_ = true;
 
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(vmath::Vector3f position, vmath::Vector3f lookAt, bool active) {
+CameraSceneNode::CameraSceneNode(glm::vec3 position, glm::vec3 lookAt, bool active) {
 	setPosition(position);
 	setLookAt(lookAt);
 	active_ = active;
@@ -46,29 +48,33 @@ void CameraSceneNode::initialize() {
 	xRot_ = 0;
 	yRot_ = 0;
 
-	moveSpeed_ = 0.20f;
-	rotSpeed_ = 1.0f;
+	moveSpeed_ = 1.20f;
+	rotSpeed_ = 19.0f;
 
-	rotation_ = Quaternion();//(1, 1, 1, 1);
-	rotation_.normalize();
+	rotation_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
+	rotation_ = glm::normalize(rotation_);
+	//rotation_.normalize();
 }
 
 void CameraSceneNode::render() {
 	if (isActive()) {
-		float32 matrix[16];
-		rotation_.getConjugate().fillMatrix(matrix);
+		//glm::detail::float32 matrix[16];
+		glm::quat temp = glm::conjugate(rotation_);
+		glm::mat4x4 matrix = glm::mat4_cast( temp );
+		
+		//rotation_.getConjugate().fillMatrix(matrix);
 
-		glMultMatrixf(&matrix[0]);
+		glMultMatrixf( glm::value_ptr(matrix) );
 		
 		glTranslatef(-pos_.x, -pos_.y, -pos_.z);
 	}
 }
 
-const vmath::Vector3f& CameraSceneNode::getLookAt() {
+glm::vec3 CameraSceneNode::getLookAt() {
 	return lookAt_;
 }
 
-void CameraSceneNode::setLookAt(const vmath::Vector3f& newLookAt) {
+void CameraSceneNode::setLookAt(glm::vec3 newLookAt) {
 	lookAt_ = newLookAt;
 }
 
@@ -76,7 +82,7 @@ void CameraSceneNode::setLookAt(const vmath::Vector3f& newLookAt) {
  *
  */
 void CameraSceneNode::clearMovementBuffer() {
-	for (uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++)
+	for (glm::detail::uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++)
 		movement_[i] = 0;
 }
 
@@ -91,7 +97,7 @@ void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled) {
 /**
  *
  */
-void CameraSceneNode::rotateX(float32 degrees) {
+void CameraSceneNode::rotateX(glm::detail::float32 degrees) {
 	xRot_ += degrees;
 }
 
@@ -99,33 +105,33 @@ void CameraSceneNode::rotateX(float32 degrees) {
 /**
  *
  */
-void CameraSceneNode::rotateY(float32 degrees) {
+void CameraSceneNode::rotateY(glm::detail::float32 degrees) {
 	yRot_ += degrees;
 }
 
 /**
  *
  */
-void CameraSceneNode::tick(float32 time) {
+void CameraSceneNode::tick(glm::detail::float32 time) {
 	// movement direction
 	if (movement_[MOVE_DIR_FORWARD] == 1)
-		pos_ += rotation_ * vmath::Vector3f(0, 0, -moveSpeed_ * time);
+		pos_ += rotation_ * glm::vec3(0, 0, -moveSpeed_ * time);
 
 	if (movement_[MOVE_DIR_BACKWARD] == 1)
-		pos_ += rotation_ * vmath::Vector3f(0, 0, moveSpeed_ * time);
+		pos_ += rotation_ * glm::vec3(0, 0, moveSpeed_ * time);
 
 	if (movement_[MOVE_DIR_LEFT] == 1)
-		pos_ += rotation_ * vmath::Vector3f(-moveSpeed_ * time, 0, 0);
+		pos_ += rotation_ * glm::vec3(-moveSpeed_ * time, 0, 0);
 
 	if (movement_[MOVE_DIR_RIGHT] == 1)
-		pos_ += rotation_ * vmath::Vector3f(moveSpeed_ * time, 0, 0);
+		pos_ += rotation_ * glm::vec3(moveSpeed_ * time, 0, 0);
 
 	// rotation
-	Quaternion pitch;
-	pitch.buildFromAxisAngle(1, 0, 0, (xRot_ * time * rotSpeed_) * math::DEGTORAD);
+	glm::quat pitch = glm::angleAxis((xRot_ * time * rotSpeed_) * math::DEGTORAD, 1.0f, 0.0f, 0.0f);
+	//pitch.buildFromAxisAngle(1, 0, 0, (xRot_ * time * rotSpeed_) * math::DEGTORAD);
 
-	Quaternion heading;
-	heading.buildFromAxisAngle(0, 1, 0, (yRot_ * time * rotSpeed_) * math::DEGTORAD);
+	glm::quat heading = glm::angleAxis((yRot_ * time * rotSpeed_) * math::DEGTORAD, 0.0f, 1.0f, 0.0f);
+	//heading.buildFromAxisAngle(0, 1, 0, (yRot_ * time * rotSpeed_) * math::DEGTORAD);
 
 	rotation_ = heading * pitch;
 }

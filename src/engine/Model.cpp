@@ -36,7 +36,7 @@ Model::~Model() {
 void Model::render() {
 	setLighting();
 	
-	for (uint32 i=0; i < meshes_.size(); i++) {
+	for (glm::detail::uint32 i=0; i < meshes_.size(); i++) {
 		if (textures_[ textureMap_[i] ] != 0)
 			textures_[ textureMap_[i] ]->bind();
 		meshes_[i]->render();
@@ -245,7 +245,7 @@ void Model::loadMeshes(const aiScene* scene) {
 	textureMap_.resize( scene->mNumMeshes );
 	
 	// get all meshes assigned to this node	
-	for (uint32 n = 0; n < scene->mNumMeshes; n++) {
+	for (glm::detail::uint32 n = 0; n < scene->mNumMeshes; n++) {
 		// create new mesh
 		meshes_[n] = std::unique_ptr<Mesh>(new Mesh( scene->mMeshes[n] ));
 		materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
@@ -262,7 +262,7 @@ void Model::loadTextures(const aiScene* scene) {
 	BOOST_LOG_TRIVIAL(debug) << "Loading textures.";
 
 	/* getTexture Filenames and Numb of Textures */
-	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
+	for (glm::detail::uint32 m = 0; m < scene->mNumMaterials; m++) {
 		aiReturn texFound = AI_SUCCESS;
 		aiString path;	// filename
 
@@ -284,7 +284,7 @@ void Model::loadTextures(const aiScene* scene) {
 void Model::loadMaterials(const aiScene* scene) {	
 	materials_.resize( scene->mNumMaterials );
 	
-	for (uint32 m = 0; m < scene->mNumMaterials; m++) {
+	for (glm::detail::uint32 m = 0; m < scene->mNumMaterials; m++) {
 		BOOST_LOG_TRIVIAL(debug) << "load material..." << m;
 		materials_[m] = std::unique_ptr<Material>( new Material(scene->mMaterials[m]) );
 		BOOST_LOG_TRIVIAL(debug) << "done loading material " << m;

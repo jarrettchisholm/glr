@@ -16,11 +16,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../compatibility/Types.h"
-
 namespace utilities {
-
-using namespace compatibility;
 
 class AssImpUtilities {
 public:

@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "../vmath/Vector3f.h"
+#include <glm/glm.hpp>
 
 #include "IModel.h"
 
@@ -19,13 +19,11 @@ namespace oglre {
 
 namespace engine {
 
-using namespace compatibility;
-
 class ISceneNode {
 public:
 	ISceneNode() {
 		parent_ = 0;
-		pos_ = vmath::Vector3f(0, 0, 0);
+		pos_ = glm::vec3(0, 0, 0);
 
 		active_ = true;
 		isVisible_ = true;
@@ -36,11 +34,11 @@ public:
 	}
 	;
 
-	const vmath::Vector3f& getPosition() const {
+	const glm::vec3& getPosition() const {
 		return pos_;
 	}
 
-	void setPosition(const vmath::Vector3f& newPos) {
+	void setPosition(const glm::vec3& newPos) {
 		pos_ = newPos;
 	}
 
@@ -58,14 +56,14 @@ public:
 		isVisible_ = isVisible;
 	}
 
-	std::vector<float32> vertices;
+	std::vector<glm::detail::float32> vertices;
 
 	virtual void render() = 0;
 
 protected:
 	ISceneNode* parent_; // does not own the parent_ pointer
 	std::vector<ISceneNode*> children_; // owns ALL the children pointers
-	vmath::Vector3f pos_;
+	glm::vec3 pos_;
 
 	bool active_;
 	bool isVisible_;
