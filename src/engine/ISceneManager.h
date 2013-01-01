@@ -17,21 +17,18 @@ namespace oglre {
 namespace engine {
 
 class ISceneManager {
-public:
+public:	
 	virtual ~ISceneManager() {
 	}
 	;
 
-	virtual ISceneNode* addDefaultSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1) = 0;
-	virtual ISceneNode* addSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1) = 0;
-	virtual ICameraSceneNode* addCamera(glm::vec3 position, glm::vec3 lookAt) = 0;
-	virtual ICameraSceneNode* addCameraFPS(glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) = 0;
+	virtual ISceneNode* createDefaultSceneNode( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1) ) = 0;
+	virtual ISceneNode* createSceneNode( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1) ) = 0;
+	virtual ICameraSceneNode* createCamera( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1), glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5 ) = 0;
+	virtual ICameraSceneNode* createCameraFPS( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1), glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5 ) = 0;
 	virtual void drawAll() = 0;
 	
 	virtual IModelManager* getModelManager() = 0;
-
-protected:
-	std::vector<ISceneNode*> sceneNodes_;
 };
 
 }

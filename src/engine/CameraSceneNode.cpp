@@ -24,8 +24,8 @@ namespace oglre {
 namespace engine {
 
 CameraSceneNode::CameraSceneNode() {
-	setLookAt(glm::vec3(1, 1, 1));
-	setPosition(glm::vec3(0, 0, 0));
+	setLookAt( 1, 1, 1 );
+	setPosition( 0, 0, 0 );
 	active_ = true;
 
 	initialize();
@@ -70,12 +70,32 @@ void CameraSceneNode::render() {
 	}
 }
 
-glm::vec3 CameraSceneNode::getLookAt() {
+glm::vec3& CameraSceneNode::getPosition() {
+	return pos_;
+}
+
+void CameraSceneNode::setPosition(glm::vec3& newPos) {
+	pos_ = newPos;
+}
+
+void CameraSceneNode::setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) {
+	pos_ = glm::vec3(x, y, z);
+}
+
+glm::vec3& CameraSceneNode::getLookAt() {
 	return lookAt_;
 }
 
-void CameraSceneNode::setLookAt(glm::vec3 newLookAt) {
+void CameraSceneNode::setLookAt(glm::vec3& newLookAt) {
 	lookAt_ = newLookAt;
+}
+
+void CameraSceneNode::setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) {
+	lookAt_ = glm::vec3(x, y, z);
+}
+
+bool CameraSceneNode::isActive() {
+	return active_;
 }
 
 /**

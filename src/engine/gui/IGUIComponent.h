@@ -10,6 +10,8 @@
 
 #include "glm/glm.hpp"
 
+#include "IGUIObject.h"
+
 namespace oglre {
 
 namespace engine {
@@ -27,6 +29,18 @@ public:
 	
 	virtual bool isVisible() = 0;
 	virtual void setVisible(bool isVisible) = 0;
+	
+	/**
+	 * Method createGUIObject
+	 * 
+	 * Create a GUIObject that your gui can use to talk to your application.
+	 * 
+	 * @param name The name associated with this GUIObject
+	 * @return A pointer to an IGUIObject, or nullptr if the GUIObject could not be created successfully.
+	 */
+	virtual IGUIObject* createGUIObject(std::wstring name) = 0;
+	
+	virtual IGUIObject* getGUIObject(std::wstring name) = 0;
 };
 
 }

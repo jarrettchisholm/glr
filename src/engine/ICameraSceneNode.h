@@ -16,6 +16,10 @@ namespace engine {
 
 class ICameraSceneNode: public ISceneNode {
 public:
+	ICameraSceneNode() {
+	}
+	;
+	
 	virtual ~ICameraSceneNode() {
 	}
 	;
@@ -36,10 +40,13 @@ public:
 	virtual void attach(IModel* model) {
 	}
 	;
-
-	// new methods
-	virtual glm::vec3 getLookAt() = 0;
-	virtual void setLookAt(glm::vec3 newLookAt) = 0;
+	
+	/**
+	 * Does not implement the setVisible method.
+	 */ 
+	virtual void setVisible(bool isVisible) {
+	}
+	;
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled) = 0;
 	// up/down
@@ -48,9 +55,6 @@ public:
 	virtual void rotateY(glm::detail::float32 degrees) = 0;
 
 	virtual void tick(glm::detail::float32 time) = 0;
-
-	// inherited from ISceneNode
-	virtual void render() = 0;
 };
 
 }

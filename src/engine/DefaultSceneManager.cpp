@@ -16,7 +16,6 @@ namespace oglre {
 namespace engine {
 
 DefaultSceneManager::DefaultSceneManager() {
-
 }
 
 DefaultSceneManager::~DefaultSceneManager() {
@@ -25,7 +24,7 @@ DefaultSceneManager::~DefaultSceneManager() {
 /**
  * FOR TESTING PURPOSES ONLY.
  */
-ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNode* parent, glm::detail::int32 id) {
+ISceneNode* DefaultSceneManager::createDefaultSceneNode(const std::string name, glm::vec3 position, glm::vec3 lookAt) {
 	DefaultSceneNode* testNode = new DefaultSceneNode();
 	sceneNodes_.push_back(testNode);
 
@@ -33,14 +32,14 @@ ISceneNode* DefaultSceneManager::addDefaultSceneNode(const char* name, ISceneNod
 	//return 0;
 }
 
-ISceneNode* DefaultSceneManager::addSceneNode(const char* name, ISceneNode* parent, glm::detail::int32 id) {
+ISceneNode* DefaultSceneManager::createSceneNode(const std::string name, glm::vec3 position, glm::vec3 lookAt) {
 	DefaultSceneNode* testNode = new DefaultSceneNode();
 	sceneNodes_.push_back(testNode);
 
 	return testNode;
 }
 
-ICameraSceneNode* DefaultSceneManager::addCamera(glm::vec3 position, glm::vec3 lookAt) {
+ICameraSceneNode* DefaultSceneManager::createCamera(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
 	CameraSceneNode* node = new CameraSceneNode(position, lookAt);
 
 	std::vector<ISceneNode*>::iterator it;
@@ -53,8 +52,7 @@ ICameraSceneNode* DefaultSceneManager::addCamera(glm::vec3 position, glm::vec3 l
 	return node;
 }
 
-ICameraSceneNode* DefaultSceneManager::addCameraFPS(glm::vec3 position,
-		glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
+ICameraSceneNode* DefaultSceneManager::createCameraFPS(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
 	CameraSceneNode* node = new CameraSceneNode();
 	sceneNodes_.push_back(node);
 

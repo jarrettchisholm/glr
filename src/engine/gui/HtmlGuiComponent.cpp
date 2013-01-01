@@ -13,6 +13,8 @@
 
 #include "HtmlGuiComponent.h"
 
+#include "GUIObject.h"
+
 #include "../../common/utilities/ImageLoader.h"
 
 #define DEBUG_PAINT true
@@ -92,9 +94,23 @@ int HtmlGuiComponent::load() {
         Berkelium::Script::Variant("Hello, World!"));
 	// TESTING CALLBACKS END
 	
+	/*
 	window_->addBindOnStartLoading(
-        Berkelium::WideString::point_to(L"cameraGetX"),
-        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"cameraGetX"), false));
+        Berkelium::WideString::point_to(L"camera"),
+        Berkelium::Script::Variant::emptyObject());
+        
+	window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"camera.getX"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getX"), true));
+        
+	window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"camera.getY"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getY"), true));
+        
+	window_->addBindOnStartLoading(
+        Berkelium::WideString::point_to(L"camera.getZ"),
+        Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getZ"), true));
+    */
     
     testint = 31;
     webTextureReady_ = false;
@@ -259,17 +275,33 @@ void HtmlGuiComponent::onScriptAlert(Berkelium::Window *win, Berkelium::WideStri
 	std::wcout << L"*** onScriptAlert " << message << std::endl;
 }
 
+
+std::wstring HtmlGuiComponent::getObjectName(std::wstring name) {
+	//return L"testObj";
+	 std::string::size_type loc = name.find( L".", 0 );
+	 if( loc != std::string::npos ) {
+		 return name.substr(0, (int)loc);
+	 }
+	 
+	 return L"";
+}
+
+std::wstring HtmlGuiComponent::getFunctionName(std::wstring name) {
+	//return L"testFunc";
+	std::string::size_type loc = name.find( L".", 0 );
+	 if( loc != std::string::npos ) {
+		 return name.substr((int)loc + 1);
+	 }
+	 
+	 return L"";
+}
+
+
 void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window *win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant *args, size_t numArgs) {
+	/*
 	std::cout << "*** onJavascriptCallback at URL " << url << ", "
 			  << (replyMsg?"synchronous":"async") << std::endl;
 	std::wcout << L"    Function name: " << funcName << std::endl;
-	
-	const std::wstring funcNameWString(funcName.data(), funcName.length());
-	const std::wstring cameraGetX(L"cameraGetX");
-	
-	if (funcNameWString == cameraGetX) {
-		std::cout << "here dawg" << std::endl;
-	}
 	
 	for (size_t i = 0; i < numArgs; i++) {
 		Berkelium::WideString jsonStr = toJSON(args[i]);
@@ -281,8 +313,56 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window *win, void* replyM
 		}
 		Berkelium::Script::toJSON_free(jsonStr);
 	}
-	if (replyMsg) {
-		win->synchronousScriptReturn(replyMsg, numArgs ? args[0] : Berkelium::Script::Variant());
+	*/
+	
+	// parse object and function names
+	const std::wstring berkeliumFuncName = std::wstring(funcName.data(), funcName.length());
+	
+	const std::wstring objName = getObjectName(berkeliumFuncName);
+	const std::wstring functionName = getFunctionName(berkeliumFuncName);
+	
+	//std::wcout << objName << " " << functionName << std::endl;
+	
+	
+	std::vector< CallbackParameter > params;
+	
+	// parse parameters
+	for (size_t i = 0; i < numArgs; i++) {
+		switch( args[i].type() ) {
+			case Berkelium::Script::Variant::JSSTRING: {
+				std::wstring p = std::wstring( args[i].toString().data(), args[i].toString().length() );
+				params.push_back( CallbackParameter(p) );
+			}
+				break;
+				
+			case Berkelium::Script::Variant::JSDOUBLE: {
+				double p = args[i].toDouble();
+				params.push_back( CallbackParameter(p) );
+			}
+				break;
+				
+			case Berkelium::Script::Variant::JSBOOLEAN: {
+				bool p = args[i].toBoolean();
+				params.push_back( CallbackParameter(p) );
+			}
+				break;
+				
+			case Berkelium::Script::Variant::JSNULL:
+				
+				break;
+			
+			default:
+				// int i = args[i].toInteger();
+				break;
+		}
+	}
+	
+	
+	if (guiObjects_[objName] != nullptr) {
+		Berkelium::Script::Variant r = guiObjects_[objName]->processCallback( functionName, params );
+		
+		if (replyMsg)
+			win->synchronousScriptReturn(replyMsg, r);
 	}
 }
 
@@ -483,6 +563,24 @@ bool HtmlGuiComponent::isVisible() {
 
 void HtmlGuiComponent::setVisible(bool isVisible) {
 	isVisible_ = isVisible;
+}
+
+IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name) {
+	if (guiObjects_[name] != nullptr) {
+		return nullptr;
+	}
+	
+	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, window_));
+	
+	return guiObjects_[name].get();
+}
+
+IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name) {
+	if (guiObjects_[name] == nullptr) {
+		return nullptr;
+	}
+	
+	return guiObjects_[name].get();
 }
 
 }

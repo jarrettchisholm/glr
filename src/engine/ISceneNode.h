@@ -22,11 +22,6 @@ namespace engine {
 class ISceneNode {
 public:
 	ISceneNode() {
-		parent_ = 0;
-		pos_ = glm::vec3(0, 0, 0);
-
-		active_ = true;
-		isVisible_ = true;
 	}
 	;
 
@@ -34,39 +29,16 @@ public:
 	}
 	;
 
-	const glm::vec3& getPosition() const {
-		return pos_;
-	}
-
-	void setPosition(const glm::vec3& newPos) {
-		pos_ = newPos;
-	}
-
-	const ISceneNode* getParent() const {
-		return parent_;
-	}
-
-	const bool isActive() const {
-		return active_;
-	}
-	
+	virtual glm::vec3& getPosition() = 0;
+	virtual void setPosition(glm::vec3& newPos) = 0;
+	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
+	virtual glm::vec3& getLookAt() = 0;
+	virtual void setLookAt(glm::vec3& newPos) = 0;
+	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
+	virtual bool isActive() = 0;	
 	virtual void attach(IModel* model) = 0;
-	
-	void setVisible(bool isVisible) {
-		isVisible_ = isVisible;
-	}
-
-	std::vector<glm::detail::float32> vertices;
-
+	virtual void setVisible(bool isVisible) = 0;
 	virtual void render() = 0;
-
-protected:
-	ISceneNode* parent_; // does not own the parent_ pointer
-	std::vector<ISceneNode*> children_; // owns ALL the children pointers
-	glm::vec3 pos_;
-
-	bool active_;
-	bool isVisible_;
 
 };
 

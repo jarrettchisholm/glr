@@ -9,6 +9,7 @@
 #define HTMLGUICOMPONENT_H_
 
 #include <string>
+#include <map>
 
 /* gl.h we need OpenGL */
 #include <GL/gl.h>
@@ -21,6 +22,8 @@
 #include <berkelium/Context.hpp>
 
 #include "IGUIComponent.h"
+
+#include "GUIObject.h"
 
 namespace oglre {
 
@@ -52,6 +55,9 @@ public:
 	virtual bool isVisible();
 	virtual void setVisible(bool isVisible);
 	
+	virtual IGUIObject* createGUIObject(std::wstring name);
+	virtual IGUIObject* getGUIObject(std::wstring name);
+	
 private:
 	bool isVisible_;
 
@@ -65,6 +71,11 @@ private:
     char* scroll_buffer;
     
     Berkelium::Window* window_;
+    
+    std::map< std::wstring, std::unique_ptr<GUIObject> > guiObjects_;
+    
+    std::wstring getFunctionName(std::wstring name);
+	std::wstring getObjectName(std::wstring name);
 
 	bool mapOnPaintToTexture(
 		Berkelium::Window *wini,

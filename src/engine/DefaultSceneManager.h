@@ -19,14 +19,16 @@ public:
 	DefaultSceneManager();
 	virtual ~DefaultSceneManager();
 
-	virtual ISceneNode* addDefaultSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1);
-	virtual ISceneNode* addSceneNode(const char* name, ISceneNode* parent = 0, glm::detail::int32 id = -1);
-	virtual ICameraSceneNode* addCamera(glm::vec3 position, glm::vec3 lookAt);
-	virtual ICameraSceneNode* addCameraFPS(glm::vec3 position, glm::vec3 lookAt,
-			glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed);
+	virtual ISceneNode* createDefaultSceneNode( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1) );
+	virtual ISceneNode* createSceneNode( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1) );
+	virtual ICameraSceneNode* createCamera( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1), glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5 );
+	virtual ICameraSceneNode* createCameraFPS( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1), glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5 );
 	virtual void drawAll();
 	
 	virtual IModelManager* getModelManager();
+	
+private:
+	std::vector<ISceneNode*> sceneNodes_;
 };
 
 }

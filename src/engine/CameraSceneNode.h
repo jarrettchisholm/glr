@@ -28,9 +28,14 @@ public:
 	// inherited from ICameraSceneNode
 	virtual void render(); // don't really need this
 
-	// inherited from ICameraSceneNode
-	virtual glm::vec3 getLookAt();
-	virtual void setLookAt(glm::vec3 newLookAt);
+	virtual glm::vec3& getPosition();
+	virtual void setPosition(glm::vec3& newPos);
+	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	virtual glm::vec3& getLookAt();
+	virtual void setLookAt(glm::vec3& newPos);
+	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	
+	virtual bool isActive();
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled);
 	// up/down
@@ -41,9 +46,12 @@ public:
 	virtual void tick(glm::detail::float32 time);
 
 protected:
+	glm::vec3 pos_;
 	glm::vec3 lookAt_;
 	glm::quat rotation_;
 	glm::detail::int32 prevX_, prevY_;
+	
+	bool active_;
 
 	char movement_[NUM_MOVE_DIRECTIONS];
 	glm::detail::float32 moveSpeed_, rotSpeed_;

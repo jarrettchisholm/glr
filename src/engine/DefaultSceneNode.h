@@ -19,11 +19,27 @@ public:
 	DefaultSceneNode();
 	virtual ~DefaultSceneNode();
 
+	virtual glm::vec3& getPosition();
+	virtual void setPosition(glm::vec3& newPos);
+	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	virtual glm::vec3& getLookAt();
+	virtual void setLookAt(glm::vec3& newPos);
+	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	
+	virtual bool isActive();	
 	virtual void attach(IModel* model);
-	void render();
+	virtual void setVisible(bool isVisible);
+	virtual void render();
 	
 private:
 	IModel* model_;
+	
+	std::vector<ISceneNode*> children_;
+	glm::vec3 pos_;
+	glm::vec3 lookAt_;
+
+	bool active_;
+	bool isVisible_;
 };
 
 }
