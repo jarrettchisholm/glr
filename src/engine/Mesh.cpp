@@ -43,15 +43,6 @@ Mesh::Mesh(const aiMesh* mesh) {
 		for(glm::detail::uint32 i = 0; i < numIndices; i++) {
 			// get group index for current index
 			int vertexIndex = face->mIndices[i];
-			/*
-			if(mesh->mColors[0] != NULL)
-				Color4f(&mesh->mColors[0][vertexIndex]);
-				
-			if(mesh->mNormals != NULL) {
-				glNormal3fv(&mesh->mNormals[vertexIndex].x);
-				glVertex3fv(&mesh->mVertices[vertexIndex].x);
-			}
-			*/
 			
 			if (mesh->mNormals != 0) {
 				vertices_[currentIndex + i]		= glm::vec3( mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z );
@@ -89,6 +80,7 @@ void Mesh::render() {
 		glTexCoord2fv( &textureCoordinates_[i].x );
 		glNormal3fv( &normals_[i].x );
 		glVertex3fv( &vertices_[i].x );
+		//Color4f(&mesh->mColors[0][vertexIndex]);
 	}
 	
 	glEnd();
