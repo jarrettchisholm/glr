@@ -12,6 +12,7 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include "ICameraSceneNode.h"
+#include "DefaultSceneNode.h"
 
 //#include "IInputListener.h"
 
@@ -19,23 +20,22 @@ namespace oglre {
 
 namespace engine {
 
-class CameraSceneNode: public ICameraSceneNode {
+class CameraSceneNode: public virtual ICameraSceneNode, public DefaultSceneNode {
 public:
 	CameraSceneNode();
 	CameraSceneNode(glm::vec3 position, glm::vec3 lookAt, bool active = true);
 	virtual ~CameraSceneNode();
 
 	// inherited from ICameraSceneNode
-	virtual void render(); // don't really need this
+	
 
-	virtual glm::vec3& getPosition();
-	virtual void setPosition(glm::vec3& newPos);
-	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
-	virtual glm::vec3& getLookAt();
-	virtual void setLookAt(glm::vec3& newPos);
-	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	
 	
 	virtual bool isActive();
+	virtual void render();
+	
+	virtual void attach(IModel* model);
+	virtual void setVisible(bool isVisible);
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled);
 	// up/down
@@ -45,13 +45,9 @@ public:
 
 	virtual void tick(glm::detail::float32 time);
 
-protected:
-	glm::vec3 pos_;
-	glm::vec3 lookAt_;
+private:
 	glm::quat rotation_;
 	glm::detail::int32 prevX_, prevY_;
-	
-	bool active_;
 
 	char movement_[NUM_MOVE_DIRECTIONS];
 	glm::detail::float32 moveSpeed_, rotSpeed_;

@@ -23,6 +23,29 @@ namespace engine {
 DefaultSceneNode::DefaultSceneNode() {
 	setPosition(0, 0, 0);
 	setLookAt(1, 1, 1);
+	setScale(1, 1, 1);
+
+	active_ = true;
+	isVisible_ = true;
+	
+	model_ = nullptr;
+}
+
+DefaultSceneNode::DefaultSceneNode(std::string name) {
+	setPosition(0, 0, 0);
+	setLookAt(1, 1, 1);
+	setScale(1, 1, 1);
+
+	active_ = true;
+	isVisible_ = true;
+	
+	model_ = nullptr;
+}
+
+DefaultSceneNode::DefaultSceneNode(std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale) {
+	setPosition(position);
+	setLookAt(lookAt);
+	setScale(scale);
 
 	active_ = true;
 	isVisible_ = true;
@@ -61,6 +84,34 @@ void DefaultSceneNode::setLookAt(glm::detail::float32 x, glm::detail::float32 y,
 	lookAt_ = glm::vec3(x, y, z);
 }
 
+glm::vec3 DefaultSceneNode::getScale() {
+	return scale_;
+}
+
+void DefaultSceneNode::setScale(glm::vec3 scale) {
+	scale_ = scale;
+}
+
+void DefaultSceneNode::setScale(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) {
+	scale_ = glm::vec3(x, y, z);
+}
+	
+void DefaultSceneNode::translate(glm::vec3 trans) {
+	
+}
+
+void DefaultSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) {
+	
+}
+	
+void DefaultSceneNode::rotate(glm::vec3 axis, glm::detail::float32 radians) {
+	
+}
+
+void DefaultSceneNode::rotate(glm::quat quaternion) {
+	
+}
+
 bool DefaultSceneNode::isActive() {
 	return active_;
 }
@@ -69,9 +120,15 @@ void DefaultSceneNode::setVisible(bool isVisible) {
 	isVisible_ = isVisible;
 }
 
-void DefaultSceneNode::render() {	
-	if (model_ != nullptr)
+void DefaultSceneNode::render() {
+	glPushMatrix();
+	glScalef(scale_.x, scale_.y, scale_.z);
+	
+	if (model_ != nullptr) {
 		model_->render();
+	}
+	
+	glPopMatrix();
 }
 
 }

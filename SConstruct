@@ -23,6 +23,7 @@ source_files = source_files + Glob('build/windows/*.cpp', 'build/windows/*.h')
 libraries = [
 'GL',
 'GLU',
+'GLEW',
 'Xi',
 'sfml-window',
 'assimp',

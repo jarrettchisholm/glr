@@ -4,6 +4,8 @@
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
+ 
+#include <GL/glew.h>
 
 #include "GL/glu.h"
 
@@ -19,7 +21,7 @@ namespace engine {
 
 GLWindow::GLWindow(int width, int height, std::string title) {
 	sf::ContextSettings settings;
-	settings.depthBits = 24;
+	settings.depthBits = 32;
 	settings.stencilBits = 8;
 	settings.antialiasingLevel = 4;
 	settings.majorVersion = 2;
@@ -32,8 +34,16 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 		settings
 	);
 	
+	// Initialize GLEW
+	glewExperimental=true; // Needed in core profile
+	if (glewInit() != GLEW_OK) {
+		BOOST_LOG_TRIVIAL(warning) << "Failed to initialize GLEW.";
+	}
+	
 	//window_->setVerticalSyncEnabled(true);
 	//window_->setActive();
+	
+	//window_->setFramerateLimit(120);
 }
 
 GLWindow::~GLWindow() {

@@ -14,7 +14,7 @@ namespace oglre {
 
 namespace engine {
 
-class ICameraSceneNode: public ISceneNode {
+class ICameraSceneNode: public virtual ISceneNode {
 public:
 	ICameraSceneNode() {
 	}
@@ -33,20 +33,6 @@ public:
 	enum LOOK_DIRECTION {
 		LOOK_DIR_UP = 0, LOOK_DIR_DOWN = 1, LOOK_DIR_LEFT = 2, LOOK_DIR_RIGHT = 3
 	};
-	
-	/**
-	 * Does not implement the attach method.
-	 */ 
-	virtual void attach(IModel* model) {
-	}
-	;
-	
-	/**
-	 * Does not implement the setVisible method.
-	 */ 
-	virtual void setVisible(bool isVisible) {
-	}
-	;
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled) = 0;
 	// up/down
