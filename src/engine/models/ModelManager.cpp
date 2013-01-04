@@ -11,12 +11,12 @@
 
 #include "ModelManager.h"
 
-#include "../common/utilities/ImageLoader.h"
+#include "../../common/utilities/ImageLoader.h"
 
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 ModelManager::ModelManager() {
 	// get a handle to the predefined STDOUT log stream and attach

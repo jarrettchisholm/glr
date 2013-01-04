@@ -10,13 +10,14 @@
 #endif
 
 #include "TextureManager.h"
+#include "Constants.h"
 
-#include "../common/utilities/ImageLoader.h"
+#include "../../common/utilities/ImageLoader.h"
 
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 TextureManager::TextureManager() {
 }
@@ -43,7 +44,7 @@ Texture* TextureManager::getTexture(const std::string filename) {
 		return textures_[filename].get();
 	}
 	
-	std::string basepath = "/home/jarrett/projects/chisholmsoft/models/";
+	std::string basepath = Constants::MODEL_DIRECTORY;
 	
 	BOOST_LOG_TRIVIAL(debug) << "Loading texture image.";
 	utilities::ImageLoader il;

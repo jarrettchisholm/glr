@@ -1,5 +1,5 @@
 /*
- * MeshManager.cpp
+ * MaterialManager.cpp
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -9,14 +9,14 @@
 #include <windows.h>
 #endif
 
-#include "MeshManager.h"
+#include "MaterialManager.h"
 
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
-MeshManager::MeshManager() {
+MaterialManager::MaterialManager() {
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
@@ -26,14 +26,14 @@ MeshManager::MeshManager() {
 	
 }
 
-MeshManager::~MeshManager() {
+MaterialManager::~MaterialManager() {
 	// We added a log stream to the library, it's our job to disable it
 	// again. This will definitely release the last resources allocated
 	// by Assimp.
 	aiDetachAllLogStreams();
 }
 
-Mesh* MeshManager::getMesh(const std::string filename) {
+Material* MaterialManager::getMaterial(const std::string filename) {
 	// TODO: implement
 }
 

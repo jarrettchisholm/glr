@@ -25,7 +25,7 @@ public:
 	virtual ICameraSceneNode* createCameraFPS( const std::string name, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 lookAt = glm::vec3(1, 1, 1), glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5 );
 	virtual void drawAll();
 	
-	virtual IModelManager* getModelManager();
+	virtual models::IModelManager* getModelManager();
 	
 private:
 	std::vector<ISceneNode*> sceneNodes_;

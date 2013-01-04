@@ -79,7 +79,7 @@ bool CameraSceneNode::isActive() {
 /**
 * Does nothing in the CameraSceneNode.
 */ 
-void CameraSceneNode::attach(IModel* model) {
+void CameraSceneNode::attach(models::IModel* model) {
 	
 }
 

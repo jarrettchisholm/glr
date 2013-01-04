@@ -10,11 +10,11 @@
 
 #include <GL/gl.h>
 
-#include "../common/utilities/ImageLoader.h"
+#include "../../common/utilities/ImageLoader.h"
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 class Texture {
 public:

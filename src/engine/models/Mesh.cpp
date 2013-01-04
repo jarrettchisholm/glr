@@ -7,13 +7,13 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "../common/utilities/AssImpUtilities.h"
+#include "../../common/utilities/AssImpUtilities.h"
 
 #include "Mesh.h"
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 Mesh::Mesh(const aiMesh* mesh) {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";

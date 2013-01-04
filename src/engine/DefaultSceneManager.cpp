@@ -9,7 +9,7 @@
 
 #include "CameraSceneNode.h"
 #include "DefaultSceneNode.h"
-#include "ModelManager.h"
+#include "models/ModelManager.h"
 
 namespace oglre {
 
@@ -65,8 +65,8 @@ void DefaultSceneManager::drawAll() {
 	}
 }
 
-IModelManager* DefaultSceneManager::getModelManager() {
-	return ModelManager::getInstance();
+models::IModelManager* DefaultSceneManager::getModelManager() {
+	return models::ModelManager::getInstance();
 }
 
 }

@@ -42,12 +42,12 @@ public:
 	virtual void rotate(glm::quat quaternion);
 	
 	virtual bool isActive();	
-	virtual void attach(IModel* model);
+	virtual void attach(models::IModel* model);
 	virtual void setVisible(bool isVisible);
 	virtual void render();
 	
 protected:
-	IModel* model_;
+	models::IModel* model_;
 	
 	std::vector<ISceneNode*> children_;
 	glm::vec3 pos_;

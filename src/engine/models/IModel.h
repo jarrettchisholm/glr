@@ -10,7 +10,7 @@
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 class IModel {
 public:

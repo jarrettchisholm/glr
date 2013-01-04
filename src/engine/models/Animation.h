@@ -21,7 +21,7 @@
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 class Animation {
 public:

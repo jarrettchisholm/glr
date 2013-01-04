@@ -14,7 +14,7 @@
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 class IModelManager {
 public:

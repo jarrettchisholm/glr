@@ -7,13 +7,13 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../common/utilities/AssImpUtilities.h"
+#include "../../common/utilities/AssImpUtilities.h"
 
 #include "Material.h"
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 Material::Material(const aiMaterial* mtl) {
 	BOOST_LOG_TRIVIAL(debug) << "loading material...";

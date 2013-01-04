@@ -13,7 +13,7 @@
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-#include "IModel.h"
+#include "models/IModel.h"
 
 
 namespace oglre {
@@ -49,7 +49,7 @@ public:
 	virtual void rotate(glm::quat quaternion) = 0;
 	
 	virtual bool isActive() = 0;	
-	virtual void attach(IModel* model) = 0;
+	virtual void attach(models::IModel* model) = 0;
 	virtual void setVisible(bool isVisible) = 0;
 	virtual void render() = 0;
 

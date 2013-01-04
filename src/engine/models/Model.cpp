@@ -11,7 +11,7 @@
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 
 Model::Model() {

@@ -10,7 +10,7 @@
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
 Texture::Texture(utilities::Image* image) {
 	if (image == 0)

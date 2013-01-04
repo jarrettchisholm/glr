@@ -56,7 +56,7 @@ DefaultSceneNode::DefaultSceneNode(std::string name, glm::vec3& position, glm::v
 DefaultSceneNode::~DefaultSceneNode() {
 }
 
-void DefaultSceneNode::attach(IModel* model) {
+void DefaultSceneNode::attach(models::IModel* model) {
 	model_ = model;
 }
 

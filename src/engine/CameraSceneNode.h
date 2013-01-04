@@ -34,7 +34,7 @@ public:
 	virtual bool isActive();
 	virtual void render();
 	
-	virtual void attach(IModel* model);
+	virtual void attach(models::IModel* model);
 	virtual void setVisible(bool isVisible);
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled);

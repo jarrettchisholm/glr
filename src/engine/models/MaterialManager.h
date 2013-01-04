@@ -1,12 +1,12 @@
 /*
- * MeshManager.h
+ * MaterialManager.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
 
-#ifndef MESHMANAGER_H_
-#define MESHMANAGER_H_
+#ifndef MATERIALMANAGER_H_
+#define MATERIALMANAGER_H_
 
 #include <memory>
 #include <string>
@@ -20,23 +20,23 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "Mesh.h"
+#include "Material.h"
 
 namespace oglre {
 
-namespace engine {
+namespace models {
 
-class MeshManager {
+class MaterialManager {
 public:
-	MeshManager();
-	virtual ~MeshManager();
+	MaterialManager();
+	virtual ~MaterialManager();
 
-	Mesh* getMesh(const std::string path);
+	Material* getMaterial(const std::string path);
 	
 private:
 	aiLogStream stream;
 	
-	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
+	std::map< std::string, std::unique_ptr<Material> > meshes_;
 	
 	
 };
@@ -45,4 +45,4 @@ private:
 
 }
 
-#endif /* MESHMANAGER_H_ */
+#endif /* MATERIALMANAGER_H_ */
