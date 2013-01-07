@@ -8,18 +8,25 @@
 #ifndef SHADERPROGRAM_H_
 #define SHADERPROGRAM_H_
 
-#include <GL/gl.h>
+#include <GL/glew.h>
+
+#include <glm/glm.hpp>
+
+#include "IShaderProgram.h"
 
 namespace oglre {
 
 namespace shaders {
 
-class ShaderProgram {
+class ShaderProgram : public IShaderProgram{
 public:
 	ShaderProgram();
 	virtual ~ShaderProgram();
 	
-	void bind();
+	virtual void bind();
+	glm::detail::int32 initialize();
+	
+	static void unbindAll();
 
 private:
 	GLuint textureId_;

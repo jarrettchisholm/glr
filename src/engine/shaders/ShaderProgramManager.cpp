@@ -42,7 +42,7 @@ ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string filename
 	
 	std::string basepath = Constants::SHADER_DIRECTORY;
 	
-	BOOST_LOG_TRIVIAL(debug) << "Loading shaderProgram image.";
+	BOOST_LOG_TRIVIAL(debug) << "Loading shaderProgram.";
 	
     
     //if (image == 0) {

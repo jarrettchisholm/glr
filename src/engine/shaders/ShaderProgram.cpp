@@ -17,9 +17,17 @@ ShaderProgram::ShaderProgram() {
 
 ShaderProgram::~ShaderProgram() {
 }
+
+glm::detail::int32 ShaderProgram::initialize() {
+	
+}
 	
 void ShaderProgram::bind() {
 	
+}
+
+void ShaderProgram::unbindAll() {
+	glUseProgram(0);
 }
 
 }

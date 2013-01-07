@@ -12,6 +12,8 @@
 
 #include "ISceneNode.h"
 
+#include "shaders/IShaderProgram.h"
+
 namespace oglre {
 
 namespace engine {
@@ -43,11 +45,13 @@ public:
 	
 	virtual bool isActive();	
 	virtual void attach(models::IModel* model);
+	virtual void attach(shaders::IShaderProgram* shaderProgram);
 	virtual void setVisible(bool isVisible);
 	virtual void render();
 	
 protected:
 	models::IModel* model_;
+	shaders::IShaderProgram* shaderProgram_;
 	
 	std::vector<ISceneNode*> children_;
 	glm::vec3 pos_;

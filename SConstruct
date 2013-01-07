@@ -11,15 +11,13 @@ source_files = Glob('build/*.cpp', 'build/*.h')
 source_files = source_files + Glob('build/common/compatibility/*.cpp', 'build/common/compatibility/*.h')
 source_files = source_files + Glob('build/common/math/*.cpp', 'build/common/math/*.h')
 source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common/utilities/*.h')
-source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
+source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h')
+#source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
 
 source_files = source_files + Glob('build/engine/*.cpp', 'build/engine/*.h')
 source_files = source_files + Glob('build/engine/gui/*.cpp', 'build/engine/gui/*.h')
 source_files = source_files + Glob('build/engine/models/*.cpp', 'build/engine/models/*.h')
 source_files = source_files + Glob('build/engine/shaders/*.cpp', 'build/engine/shaders/*.h')
-source_files = source_files + Glob('build/linux/*.cpp', 'build/linux/*.h')
-source_files = source_files + Glob('build/osx/*.cpp', 'build/osx/*.h')
-source_files = source_files + Glob('build/windows/*.cpp', 'build/windows/*.h')
 
 # Set our required libraries
 libraries = [

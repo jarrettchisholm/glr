@@ -5,16 +5,16 @@
  *      Author: jarrett
  */
 
-#include "DefaultSceneNode.h"
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
-/* gl.h we need OpenGL */
-#include <GL/gl.h>
-
 #include <stdlib.h>
+
+#include "DefaultSceneNode.h"
+
+#include "shaders/ShaderProgram.h"
+
 
 namespace oglre {
 
@@ -51,6 +51,7 @@ DefaultSceneNode::DefaultSceneNode(std::string name, glm::vec3& position, glm::v
 	isVisible_ = true;
 	
 	model_ = nullptr;
+	shaderProgram_ = nullptr;
 }
 
 DefaultSceneNode::~DefaultSceneNode() {
@@ -58,6 +59,10 @@ DefaultSceneNode::~DefaultSceneNode() {
 
 void DefaultSceneNode::attach(models::IModel* model) {
 	model_ = model;
+}
+
+void DefaultSceneNode::attach(shaders::IShaderProgram* shaderProgram) {
+	shaderProgram_ = shaderProgram;
 }
 
 glm::vec3& DefaultSceneNode::getPosition() {
@@ -125,6 +130,10 @@ void DefaultSceneNode::render() {
 	glScalef(scale_.x, scale_.y, scale_.z);
 	
 	if (model_ != nullptr) {
+		if (shaderProgram_ != nullptr)
+			shaderProgram_->bind();
+		else
+			shaders::ShaderProgram::unbindAll();
 		model_->render();
 	}
 	
