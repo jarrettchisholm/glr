@@ -53,13 +53,13 @@ void CameraSceneNode::initialize() {
 	xRot_ = 0;
 	yRot_ = 0;
 
-	moveSpeed_ = 1.20f;
-	rotSpeed_ = 19.0f;
+	moveSpeed_ = 0.05f;
+	rotSpeed_ = 18.0f;
 
 	rotation_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
 	rotation_ = glm::normalize(rotation_);
 	
-	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.f));
+	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	
 	BOOST_LOG_TRIVIAL(debug) << "Camera initialized.";
 	//rotation_.normalize();
@@ -69,13 +69,11 @@ void CameraSceneNode::render() {
 	if (isActive()) {
 		//glm::detail::float32 matrix[16];
 		glm::quat temp = glm::conjugate(rotation_);
-		glm::mat4x4 matrix = glm::mat4_cast( temp );
-
-		///glMultMatrixf( glm::value_ptr(matrix) );
-		
-		viewMatrix_ = viewMatrix_ * matrix;
+		viewMatrix_ = glm::mat4_cast( temp );
 		
 		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
+
+		///glMultMatrixf( glm::value_ptr(matrix) );
 		
 		//glTranslatef(-pos_.x, -pos_.y, -pos_.z);
 	}
