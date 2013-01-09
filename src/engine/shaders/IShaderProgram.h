@@ -19,8 +19,6 @@ public:
 	;
 	
 	virtual void bind() = 0;
-	
-	//static void unbindAll() = 0;
 };
 
 }

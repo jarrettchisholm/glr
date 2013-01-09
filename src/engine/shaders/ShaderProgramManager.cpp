@@ -9,6 +9,7 @@
 
 #include "ShaderProgramManager.h"
 
+#include "ShaderManager.h"
 #include "Constants.h"
 
 namespace oglre {
@@ -32,32 +33,49 @@ ShaderProgramManager* ShaderProgramManager::getInstance() {
 	return ShaderProgramManager::shaderProgramManager_;
 }
 
-ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string filename) {
+ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name) {
 	BOOST_LOG_TRIVIAL(debug) << "Loading shaderProgram...";
 	
-	if (shaderPrograms_[filename] != 0) {
+	if (shaderPrograms_[name] != nullptr) {
 		BOOST_LOG_TRIVIAL(debug) << "ShaderProgram found.";
-		return shaderPrograms_[filename].get();
+		return shaderPrograms_[name].get();
+	}
+	else {
+		BOOST_LOG_TRIVIAL(debug) << "Unable to find ShaderProgram.";
+		return nullptr;
+	}
+}
+
+ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name, std::vector< std::pair <std::string, shaders::IShader::Type> > shaderInfo) {
+	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram...";
+	
+	if (shaderPrograms_[name] != nullptr) {
+		BOOST_LOG_TRIVIAL(debug) << "ShaderProgram found.";
+		return shaderPrograms_[name].get();
 	}
 	
-	std::string basepath = Constants::SHADER_DIRECTORY;
+	std::vector<Shader*> shaders;
 	
-	BOOST_LOG_TRIVIAL(debug) << "Loading shaderProgram.";
+	for (int i=0; i < shaderInfo.size(); i++) {		
+		Shader* shader = ShaderManager::getInstance()->getShader(shaderInfo[i].first, shaderInfo[i].second);
+		
+		if (shader != nullptr)
+			shaders.push_back(shader);
+	}
 	
-    
-    //if (image == 0) {
-	//	BOOST_LOG_TRIVIAL(debug) << "Unable to load shaderProgram.";
-	//	return 0;
-	//}
-    
-    
 	
-	BOOST_LOG_TRIVIAL(debug) << "Creating shaderProgram.";
-	shaderPrograms_[filename] = std::unique_ptr<ShaderProgram>( new ShaderProgram() );
+	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram.";
 	
-	//delete image;
+	shaderPrograms_[name] = std::unique_ptr<ShaderProgram>( new ShaderProgram(shaders) );
 	
-	return shaderPrograms_[filename].get();
+	// error checking
+	if (shaderPrograms_[name]->initialize() < 0) {
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load ShaderProgram.";
+		shaderPrograms_.erase(name);
+		return nullptr;
+	}
+	
+	return shaderPrograms_[name].get();
 }
 
 }

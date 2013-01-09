@@ -4,6 +4,7 @@
  *  Created on: 2013-01-04
  *      Author: jarrett
  */
+#include <boost/log/trivial.hpp>
 
 #include "ShaderProgram.h"
 
@@ -11,7 +12,7 @@ namespace oglre {
 
 namespace shaders {
 
-ShaderProgram::ShaderProgram() {
+ShaderProgram::ShaderProgram(std::vector<Shader*> shaders) : shaders_(shaders) {
 	
 }
 
@@ -19,11 +20,42 @@ ShaderProgram::~ShaderProgram() {
 }
 
 glm::detail::int32 ShaderProgram::initialize() {
+	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program.";
 	
+	if (programId_ < 0) {
+		BOOST_LOG_TRIVIAL(error) << "Could not load shader program - shader program already has an OpenGL id assigned to it.";
+		return -1;
+	}
+	
+	programId_ = glCreateProgram();
+	
+	for (int i=0; i < shaders_.size(); i++) {
+		glAttachShader(programId_, shaders_[i]->getGLShaderId());
+	}
+	
+	glLinkProgram(programId_); 
+	
+	GLint linked;
+	glGetProgramiv(programId_, GL_LINK_STATUS, &linked);
+	
+	if (!linked) {
+		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader program.";
+		
+		GLchar errorLog[1024] = {0};
+	    glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
+	    
+	    BOOST_LOG_TRIVIAL(error) << errorLog;
+		
+		return -1;
+	}  
+	
+	
+	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
+	return 0;
 }
 	
 void ShaderProgram::bind() {
-	
+	glUseProgram(programId_);
 }
 
 void ShaderProgram::unbindAll() {

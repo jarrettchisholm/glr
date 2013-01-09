@@ -11,14 +11,16 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+
 using namespace std;
+
+namespace oglre {
 
 namespace io {
 
 class File {
 public:
-	File(char* file, bool read = true, bool write = false, bool truncate = true, bool append =
-			false);
+	File(char* file, bool read = true, bool write = false, bool truncate = true, bool append = false);
 	virtual ~File();
 
 	void close();
@@ -36,6 +38,8 @@ public:
 
 	int readInt();
 	char* readToken(int max = 256);
+	
+	static std::string getFileContents(const std::string filename);
 
 private:
 	fstream* stream;
@@ -47,6 +51,8 @@ private:
 	bool read_, write_;
 
 };
+
+}
 
 }
 

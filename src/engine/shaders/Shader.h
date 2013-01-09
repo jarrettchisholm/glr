@@ -8,6 +8,8 @@
 #ifndef SHADER_H_
 #define SHADER_H_
 
+#include <string>
+
 #include <glm/glm.hpp>
 
 #include "IShader.h"
@@ -18,18 +20,21 @@ namespace shaders {
 
 class Shader : public IShader {
 public:
-	Shader();
+	Shader(std::string sourceCode, Type type);
 	virtual ~Shader();
 	
 	virtual void bind();
+	virtual IShader::Type getType();
 	virtual GLuint getGLShaderId();
 	
 	glm::detail::int32 initialize();
 
 private:
 	GLuint shaderId_;
-
-	void loadShader();
+	
+	Type type_;
+	
+	std::string sourceCode_;
 };
 
 }

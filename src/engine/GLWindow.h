@@ -32,11 +32,11 @@ namespace engine {
 
 class GLWindow: public IWindow {
 private:
-	sf::Window* window_;
+	std::unique_ptr<sf::Window> window_;
 	std::unique_ptr<GUI> gui_;
 
 protected:
-	DefaultSceneManager* sMgr_;
+	std::unique_ptr<DefaultSceneManager> sMgr_;
 
 public:
 	GLWindow(int width, int height, std::string title);

@@ -9,6 +9,8 @@
 
 #include "ShaderManager.h"
 
+#include "../../common/io/File.h"
+
 #include "Constants.h"
 
 namespace oglre {
@@ -32,30 +34,35 @@ ShaderManager* ShaderManager::getInstance() {
 	return ShaderManager::shaderManager_;
 }
 
-Shader* ShaderManager::getShader(const std::string filename) {
+Shader* ShaderManager::getShader(const std::string filename, const IShader::Type shaderType) {
 	BOOST_LOG_TRIVIAL(debug) << "Loading shader...";
 	
-	if (shaders_[filename] != 0) {
+	if (shaders_[filename] != nullptr) {
 		BOOST_LOG_TRIVIAL(debug) << "Shader found.";
 		return shaders_[filename].get();
 	}
 	
-	std::string basepath = Constants::SHADER_DIRECTORY;
+	std::string filepath = constants::SHADER_DIRECTORY;
+	filepath.append(filename);
+	
+	BOOST_LOG_TRIVIAL(debug) << "shader source filename: " << filename;
+	BOOST_LOG_TRIVIAL(debug) << "shader source filepath: " << filepath;
 	
 	BOOST_LOG_TRIVIAL(debug) << "Loading shader.";
 	
-    
-    //if (image == 0) {
-	//	BOOST_LOG_TRIVIAL(debug) << "Unable to load shaderProgram.";
-	//	return 0;
-	//}
-    
+	std::string shaderContents = io::File::getFileContents(filepath);    
     
 	
 	BOOST_LOG_TRIVIAL(debug) << "Creating shader.";
-	shaders_[filename] = std::unique_ptr<Shader>( new Shader() );
 	
-	//delete image;
+	shaders_[filename] = std::unique_ptr<Shader>( new Shader(shaderContents, shaderType) );
+	
+	// error checking
+	if (shaders_[filename]->initialize() < 0) {
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load shader.";
+		shaders_.erase(filename);
+		return nullptr;
+	}
 	
 	return shaders_[filename].get();
 }

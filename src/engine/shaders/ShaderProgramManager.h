@@ -28,6 +28,7 @@ public:
 	static ShaderProgramManager* getInstance();
 
 	ShaderProgram* getShaderProgram(const std::string filename);
+	ShaderProgram* getShaderProgram(const std::string name, std::vector< std::pair <std::string, shaders::IShader::Type> > shaderInfo);
 	
 private:
 	static ShaderProgramManager* shaderProgramManager_;

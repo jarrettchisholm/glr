@@ -8,6 +8,12 @@
 #include "File.h"
 #include <string.h>
 
+#include <string>
+#include <fstream>
+#include <streambuf>
+
+namespace oglre {
+
 namespace io {
 
 File::File(char* file, bool read, bool write, bool truncate, bool append) {
@@ -185,6 +191,16 @@ char* File::readln(int i) {
 	}
 
 	return NULL;
+}
+
+std::string File::getFileContents(const std::string filename) {
+	std::ifstream t(filename);
+	std::string str((std::istreambuf_iterator<char>(t)),
+	                 std::istreambuf_iterator<char>());
+	                 
+	return str;
+}
+
 }
 
 }

@@ -20,7 +20,16 @@ public:
 	}
 	;
 	
+	enum Type {
+		TYPE_NONE = 0,
+		TYPE_VERTEX,
+		TYPE_FRAGMENT,
+		TYPE_GEOMETRY,
+		TYPE_TESSELLATION
+	};
+	
 	virtual void bind() = 0;
+	virtual Type getType() = 0;
 	virtual GLuint getGLShaderId() = 0;
 };
 

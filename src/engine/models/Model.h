@@ -12,8 +12,6 @@
 #include <map>
 #include <string>
 
-#include <GL/gl.h>
-
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

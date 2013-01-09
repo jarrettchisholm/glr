@@ -16,6 +16,9 @@ namespace oglre {
 namespace models {
 
 Mesh::Mesh(const aiMesh* mesh) {
+	vaoId_[1];
+	vboIds_[4];
+	
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";
 	
 	glm::detail::uint32 currentIndex = 0;
@@ -66,6 +69,37 @@ Mesh::Mesh(const aiMesh* mesh) {
 		
 		currentIndex += 3;
 	}
+	
+	BOOST_LOG_TRIVIAL(debug) << "loading mesh into video memory...";	
+	
+	glGenVertexArrays(1, &vaoId_[0]);
+	glBindVertexArray(vaoId_[0]);
+  
+	glGenBuffers(4, vboIds_);
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(GLfloat), &vertices_[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, vboIds_[1]);
+    //glBufferData(GL_ARRAY_BUFFER, textureCoordinates_.size() * sizeof(GLfloat), &textureCoordinates_[0], GL_STATIC_DRAW);
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //glBindBuffer(GL_ARRAY_BUFFER, vboIds_[2]);
+    //glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(GLfloat), &normals_[0], GL_STATIC_DRAW);
+    //glEnableVertexAttribArray(2);
+    //glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    
+	
+	  
+	  
+	// Disable our Vertex Array Object  
+	glEnableVertexAttribArray(0); 
+	// Disable our Vertex Buffer Object
+	glBindVertexArray(0);
+	
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 }
 
@@ -73,6 +107,15 @@ Mesh::~Mesh() {
 }
 
 void Mesh::render() {
+	// Bind our Vertex Array Object  
+	glBindVertexArray(vaoId_[0]);
+
+	glDrawArrays(GL_TRIANGLES, 0, vertices_.size()/3);
+
+	// Unbind our Vertex Array Object
+	glBindVertexArray(0);
+	
+	/*
 	glBegin( GL_TRIANGLES );
 	
 	for (glm::detail::uint32 i = 0; i < vertices_.size(); i++) {
@@ -84,6 +127,7 @@ void Mesh::render() {
 	}
 	
 	glEnd();
+	*/
 }
 
 

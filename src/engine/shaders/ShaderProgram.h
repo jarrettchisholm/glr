@@ -8,11 +8,15 @@
 #ifndef SHADERPROGRAM_H_
 #define SHADERPROGRAM_H_
 
+#include <vector>
+
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
 
 #include "IShaderProgram.h"
+
+#include "Shader.h"
 
 namespace oglre {
 
@@ -20,7 +24,7 @@ namespace shaders {
 
 class ShaderProgram : public IShaderProgram{
 public:
-	ShaderProgram();
+	ShaderProgram(std::vector<Shader*> shaders);
 	virtual ~ShaderProgram();
 	
 	virtual void bind();
@@ -29,9 +33,9 @@ public:
 	static void unbindAll();
 
 private:
-	GLuint textureId_;
+	GLuint programId_;
 
-	void loadShaderProgram();
+	std::vector<Shader*> shaders_;
 };
 
 }

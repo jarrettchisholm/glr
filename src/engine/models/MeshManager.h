@@ -12,9 +12,6 @@
 #include <string>
 #include <map>
 
-/* gl.h we need OpenGL */
-#include <GL/gl.h>
-
 // assimp include files. These three are usually needed.
 #include <assimp/cimport.h>
 #include <assimp/scene.h>

@@ -15,6 +15,8 @@
 
 #include "GLWindow.h"
 
+#include "shaders/ShaderProgramManager.h"
+
 namespace oglre {
 
 namespace engine {
@@ -24,15 +26,15 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 	settings.depthBits = 32;
 	settings.stencilBits = 8;
 	settings.antialiasingLevel = 4;
-	settings.majorVersion = 2;
-	settings.minorVersion = 0;
+	settings.majorVersion = 3;
+	settings.minorVersion = 2;
 	
-	window_ = new sf::Window(
+	window_ = std::unique_ptr<sf::Window>(new sf::Window(
 		sf::VideoMode(width, height, 32), 
 		title,
 		sf::Style::Default, 
 		settings
-	);
+	));
 	
 	// Initialize GLEW
 	glewExperimental=true; // Needed in core profile
@@ -57,7 +59,7 @@ IWindow::WindowHandle GLWindow::getWindowHandle() {
 }
 
 IWindow::InternalWindow GLWindow::getInternalWindowPointer() {
-	return window_;
+	return window_.get();
 }
 
 void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
@@ -90,15 +92,20 @@ glm::detail::int32 GLWindow::initialize() {
 	
 	glFlush();
 	
-	sMgr_ = 0;
-	sMgr_ = new DefaultSceneManager();
+	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager());
+	
+	
+	// load all of the shaders
+	std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
+	shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
+	shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.frag", shaders::IShader::TYPE_FRAGMENT) );
+	
+	shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 	
 	return 0;
 }
 
 void GLWindow::destroy() {
-	if (sMgr_ != 0)
-		delete sMgr_;
 }
 
 glm::detail::int32 GLWindow::handleEvents() {
@@ -177,7 +184,7 @@ glm::detail::uint32 GLWindow::getDepth() {
 }
 
 ISceneManager* GLWindow::getSceneManager() {
-	return sMgr_;
+	return sMgr_.get();
 }
 
 IGUI* GLWindow::getHtmlGui() {

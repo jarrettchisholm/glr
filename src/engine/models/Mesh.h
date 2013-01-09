@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -33,6 +33,9 @@ public:
 	void render();
 
 private:
+	glm::detail::uint32 vaoId_[];
+	glm::detail::uint32 vboIds_[];
+
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec3 > normals_;
 	std::vector< glm::vec2 > textureCoordinates_;
