@@ -10,6 +10,8 @@
 
 #include "ISceneManager.h"
 
+#include "CameraSceneNode.h"
+
 namespace oglre {
 
 namespace engine {
@@ -27,8 +29,11 @@ public:
 	
 	virtual models::IModelManager* getModelManager();
 	
+	CameraSceneNode* getActiveCameraSceneNode();
+	
 private:
 	std::vector<ISceneNode*> sceneNodes_;
+	std::vector<CameraSceneNode*> cameras_;
 };
 
 }

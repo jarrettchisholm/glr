@@ -11,6 +11,9 @@
 
 #include <SFML/OpenGL.hpp>
 
+#include <glm/glm.hpp>  
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <boost/log/trivial.hpp>
 
 #include "GLWindow.h"
@@ -68,13 +71,19 @@ void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 		height = 1;
 	
 	glViewport(0, 0, width, height);
+	/*
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 2000.0f);
 	glMatrixMode(GL_MODELVIEW);
+	*/
 
 	width_ = width;
 	height_ = height;
+	
+	projectionMatrix_ = glm::perspective(60.0f, (float)width / (float)height, 0.1f, 100.f);
+	//viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.f));
+	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 }
 
 glm::detail::int32 GLWindow::initialize() {	
@@ -133,9 +142,9 @@ glm::detail::int32 GLWindow::handleEvents() {
 }
 
 void GLWindow::beginRender() {
-	glMatrixMode(GL_MODELVIEW);
+	//glMatrixMode(GL_MODELVIEW);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	//glLoadIdentity();
 }
 
 void GLWindow::endRender() {
@@ -146,9 +155,22 @@ void GLWindow::endRender() {
 void GLWindow::render() {
 	beginRender();
 	
-	//DrawAQuad();
+	shaders::IShaderProgram* shader = shaders::ShaderProgramManager::getInstance()->getShaderProgram("test");
+	shader->bind();
 	
+	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix"); // Get the location of our projection matrix in the shader  
+	int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix"); // Get the location of our view matrix in the shader  
+	int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix"); // Get the location of our model matrix in the shader
+	
+	glm::mat4 viewMatrix = sMgr_->getActiveCameraSceneNode()->getViewMatrix();
+	
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix_[0][0]); // Send our projection matrix to the shader  
+	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]); // Send our view matrix to the shader  
+	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix_[0][0]); // Send our model matrix to the shader
+	DrawAQuad();
 	sMgr_->drawAll();
+	
+	shaders::ShaderProgram::unbindAll();
 	
 	if (gui_)
 		gui_->render();

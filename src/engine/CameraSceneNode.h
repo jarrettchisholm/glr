@@ -44,10 +44,14 @@ public:
 	virtual void rotateY(glm::detail::float32 degrees);
 
 	virtual void tick(glm::detail::float32 time);
+	
+	glm::mat4& getViewMatrix();
 
 private:
 	glm::quat rotation_;
 	glm::detail::int32 prevX_, prevY_;
+	
+	glm::mat4 viewMatrix_;
 
 	char movement_[NUM_MOVE_DIRECTIONS];
 	glm::detail::float32 moveSpeed_, rotSpeed_;

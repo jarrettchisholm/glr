@@ -33,6 +33,9 @@ glm::detail::int32 ShaderProgram::initialize() {
 		glAttachShader(programId_, shaders_[i]->getGLShaderId());
 	}
 	
+	glBindAttribLocation(programId_, 0, "in_Position");
+	glBindAttribLocation(programId_, 1, "in_Color");
+	
 	glLinkProgram(programId_); 
 	
 	GLint linked;
@@ -52,6 +55,10 @@ glm::detail::int32 ShaderProgram::initialize() {
 	
 	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
 	return 0;
+}
+
+GLuint ShaderProgram::getGLShaderProgramId() {
+	return programId_;
 }
 	
 void ShaderProgram::bind() {

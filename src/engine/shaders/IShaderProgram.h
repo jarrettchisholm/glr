@@ -8,6 +8,8 @@
 #ifndef ISHADERPROGRAM_H_
 #define ISHADERPROGRAM_H_
 
+#include <GL/glew.h>
+
 namespace oglre {
 
 namespace shaders {
@@ -19,6 +21,8 @@ public:
 	;
 	
 	virtual void bind() = 0;
+	
+	virtual GLuint getGLShaderProgramId() = 0;
 };
 
 }

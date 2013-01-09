@@ -42,26 +42,37 @@ ISceneNode* DefaultSceneManager::createSceneNode(const std::string name, glm::ve
 ICameraSceneNode* DefaultSceneManager::createCamera(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
 	CameraSceneNode* node = new CameraSceneNode(position, lookAt);
 
-	std::vector<ISceneNode*>::iterator it;
+	//std::vector<ISceneNode*>::iterator it;
 
-	it = sceneNodes_.begin();
-	it = sceneNodes_.insert(it, node);
+	//it = cameras_.begin();
+	//it = cameras_.insert(it, node);
 
-	//sceneNodes_.push_back(node);
+	cameras_.push_back(node);
 
 	return node;
 }
 
 ICameraSceneNode* DefaultSceneManager::createCameraFPS(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
 	CameraSceneNode* node = new CameraSceneNode();
-	sceneNodes_.push_back(node);
+	cameras_.push_back(node);
 
 	return node;
 }
 
 void DefaultSceneManager::drawAll() {
+	for (glm::detail::uint32 i = 0; i < cameras_.size(); i++) {
+		cameras_[i]->render();
+	}
+		
 	for (glm::detail::uint32 i = 0; i < sceneNodes_.size(); i++) {
 		sceneNodes_[i]->render();
+	}
+}
+
+CameraSceneNode* DefaultSceneManager::getActiveCameraSceneNode() {
+	for (glm::detail::uint32 i = 0; i < cameras_.size(); i++) {
+		if (cameras_[i]->isActive())
+			return cameras_[i];
 	}
 }
 

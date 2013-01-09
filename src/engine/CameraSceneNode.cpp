@@ -6,6 +6,9 @@
  */
 
 #include "glm/gtc/type_ptr.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <boost/log/trivial.hpp>
 
 #include "CameraSceneNode.h"
 
@@ -55,6 +58,10 @@ void CameraSceneNode::initialize() {
 
 	rotation_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
 	rotation_ = glm::normalize(rotation_);
+	
+	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.f));
+	
+	BOOST_LOG_TRIVIAL(debug) << "Camera initialized.";
 	//rotation_.normalize();
 }
 
@@ -63,13 +70,19 @@ void CameraSceneNode::render() {
 		//glm::detail::float32 matrix[16];
 		glm::quat temp = glm::conjugate(rotation_);
 		glm::mat4x4 matrix = glm::mat4_cast( temp );
-		
-		//rotation_.getConjugate().fillMatrix(matrix);
 
-		glMultMatrixf( glm::value_ptr(matrix) );
+		///glMultMatrixf( glm::value_ptr(matrix) );
 		
-		glTranslatef(-pos_.x, -pos_.y, -pos_.z);
+		viewMatrix_ = viewMatrix_ * matrix;
+		
+		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
+		
+		//glTranslatef(-pos_.x, -pos_.y, -pos_.z);
 	}
+}
+
+glm::mat4& CameraSceneNode::getViewMatrix() {
+	return viewMatrix_;
 }
 
 bool CameraSceneNode::isActive() {

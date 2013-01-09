@@ -10,8 +10,6 @@
 
 #include <vector>
 
-#include <GL/glew.h>
-
 #include <glm/glm.hpp>
 
 #include "IShaderProgram.h"
@@ -28,6 +26,7 @@ public:
 	virtual ~ShaderProgram();
 	
 	virtual void bind();
+	virtual GLuint getGLShaderProgramId();
 	glm::detail::int32 initialize();
 	
 	static void unbindAll();

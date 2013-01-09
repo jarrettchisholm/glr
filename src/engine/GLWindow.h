@@ -16,9 +16,6 @@
 
 #include <SFML/Window.hpp>
 
-/* gl.h we need OpenGL */
-#include <GL/gl.h>
-
 #include "IWindow.h"
 #include "DefaultSceneNode.h"
 #include "DefaultSceneManager.h"
@@ -31,13 +28,6 @@ namespace oglre {
 namespace engine {
 
 class GLWindow: public IWindow {
-private:
-	std::unique_ptr<sf::Window> window_;
-	std::unique_ptr<GUI> gui_;
-
-protected:
-	std::unique_ptr<DefaultSceneManager> sMgr_;
-
 public:
 	GLWindow(int width, int height, std::string title);
 	virtual ~GLWindow();
@@ -66,6 +56,16 @@ public:
 	virtual IGUI* getHtmlGui();
 	
 	void DrawAQuad();
+	
+protected:
+	std::unique_ptr<DefaultSceneManager> sMgr_;
+	
+private:
+	std::unique_ptr<sf::Window> window_;
+	std::unique_ptr<GUI> gui_;
+	
+	glm::mat4 projectionMatrix_;
+	glm::mat4 modelMatrix_;
 };
 
 }
