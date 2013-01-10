@@ -67,15 +67,9 @@ void CameraSceneNode::initialize() {
 
 void CameraSceneNode::render() {
 	if (isActive()) {
-		//glm::detail::float32 matrix[16];
 		glm::quat temp = glm::conjugate(rotation_);
 		viewMatrix_ = glm::mat4_cast( temp );
-		
 		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
-
-		///glMultMatrixf( glm::value_ptr(matrix) );
-		
-		//glTranslatef(-pos_.x, -pos_.y, -pos_.z);
 	}
 }
 

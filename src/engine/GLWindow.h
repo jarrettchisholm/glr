@@ -56,6 +56,7 @@ public:
 	virtual IGUI* getHtmlGui();
 	
 	void DrawAQuad();
+	void LoadAQuad();
 	
 protected:
 	std::unique_ptr<DefaultSceneManager> sMgr_;
@@ -66,6 +67,10 @@ private:
 	
 	glm::mat4 projectionMatrix_;
 	glm::mat4 modelMatrix_;
+	
+	unsigned int vaoID[1]; // Our Vertex Array Object  
+  
+	unsigned int vboID[1]; // Our Vertex Buffer Object
 };
 
 }

@@ -11,6 +11,8 @@
 
 #include <stdlib.h>
 
+#include <boost/log/trivial.hpp>
+
 #include "DefaultSceneNode.h"
 
 #include "shaders/ShaderProgram.h"
@@ -126,18 +128,13 @@ void DefaultSceneNode::setVisible(bool isVisible) {
 }
 
 void DefaultSceneNode::render() {
-	glPushMatrix();
-	glScalef(scale_.x, scale_.y, scale_.z);
-	
 	if (model_ != nullptr) {
-		if (shaderProgram_ != nullptr)
-			shaderProgram_->bind();
-		else
-			shaders::ShaderProgram::unbindAll();
+		//if (shaderProgram_ != nullptr)
+		//	shaderProgram_->bind();
+		//else
+		//	shaders::ShaderProgram::unbindAll();
 		model_->render();
 	}
-	
-	glPopMatrix();
 }
 
 }

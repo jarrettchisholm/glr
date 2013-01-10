@@ -37,8 +37,9 @@ void Model::render() {
 	setLighting();
 	
 	for (glm::detail::uint32 i=0; i < meshes_.size(); i++) {
-		if (textures_[ textureMap_[i] ] != 0)
+		if (textures_[ textureMap_[i] ] != nullptr) {
 			textures_[ textureMap_[i] ]->bind();
+		}
 		meshes_[i]->render();
 	}
 	

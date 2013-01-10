@@ -8,7 +8,7 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include "../../common/utilities/ImageLoader.h"
 

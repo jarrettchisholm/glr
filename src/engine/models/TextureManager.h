@@ -12,9 +12,6 @@
 #include <map>
 #include <string>
 
-/* gl.h we need OpenGL */
-#include <GL/gl.h>
-
 #include "Texture.h"
 
 namespace oglre {

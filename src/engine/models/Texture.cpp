@@ -40,7 +40,36 @@ void Texture::loadTexture(utilities::Image* image) {
 	// error check
 	GLenum huboError = glGetError();
 	if(huboError){
+		std::string errorName = "";
+		
+		switch (huboError) {
+			case GL_INVALID_ENUM:
+				errorName = "GL_INVALID_ENUM";
+				break;
+				
+			case GL_INVALID_VALUE:
+				errorName = "GL_INVALID_VALUE";
+				break;
+			
+			case GL_INVALID_OPERATION:
+				errorName = "GL_INVALID_OPERATION";
+				break;
+				
+			case GL_STACK_OVERFLOW:
+				errorName = "GL_STACK_OVERFLOW";
+				break;
+				
+			case GL_STACK_UNDERFLOW:
+				errorName = "GL_STACK_UNDERFLOW";
+				break;
+				
+			case GL_OUT_OF_MEMORY:
+				errorName = "GL_OUT_OF_MEMORY";
+				break;
+			
+		}
 		BOOST_LOG_TRIVIAL(error) << "Texture::loadTexture: error loading texture in opengl";
+		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << errorName;
 	} else {
 		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded texture.";
 	}

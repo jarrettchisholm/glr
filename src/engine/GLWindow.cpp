@@ -111,6 +111,9 @@ glm::detail::int32 GLWindow::initialize() {
 	
 	shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 	
+	
+	LoadAQuad(); //TESTING
+	
 	return 0;
 }
 
@@ -154,31 +157,66 @@ void GLWindow::endRender() {
 
 void GLWindow::render() {
 	beginRender();
-	
+
 	shaders::IShaderProgram* shader = shaders::ShaderProgramManager::getInstance()->getShaderProgram("test");
 	shader->bind();
-	
+
 	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix"); // Get the location of our projection matrix in the shader  
 	int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix"); // Get the location of our view matrix in the shader  
 	int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix"); // Get the location of our model matrix in the shader
-	
+
 	glm::mat4 viewMatrix = sMgr_->getActiveCameraSceneNode()->getViewMatrix();
-	
+
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix_[0][0]); // Send our projection matrix to the shader  
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]); // Send our view matrix to the shader  
 	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix_[0][0]); // Send our model matrix to the shader
+
 	DrawAQuad();
+
 	sMgr_->drawAll();
-	
+
 	shaders::ShaderProgram::unbindAll();
-	
+
 	if (gui_)
 		gui_->render();
-	
+
 	endRender();
 }
 
+void GLWindow::LoadAQuad() {
+	float* vertices = new float[18];  // Vertices for our square  
+  
+	vertices[0] = -0.5; vertices[1] = -0.5; vertices[2] = 0.0; // Bottom left corner  
+	vertices[3] = -0.5; vertices[4] = 0.5; vertices[5] = 0.0; // Top left corner  
+	vertices[6] = 0.5; vertices[7] = 0.5; vertices[8] = 0.0; // Top Right corner  
+	  
+	vertices[9] = 0.5; vertices[10] = -0.5; vertices[11] = 0.0; // Bottom right corner  
+	vertices[12] = -0.5; vertices[13] = -0.5; vertices[14] = 0.0; // Bottom left corner  
+	vertices[15] = 0.5; vertices[16] = 0.5; vertices[17] = 0.0; // Top Right corner  
+	
+	glGenVertexArrays(1, &vaoID[0]); // Create our Vertex Array Object  
+	glBindVertexArray(vaoID[0]); // Bind our Vertex Array Object so we can use it  
+	  
+	glGenBuffers(1, vboID); // Generate our Vertex Buffer Object  
+	glBindBuffer(GL_ARRAY_BUFFER, vboID[0]); // Bind our Vertex Buffer Object  
+	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), vertices, GL_STATIC_DRAW); // Set the size and data of our VBO and set it to STATIC_DRAW  
+	  
+	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); // Set up our vertex attributes pointer  
+	  
+	glEnableVertexAttribArray(0); // Disable our Vertex Array Object  
+	glBindVertexArray(0); // Disable our Vertex Buffer Object
+	  
+	delete [] vertices; // Delete our vertices from memory
+}
+
 void GLWindow::DrawAQuad() {
+	glBindVertexArray(vaoID[0]); // Bind our Vertex Array Object
+	
+	glDrawArrays(GL_TRIANGLES, 0, 6); // Draw our square  
+	
+	glBindVertexArray(0); // Unbind our Vertex Array Object
+	
+	/*
 	glTranslatef(-0., -0., -30.);
 
 	glBegin(GL_QUADS);
@@ -191,6 +229,7 @@ void GLWindow::DrawAQuad() {
 		glColor3f(1., 1., 0.);
 		glVertex3f(-.75, .75, 0.);
 	glEnd();
+	*/
 }
 
 glm::detail::uint32 GLWindow::getWidth() {
