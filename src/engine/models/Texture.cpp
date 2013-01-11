@@ -33,7 +33,7 @@ void Texture::loadTexture(utilities::Image* image) {
 	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     
     // i don't combine the color with the original surface color, use only the texture map.
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->data);
  
@@ -76,10 +76,18 @@ void Texture::loadTexture(utilities::Image* image) {
 }
 
 void Texture::bind() {
+	/*
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_TEXTURE_2D );
 	glBindTexture(GL_TEXTURE_2D, textureId_);
+	*/
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureId_);
+	
+	// to unbind, we use the following
+	// glBindTexture(GL_TEXTURE_2D,0);
 }
 
 }

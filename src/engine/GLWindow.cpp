@@ -171,7 +171,7 @@ void GLWindow::render() {
 	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]); // Send our view matrix to the shader  
 	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix_[0][0]); // Send our model matrix to the shader
 
-	DrawAQuad();
+	//DrawAQuad();
 
 	sMgr_->drawAll();
 

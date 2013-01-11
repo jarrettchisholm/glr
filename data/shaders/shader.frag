@@ -1,9 +1,13 @@
 #version 150 core
 
+uniform sampler2D texture;
+
 in vec3 pass_Color;
+in vec2 textureCoord;
 
-out vec4 out_Color;
-
-void main() {
-	out_Color = vec4(pass_Color, 1.0);
+void main() {	
+	vec4 out_Color = texture2D(texture, textureCoord);
+	
+	// gl_FragColor is pre-defined
+	gl_FragColor = out_Color;
 }
