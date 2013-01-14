@@ -13,7 +13,7 @@ namespace oglre {
 namespace shaders {
 
 ShaderProgram::ShaderProgram(std::vector<Shader*> shaders) : shaders_(shaders) {
-	
+
 }
 
 ShaderProgram::~ShaderProgram() {
@@ -22,7 +22,7 @@ ShaderProgram::~ShaderProgram() {
 glm::detail::int32 ShaderProgram::initialize() {
 	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program.";
 	
-	if (programId_ < 0) {
+	if (programId_ > 0) {
 		BOOST_LOG_TRIVIAL(error) << "Could not load shader program - shader program already has an OpenGL id assigned to it.";
 		return -1;
 	}
