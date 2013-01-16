@@ -14,10 +14,10 @@ source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common
 source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h')
 #source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
 
-source_files = source_files + Glob('build/engine/*.cpp', 'build/engine/*.h')
-source_files = source_files + Glob('build/engine/gui/*.cpp', 'build/engine/gui/*.h')
-source_files = source_files + Glob('build/engine/models/*.cpp', 'build/engine/models/*.h')
-source_files = source_files + Glob('build/engine/shaders/*.cpp', 'build/engine/shaders/*.h')
+source_files = source_files + Glob('build/*.cpp', 'build/*.h')
+source_files = source_files + Glob('build/gui/*.cpp', 'build/gui/*.h')
+source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
+source_files = source_files + Glob('build/shaders/*.cpp', 'build/shaders/*.h')
 
 env = Environment(ENV = os.environ, CCFLAGS=[]) 
 
