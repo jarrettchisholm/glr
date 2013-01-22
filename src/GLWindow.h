@@ -36,7 +36,6 @@ public:
 	virtual IWindow::InternalWindow getInternalWindowPointer();
 
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height);
-	virtual glm::detail::int32 initialize();
 	virtual void destroy();
 	glm::detail::int32 handleEvents();
 	
@@ -71,6 +70,8 @@ private:
 	unsigned int vaoID[1]; // Our Vertex Array Object  
   
 	unsigned int vboID[1]; // Our Vertex Buffer Object
+
+	void initialize();
 };
 
 }

@@ -1,0 +1,34 @@
+/*
+ * Exception.h
+ *
+ *  Created on: 2013-01-16
+ *      Author: jarrett
+ */
+
+#ifndef EXCEPTION_H_
+#define EXCEPTION_H_
+
+#include <string>
+#include <exception>
+
+namespace oglre {
+
+namespace exception {
+
+class Exception : public std::exception {
+public:
+	Exception(const std::string message="Oglre Exception");
+	virtual ~Exception() throw();
+	
+	const char* what() throw();
+
+protected:
+	std::string message_;
+	
+};
+
+}
+
+}
+
+#endif /* EXCEPTION_H_ */

@@ -38,7 +38,6 @@ public:
 	virtual WindowHandle getWindowHandle() = 0;
 	virtual InternalWindow getInternalWindowPointer() = 0;
 
-	virtual glm::detail::int32 initialize() = 0;
 	virtual void destroy() = 0;
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
 	virtual glm::detail::int32 handleEvents() = 0;

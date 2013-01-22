@@ -19,10 +19,9 @@
 #include "GLWindow.h"
 
 #include "shaders/ShaderProgramManager.h"
+#include "exceptions/GlException.h"
 
 namespace oglre {
-
-
 
 GLWindow::GLWindow(int width, int height, std::string title) {
 	sf::ContextSettings settings;
@@ -42,9 +41,12 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 	// Initialize GLEW
 	glewExperimental=true; // Needed in core profile
 	if (glewInit() != GLEW_OK) {
-		BOOST_LOG_TRIVIAL(warning) << "Failed to initialize GLEW.";
+		std::string msg("Failed to initialize GLEW.");
+		BOOST_LOG_TRIVIAL(warning) << msg;
+		throw exception::GlException(msg);
 	}
 	
+	initialize();
 	//window_->setVerticalSyncEnabled(true);
 	//window_->setActive();
 	
@@ -86,7 +88,7 @@ void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 }
 
-glm::detail::int32 GLWindow::initialize() {	
+void GLWindow::initialize() {
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	//glClearDepth(1.0f);
@@ -113,8 +115,6 @@ glm::detail::int32 GLWindow::initialize() {
 	
 	
 	LoadAQuad(); //TESTING
-	
-	return 0;
 }
 
 void GLWindow::destroy() {
