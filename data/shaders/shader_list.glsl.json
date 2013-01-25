@@ -1,0 +1,25 @@
+{
+	"programs": [
+		{
+			"name": "test",
+			"shaders": [
+				{ "name": "test_vertex_shader" },
+				{ "name": "test_fragment_shader" }
+			]
+		}
+	],
+	
+	"shaders": [
+		{
+			"name": "test_vertex_shader",
+			"type": "vertex",
+			"filename": "shader.vert"
+		},
+		
+		{
+			"name": "test_fragment_shader",
+			"type": "fragment",
+			"filename": "shader.frag"
+		}
+	]
+}

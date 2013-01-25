@@ -22,6 +22,20 @@ Shader::Shader(std::string sourceCode, Type type) : sourceCode_(sourceCode), typ
 Shader::~Shader() {
 }
 
+IShader::Type Shader::parseType(std::string type) {
+	BOOST_LOG_TRIVIAL(debug) << "parsing shader type: " << type;
+	if (type.compare("fragment") == 0)
+		return IShader::TYPE_FRAGMENT;
+	else if (type.compare("vertex") == 0)
+		return IShader::TYPE_VERTEX;
+	else if (type.compare("geometry") == 0)
+		return IShader::TYPE_GEOMETRY;
+	else if (type.compare("tessellation") == 0)
+		return IShader::TYPE_TESSELLATION;
+		
+	return IShader::TYPE_NONE;
+}
+
 glm::detail::int32 Shader::initialize() {
 	BOOST_LOG_TRIVIAL(debug) << "Initializing shader.";
 	

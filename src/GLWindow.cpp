@@ -107,11 +107,13 @@ void GLWindow::initialize() {
 	
 	
 	// load all of the shaders
-	std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
-	shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
-	shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.frag", shaders::IShader::TYPE_FRAGMENT) );
+	//std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
+	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
+	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.frag", shaders::IShader::TYPE_FRAGMENT) );
 	
-	shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
+	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
+	
+	shaders::ShaderProgramManager::getInstance();
 	
 	
 	LoadAQuad(); //TESTING

@@ -10,6 +10,8 @@
 
 #include <GL/glew.h>
 
+#include "IShader.h"
+
 namespace oglre {
 
 namespace shaders {
@@ -23,6 +25,11 @@ public:
 	virtual void bind() = 0;
 	
 	virtual GLuint getGLShaderProgramId() = 0;
+};
+
+struct ShaderProgramInfo {
+	std::string name;
+	std::vector<ShaderInfo> shaderInfoList;
 };
 
 }

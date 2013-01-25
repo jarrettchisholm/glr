@@ -28,6 +28,7 @@ public:
 	static ShaderManager* getInstance();
 
 	Shader* getShader(const std::string filename, const IShader::Type shaderType = IShader::TYPE_NONE);
+	Shader* getShader(ShaderInfo shaderInfo);
 	
 private:
 	static ShaderManager* shaderManager_;

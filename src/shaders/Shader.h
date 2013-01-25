@@ -28,6 +28,8 @@ public:
 	virtual GLuint getGLShaderId();
 	
 	glm::detail::int32 initialize();
+	
+	static IShader::Type parseType(std::string type);
 
 private:
 	GLuint shaderId_;

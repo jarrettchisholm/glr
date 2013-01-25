@@ -17,6 +17,6 @@ GlException::GlException(const std::string message) : Exception(message) {
 GlException::~GlException() throw() {
 }
 
-} /* namespace exception */
+}
 
-} /* namespace oglre */
+}

@@ -29,11 +29,22 @@ public:
 
 	ShaderProgram* getShaderProgram(const std::string filename);
 	ShaderProgram* getShaderProgram(const std::string name, std::vector< std::pair <std::string, shaders::IShader::Type> > shaderInfo);
+	ShaderProgram* getShaderProgram(ShaderProgramInfo shaderProgramInfo);
+	
+	void loadShaderPrograms(const std::string filename);
+	void loadShaderProgramsFromData(const std::string data);
 	
 private:
 	static ShaderProgramManager* shaderProgramManager_;
 
 	std::map< std::string, std::unique_ptr<ShaderProgram> > shaderPrograms_;
+	
+	/**
+	 * Loads the standard set of shader programs into OpenGL.
+	 * 
+	 * @exception GlException if an error occurs while compiling and linking shaders into shader programs.
+	 */ 
+	void loadStandardShaderPrograms();
 	
 };
 
