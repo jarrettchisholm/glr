@@ -11,7 +11,6 @@
 #include <memory>
 
 #include "IWindow.h"
-#include "IOS.h"
 
 // we require a C++ compiler.
 #if !defined(__cplusplus)
@@ -26,8 +25,6 @@ class GraphicsEngine {
 public:
 	static std::unique_ptr<IWindow> createWindow(glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
 			bool fullscreen = false, bool vsync = false);
-
-	static IOS* createIOSObject();
 
 private:
 	/**

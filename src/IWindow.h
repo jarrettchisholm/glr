@@ -43,6 +43,11 @@ public:
 	virtual glm::detail::int32 handleEvents() = 0;
 	virtual void render() = 0;
 	virtual bool blah() = 0;
+	
+	virtual glm::detail::uint32 getWidth() = 0;
+	virtual glm::detail::uint32 getHeight() = 0;
+	virtual glm::vec2 getPosition() = 0;
+	virtual glm::detail::uint32 getDepth() = 0;
 
 	virtual ISceneManager* getSceneManager() = 0;
 	

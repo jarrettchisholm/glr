@@ -30,13 +30,4 @@ std::unique_ptr<IWindow> GraphicsEngine::createWindow(glm::detail::uint32 width,
 	return window;
 }
 
-/**
- *
- */
-IOS* GraphicsEngine::createIOSObject() {
-	IOS* retObj = 0;
-
-	return retObj;
-}
-
 }

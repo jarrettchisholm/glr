@@ -48,6 +48,7 @@ public:
 
 	virtual glm::detail::uint32 getWidth();
 	virtual glm::detail::uint32 getHeight();
+	virtual glm::vec2 getPosition();
 	virtual glm::detail::uint32 getDepth();
 
 	virtual ISceneManager* getSceneManager();

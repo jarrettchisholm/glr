@@ -242,6 +242,12 @@ glm::detail::uint32 GLWindow::getHeight() {
 	return height_;
 }
 
+glm::vec2 GLWindow::getPosition() {	
+	const sf::Vector2i windowPosition = window_->getPosition();
+	
+	return glm::vec2( windowPosition.x, windowPosition.y );
+}
+
 glm::detail::uint32 GLWindow::getDepth() {
 	return depth_;
 }
