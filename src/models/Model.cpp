@@ -294,7 +294,7 @@ void Model::loadMaterials(const aiScene* scene) {
 }
 
 void Model::loadAnimations(const aiScene* scene) {
-	// TODO: implement	
+	// TODO: implement
 }
 
 // temporary method
