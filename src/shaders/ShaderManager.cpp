@@ -46,13 +46,6 @@ Shader* ShaderManager::getShader(ShaderInfo shaderInfo) {
 	
 	shaders_[shaderInfo.name] = std::unique_ptr<Shader>( new Shader(shaderInfo.contents, shaderInfo.type) );
 	
-	// error checking
-	if (shaders_[shaderInfo.name]->initialize() < 0) {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load shader.";
-		shaders_.erase(shaderInfo.name);
-		return nullptr;
-	}
-	
 	return shaders_[shaderInfo.name].get();
 }
 
@@ -78,13 +71,6 @@ Shader* ShaderManager::getShader(const std::string filename, const IShader::Type
 	BOOST_LOG_TRIVIAL(debug) << "Creating shader.";
 	
 	shaders_[filename] = std::unique_ptr<Shader>( new Shader(shaderContents, shaderType) );
-	
-	// error checking
-	if (shaders_[filename]->initialize() < 0) {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load shader.";
-		shaders_.erase(filename);
-		return nullptr;
-	}
 	
 	return shaders_[filename].get();
 }

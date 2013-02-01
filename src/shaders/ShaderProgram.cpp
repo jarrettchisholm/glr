@@ -33,9 +33,9 @@ glm::detail::int32 ShaderProgram::initialize() {
 		glAttachShader(programId_, shaders_[i]->getGLShaderId());
 	}
 	
-	glBindAttribLocation(programId_, 0, "in_Position");
-	glBindAttribLocation(programId_, 1, "in_Texture");
-	glBindAttribLocation(programId_, 2, "in_Color");
+	//glBindAttribLocation(programId_, 0, "in_Position");
+	//glBindAttribLocation(programId_, 1, "in_Texture");
+	//glBindAttribLocation(programId_, 2, "in_Color");
 	
 	glLinkProgram(programId_); 
 	

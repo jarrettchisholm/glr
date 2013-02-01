@@ -5,11 +5,15 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include <GL/glew.h>
 
 #include <boost/log/trivial.hpp>
 
 #include "Shader.h"
+
+#include "../exceptions/GlException.h"
 
 namespace oglre {
 
@@ -17,6 +21,8 @@ namespace shaders {
 
 Shader::Shader(std::string sourceCode, Type type) : sourceCode_(sourceCode), type_(type) {
 	shaderId_ = -1;
+	
+	initialize();
 }
 
 Shader::~Shader() {
@@ -36,12 +42,13 @@ IShader::Type Shader::parseType(std::string type) {
 	return IShader::TYPE_NONE;
 }
 
-glm::detail::int32 Shader::initialize() {
+void Shader::initialize() {
 	BOOST_LOG_TRIVIAL(debug) << "Initializing shader.";
 	
 	if (shaderId_ < 0) {
-		BOOST_LOG_TRIVIAL(error) << "Could not load shader - shader already has an OpenGL id assigned to it.";
-		return -1;
+		std::string msg("Could not load shader - shader already has an OpenGL id assigned to it.");
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::GlException(msg);
 	}
 	
 	
@@ -65,8 +72,9 @@ glm::detail::int32 Shader::initialize() {
 			break;
 			
 		case TYPE_TESSELLATION:
-			BOOST_LOG_TRIVIAL(warning) << "Could not load shader - tessellation shaders are not yet implemented.";
-			break;
+			std::string msg("Could not load shader - tessellation shaders are not yet implemented.");
+			BOOST_LOG_TRIVIAL(warning) << msg;
+			throw exception::GlException(msg);
 	}
 	
 	
@@ -85,28 +93,28 @@ glm::detail::int32 Shader::initialize() {
 
 	glGetProgramiv(shaderId_, GL_COMPILE_STATUS, &compiled);
 	
-	if (!compiled) {
-		GLint blen = 0;	
-		GLsizei slen = 0;
+	// Handle any errors
+	if (compiled = GL_FALSE) {
+		std::stringstream msg;
+		msg << "Could not initialize shader.";
 		
-		glGetShaderiv(shaderId_, GL_INFO_LOG_LENGTH , &blen);
+		GLint infoLogLength;
+	    glGetShaderiv(shaderId_, GL_INFO_LOG_LENGTH, &infoLogLength);
+	
+	    GLchar* strInfoLog = new GLchar[infoLogLength + 1];
+	    glGetShaderInfoLog(shaderId_, infoLogLength, NULL, strInfoLog);
+	    
+	    msg << "\ncompiler_log: " << strInfoLog;
+	
+	    delete[] strInfoLog;
 		
-		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader.";     
+		BOOST_LOG_TRIVIAL(error) << msg.str();
 		
-		if (blen > 1) {
-			GLchar* compiler_log = (GLchar*)malloc(blen);
-			
-			glGetInfoLogARB(shaderId_, blen, &slen, compiler_log);
-			BOOST_LOG_TRIVIAL(error) << "compiler_log: " << compiler_log;
-			free (compiler_log);
-		}
-		
-		return -1;
+		throw exception::GlException(msg.str());
 	}
 	
 	
 	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader.";
-	return 0;
 }
 
 IShader::Type Shader::getType() {
