@@ -13,7 +13,6 @@
 namespace oglre {
 
 
-
 class ICameraSceneNode: public virtual ISceneNode {
 public:
 	ICameraSceneNode() {

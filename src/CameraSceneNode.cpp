@@ -25,7 +25,6 @@
 namespace oglre {
 
 
-
 CameraSceneNode::CameraSceneNode() {
 	setLookAt( 1, 1, 1 );
 	setPosition( 0, 0, 0 );

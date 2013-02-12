@@ -13,7 +13,35 @@ namespace shaders {
 
 static const std::string SHADER_DATA = std::string(
 	R"<STRING>(
-{"shaders": [{"variables": [{"in": [{"1": [{"type": "vec2"}, {"name": "in_Texture"}], "0": [{"type": "vec3"}, {"name": "in_Position"}], "2": [{"type": "vec3"}, {"name": "in_Color"}]}]}, {"uniform": [{"1": [{"type": "mat4"}, {"name": "viewMatrix"}], "0": [{"type": "mat4"}, {"name": "projectionMatrix"}], "2": [{"type": "mat4"}, {"name": "modelMatrix"}]}]}], "type": "vertex", "name": "test_vertex_shader", "contents": "#version 150 core\n\nuniform mat4 projectionMatrix;\nuniform mat4 viewMatrix;\nuniform mat4 modelMatrix;\n\nin vec3 in_Position;\nin vec2 in_Texture;\nin vec3 in_Color;\n\nout vec2 textureCoord;\nout vec3 pass_Color;\n\nvoid main() {\n\t// gl_Position is pre-defined\n\tgl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(in_Position, 1.0);\n\t\n\ttextureCoord = in_Texture;\n\tpass_Color = in_Color;\n}\n", "filename": "shader.vert"}, {"type": "fragment", "name": "test_fragment_shader", "contents": "#version 150 core\n\nuniform sampler2D texture;\n\nin vec3 pass_Color;\nin vec2 textureCoord;\n\nvoid main() {\t\n\tvec4 out_Color = texture2D(texture, textureCoord);\n\t\n\t// gl_FragColor is pre-defined\n\tgl_FragColor = out_Color;\n}\n", "filename": "shader.frag"}], "programs": [{"name": "test", "shaders": [{"name": "test_vertex_shader"}, {"name": "test_fragment_shader"}]}]}
+{
+    "shaders": [
+        {
+            "type": "vertex", 
+            "name": "test_vertex_shader", 
+            "contents": "#version 150 core\n\n#type vertex\n\n#include <oglre>\n#include <light>\n#include <material>\n\nin vec3 in_Position;\nin vec2 in_Texture;\nin vec3 in_Normal;\n\nout vec2 textureCoord;\nout vec4 pass_Color;\n\n#bind Light\nuniform LightSources {\n\tLightSource lightSources[1];\n};\n\n#bind Material\nMaterial mymaterial = Material(\n\tvec4(1.0, 0.8, 0.8, 1.0),\n\tvec4(1.0, 0.8, 0.8, 1.0),\n\tvec4(1.0, 0.8, 0.8, 1.0),\n\t0.995\n);\n\n\nvoid main() {\n\tgl_Position = pvmMatrix * vec4(in_Position, 1.0);\n\t\n\ttextureCoord = in_Texture;\n\t\n\t\n\tvec3 normalDirection = normalize(normalMatrix * in_Normal);\n\tvec3 lightDirection = normalize(vec3(lightSources[0].direction));\n\t\n\tvec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));\n\t\n\t/*\n\tfloat bug = 0.0;\n\tbvec3 result = equal( diffuseReflection, vec3(0.0, 0.0, 0.0) );\n\tif(result[0]) bug = 1.0;\n\t\n\tdiffuseReflection.x += bug;\n\t*/\n\t\n\tpass_Color = vec4(diffuseReflection, 1.0);\n}\n", 
+            "filename": "shader.vert"
+        }, 
+        {
+            "type": "fragment", 
+            "name": "test_fragment_shader", 
+            "contents": "#version 150 core\n\n#type fragment\n\n#bind texture0\nuniform sampler2D texture;\n\nin vec4 pass_Color;\nin vec2 textureCoord;\n\nvoid main() {\t\n\tvec4 out_Color = texture2D(texture, textureCoord);\n\t\n\tgl_FragColor = pass_Color;\n\t\n\t//gl_FragColor = out_Color;\n}\n", 
+            "filename": "shader.frag"
+        }
+    ], 
+    "programs": [
+        {
+            "name": "test", 
+            "shaders": [
+                {
+                    "name": "test_vertex_shader"
+                }, 
+                {
+                    "name": "test_fragment_shader"
+                }
+            ]
+        }
+    ]
+}
 
 	)<STRING>"
 );

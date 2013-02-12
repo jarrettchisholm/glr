@@ -11,23 +11,7 @@
 		{
 			"name": "test_vertex_shader",
 			"type": "vertex",
-			"filename": "shader.vert",
-			"variables": [
-				{ 
-					"in": [{
-						"0": [ { "type": "vec3" }, { "name": "in_Position" } ],
-						"1": [ { "type": "vec2" }, { "name": "in_Texture" } ],
-						"2": [ { "type": "vec3" }, { "name": "in_Color" } ]
-					}]
-				},
-				{ 
-					"uniform": [{
-						"0": [ { "type": "mat4" }, { "name": "projectionMatrix" } ],
-						"1": [ { "type": "mat4" }, { "name": "viewMatrix" } ],
-						"2": [ { "type": "mat4" }, { "name": "modelMatrix" } ]
-					}]
-				}
-			]
+			"filename": "shader.vert"
 		},
 		
 		{
@@ -36,4 +20,20 @@
 			"filename": "shader.frag"
 		}
 	]
+}
+
+
+{
+	"program": [{
+			"name": "test",
+			"shaders": [
+				{
+					"name": "test_vertex_shader",
+					"type": "vertex",
+					"filename": "shader.vert",
+					"contents": "blah blah"
+				},
+				{ "name": "fragment_shader" }
+			]
+		}],
 }

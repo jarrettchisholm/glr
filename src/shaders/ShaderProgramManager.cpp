@@ -6,6 +6,7 @@
  */
 
 #include <boost/log/trivial.hpp>
+#include <boost/filesystem.hpp>
 
 #include "ShaderProgramManager.h"
 
@@ -14,132 +15,137 @@
 #include "ShaderParserJson.h"
 #include "Constants.h"
 
+namespace fs = boost::filesystem;
+
 namespace oglre {
 
 namespace shaders {
 
 ShaderProgramManager::ShaderProgramManager() {
-	loadStandardShaderPrograms();
+	//loadStandardShaderPrograms();
 }
 
 ShaderProgramManager::~ShaderProgramManager() {
 }
 
-ShaderProgramManager::ShaderProgramManager(ShaderProgramManager const&) {
+IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name) {
+	return glslProgramMap_[ name ];
 }
 
-ShaderProgramManager* ShaderProgramManager::shaderProgramManager_ = 0;
-ShaderProgramManager* ShaderProgramManager::getInstance() {
-	if (ShaderProgramManager::shaderProgramManager_ == nullptr)
-		ShaderProgramManager::shaderProgramManager_ = new ShaderProgramManager();
-
-	return ShaderProgramManager::shaderProgramManager_;
+void ShaderProgramManager::load(const std::string directory) {
+	return load( fs::path(directory) );
 }
 
-void ShaderProgramManager::loadStandardShaderPrograms() {
-	loadShaderProgramsFromData( SHADER_DATA );
+void ShaderProgramManager::load(fs::path directory) {
+	std::vector<std::string> filenames;
+	// find all of the files
+	fs::directory_iterator end_iter;
+	if ( fs::exists(directory) && fs::is_directory(directory)) {
+		for( fs::directory_iterator dir_iter(directory) ; dir_iter != end_iter ; ++dir_iter) {
+			if (fs::is_regular_file(dir_iter->status()) ) {
+				filenames.push_back( dir_iter->file_string() );
+			}
+		}
+	}
+	
+	return load( filenames );
 }
 
-void ShaderProgramManager::loadShaderProgramsFromData(const std::string data) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading shader programs from data: " << data;
+void ShaderProgramManager::load(std::vector<std::string> filenames) {
+	std::vector<fs::path> filePaths;
 	
-	ShaderParserJson parser(data);
+	for (int i=0; i < filenames.size(); i++) {
+		if (fs::exists( filenames[i] ) && !fs::is_directory( filenames[i] ))
+			filePaths.push_back( fs::path(filenames[i]) );
+	}
 	
-	//std::vector<ShaderInfo> shaders = parser.getShaderInfoList();
-	std::vector<ShaderProgramInfo> shaderPrograms = parser.getShaderProgramInfoList();
+	return load( filePaths);
+}
+
+void ShaderProgramManager::load(std::vector<fs::path> filePaths) {
+	BOOST_LOG_TRIVIAL(debug) << "Reading shader programs from disk.";
 	
-	BOOST_LOG_TRIVIAL(debug) << "Found " << shaderPrograms.size() << " shader programs.";
+	std::map<std::string, std::string> dataMap;
 	
-	// Load all of the shaders
-	//for (ShaderInfo si : shaders)
-	//	ShaderManager->getInstance()->getShaderFromData(si);
+	// Load data from files and put into map
+	for (int i=0; i < filePaths.size(); i++) {
+		if (fs::exists( filePaths[i] )) {
+			fs::ifstream file( filePaths[i] );
+			std::string contents = "";
+			
+			while ( getline(file, line) ) {
+				contents += line;
+			}
+			
+			file.close();
+			
+			dataMap[ filePaths[i].file_string() ] = contents;
+		}
+	}
+	
+	load( dataMap );
+}
+
+void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
+	BOOST_LOG_TRIVIAL(debug) << "Loading shader programs.";
+	
+	// Add all shaders and shader programs to the maps
+	for (auto entry : dataMap) {
+		if ( isShader(entry.second) ) {
+			oglreShaderMap_[entry.first] = std::shared_ptr<OglreShader>( new OglreShader(entry.second) );
+			// Add shader to glsl shader map if it doesn't have any preprocessor commands
+			if (!oglreShaderMap_[entry.first]->containsPreProcessorCommands()) {
+				glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
+			}
+		} else if ( isProgram(entry.second) ) {
+			oglreProgramMap_[entry.first] = std::unique_ptr<OglreShaderProgram>( new OglreShaderProgram(entry.second) );
+		} else {
+			// Error
+			BOOST_LOG_TRIVIAL(error) << "ERROR loading shaders and shader programs";
+		}
+	}
+	
+	// Compile all glsl shaders
+	//for (auto entry : glslShaderMap_) {
+	//	entry.second->compile();
+	//}
+	
+	// Process each oglre shader program
+	for (auto entry : oglreProgramMap_) {
+		entry.second->process();
 		
-	// Load all of the shader programs
-	for (ShaderProgramInfo spi : shaderPrograms)
-		this->getShaderProgram(spi);
-	
-}
-
-void ShaderProgramManager::loadShaderPrograms(const std::string filename) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading shader programs from file: " << filename;
-}
-
-ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading shaderProgram: " << name;
-	
-	if (shaderPrograms_[name] != nullptr) {
-		BOOST_LOG_TRIVIAL(debug) << "ShaderProgram found.";
-		return shaderPrograms_[name].get();
+		glslProgramMap_[entry.first] = convertOglreProgramToGlslProgram( entry.second->get() );
 	}
-	else {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to find ShaderProgram: " << name;
-		return nullptr;
+	
+	// Compile each glsl shader program
+	for (auto entry : glslProgramMap_) {
+		entry.second->compile();
 	}
 }
 
-ShaderProgram* ShaderProgramManager::getShaderProgram(ShaderProgramInfo shaderProgramInfo) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram...";
+std::unique_ptr<GlslShaderProgram> convertOglreProgramToGlslProgram( OglreShaderProgram* oglreProgram ) {
+	auto oglreShaders = oglreProgram->getShaders();
+	std::vector< std::shared_ptr<GlslShader> > glslShaders;
 	
-	if (shaderProgramInfo.shaderInfoList.size() == 0) {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load ShaderProgram - shader program has no shaders listed.";
-		return nullptr;
+	for (auto entry : oglreShaders) {
+		if (glslShaderMap_.find( entry.first ) == glslShaderMap_.end()) {
+			// If GlslShader doesn't exist in the map, create it specifically for this shader program
+			glslShaders.push_back( 
+				std::shared_ptr<GlslShader>( 
+					new GlslShader( 
+						entry.second->getName(),
+						entry.second->getProcessedSource(),
+						entry.second->getType()
+					) 
+				)
+			);
+		} else {
+			// Otherwise, use the already existing shader
+			glslShaders.push_back( glslShaderMap_[entry.first] );
+		}
 	}
 	
-	std::vector<Shader*> shaders;
-	
-	std::vector<ShaderInfo> shaderInfoList = shaderProgramInfo.shaderInfoList;
-	
-	for (int i=0; i < shaderInfoList.size(); i++) {		
-		Shader* shader = ShaderManager::getInstance()->getShader(shaderInfoList[i]);
-		
-		if (shader != nullptr)
-			shaders.push_back(shader);
-	}
-	
-	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram.";
-	
-	shaderPrograms_[shaderProgramInfo.name] = std::unique_ptr<ShaderProgram>( new ShaderProgram(shaders) );
-	
-	// error checking
-	if (shaderPrograms_[shaderProgramInfo.name]->initialize() < 0) {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load ShaderProgram.";
-		shaderPrograms_.erase(shaderProgramInfo.name);
-		return nullptr;
-	}
-	
-	return shaderPrograms_[shaderProgramInfo.name].get();
-}
-
-ShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name, std::vector< std::pair <std::string, shaders::IShader::Type> > shaderInfo) {
-	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram...";
-	
-	if (shaderPrograms_[name] != nullptr) {
-		BOOST_LOG_TRIVIAL(debug) << "ShaderProgram found.";
-		return shaderPrograms_[name].get();
-	}
-	
-	std::vector<Shader*> shaders;
-	
-	for (int i=0; i < shaderInfo.size(); i++) {		
-		Shader* shader = ShaderManager::getInstance()->getShader(shaderInfo[i].first, shaderInfo[i].second);
-		
-		if (shader != nullptr)
-			shaders.push_back(shader);
-	}
-	
-	
-	BOOST_LOG_TRIVIAL(debug) << "Loading ShaderProgram.";
-	
-	shaderPrograms_[name] = std::unique_ptr<ShaderProgram>( new ShaderProgram(shaders) );
-	
-	// error checking
-	if (shaderPrograms_[name]->initialize() < 0) {
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load ShaderProgram.";
-		shaderPrograms_.erase(name);
-		return nullptr;
-	}
-	
-	return shaderPrograms_[name].get();
+	return std::unique_ptr<GlslShaderProgram>( new GlslShaderProgram(oglreProgram->getName(), glslShaders) );
 }
 
 }

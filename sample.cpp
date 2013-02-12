@@ -40,16 +40,19 @@ shaderProgramMgr->loadShaderPrograms("shader_programs.glsl.json");
 
 oglre::IModel* model1 = nullptr;
 oglre::IModel* model2 = nullptr;
+oglre::ILight* light1 = nullptr;
 oglre::IShaderProgram* shaderProgram = nullptr;
 
 
-shaderProgram = shaderProgramMgr->getShaderProgram("test");
+shaderProgram = shaderProgramMgr->getShaderProgram("oglre_simple");
 
 
 modelMgr->loadModels("my_models.list.json");
 modelMgr->loadModel("model_blah", "model_blah.obj");
 model1 = modelMgr->getModel("my_model1");
 model2 = modelMgr->getModel("my_model2");
+
+light1 = scnMgr->createLight("my_light_1", oglre::ILight::DIRECTIONAL_LIGHT, glm::vec3(5, 5, 5), glm::vec3(0, 0, 0));
 
 model1->attach(shaderProgram);
 

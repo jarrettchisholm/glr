@@ -1,5 +1,5 @@
 /*
- * IIShaderProgram.h
+ * IShaderProgram.h
  *
  *  Created on: 2013-01-04
  *      Author: jarrett

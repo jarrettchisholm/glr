@@ -25,16 +25,17 @@ def parseShadersIntoHeader():
 	
 	jsonData = json.loads(data)
 	
-	print(jsonData)
-	
 	# Load the contents of the shaders
 	for s in jsonData["shaders"]:
 		contents = open( os.path.join(shaderListLocation, s["filename"]) ).read()
-		s["contents"] = contents	
+		s["contents"] = contents
 	
 	
 	# Re-encode data as json
-	jsonData = json.dumps(jsonData)
+	jsonData = json.dumps(jsonData, indent=4)
+	#jasonData = jsonData.replace('    ', '\t')
+	
+	#print(jsonData)
 	
 	# Save json as a std::string in a .h file
 	shaderDataFile = open( os.path.join('src/shaders', shaderDataOutputFilename), 'w' )

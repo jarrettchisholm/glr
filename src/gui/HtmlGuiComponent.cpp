@@ -220,7 +220,7 @@ void HtmlGuiComponent::render() {
 
 void HtmlGuiComponent::testDrawTestBerkelium() {
 	if (webTextureReady_) {
-		glDisable(GL_LIGHTING);
+		//glDisable(GL_LIGHTING);
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -251,7 +251,7 @@ void HtmlGuiComponent::testDrawTestBerkelium() {
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
-		glEnable(GL_LIGHTING);
+		//glEnable(GL_LIGHTING);
     }
     
     // wait a bit before calling Berkelium::update() again
