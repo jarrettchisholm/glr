@@ -33,12 +33,6 @@ public:
 	virtual GLuint getGLShaderId() = 0;
 };
 
-struct ShaderInfo {
-	std::string name;
-	std::string contents;
-	IShader::Type type;
-};
-
 }
 
 }

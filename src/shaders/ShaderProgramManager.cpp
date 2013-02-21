@@ -5,17 +5,17 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include <boost/log/trivial.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 #include "ShaderProgramManager.h"
 
-#include "ShaderData.h"
-#include "ShaderManager.h"
-#include "ShaderParserJson.h"
+//#include "ShaderData.h"
+//#include "ShaderManager.h"
+//#include "ShaderParserJson.h"
 #include "Constants.h"
-
-namespace fs = boost::filesystem;
 
 namespace oglre {
 
@@ -29,7 +29,7 @@ ShaderProgramManager::~ShaderProgramManager() {
 }
 
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name) {
-	return glslProgramMap_[ name ];
+	return glslProgramMap_[ name ].get();
 }
 
 void ShaderProgramManager::load(const std::string directory) {
@@ -38,12 +38,15 @@ void ShaderProgramManager::load(const std::string directory) {
 
 void ShaderProgramManager::load(fs::path directory) {
 	std::vector<std::string> filenames;
+	
 	// find all of the files
 	fs::directory_iterator end_iter;
 	if ( fs::exists(directory) && fs::is_directory(directory)) {
 		for( fs::directory_iterator dir_iter(directory) ; dir_iter != end_iter ; ++dir_iter) {
-			if (fs::is_regular_file(dir_iter->status()) ) {
-				filenames.push_back( dir_iter->file_string() );
+			if ( fs::is_regular_file(dir_iter->status()) ) {
+				std::stringstream temp;
+				temp << dir_iter->path().filename();
+				filenames.push_back( temp.str() );
 			}
 		}
 	}
@@ -72,6 +75,8 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths) {
 		if (fs::exists( filePaths[i] )) {
 			fs::ifstream file( filePaths[i] );
 			std::string contents = "";
+			
+			std::string line;
 			
 			while ( getline(file, line) ) {
 				contents += line;
@@ -112,7 +117,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
 	
 	// Process each oglre shader program
 	for (auto entry : oglreProgramMap_) {
-		entry.second->process();
+		entry.second->process(oglreShaderMap_);
 		
 		glslProgramMap_[entry.first] = convertOglreProgramToGlslProgram( entry.second->get() );
 	}
@@ -135,7 +140,8 @@ std::unique_ptr<GlslShaderProgram> convertOglreProgramToGlslProgram( OglreShader
 					new GlslShader( 
 						entry.second->getName(),
 						entry.second->getProcessedSource(),
-						entry.second->getType()
+						entry.second->getType(),
+						entry.second->getParsedBinding()
 					) 
 				)
 			);

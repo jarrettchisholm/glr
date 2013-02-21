@@ -23,6 +23,8 @@
 //#include "gui/IGUI.h"
 #include "gui/GUI.h"
 
+#include "shaders/ShaderProgramManager.h"
+
 namespace oglre {
 
 
@@ -67,6 +69,8 @@ private:
 	
 	glm::mat4 projectionMatrix_;
 	glm::mat4 modelMatrix_;
+	
+	shaders::ShaderProgramManager shaderProgramManager_;
 	
 	unsigned int vaoID[1]; // Our Vertex Array Object  
   

@@ -76,7 +76,7 @@ static const std::string SHADER_DATA = std::string(
 
 
 # Parse our shader programs and create .h files out of them
-parseShadersIntoHeader()
+#parseShadersIntoHeader()
 
 
 # Tell SCons to create our build files in the 'build' directory
@@ -111,7 +111,8 @@ libraries = [
 'jsoncpp',
 'boost_log', 
 'boost_date_time', 
-'boost_thread'
+'boost_thread',
+'boost_wave'
 ]
 
 library_paths = ['../lwis/build']
@@ -145,6 +146,8 @@ else:
 
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
+
+env.SetOption('num_jobs', 4)
 
 # Tell SCons the program to build
 #env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)

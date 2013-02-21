@@ -27,11 +27,6 @@ public:
 	virtual GLuint getGLShaderProgramId() = 0;
 };
 
-struct ShaderProgramInfo {
-	std::string name;
-	std::vector<ShaderInfo> shaderInfoList;
-};
-
 }
 
 }

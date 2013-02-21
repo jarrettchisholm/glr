@@ -113,7 +113,7 @@ void GLWindow::initialize() {
 	
 	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 	
-	shaders::ShaderProgramManager::getInstance();
+	//shaders::ShaderProgramManager::getInstance();
 	
 	
 	LoadAQuad(); //TESTING
@@ -160,7 +160,7 @@ void GLWindow::endRender() {
 void GLWindow::render() {
 	beginRender();
 
-	shaders::IShaderProgram* shader = shaders::ShaderProgramManager::getInstance()->getShaderProgram("test");
+	shaders::IShaderProgram* shader = shaderProgramManager_.getShaderProgram("test");
 	shader->bind();
 
 	// Get uniform variable locations
@@ -189,7 +189,7 @@ void GLWindow::render() {
 
 	sMgr_->drawAll();
 
-	shaders::ShaderProgram::unbindAll();
+	shaders::GlslShaderProgram::unbindAll();
 
 	if (gui_)
 		gui_->render();

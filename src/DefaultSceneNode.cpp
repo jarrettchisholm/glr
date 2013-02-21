@@ -15,7 +15,7 @@
 
 #include "DefaultSceneNode.h"
 
-#include "shaders/ShaderProgram.h"
+#include "shaders/GlslShaderProgram.h"
 
 
 namespace oglre {
