@@ -44,12 +44,15 @@ public:
 	void load(std::map<std::string, std::string> dataMap);
 
 private:	
-	std::map< std::string, std::unique_ptr<OglreShaderProgram> >	oglreProgramMap_;
+	std::map< std::string, std::shared_ptr<OglreShaderProgram> >	oglreProgramMap_;
 	std::map< std::string, std::shared_ptr<OglreShader> >			oglreShaderMap_;
-	std::map< std::string, std::unique_ptr<GlslShaderProgram> >		glslProgramMap_;
+	std::map< std::string, std::shared_ptr<GlslShaderProgram> >		glslProgramMap_;
 	std::map< std::string, std::shared_ptr<GlslShader> >			glslShaderMap_;
 	
 	std::unique_ptr<GlslShaderProgram> convertOglreProgramToGlslProgram( OglreShaderProgram* oglreProgram );
+	
+	bool isShader( std::string s );
+	bool isProgram( std::string s );
 };
 
 }

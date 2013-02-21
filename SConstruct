@@ -9,33 +9,12 @@ def parseShadersIntoHeader():
 	
 	shaderDataOutputFilename = "ShaderData.h"
 	shaderListLocation = "data/shaders"
-	shaderListExtension = ".json"
+	#shaderListExtension = ".json"
 	
-	fileList = glob.glob( os.path.join(shaderListLocation, '*'+shaderListExtension) )
-	
-	if (len(fileList) > 1):
-		print('Too many shader lists found!')
-		sys.exit(1)
-	elif (len(fileList) == 0):
-		print('No shader list found!')
-		sys.exit(1)
+	fileList = glob.glob( os.path.join(shaderListLocation, '*') )
 	
 	file = open(fileList[0], 'r')
 	data = file.read()
-	
-	jsonData = json.loads(data)
-	
-	# Load the contents of the shaders
-	for s in jsonData["shaders"]:
-		contents = open( os.path.join(shaderListLocation, s["filename"]) ).read()
-		s["contents"] = contents
-	
-	
-	# Re-encode data as json
-	jsonData = json.dumps(jsonData, indent=4)
-	#jasonData = jsonData.replace('    ', '\t')
-	
-	#print(jsonData)
 	
 	# Save json as a std::string in a .h file
 	shaderDataFile = open( os.path.join('src/shaders', shaderDataOutputFilename), 'w' )
@@ -49,25 +28,38 @@ def parseShadersIntoHeader():
  * and the shader program list in the 'data' directory.
  *
  */
+ 
+#include <map> 
+ 
 namespace oglre {
 
 namespace shaders {
 
-static const std::string SHADER_DATA = std::string(
+static std::map<std::string, std::string> SHADER_DATA;
+"""
+	for filename in fileList:
+		file = open(filename, 'r')
+		data = file.read()
+		
+		cpp += """
+SHADER_DATA[\""""
+
+		cpp += filename
+		
+		cpp +="""\"] = std::string(
 	R"<STRING>(
 """
 
-	cpp += jsonData
+		cpp += data
 
-	cpp += """
-
+		cpp += """
 	)<STRING>"
 );
 
 }
 
 }	
-	"""
+"""
 	
 	shaderDataFile.write(cpp)
 	shaderDataFile.close()
@@ -76,7 +68,7 @@ static const std::string SHADER_DATA = std::string(
 
 
 # Parse our shader programs and create .h files out of them
-#parseShadersIntoHeader()
+parseShadersIntoHeader()
 
 
 # Tell SCons to create our build files in the 'build' directory

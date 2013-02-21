@@ -19,7 +19,13 @@ namespace oglre {
 
 namespace shaders {
 
-GlslShader::GlslShader(std::string sourceCode, Type type) : sourceCode_(sourceCode), type_(type) {
+GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(type) {
+	shaderId_ = -1;
+	
+	//initialize();
+}
+
+GlslShader::GlslShader(std::string name, std::string source, Type type, BindingsMap bindings) : name_(name), source_(source), type_(type), bindings_(bindings) {
 	shaderId_ = -1;
 	
 	//initialize();
@@ -80,7 +86,7 @@ void GlslShader::compile() {
 	
 	shaderId_ = glCreateShader(shaderType);
 	
-	const char* source = sourceCode_.c_str();
+	const char* source = source_.c_str();
 	
 	BOOST_LOG_TRIVIAL(debug) << "source: " << source;
 	
@@ -125,7 +131,7 @@ std::string GlslShader::getName() {
 	return name_;
 }
 
-GLuint GlslShader::getGLGlslShaderId() {
+GLuint GlslShader::getGLShaderId() {
 	return shaderId_;
 }
 	

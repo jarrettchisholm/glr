@@ -33,7 +33,7 @@ CPreProcessor::CPreProcessor(std::string source) : source_(source) {
 CPreProcessor::~CPreProcessor() {
 }
 
-void CPreProcessor::process() {
+void CPreProcessor::process( std::map< std::string, std::string > defineMap ) {
 	// current file position is saved for exception handling
 	boost::wave::util::file_position_type current_position;
 

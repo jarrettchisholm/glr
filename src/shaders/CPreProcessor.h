@@ -56,8 +56,7 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 			std::map< std::string, std::string > defineMap;
 		};
 		
-		
-		void process();
+		void process(std::map< std::string, std::string > defineMap = std::map< std::string, std::string >());
 		
 		std::string getName();
 		std::vector<ShaderData> getShaders();

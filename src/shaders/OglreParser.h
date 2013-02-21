@@ -32,11 +32,13 @@ public:
 	virtual ~OglreParser();
 	
 	void parse();
+	
+	Map getBindings();
 
 
 private:
 	std::string source_;
-	Map variableBindings_;
+	Map bindings_;
 	
 	template <typename It>
 	void parse(It f, It l);

@@ -23,7 +23,7 @@ class OglreShader {
 	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
 	
 public:
-	OglreShader();
+	OglreShader(std::string source);
 	virtual ~OglreShader();
 	
 	void process(std::map< std::string, std::string > defineMap);
@@ -32,16 +32,18 @@ public:
 	IShader::Type getType();
 	std::string getProcessedSource();
 	std::string getSource();
-	BindingsMap getVariableBindings();
+	BindingsMap getBindings();
+	
+	bool containsPreProcessorCommands();
 	
 private:
 	std::string name_;
 	IShader::Type type_;
 	
-	std::string sourceCode_;
-	std::string processedSourceCode_;
+	std::string source_;
+	std::string processedSource_;
 	
-	BindingsMap variableBindings_;
+	BindingsMap bindings_;
 };
 
 }

@@ -6,13 +6,14 @@
  */
 
 #include <sstream>
+#include <regex>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include "ShaderProgramManager.h"
 
-//#include "ShaderData.h"
+#include "ShaderData.h"
 //#include "ShaderManager.h"
 //#include "ShaderParserJson.h"
 #include "Constants.h"
@@ -30,6 +31,10 @@ ShaderProgramManager::~ShaderProgramManager() {
 
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name) {
 	return glslProgramMap_[ name ].get();
+}
+
+void ShaderProgramManager::loadShaderPrograms(const std::string directory) {
+	load( directory );
 }
 
 void ShaderProgramManager::load(const std::string directory) {
@@ -84,7 +89,9 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths) {
 			
 			file.close();
 			
-			dataMap[ filePaths[i].file_string() ] = contents;
+			std::stringstream temp;
+			temp << filePaths[i].filename();
+			dataMap[ temp.str() ] = contents;
 		}
 	}
 	
@@ -99,9 +106,9 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
 		if ( isShader(entry.second) ) {
 			oglreShaderMap_[entry.first] = std::shared_ptr<OglreShader>( new OglreShader(entry.second) );
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
-			if (!oglreShaderMap_[entry.first]->containsPreProcessorCommands()) {
-				glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
-			}
+			//if (!oglreShaderMap_[entry.first]->containsPreProcessorCommands()) {
+			//	glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
+			//}
 		} else if ( isProgram(entry.second) ) {
 			oglreProgramMap_[entry.first] = std::unique_ptr<OglreShaderProgram>( new OglreShaderProgram(entry.second) );
 		} else {
@@ -119,7 +126,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
 	for (auto entry : oglreProgramMap_) {
 		entry.second->process(oglreShaderMap_);
 		
-		glslProgramMap_[entry.first] = convertOglreProgramToGlslProgram( entry.second->get() );
+		glslProgramMap_[entry.first] = convertOglreProgramToGlslProgram( entry.second.get() );
 	}
 	
 	// Compile each glsl shader program
@@ -128,30 +135,40 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
 	}
 }
 
-std::unique_ptr<GlslShaderProgram> convertOglreProgramToGlslProgram( OglreShaderProgram* oglreProgram ) {
+std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertOglreProgramToGlslProgram( OglreShaderProgram* oglreProgram ) {
 	auto oglreShaders = oglreProgram->getShaders();
 	std::vector< std::shared_ptr<GlslShader> > glslShaders;
 	
-	for (auto entry : oglreShaders) {
-		if (glslShaderMap_.find( entry.first ) == glslShaderMap_.end()) {
+	for (auto s : oglreShaders) {
+		if (glslShaderMap_.find( s->getName() ) == glslShaderMap_.end()) {
 			// If GlslShader doesn't exist in the map, create it specifically for this shader program
 			glslShaders.push_back( 
 				std::shared_ptr<GlslShader>( 
 					new GlslShader( 
-						entry.second->getName(),
-						entry.second->getProcessedSource(),
-						entry.second->getType(),
-						entry.second->getParsedBinding()
+						s->getName(),
+						s->getProcessedSource(),
+						s->getType(),
+						s->getBindings()
 					) 
 				)
 			);
 		} else {
 			// Otherwise, use the already existing shader
-			glslShaders.push_back( glslShaderMap_[entry.first] );
+			glslShaders.push_back( glslShaderMap_[s->getName()] );
 		}
 	}
 	
 	return std::unique_ptr<GlslShaderProgram>( new GlslShaderProgram(oglreProgram->getName(), glslShaders) );
+}
+
+bool ShaderProgramManager::isShader( std::string s ) {
+	return !isProgram(s);
+}
+
+bool ShaderProgramManager::isProgram( std::string s ) {
+	std::regex shaderRegex("\\#type(\\s+)program", std::regex_constants::icase);
+	
+	return ( std::regex_match(s, shaderRegex) );
 }
 
 }

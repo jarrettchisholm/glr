@@ -19,13 +19,16 @@ namespace oglre {
 namespace shaders {
 
 class GlslShader : public IShader {
+	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
+	
 public:
-	GlslShader(std::string sourceCode, Type type);
+	GlslShader(std::string source, Type type);
+	GlslShader(std::string name, std::string source, Type type, BindingsMap bindings);
 	virtual ~GlslShader();
 	
 	virtual void bind();
 	virtual IShader::Type getType();
-	virtual GLuint getGLGlslShaderId();
+	virtual GLuint getGLShaderId();
 	
 	void compile();
 	
@@ -39,7 +42,9 @@ private:
 	Type type_;
 	std::string name_;
 	
-	std::string sourceCode_;
+	std::string source_;
+	
+	BindingsMap bindings_;
 };
 
 }

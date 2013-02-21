@@ -63,7 +63,7 @@ void GlslShaderProgram::compile() {
 	return;
 }
 
-GLuint GlslShaderProgram::getGLGlslShaderProgramId() {
+GLuint GlslShaderProgram::getGLShaderProgramId() {
 	return programId_;
 }
 	

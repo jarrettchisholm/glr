@@ -15,7 +15,7 @@ namespace oglre {
 
 namespace shaders {
 
-OglreShader::OglreShader() {
+OglreShader::OglreShader(std::string source) : source_(source) {
 }
 
 
@@ -23,13 +23,13 @@ OglreShader::~OglreShader() {
 }
 
 void OglreShader::process(std::map< std::string, std::string > defineMap) {
-	OglrePreProcessor pp(sourceCode_);
+	OglrePreProcessor pp(source_);
 	pp.process(defineMap);
-	processedSourceCode_ = pp.getProcessedSource();
+	processedSource_ = pp.getProcessedSource();
 	
-	OglreParser op(processedSourceCode_);
+	OglreParser op(processedSource_);
 	op.parse();
-	variableBindings_ = op.getVariableBindings();
+	bindings_ = op.getBindings();
 }
 
 std::string OglreShader::getName() {
@@ -41,15 +41,20 @@ IShader::Type OglreShader::getType() {
 }
 
 std::string OglreShader::getProcessedSource() {
-	return processedSourceCode_;
+	return processedSource_;
 }
 
 std::string OglreShader::getSource() {
-	return sourceCode_;
+	return source_;
 }
 
-BindingsMap OglreShader::getVariableBindings() {
-	return variableBindings_;
+OglreShader::BindingsMap OglreShader::getBindings() {
+	return bindings_;
+}
+
+bool OglreShader::containsPreProcessorCommands() {
+	// TODO: implement
+	return true;
 }
 
 }
