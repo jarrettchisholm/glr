@@ -14,9 +14,9 @@ namespace oglre {
 
 namespace shaders {
 
-static std::map<std::string, std::string> SHADER_DATA;
+static std::map<std::string, std::string> SHADER_DATA = {
 
-SHADER_DATA["data/shaders/oglre.glsl"] = std::string(
+{"oglre.glsl", std::string(
 	R"<STRING>(
 #type na
 
@@ -27,13 +27,9 @@ uniform mat4 pvmMatrix;
 uniform mat3 normalMatrix;
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/shader.vert"] = std::string(
+)}	
+, 
+{"shader.vert", std::string(
 	R"<STRING>(
 #version 150 core
 
@@ -87,13 +83,9 @@ void main() {
 }
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/material.glsl"] = std::string(
+)}	
+, 
+{"material.glsl", std::string(
 	R"<STRING>(
 #type na
 
@@ -105,13 +97,9 @@ struct Material {
 };
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/light.glsl"] = std::string(
+)}	
+, 
+{"light.glsl", std::string(
 	R"<STRING>(
 #type na
 
@@ -124,13 +112,9 @@ struct LightSource {
 };
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/shader_list.glsl.json"] = std::string(
+)}	
+, 
+{"shader_list.glsl.json", std::string(
 	R"<STRING>(
 {
 	"programs": [{
@@ -189,13 +173,9 @@ SHADER_DATA["data/shaders/shader_list.glsl.json"] = std::string(
 }
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/shader.frag"] = std::string(
+)}	
+, 
+{"shader.frag", std::string(
 	R"<STRING>(
 #version 150 core
 
@@ -216,13 +196,9 @@ void main() {
 }
 
 	)<STRING>"
-);
-
-}
-
-}	
-
-SHADER_DATA["data/shaders/oglre_basic.program"] = std::string(
+)}	
+, 
+{"oglre_basic.program", std::string(
 	R"<STRING>(
 #name oglre_basic
 #type program
@@ -231,8 +207,10 @@ SHADER_DATA["data/shaders/oglre_basic.program"] = std::string(
 #include shader.frag
 
 	)<STRING>"
-);
+)}	
+
+};
 
 }
 
-}	
+}

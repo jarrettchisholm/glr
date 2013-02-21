@@ -8,7 +8,7 @@ def parseShadersIntoHeader():
 	print('Parsing Shaders into header ShaderData.h')
 	
 	shaderDataOutputFilename = "ShaderData.h"
-	shaderListLocation = "data/shaders"
+	shaderListLocation = "data/shaders/"
 	#shaderListExtension = ".json"
 	
 	fileList = glob.glob( os.path.join(shaderListLocation, '*') )
@@ -25,7 +25,7 @@ def parseShadersIntoHeader():
  * not be reflected after compiling.
  *
  * If you wish to make changes to shader information for Oglre, edit the shaders
- * and the shader program list in the 'data' directory.
+ * and shader programs in the 'data/shaders/' directory.
  *
  */
  
@@ -35,18 +35,22 @@ namespace oglre {
 
 namespace shaders {
 
-static std::map<std::string, std::string> SHADER_DATA;
+static std::map<std::string, std::string> SHADER_DATA = {
 """
+	current = 0
 	for filename in fileList:
 		file = open(filename, 'r')
 		data = file.read()
 		
-		cpp += """
-SHADER_DATA[\""""
-
-		cpp += filename
+		if (current > 0):
+			cpp += ", "
 		
-		cpp +="""\"] = std::string(
+		cpp += """
+{\""""
+
+		cpp += filename.replace(shaderListLocation, "")
+		
+		cpp +="""\", std::string(
 	R"<STRING>(
 """
 
@@ -54,13 +58,18 @@ SHADER_DATA[\""""
 
 		cpp += """
 	)<STRING>"
-);
+)}	
+"""
+		current += 1
+	
+	cpp += """
+};
 
 }
 
-}	
+}
 """
-	
+		
 	shaderDataFile.write(cpp)
 	shaderDataFile.close()
 	
