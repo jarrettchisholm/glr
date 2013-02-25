@@ -34,20 +34,6 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, Bindings
 GlslShader::~GlslShader() {
 }
 
-IShader::Type GlslShader::parseType(std::string type) {
-	BOOST_LOG_TRIVIAL(debug) << "parsing shader type: " << type;
-	if (type.compare("fragment") == 0)
-		return IShader::TYPE_FRAGMENT;
-	else if (type.compare("vertex") == 0)
-		return IShader::TYPE_VERTEX;
-	else if (type.compare("geometry") == 0)
-		return IShader::TYPE_GEOMETRY;
-	else if (type.compare("tessellation") == 0)
-		return IShader::TYPE_TESSELLATION;
-		
-	return IShader::TYPE_NONE;
-}
-
 void GlslShader::compile() {
 	BOOST_LOG_TRIVIAL(debug) << "Compiling shader.";
 	
@@ -83,6 +69,7 @@ void GlslShader::compile() {
 			throw exception::GlException(msg);
 	}
 	
+	BOOST_LOG_TRIVIAL(debug) << "Shader is a of type '" << type_ << "'.";
 	
 	shaderId_ = glCreateShader(shaderType);
 	
@@ -129,6 +116,10 @@ IShader::Type GlslShader::getType() {
 
 std::string GlslShader::getName() {
 	return name_;
+}
+
+GlslShader::BindingsMap GlslShader::getBindings() {
+	return bindings_;
 }
 
 GLuint GlslShader::getGLShaderId() {

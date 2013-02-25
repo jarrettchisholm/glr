@@ -1,5 +1,7 @@
 #version 150 core
 
+#define NUM_LIGHTS 1
+
 #type vertex
 
 #include <oglre>
@@ -13,12 +15,22 @@ in vec3 in_Normal;
 out vec2 textureCoord;
 out vec4 pass_Color;
 
-#bind Light
+/*
+@bind Light
 uniform LightSources {
-	LightSource lightSources[1];
+	LightSource lightSources[ NUM_LIGHTS ];
 };
+*/
 
-#bind Material
+uniform LightSources {
+	vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 specular = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 position = vec4(1.5, 7, 0.5, 1.0);
+	vec4 direction = vec4(0.0, 0.0, 0.0, 1.0);
+} lightSources;
+
+//@bind Material
 Material mymaterial = Material(
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
@@ -34,9 +46,9 @@ void main() {
 	
 	
 	vec3 normalDirection = normalize(normalMatrix * in_Normal);
-	vec3 lightDirection = normalize(vec3(lightSources[0].direction));
+	vec3 lightDirection = normalize(vec3(lightSources.direction));
 	
-	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
+	vec3 diffuseReflection = vec3(lightSources.diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
 	/*
 	float bug = 0.0;

@@ -11,6 +11,11 @@
 #include <vector>
 #include <sstream>
 
+#include <boost/log/trivial.hpp>
+
+#include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Include Wave itself
 #include <boost/wave.hpp>
@@ -65,6 +70,7 @@ void CPreProcessor::process( std::map< std::string, std::string > defineMap ) {
     // The preprocessing of the input stream is done on the fly behind the 
     // scenes during iteration over the context_type::iterator_type stream.
     //context_type ctx (source.begin(), source.end(), "lex_infile", hooks);
+    std::cout << "processing: " << std::endl << source_ << std::endl;
     context_type ctx (source_.begin(), source_.end(), "lex_infile", *this);
 
     ctx.set_language(boost::wave::enable_long_long(ctx.get_language()));
@@ -110,10 +116,17 @@ void CPreProcessor::process( std::map< std::string, std::string > defineMap ) {
     }
     
     processedSource_ = ss.str();
+    name_ = ctx.get_hooks().getName();
+    shaderData_ = ctx.get_hooks().getShaders();
+    type_ = ctx.get_hooks().getType();
 }
 
 std::string CPreProcessor::getName() {
 	return name_;
+}
+
+std::string CPreProcessor::getType() {
+	return type_;
 }
 
 std::vector<CPreProcessor::ShaderData> CPreProcessor::getShaders() {
@@ -149,16 +162,31 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 	if ( (*it).get_value() == "type") {
 		// Handle type directive
 		typedef typename ContextT::token_type result_type;
-		std::string value = "";
 		for ( result_type t : line ) {
 			const char* text =t.get_value().c_str();
-			if (strcmp( "#", text ) != 0 && strcmp( "type", text ) != 0) {
-				value += t.get_value().c_str();
+			if (strcmp( "#", text ) != 0 && strcmp( "type", text ) != 0 && strcmp( "na", text ) != 0) {
+				type_ += t.get_value().c_str();
 			}
 		}
 		
-		alg::trim(value);
-		std::cout << value << std::endl;
+		alg::trim(type_);
+		std::cout << type_ << std::endl;
+		
+		return true;
+	}
+	
+	if ( (*it).get_value() == "name") {
+		// Handle type directive
+		typedef typename ContextT::token_type result_type;
+		for ( result_type t : line ) {
+			const char* text =t.get_value().c_str();
+			if (strcmp( "#", text ) != 0 && strcmp( "name", text ) != 0) {
+				name_ += t.get_value().c_str();
+			}
+		}
+		
+		alg::trim(name_);
+		std::cout << name_ << std::endl;
 		
 		return true;
 	}
@@ -184,6 +212,8 @@ template <typename ContextT, typename ContainerT>
 bool 
 CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typename ContextT::token_type const& act_token)
 {
+	std::cout << "in emit_line_directive" << std::endl;
+	
 	// emit a #line directive showing the relative filename instead
 	typename ContextT::position_type pos = act_token.get_position();
 	unsigned int column = 1;
@@ -197,8 +227,7 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typ
 	pos.set_column(column += (unsigned int)comments.size());    // account for comments
 	
 	std::string file("");
-	boost::filesystem::path filename(
-		wave::util::create_path(ctx.get_current_filename().c_str()));
+	boost::filesystem::path filename( wave::util::create_path(ctx.get_current_filename().c_str()) );
 
 	file += boost::wave::util::impl::escape_lit(wave::util::native_file_string(filename)) + "";
 
@@ -239,7 +268,19 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typ
     bool 
     CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next) {
 		std::cout << "found_include_directive:" << filename << std::endl;
+		
+		boost::regex systemIncludeRegex("<.*>");
+	
+		if ( !boost::regex_match(filename, systemIncludeRegex) ) {			
+			std::string editedFilename = filename;
+			// remove any quotations around the filename
+			boost::algorithm::erase_all( editedFilename, "\"");
 			
+			BOOST_LOG_TRIVIAL(debug) << "adding: " << editedFilename << " size: " << shaderData_.size();
+			
+			shaderData_.push_back( ShaderData(editedFilename) );
+		}
+		
         return false;    // ok to include this file
     }
 #endif
@@ -248,15 +289,15 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typ
 template <typename ContextT>
 bool 
 CPreProcessor::locate_include_file(ContextT& ctx, std::string &file_path, bool is_system, char const *current_name, std::string &dir_path, std::string &native_name) {
-	if (is_system) {
+	//if (is_system) {
 		// Check if file is in the files map
 		if (CPreProcessor::files_.find(file_path) != CPreProcessor::files_.end()) {
 			std::cout << "locate_include_file: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 			native_name = file_path;
 			
 			return true;
-		}
-	} else {
+		} else {
+	//} else {
 		if (!ctx.find_include_file (file_path, dir_path, is_system, current_name))
             return false;   // could not locate file
 

@@ -75,6 +75,19 @@ std::string GlslShaderProgram::getName() {
 	return name_;
 }
 
+IShader::BindingsMap GlslShaderProgram::getBindings() {
+	IShader::BindingsMap bindings;
+	
+	for ( auto s : shaders_ ) {
+		IShader::BindingsMap b = s->getBindings();
+		for ( auto e : b ) {
+			bindings.push_back( e );
+		}
+	}
+	
+	return bindings;
+}
+
 void GlslShaderProgram::unbindAll() {
 	glUseProgram(0);
 }

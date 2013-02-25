@@ -4,7 +4,7 @@
  * not be reflected after compiling.
  *
  * If you wish to make changes to shader information for Oglre, edit the shaders
- * and the shader program list in the 'data' directory.
+ * and shader programs in the 'data/shaders/' directory.
  *
  */
  
@@ -16,7 +16,7 @@ namespace shaders {
 
 static std::map<std::string, std::string> SHADER_DATA = {
 
-{"oglre.glsl", std::string(
+{"oglre", std::string(
 	R"<STRING>(
 #type na
 
@@ -26,12 +26,14 @@ uniform mat4 modelMatrix;
 uniform mat4 pvmMatrix;
 uniform mat3 normalMatrix;
 
-	)<STRING>"
+)<STRING>"
 )}	
 , 
 {"shader.vert", std::string(
 	R"<STRING>(
 #version 150 core
+
+#define NUM_LIGHTS 1
 
 #type vertex
 
@@ -46,12 +48,22 @@ in vec3 in_Normal;
 out vec2 textureCoord;
 out vec4 pass_Color;
 
-#bind Light
+/*
+@bind Light
 uniform LightSources {
-	LightSource lightSources[1];
+	LightSource lightSources[ NUM_LIGHTS ];
 };
+*/
 
-#bind Material
+uniform LightSources {
+	vec4 ambient = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 diffuse = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 specular = vec4(0.5, 0.5, 0.5, 1.0);
+	vec4 position = vec4(0.5, 7, 0.5, 1.0);
+	vec4 direction = vec4(0.0, 0.0, 0.0, 1.0);
+} lightSources;
+
+//@bind Material
 Material mymaterial = Material(
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
@@ -67,9 +79,9 @@ void main() {
 	
 	
 	vec3 normalDirection = normalize(normalMatrix * in_Normal);
-	vec3 lightDirection = normalize(vec3(lightSources[0].direction));
+	vec3 lightDirection = normalize(vec3(lightSources.direction));
 	
-	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
+	vec3 diffuseReflection = vec3(lightSources.diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
 	/*
 	float bug = 0.0;
@@ -82,10 +94,10 @@ void main() {
 	pass_Color = vec4(diffuseReflection, 1.0);
 }
 
-	)<STRING>"
+)<STRING>"
 )}	
 , 
-{"material.glsl", std::string(
+{"material", std::string(
 	R"<STRING>(
 #type na
 
@@ -96,10 +108,10 @@ struct Material {
 	float shininess;
 };
 
-	)<STRING>"
+)<STRING>"
 )}	
 , 
-{"light.glsl", std::string(
+{"light", std::string(
 	R"<STRING>(
 #type na
 
@@ -111,68 +123,7 @@ struct LightSource {
 	vec4 direction;
 };
 
-	)<STRING>"
-)}	
-, 
-{"shader_list.glsl.json", std::string(
-	R"<STRING>(
-{
-	"programs": [{
-			"name": "test",
-			"shaders": [
-				{ "name": "test_vertex_shader" },
-				{ "name": "test_fragment_shader" }
-			]
-		}],
-	
-	"shaders": [
-		{
-			"name": "test_vertex_shader",
-			"type": "vertex",
-			"filename": "shader.vert",
-			"variables": [
-				{ 
-					"in": [{
-						"0": [ { "type": "vec3" }, { "name": "in_Position" } ],
-						"1": [ { "type": "vec2" }, { "name": "in_Texture" } ],
-						"2": [ { "type": "vec3" }, { "name": "in_Color" } ]
-					}]
-				},
-				{ 
-					"uniform": [{
-						"0": [ { "type": "mat4" }, { "name": "projectionMatrix" } ],
-						"1": [ { "type": "mat4" }, { "name": "viewMatrix" } ],
-						"2": [ { "type": "mat4" }, { "name": "modelMatrix" } ]
-					}]
-				}
-			]
-		},
-		
-		{
-			"name": "test_fragment_shader",
-			"type": "fragment",
-			"filename": "shader.frag"
-		}
-	]
-}
-
-
-{
-	"program": [{
-			"name": "test",
-			"shaders": [
-				{
-					"name": "test_vertex_shader",
-					"type": "vertex",
-					"filename": "shader.vert",
-					"contents": "blah blah"
-				},
-				{ "name": "fragment_shader" }
-			]
-		}],
-}
-
-	)<STRING>"
+)<STRING>"
 )}	
 , 
 {"shader.frag", std::string(
@@ -181,7 +132,7 @@ struct LightSource {
 
 #type fragment
 
-#bind texture0
+@bind texture0
 uniform sampler2D texture;
 
 in vec4 pass_Color;
@@ -195,7 +146,7 @@ void main() {
 	//gl_FragColor = out_Color;
 }
 
-	)<STRING>"
+)<STRING>"
 )}	
 , 
 {"oglre_basic.program", std::string(
@@ -203,10 +154,10 @@ void main() {
 #name oglre_basic
 #type program
 
-#include shader.vert
-#include shader.frag
+#include "shader.vert"
+#include "shader.frag"
 
-	)<STRING>"
+)<STRING>"
 )}	
 
 };

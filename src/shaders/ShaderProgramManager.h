@@ -30,12 +30,14 @@ namespace fs = boost::filesystem;
 
 class ShaderProgramManager: public IShaderProgramManager {
 public:
-	ShaderProgramManager();
+	ShaderProgramManager(bool autoLoad = true);
 	virtual ~ShaderProgramManager();
 
 	virtual IShaderProgram* getShaderProgram(const std::string name);
 
 	virtual void loadShaderPrograms(const std::string directory);
+	
+	void loadStandardShaderPrograms();
 	
 	void load(const std::string directory);	
 	void load(fs::path directory);

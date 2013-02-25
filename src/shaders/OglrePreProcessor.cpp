@@ -8,12 +8,14 @@
 
 #include "OglrePreProcessor.h"
 
+#include "ShaderData.h"
+
 namespace oglre {
 
 namespace shaders {
 
 OglrePreProcessor::OglrePreProcessor(std::string source) : CPreProcessor(source) {
-	
+	CPreProcessor::files_ = SHADER_DATA;
 }
 
 }

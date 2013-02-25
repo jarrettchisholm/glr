@@ -48,7 +48,9 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		cpp += """
 {\""""
 
-		cpp += filename.replace(shaderListLocation, "")
+		filename = filename.replace(shaderListLocation, "")
+		filename = filename.replace(".glsl", "")
+		cpp += filename
 		
 		cpp +="""\", std::string(
 	R"<STRING>(
@@ -57,7 +59,7 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		cpp += data
 
 		cpp += """
-	)<STRING>"
+)<STRING>"
 )}	
 """
 		current += 1
@@ -113,7 +115,8 @@ libraries = [
 'boost_log', 
 'boost_date_time', 
 'boost_thread',
-'boost_wave'
+'boost_wave',
+'boost_regex'
 ]
 
 library_paths = ['../lwis/build']

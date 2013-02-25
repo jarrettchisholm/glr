@@ -16,6 +16,8 @@ namespace shaders {
 
 class IShader {
 public:
+	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
+
 	virtual ~IShader() {
 	}
 	;
@@ -27,6 +29,19 @@ public:
 		TYPE_GEOMETRY,
 		TYPE_TESSELLATION
 	};
+	
+	static Type parseType(std::string type) {
+		if (type.compare("fragment") == 0)
+			return TYPE_FRAGMENT;
+		else if (type.compare("vertex") == 0)
+			return TYPE_VERTEX;
+		else if (type.compare("geometry") == 0)
+			return TYPE_GEOMETRY;
+		else if (type.compare("tessellation") == 0)
+			return TYPE_TESSELLATION;
+			
+		return TYPE_NONE;
+	}
 	
 	virtual void bind() = 0;
 	virtual Type getType() = 0;

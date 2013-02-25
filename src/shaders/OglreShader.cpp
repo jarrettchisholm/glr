@@ -5,6 +5,8 @@
  * 
  */
 
+#include <boost/log/trivial.hpp>
+#include <boost/regex.hpp>
 
 #include "OglreShader.h"
 
@@ -23,13 +25,20 @@ OglreShader::~OglreShader() {
 }
 
 void OglreShader::process(std::map< std::string, std::string > defineMap) {
+	BOOST_LOG_TRIVIAL(debug) << "Processing shader.";
 	OglrePreProcessor pp(source_);
 	pp.process(defineMap);
 	processedSource_ = pp.getProcessedSource();
+	type_ = IShader::parseType( pp.getType() );
 	
 	OglreParser op(processedSource_);
 	op.parse();
 	bindings_ = op.getBindings();
+	
+	// Remove all '@bind' lines
+	const boost::regex e("@bind(\\s+)(\\S+)\\n+");
+    processedSource_ = boost::regex_replace(processedSource_, e, "\n");
+    std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
 std::string OglreShader::getName() {

@@ -4,6 +4,8 @@
  *  Created on: 2011-05-06
  *      Author: jarrett
  */
+
+#include <iostream>
  
 #include <GL/glew.h>
 
@@ -19,6 +21,7 @@
 #include "GLWindow.h"
 
 #include "shaders/ShaderProgramManager.h"
+#include "shaders/IShader.h"
 #include "exceptions/GlException.h"
 
 namespace oglre {
@@ -103,9 +106,12 @@ void GLWindow::initialize() {
 	
 	glFlush();
 	
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
+	
 	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager());
 	
-	
+	// Testing of lights
+	light_ubo = -1;
 	// load all of the shaders
 	//std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
 	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
@@ -159,10 +165,19 @@ void GLWindow::endRender() {
 
 void GLWindow::render() {
 	beginRender();
-
-	shaders::IShaderProgram* shader = shaderProgramManager_.getShaderProgram("test");
+	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
+	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("oglre_basic");
+	
 	shader->bind();
-
+	
+	shaders::IShader::BindingsMap bindings = shader->getBindings();
+	
+	//testBindingLights(shader);
+	
+	
+	for (auto it = bindings.begin(); it != bindings.end(); ++it)
+		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+	
 	// Get uniform variable locations
 	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix");
 	int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix");
@@ -195,6 +210,117 @@ void GLWindow::render() {
 		gui_->render();
 
 	endRender();
+}
+
+void GLWindow::testBindingLights(shaders::IShaderProgram* shader) {
+	// Testing lights
+	LightSource ls;
+	
+	ls.ambient = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ls.diffuse = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ls.specular = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ls.position = glm::vec4(2.5f, 2.5f, 2.5f, 0.f);
+	ls.direction = glm::vec4(0.5f, 0.5f, 0.5f, 0.f);
+	
+	GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
+	
+	if (light_ubo < 0) {
+		glGenBuffers(1, &light_ubo);
+		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * 5, nullptr, GL_STREAM_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+	
+	glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &ls.ambient[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.diffuse[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.specular[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.position[0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.direction[0]);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
+	
+	/*
+	glGenBuffers (1, &light_ubo);
+	glBindBuffer (GL_UNIFORM_BUFFER, light_ubo);
+	
+	const GLchar *uniformNames[1] =
+	{
+	    "LightSources.lightSources"
+	};
+	GLuint uniformIndices;
+	
+	glGetUniformIndices(shader->getGLShaderProgramId(), 1, uniformNames, &uniformIndices);
+	
+	GLint uniformOffsets[1];
+	glGetActiveUniformsiv (shader->getGLShaderProgramId(), 1, &uniformIndices, GL_UNIFORM_OFFSET, uniformOffsets);
+	
+	GLuint uniformBlockIndex = glGetUniformBlockIndex (shader->getGLShaderProgramId(), "LightSources");
+	
+	GLsizei uniformBlockSize(0);
+	glGetActiveUniformBlockiv (shader->getGLShaderProgramId(), uniformBlockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &uniformBlockSize);
+	
+	const GLchar *names[] = {
+	    "LightSources.lightSources[0].ambient",
+	    "LightSources.lightSources[0].diffuse",
+	    "LightSources.lightSources[0].specular",
+	    "LightSources.lightSources[0].position",
+	    "LightSources.lightSources[0].direction"
+	};
+	GLuint indices[5];
+	
+	glGetUniformIndices(shader->getGLShaderProgramId(), 5, names, indices);
+	
+	std::vector _lightUniformOffsets(5);
+	glGetActiveUniformsiv (shader->getGLShaderProgramId(), _lightUniformOffsets.size(), indices, GL_UNIFORM_OFFSET, &_lightUniformOffsets[0]);
+	GLint *offsets = &_lightUniformOffsets[0];
+	
+	const unsigned int uboSize (uniformBlockSize);
+	std::vector buffer (uboSize);
+	
+	int offset;
+	
+	for (unsigned int n = 0; n < _lights.size (); ++n) {
+	    // Light ambient color (vec4)
+	    offset = offsets[0 + n * 5];
+	    for (int i = 0; i < 4; ++i) {
+	        *(reinterpret_cast<float*> (&buffer[0] + offset)) =
+	            _lights[n].ambient[i];
+	        offset += sizeof (GLfloat);
+	    }
+	    // Light diffuse color (vec4)
+	    offset = offsets[1 + n * 5];
+	    for (int i = 0; i < 4; ++i) {
+	        *(reinterpret_cast<float*> (&buffer[0] + offset)) =
+	            _lights[n].diffuse[i];
+	        offset += sizeof (GLfloat);
+	    }
+	    // Light specular color (vec4)
+	    offset = offsets[2 + n * 5];
+	    for (int i = 0; i < 4; ++i) {
+	        *(reinterpret_cast<float*> (&buffer[0] + offset)) =
+	            _lights[n].specular[i];
+	        offset += sizeof (GLfloat);
+	    }	    
+	    // Light position (vec4)
+	    offset = offsets[3 + n * 5];
+	    for (int i = 0; i < 4; ++i) {
+	        *(reinterpret_cast<float*> (&buffer[0] + offset)) =
+	            _lights[n].position[i];
+	        offset += sizeof (GLfloat);
+	    }
+	    // Light spot direction (vec4)
+	    offset = offsets[4 + n * 5];
+	    for (int i = 0; i < 4; ++i) {
+	        *(reinterpret_cast<float*> (&buffer[0] + offset)) =
+	            _lights[n].spotDirection[i];
+	        offset += sizeof (GLfloat);
+	    }
+	}
+	glBufferData (GL_UNIFORM_BUFFER, uboSize, &buffer[0], GL_DYNAMIC_DRAW);
+	glBindBufferBase (GL_UNIFORM_BUFFER, 0, light_ubo);
+	glUniformBlockBinding (shader->getGLShaderProgramId(), uniformBlockIndex, 0)
+	*/
 }
 
 void GLWindow::LoadAQuad() {

@@ -20,13 +20,14 @@ namespace oglre {
 
 namespace shaders {
 
-class GlslShaderProgram : public IShaderProgram {
+class GlslShaderProgram : public IShaderProgram {	
 public:
 	GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders);
 	virtual ~GlslShaderProgram();
 	
 	virtual void bind();
 	virtual GLuint getGLShaderProgramId();
+	virtual IShader::BindingsMap getBindings();
 	void compile();
 	
 	

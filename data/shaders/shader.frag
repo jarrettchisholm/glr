@@ -2,7 +2,7 @@
 
 #type fragment
 
-#bind texture0
+@bind texture0
 uniform sampler2D texture;
 
 in vec4 pass_Color;

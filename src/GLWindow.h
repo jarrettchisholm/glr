@@ -19,6 +19,7 @@
 #include "IWindow.h"
 #include "DefaultSceneNode.h"
 #include "DefaultSceneManager.h"
+#include "Light.h"
 
 //#include "gui/IGUI.h"
 #include "gui/GUI.h"
@@ -27,7 +28,13 @@
 
 namespace oglre {
 
-
+struct LightSource {
+		glm::vec4 ambient;
+		glm::vec4 diffuse;
+		glm::vec4 specular;
+		glm::vec4 position;
+		glm::vec4 direction;
+	};
 
 class GLWindow: public IWindow {
 public:
@@ -60,6 +67,9 @@ public:
 	void DrawAQuad();
 	void LoadAQuad();
 	
+	void testBindingLights(shaders::IShaderProgram* shader);
+	GLuint light_ubo;
+	
 protected:
 	std::unique_ptr<DefaultSceneManager> sMgr_;
 	
@@ -70,7 +80,7 @@ private:
 	glm::mat4 projectionMatrix_;
 	glm::mat4 modelMatrix_;
 	
-	shaders::ShaderProgramManager shaderProgramManager_;
+	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	
 	unsigned int vaoID[1]; // Our Vertex Array Object  
   

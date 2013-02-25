@@ -18,9 +18,7 @@ namespace oglre {
 
 namespace shaders {
 
-class GlslShader : public IShader {
-	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
-	
+class GlslShader : public IShader {	
 public:
 	GlslShader(std::string source, Type type);
 	GlslShader(std::string name, std::string source, Type type, BindingsMap bindings);
@@ -33,8 +31,7 @@ public:
 	void compile();
 	
 	std::string getName();
-	
-	static IShader::Type parseType(std::string type);
+	GlslShader::BindingsMap getBindings();
 
 private:
 	GLuint shaderId_;

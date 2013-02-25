@@ -25,6 +25,8 @@ public:
 	virtual void bind() = 0;
 	
 	virtual GLuint getGLShaderProgramId() = 0;
+	
+	virtual IShader::BindingsMap getBindings() = 0;
 };
 
 }

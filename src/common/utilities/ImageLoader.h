@@ -45,7 +45,7 @@ public:
 	 
 		int w = FreeImage_GetWidth(imagen);
 		int h = FreeImage_GetHeight(imagen);
-		BOOST_LOG_TRIVIAL(debug) <<"The size of the image is: "<<filename<<" es "<<w<<"*"<<h;
+		BOOST_LOG_TRIVIAL(debug) <<"The size of the image is: "<<filename<<" is "<<w<<"*"<<h;
 		
 		GLubyte* textura;
 		if (hasAlpha)

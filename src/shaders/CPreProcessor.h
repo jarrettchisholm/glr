@@ -52,6 +52,9 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 		virtual ~CPreProcessor();
 		
 		struct ShaderData {
+			ShaderData(std::string name) : name(name) {
+			}
+			
 			std::string name;
 			std::map< std::string, std::string > defineMap;
 		};
@@ -59,6 +62,7 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 		void process(std::map< std::string, std::string > defineMap = std::map< std::string, std::string >());
 		
 		std::string getName();
+		std::string getType();
 		std::vector<ShaderData> getShaders();
 		std::string getSource();
 		std::string getProcessedSource();
@@ -153,12 +157,15 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 			std::string instring;
 	};
 	
+protected:
+	static std::map<std::string, std::string> files_;
+
 private:
 	std::string name_;
+	std::string type_;
 	std::vector<ShaderData> shaderData_;
 	std::string source_;
 	std::string processedSource_;
-	static std::map<std::string, std::string> files_;
 		
 };
 
