@@ -69,6 +69,7 @@ public:
 	
 	void testBindingLights(shaders::IShaderProgram* shader);
 	GLuint light_ubo;
+	bool bound_light_ubo;
 	
 protected:
 	std::unique_ptr<DefaultSceneManager> sMgr_;
