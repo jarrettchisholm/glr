@@ -61,7 +61,7 @@ private:
 					| // or
 					(
 						omit [ ident ] >> ident >> '{' >> *eol
-						>> omit [ +(ident >> !char_('[')) ] // omit the type, TODO
+						>> omit [ +(ident >> !char_('[')) ]
 						>> ident >> '[' >> ignore
 					);
 				

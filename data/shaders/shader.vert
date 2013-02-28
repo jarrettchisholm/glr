@@ -15,19 +15,10 @@ in vec3 in_Normal;
 out vec2 textureCoord;
 out vec4 pass_Color;
 
-/*
-@bind Light
-uniform LightSources {
-	LightSource lightSources[ NUM_LIGHTS ];
-};
-*/
 
+@bind Light
 layout(std140) uniform LightSources {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 position;
-	vec4 direction;
+	LightSource lightSources[ NUM_LIGHTS ];
 };
 
 //@bind Material
@@ -38,14 +29,6 @@ Material mymaterial = Material(
 	0.995
 );
 
-LightSource lightSource = LightSource(
-	vec4(0.5, 0.5, 0.5, 1.0),
-	vec4(0.5, 0.5, 0.5, 1.0),
-	vec4(0.5, 0.5, 0.5, 1.0),
-	vec4(1.5, 7, 0.5, 1.0),
-	vec4(0.0, -1.0, 0.0, 1.0)
-);
-
 
 void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
@@ -53,9 +36,9 @@ void main() {
 	textureCoord = in_Texture;
 	
 	vec3 normalDirection = normalize(normalMatrix * in_Normal);
-	vec3 lightDirection = normalize(vec3(direction));
+	vec3 lightDirection = normalize(vec3(lightSources[0].direction));
 	
-	vec3 diffuseReflection = vec3(diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
+	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(mymaterial.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
 	/*
 	float bug = 0.0;	
