@@ -15,13 +15,13 @@
 
 #include "IShader.h"
 
+#include "OglreParser.h"
+
 namespace oglre {
 
 namespace shaders {
 
 class OglreShader {
-	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
-	
 public:
 	OglreShader(std::string source);
 	virtual ~OglreShader();
@@ -32,7 +32,7 @@ public:
 	IShader::Type getType();
 	std::string getProcessedSource();
 	std::string getSource();
-	BindingsMap getBindings();
+	OglreParser::StringBindingsMap getBindings();
 	
 	bool containsPreProcessorCommands();
 	
@@ -43,7 +43,7 @@ private:
 	std::string source_;
 	std::string processedSource_;
 	
-	BindingsMap bindings_;
+	OglreParser::StringBindingsMap bindings_;
 };
 
 }

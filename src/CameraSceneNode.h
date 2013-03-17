@@ -11,31 +11,25 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-#include "ICameraSceneNode.h"
+#include "ICamera.h"
 #include "DefaultSceneNode.h"
 
 //#include "IInputListener.h"
 
 namespace oglre {
 
-
-
-class CameraSceneNode: public virtual ICameraSceneNode, public DefaultSceneNode {
+class CameraSceneNode: public virtual ICamera, public DefaultSceneNode {
 public:
 	CameraSceneNode();
-	CameraSceneNode(glm::vec3 position, glm::vec3 lookAt, bool active = true);
+	CameraSceneNode(const std::string name);
 	virtual ~CameraSceneNode();
 
-	// inherited from ICameraSceneNode
-	
-
-	
-	
+	// inherited from ICamera
 	virtual bool isActive();
+	
 	virtual void render();
 	
 	virtual void attach(models::IModel* model);
-	virtual void setVisible(bool isVisible);
 
 	virtual void move(MOVE_DIRECTION dir, bool enabled);
 	// up/down
@@ -45,7 +39,7 @@ public:
 
 	virtual void tick(glm::detail::float32 time);
 	
-	glm::mat4& getViewMatrix();
+	virtual const glm::mat4& getViewMatrix();
 
 private:
 	glm::quat rotation_;

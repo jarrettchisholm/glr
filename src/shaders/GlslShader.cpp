@@ -25,10 +25,14 @@ GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(t
 	//initialize();
 }
 
-GlslShader::GlslShader(std::string name, std::string source, Type type, BindingsMap bindings) : name_(name), source_(source), type_(type), bindings_(bindings) {
+GlslShader::GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings) : name_(name), source_(source), type_(type) {
 	shaderId_ = -1;
 	
-	//initialize();
+	// Convert bindings
+	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+		bindings_.push_back( IShader::Binding( IShader::parseBindType(it->first), it->second ) );
+		//std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+	}
 }
 
 GlslShader::~GlslShader() {
@@ -118,7 +122,7 @@ std::string GlslShader::getName() {
 	return name_;
 }
 
-GlslShader::BindingsMap GlslShader::getBindings() {
+IShader::BindingsMap GlslShader::getBindings() {
 	return bindings_;
 }
 

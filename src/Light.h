@@ -16,11 +16,10 @@
 
 namespace oglre {
 
-
 class Light: public virtual ILight, public DefaultSceneNode {
 public:
 	Light();
-	Light(glm::vec3 position, glm::vec3 lookAt, bool active = true);
+	Light(const std::string name);
 	virtual ~Light();
 	
 	
@@ -28,10 +27,12 @@ public:
 	virtual void render();
 	
 	virtual void attach(models::IModel* model);
-	virtual void setVisible(bool isVisible);
 
 private:
-
+	glm::vec4 ambient_;
+	glm::vec4 diffuse_;
+	glm::vec4 specular_;
+	
 	void initialize();
 };
 

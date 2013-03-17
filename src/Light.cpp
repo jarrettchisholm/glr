@@ -25,20 +25,18 @@
 namespace oglre {
 
 
-Light::Light() {
+Light::Light() : DefaultSceneNode() {
 	setLookAt( 1, 1, 1 );
 	setPosition( 0, 0, 0 );
 	setScale(1, 1, 1);
-	
-	active_ = true;
 
 	initialize();
 }
 
-Light::Light(glm::vec3 position, glm::vec3 lookAt, bool active) {
-	setPosition(position);
-	setLookAt(lookAt);
-	active_ = active;
+Light::Light(const std::string name) : DefaultSceneNode(name) {
+	setLookAt( 1, 1, 1 );
+	setPosition( 0, 0, 0 );
+	setScale(1, 1, 1);
 
 	initialize();
 }
@@ -51,22 +49,12 @@ void Light::initialize() {
 }
 
 void Light::render() {
-	if (isActive()) {
-		
-	}
 }
 
 /**
 * Does nothing in the Light.
 */ 
 void Light::attach(models::IModel* model) {
-	
-}
-
-/**
-* Does nothing in the Light.
-*/ 
-void Light::setVisible(bool isVisible) {
 	
 }
 

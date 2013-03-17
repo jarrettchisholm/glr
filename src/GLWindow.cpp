@@ -9,8 +9,6 @@
  
 #include <GL/glew.h>
 
-#include "GL/glu.h"
-
 #include <SFML/OpenGL.hpp>
 
 #include <glm/glm.hpp>  
@@ -76,19 +74,11 @@ void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 		height = 1;
 	
 	glViewport(0, 0, width, height);
-	/*
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, (GLfloat) width / (GLfloat) height, 0.1f, 2000.0f);
-	glMatrixMode(GL_MODELVIEW);
-	*/
 
 	width_ = width;
 	height_ = height;
 	
 	projectionMatrix_ = glm::perspective(60.0f, (float)width / (float)height, 0.1f, 100.f);
-	//viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.f));
-	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 }
 
 void GLWindow::initialize() {
@@ -99,8 +89,6 @@ void GLWindow::initialize() {
 	//glDepthFunc(GL_LEQUAL);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
-	//glEnable(GL_LIGHTING);
-	
 	// we use resize once to set up our initial perspective
 	resize(width_, height_);
 	
@@ -108,7 +96,7 @@ void GLWindow::initialize() {
 	
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
 	
-	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager());
+	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
 	
 	// Testing of lights
 	light_ubo = 0;
@@ -168,52 +156,31 @@ void GLWindow::render() {
 	beginRender();
 	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("oglre_basic");
-	
+
 	shader->bind();
-	
-	shaders::IShader::BindingsMap bindings = shader->getBindings();
-	
-	testBindingLights(shader);
-	
-	
-	//for (auto it = bindings.begin(); it != bindings.end(); ++it)
-	//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
-	
-	// Get uniform variable locations
-	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix");
-	int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix");
-	int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix");
-	int pvmMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "pvmMatrix");
-	int normalMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "normalMatrix");
 
-	glm::mat4 viewMatrix = sMgr_->getActiveCameraSceneNode()->getViewMatrix();
-
-	// Send uniform variable values to the shader
-	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix_[0][0]);
-	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
-	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix_[0][0]);
+	bindUniformBufferObjects(shader);
 	
-	
-	glm::mat4 pvmMatrix(projectionMatrix_ * viewMatrix * modelMatrix_);
-	glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
-	
-	glm::mat3 normalMatrix = glm::inverse(glm::transpose( glm::mat3(viewMatrix * modelMatrix_) ));
-	glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
-	
-
 	//DrawAQuad();
 
 	sMgr_->drawAll();
-
+	
 	shaders::GlslShaderProgram::unbindAll();
-
-	if (gui_)
+	
+	if (gui_ != nullptr)
 		gui_->render();
-
+	
 	endRender();
 }
 
-void GLWindow::testBindingLights(shaders::IShaderProgram* shader) {
+void GLWindow::bindUniformBufferObjects(shaders::IShaderProgram* shader) {
+	shaders::IShader::BindingsMap bindings = shader->getBindings();
+	
+	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+		
+	}
+	
 	// Testing lights
 	LightSource ls;
 	
@@ -265,6 +232,31 @@ void GLWindow::testBindingLights(shaders::IShaderProgram* shader) {
 		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ls), &ls);
 	}
+	
+	// Get uniform variable locations
+	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix");
+	int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix");
+	int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix");
+	int pvmMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "pvmMatrix");
+	int normalMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "normalMatrix");
+	
+	glm::mat4 modelMatrix = sMgr_->getModelMatrix();
+	
+	ICamera* camera = sMgr_->getActiveCameraSceneNode();
+	if (camera != nullptr) {
+		const glm::mat4 viewMatrix = camera->getViewMatrix();
+		// Send uniform variable values to the shader
+		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
+		
+		glm::mat4 pvmMatrix(projectionMatrix_ * viewMatrix * modelMatrix);
+		glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
+		
+		glm::mat3 normalMatrix = glm::inverse(glm::transpose( glm::mat3(viewMatrix * modelMatrix) ));
+		glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
+	}
+	
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix_[0][0]);
+	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 	
 	/*
 	glGenBuffers (1, &light_ubo);

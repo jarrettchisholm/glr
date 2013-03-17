@@ -11,7 +11,6 @@
 #include "OglreShader.h"
 
 #include "OglrePreProcessor.h"
-#include "OglreParser.h"
 
 namespace oglre {
 
@@ -57,7 +56,7 @@ std::string OglreShader::getSource() {
 	return source_;
 }
 
-OglreShader::BindingsMap OglreShader::getBindings() {
+OglreParser::StringBindingsMap OglreShader::getBindings() {
 	return bindings_;
 }
 

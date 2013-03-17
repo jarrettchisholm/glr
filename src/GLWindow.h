@@ -29,12 +29,12 @@
 namespace oglre {
 
 struct LightSource {
-		glm::vec4 ambient;
-		glm::vec4 diffuse;
-		glm::vec4 specular;
-		glm::vec4 position;
-		glm::vec4 direction;
-	};
+	glm::vec4 ambient;
+	glm::vec4 diffuse;
+	glm::vec4 specular;
+	glm::vec4 position;
+	glm::vec4 direction;
+};
 
 class GLWindow: public IWindow {
 public:
@@ -79,7 +79,6 @@ private:
 	std::unique_ptr<gui::GUI> gui_;
 	
 	glm::mat4 projectionMatrix_;
-	glm::mat4 modelMatrix_;
 	
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	
@@ -88,6 +87,7 @@ private:
 	unsigned int vboID[1]; // Our Vertex Buffer Object
 
 	void initialize();
+	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 };
 
 }

@@ -219,6 +219,7 @@ void HtmlGuiComponent::render() {
 }
 
 void HtmlGuiComponent::testDrawTestBerkelium() {
+	std::cout << "binding done wooo" << std::endl;
 	if (webTextureReady_) {
 		//glDisable(GL_LIGHTING);
 		glMatrixMode(GL_PROJECTION);

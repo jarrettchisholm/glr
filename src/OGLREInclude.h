@@ -19,7 +19,7 @@
 
 #include "ISceneManager.h"
 #include "ISceneNode.h"
-#include "ICameraSceneNode.h"
+#include "ICamera.h"
 //#include "IInputListener.h"
 #include "models/IModelManager.h"
 

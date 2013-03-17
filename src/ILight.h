@@ -18,7 +18,6 @@
 
 namespace oglre {
 
-
 class ILight: public virtual ISceneNode {
 public:
 	ILight() {

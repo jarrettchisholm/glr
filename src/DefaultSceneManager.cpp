@@ -4,80 +4,180 @@
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
+#include <sstream>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "DefaultSceneManager.h"
 
 #include "CameraSceneNode.h"
 #include "DefaultSceneNode.h"
+#include "Light.h"
 #include "models/ModelManager.h"
+#include "exceptions/Exception.h"
 
 namespace oglre {
 
-
-
-DefaultSceneManager::DefaultSceneManager() {
+DefaultSceneManager::DefaultSceneManager(shaders::ShaderProgramManager* shaderProgramManager) : shaderProgramManager_(shaderProgramManager) {
+	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	modelManager_ = std::unique_ptr<models::IModelManager>( new models::ModelManager() );
+	rootSceneNode_ = std::shared_ptr<ISceneNode>( new DefaultSceneNode() );
 }
 
 DefaultSceneManager::~DefaultSceneManager() {
 }
 
-/**
- * FOR TESTING PURPOSES ONLY.
- */
-ISceneNode* DefaultSceneManager::createDefaultSceneNode(const std::string name, glm::vec3 position, glm::vec3 lookAt) {
-	DefaultSceneNode* testNode = new DefaultSceneNode();
-	sceneNodes_.push_back(testNode);
+ISceneNode* DefaultSceneManager::createSceneNode(const std::string name) {
+	// Error check
+	if (sceneNodes_.find(name) != sceneNodes_.end()) {
+		std::stringstream msg;
+		msg << "SceneNode with name '" << name << "' already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception(msg.str());
+	}
+	
+	std::shared_ptr<ISceneNode> node = std::shared_ptr<ISceneNode>( new DefaultSceneNode(name) );
+	sceneNodes_[name] = node;
 
-	return testNode;
-	//return 0;
+	return node.get();
 }
 
-ISceneNode* DefaultSceneManager::createSceneNode(const std::string name, glm::vec3 position, glm::vec3 lookAt) {
-	DefaultSceneNode* testNode = new DefaultSceneNode();
-	sceneNodes_.push_back(testNode);
+ICamera* DefaultSceneManager::createCamera(const std::string name, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
+	// Error check
+	if (cameras_.find(name) != cameras_.end()) {
+		std::stringstream msg;
+		msg << "Camera with name '" << name << "' already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception(msg.str());
+	}
+	
+	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>( new CameraSceneNode(name) );	
+	cameras_[name] = node;
 
-	return testNode;
+	return node.get();
 }
 
-ICameraSceneNode* DefaultSceneManager::createCamera(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
-	CameraSceneNode* node = new CameraSceneNode(position, lookAt);
+ILight* DefaultSceneManager::createLight( const std::string name ) {
+	// Error check
+	if (lights_.find(name) != lights_.end()) {
+		std::stringstream msg;
+		msg << "Light with name '" << name << "' already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception(msg.str());
+	}
+	
+	std::shared_ptr<ILight> node = std::shared_ptr<ILight>( new Light(name) );	
+	lights_[name] = node;
 
-	//std::vector<ISceneNode*>::iterator it;
-
-	//it = cameras_.begin();
-	//it = cameras_.insert(it, node);
-
-	cameras_.push_back(node);
-
-	return node;
-}
-
-ICameraSceneNode* DefaultSceneManager::createCameraFPS(const std::string name, glm::vec3 position, glm::vec3 lookAt, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed) {
-	CameraSceneNode* node = new CameraSceneNode();
-	cameras_.push_back(node);
-
-	return node;
+	return node.get();
 }
 
 void DefaultSceneManager::drawAll() {
-	for (glm::detail::uint32 i = 0; i < cameras_.size(); i++) {
-		cameras_[i]->render();
-	}
-		
-	for (glm::detail::uint32 i = 0; i < sceneNodes_.size(); i++) {
-		sceneNodes_[i]->render();
-	}
+	for (auto it = cameras_.begin(); it != cameras_.end(); ++it)
+		it->second->render();
+	
+	for (auto it = sceneNodes_.begin(); it != sceneNodes_.end(); ++it)
+		it->second->render();
 }
 
-CameraSceneNode* DefaultSceneManager::getActiveCameraSceneNode() {
-	for (glm::detail::uint32 i = 0; i < cameras_.size(); i++) {
-		if (cameras_[i]->isActive())
-			return cameras_[i];
-	}
+ICamera* DefaultSceneManager::getActiveCameraSceneNode() {
+	std::cout << "here2" << std::endl;
+	if (cameras_.size() > 0)
+		return cameras_.begin()->second.get();
+		
+	std::cout << "here3" << std::endl;
+	return nullptr;
+}
+
+const glm::mat4& DefaultSceneManager::getModelMatrix() {
+	return modelMatrix_;
 }
 
 models::IModelManager* DefaultSceneManager::getModelManager() {
-	return models::ModelManager::getInstance();
+	return modelManager_.get();
 }
+
+shaders::IShaderProgramManager* DefaultSceneManager::getShaderProgramManager() {
+	return shaderProgramManager_;
+}
+	
+ISceneNode* DefaultSceneManager::getSceneNode( const std::string& name ) {
+	if (sceneNodes_.find(name) == sceneNodes_.end()) {
+		return nullptr;
+	}
+	
+	return sceneNodes_[name].get();
+}
+
+ICamera* DefaultSceneManager::getCamera( const std::string& name ) {
+	if (cameras_.find(name) == cameras_.end()) {
+		return nullptr;
+	}
+	
+	return cameras_[name].get();
+}
+
+ILight* DefaultSceneManager::getLight( const std::string& name ) {
+	if (lights_.find(name) == lights_.end()) {
+		return nullptr;
+	}
+	
+	return lights_[name].get();
+}
+
+void DefaultSceneManager::destroySceneNode( const std::string& name ) {
+	
+}
+
+void DefaultSceneManager::destroySceneNode( ISceneNode* node ) {
+	
+}
+
+void DefaultSceneManager::destroyAllSceneNodes() {
+	
+}
+
+void DefaultSceneManager::destroyCamera( const std::string& name ) {
+	
+}
+
+void DefaultSceneManager::destroyCamera( ICamera* node ) {
+	
+}
+
+void DefaultSceneManager::destroyAllCameras() {
+	
+}
+
+void DefaultSceneManager::destroyLight( const std::string& name ) {
+	
+}
+
+void DefaultSceneManager::destroyLight( ILight* node ) {
+	
+}
+
+void DefaultSceneManager::destroyAllLights() {
+	
+}
+
+glmd::uint32 DefaultSceneManager::getNumSceneNodes() {
+	return sceneNodes_.size();
+}
+
+glmd::uint32 DefaultSceneManager::getNumCameras() {
+	return cameras_.size();
+}
+
+glmd::uint32 DefaultSceneManager::getNumLights() {
+	return lights_.size();
+}
+
+
+ISceneNode* DefaultSceneManager::getRootSceneNode() {
+	return rootSceneNode_.get();
+}
+
 
 }

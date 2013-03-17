@@ -8,7 +8,7 @@
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>

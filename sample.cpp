@@ -35,7 +35,7 @@ oglre::ISceneNode* rootNode = scnMgr->getRootSceneNode();
 oglre::IModelManager* modelMgr = scnMgr->getModelManager();
 oglre::IShaderProgramManager* shaderProgramMgr = scnMgr->getShaderProgramManager();
 
-shaderProgramMgr->loadShaderPrograms("shader_programs.glsl.json");
+shaderProgramMgr->loadShaderPrograms("my/shaders/directory");
 
 
 oglre::IModel* model1 = nullptr;

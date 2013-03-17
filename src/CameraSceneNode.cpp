@@ -18,27 +18,24 @@
 #include <windows.h>
 #endif
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 #include <iostream>
 
 namespace oglre {
 
-
-CameraSceneNode::CameraSceneNode() {
+CameraSceneNode::CameraSceneNode() : DefaultSceneNode() {
 	setLookAt( 1, 1, 1 );
 	setPosition( 0, 0, 0 );
 	setScale(1, 1, 1);
-	
-	active_ = true;
 
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(glm::vec3 position, glm::vec3 lookAt, bool active) {
-	setPosition(position);
-	setLookAt(lookAt);
-	active_ = active;
+CameraSceneNode::CameraSceneNode(const std::string name) : DefaultSceneNode(name) {
+	setLookAt( 1, 1, 1 );
+	setPosition( 0, 0, 0 );
+	setScale(1, 1, 1);
 
 	initialize();
 }
@@ -72,7 +69,8 @@ void CameraSceneNode::render() {
 	}
 }
 
-glm::mat4& CameraSceneNode::getViewMatrix() {
+const glm::mat4& CameraSceneNode::getViewMatrix() {
+	std::cout << "here1" << std::endl;
 	return viewMatrix_;
 }
 
@@ -84,13 +82,6 @@ bool CameraSceneNode::isActive() {
 * Does nothing in the CameraSceneNode.
 */ 
 void CameraSceneNode::attach(models::IModel* model) {
-	
-}
-
-/**
-* Does nothing in the CameraSceneNode.
-*/ 
-void CameraSceneNode::setVisible(bool isVisible) {
 	
 }
 

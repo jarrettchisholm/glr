@@ -134,13 +134,14 @@ if (os.name == "nt" or os.name == "win32"):
 	cpp_flags.append( '-I"C:\lib\Assimp\include"' )
 
 
-debug = ARGUMENTS.get('debug', 0)
-if int(debug):
-	cpp_flags.append('-g')
-	cpp_defines.append('DEBUG')
-else:
-	cpp_defines.append('NDEBUG')
-	
+#debug = ARGUMENTS.get('debug', 0)
+#if int(debug):
+#	cpp_flags.append('-g')
+#	cpp_defines.append('DEBUG')
+#else:
+#	cpp_defines.append('NDEBUG')
+cpp_flags.append('-g')
+cpp_defines.append('DEBUG')	
 	
 	
 #for key, value in ARGLIST:

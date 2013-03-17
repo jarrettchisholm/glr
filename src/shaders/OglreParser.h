@@ -28,17 +28,27 @@ class OglreParser {
 	typedef std::vector< std::pair<std::string, std::string> > Map;
 
 public:
+	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
+
 	OglreParser(std::string source);
 	virtual ~OglreParser();
 	
 	void parse();
 	
-	Map getBindings();
+	StringBindingsMap getBindings();
 
+
+/*
+(
+	omit [ ident ] >> ident >> '{' >> *eol
+	>> omit [ +(ident >> !char_('[')) ]
+	>> ident >> '[' >> ignore
+);
+*/
 
 private:
 	std::string source_;
-	Map bindings_;
+	StringBindingsMap bindings_;
 	
 	template <typename It>
 	void parse(It f, It l);
@@ -53,17 +63,75 @@ private:
 				
 				annot = "@bind" >> ident >> eol;
 				
-				declaration = 
+				layout = "layout(" >> *(omit [ ident ]) >> ')';
+				
+				declaration =
+
+					 /*
+					 * Match to things like:
+					 * @bind texture0
+					 * uniform sampler2D texture;
+					 * 
+					 * or
+					 * 
+					 * @bind texture0
+					 * uniform 
+					 * sampler2D 
+					 * texture
+					 * ;
+					 */ 
 					( 
-						omit [ +(ident >> !char_(';')) ] // omit the type, TODO
-						>> ident >> ';' >> eol
+						-layout >> *eol 
+						>> omit [ +((ident | eol) >> ( *eol >> !char_(';'))) ] >> *eol
+						>> ident >> *eol 
+						>> ';' >> eol
 					)
+					
+					
 					| // or
+					
+					/*
+					 * Match to things like:
+					 * @bind Light
+					 * layout(std140) uniform LightSources {
+					 * 	LightSource lightSources[ NUM_LIGHTS ];
+					 * };
+					 * 
+					 * or
+					 * 
+					 * @bind Light
+					 * layout(std140) 
+					 * uniform 
+					 * LightSources 
+					 * {
+					 * 	LightSource lightSources[ NUM_LIGHTS ];
+					 * };
+					 * 
+					 * or
+					 * 
+					 * @bind Light2
+					 * uniform LightSources3 
+					 * {
+					 * 	LightSource lightSources3[ NUM_LIGHTS ];
+					 * };
+					 * 
+					 * or
+					 * 
+					 * @bind Material
+					 * layout(std140) Material mymaterial = Material(
+					 * 	vec4(1.0, 0.8, 0.8, 1.0),
+					 * 	vec4(1.0, 0.8, 0.8, 1.0),
+					 * 	vec4(1.0, 0.8, 0.8, 1.0),
+					 * 	0.995
+					 * );
+					 */ 
 					(
-						omit [ ident ] >> ident >> '{' >> *eol
-						>> omit [ +(ident >> !char_('[')) ]
-						>> ident >> '[' >> ignore
-					);
+						-layout >> *eol 
+						>> omit [ ident ] >> *eol 
+						>> ident >> omit [ *eol >> (char_('{') | char_('=')) ] 
+						>> ignore
+					)
+					;
 				
 				ignore = !annot >> *(char_ - eol) >> eol;
 				
@@ -73,6 +141,7 @@ private:
 				BOOST_SPIRIT_DEBUG_NODE(start);
 				BOOST_SPIRIT_DEBUG_NODE(combi);
 				BOOST_SPIRIT_DEBUG_NODE(ignore);
+				BOOST_SPIRIT_DEBUG_NODE(layout);
 				BOOST_SPIRIT_DEBUG_NODE(declaration);
 				BOOST_SPIRIT_DEBUG_NODE(annot);
 				BOOST_SPIRIT_DEBUG_NODE(ident);
@@ -80,6 +149,7 @@ private:
 			
 		private:
 			qi::rule<It, qi::blank_type> ignore;
+			qi::rule<It, std::string(), qi::blank_type> layout;
 			qi::rule<It, std::string(), qi::blank_type> ident, declaration, annot;
 			qi::rule<It, std::pair<std::string, std::string>(), qi::blank_type> combi;
 			qi::rule<It, Map(), qi::blank_type> start;

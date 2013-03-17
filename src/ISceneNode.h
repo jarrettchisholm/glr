@@ -18,7 +18,7 @@
 
 namespace oglre {
 
-
+namespace glmd = glm::detail;
 
 class ISceneNode {
 public:
@@ -29,6 +29,15 @@ public:
 	virtual ~ISceneNode() {
 	}
 	;
+	
+	virtual ISceneNode* createChild( const std::string name, glm::vec3& position, glm::vec3& lookAt ) = 0;
+	virtual void addChild( ISceneNode* node ) = 0;
+	virtual ISceneNode* getChild( const std::string& name ) = 0;
+	virtual void removeChild( ISceneNode* node ) = 0;
+	virtual void removeAllChildren() = 0;
+	virtual glmd::uint32 getNumChildren() = 0;
+	
+	virtual std::string getName() = 0;
 
 	virtual glm::vec3& getPosition() = 0;
 	virtual void setPosition(glm::vec3& newPos) = 0;
@@ -48,9 +57,8 @@ public:
 	virtual void rotate(glm::vec3 axis, glm::detail::float32 radians) = 0;
 	virtual void rotate(glm::quat quaternion) = 0;
 	
-	virtual bool isActive() = 0;	
 	virtual void attach(models::IModel* model) = 0;
-	virtual void setVisible(bool isVisible) = 0;
+	virtual void detach(models::IModel* model) = 0;
 	virtual void render() = 0;
 
 };

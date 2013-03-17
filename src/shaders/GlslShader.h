@@ -20,18 +20,20 @@ namespace shaders {
 
 class GlslShader : public IShader {	
 public:
+	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
+
 	GlslShader(std::string source, Type type);
-	GlslShader(std::string name, std::string source, Type type, BindingsMap bindings);
+	GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings);
 	virtual ~GlslShader();
 	
 	virtual void bind();
 	virtual IShader::Type getType();
 	virtual GLuint getGLShaderId();
+	virtual IShader::BindingsMap getBindings();
 	
 	void compile();
 	
 	std::string getName();
-	GlslShader::BindingsMap getBindings();
 
 private:
 	GLuint shaderId_;

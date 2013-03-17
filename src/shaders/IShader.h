@@ -8,6 +8,10 @@
 #ifndef ISHADER_H_
 #define ISHADER_H_
 
+#include <string>
+#include <vector>
+#include <map>
+
 #include <GL/glew.h>
 
 namespace oglre {
@@ -15,13 +19,7 @@ namespace oglre {
 namespace shaders {
 
 class IShader {
-public:
-	typedef std::vector< std::pair<std::string, std::string> > BindingsMap;
-
-	virtual ~IShader() {
-	}
-	;
-	
+public:	
 	enum Type {
 		TYPE_NONE = 0,
 		TYPE_VERTEX,
@@ -43,9 +41,37 @@ public:
 		return TYPE_NONE;
 	}
 	
+	enum BindType {
+		BIND_TYPE_NONE = 0,
+		BIND_TYPE_LIGHT,
+		BIND_TYPE_MATERIAL,
+		BIND_TYPE_COLOR
+	};
+	
+	static BindType parseBindType(std::string type) {
+		if (type.compare("Light") == 0)
+			return BIND_TYPE_LIGHT;
+		else if (type.compare("Material") == 0)
+			return BIND_TYPE_MATERIAL;
+		else if (type.compare("Color") == 0)
+			return BIND_TYPE_COLOR;
+			
+		return BIND_TYPE_NONE;
+	}
+	
+	typedef std::pair<BindType, std::string> Binding;
+	typedef std::vector< Binding > BindingsMap;
+	
+	
+	virtual ~IShader() {
+	}
+	;
+	
+	
 	virtual void bind() = 0;
 	virtual Type getType() = 0;
 	virtual GLuint getGLShaderId() = 0;
+	virtual BindingsMap getBindings() = 0;
 };
 
 }

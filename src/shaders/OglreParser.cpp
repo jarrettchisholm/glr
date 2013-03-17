@@ -27,7 +27,7 @@ template <typename It>
 void OglreParser::parse(It f, It l) {
 	grammar<It> p;
 
-    Map mappings;
+    StringBindingsMap mappings;
     bool ok = qi::phrase_parse(f, l, p, qi::blank, mappings);
 
     if (ok) {
@@ -40,7 +40,7 @@ void OglreParser::parse(It f, It l) {
         std::cerr << "warning: remaing unparsed: '" << std::string(f,l) << "'\n";
 }
 
-OglreParser::Map OglreParser::getBindings() {
+OglreParser::StringBindingsMap OglreParser::getBindings() {
 	return bindings_;
 }
 
