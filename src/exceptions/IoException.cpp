@@ -7,7 +7,7 @@
 
 #include "IoException.h"
 
-namespace oglre {
+namespace glr {
 
 namespace exception {
 
@@ -20,4 +20,4 @@ IoException::~IoException() throw() {
 
 } /* namespace exception */
 
-} /* namespace oglre */
+} /* namespace glr */

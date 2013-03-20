@@ -15,7 +15,7 @@
 #include "../common/utilities/ImageLoader.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

@@ -16,7 +16,7 @@
 
 #include <glm/glm.hpp>
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

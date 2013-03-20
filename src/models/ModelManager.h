@@ -23,7 +23,7 @@
 
 #include "Model.h"
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

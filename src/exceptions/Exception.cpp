@@ -7,7 +7,7 @@
 
 #include "Exception.h"
 
-namespace oglre {
+namespace glr {
 
 namespace exception {
 

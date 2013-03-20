@@ -13,7 +13,7 @@
 #include "CameraSceneNode.h"
 #include "shaders/ShaderProgramManager.h"
 
-namespace oglre {
+namespace glr {
 
 class DefaultSceneManager: public ISceneManager {
 public:

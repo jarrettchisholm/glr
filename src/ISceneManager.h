@@ -14,7 +14,7 @@
 #include "models/IModelManager.h"
 #include "shaders/IShaderProgramManager.h"
 
-namespace oglre {
+namespace glr {
 
 class ISceneManager {
 public:	

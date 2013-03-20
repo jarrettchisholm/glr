@@ -8,7 +8,7 @@
 
 #include "GlslShaderProgram.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

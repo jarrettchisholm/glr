@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace oglre {
+namespace glr {
 
 namespace io {
 

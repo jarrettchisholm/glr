@@ -3,12 +3,12 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
 namespace constants {
-	static const std::string SHADER_DIRECTORY			= std::string("/home/jarrett/projects/chisholmsoft/ice_engine/data/shaders/");
+	static const std::string SHADER_DIRECTORY			= std::string("/home/jarrett/projects/chisholmsoft/glr/data/shaders/");
 }
 
 }

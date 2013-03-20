@@ -14,7 +14,7 @@
 
 #include <GL/glew.h>
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

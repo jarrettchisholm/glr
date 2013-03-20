@@ -14,7 +14,7 @@
 
 #include "IShader.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

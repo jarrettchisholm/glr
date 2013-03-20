@@ -16,7 +16,7 @@
 
 #include "ISceneManager.h"
 
-namespace oglre {
+namespace glr {
 
 class DefaultSceneNode: public virtual ISceneNode {
 public:

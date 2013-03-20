@@ -10,7 +10,7 @@
 
 #include "ISceneNode.h"
 
-namespace oglre {
+namespace glr {
 
 class ICamera: public virtual ISceneNode {
 public:

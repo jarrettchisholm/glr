@@ -16,7 +16,7 @@
 #include "models/IModel.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace glmd = glm::detail;
 

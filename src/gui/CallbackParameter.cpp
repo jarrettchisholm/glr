@@ -7,7 +7,7 @@
 
 #include "CallbackParameter.h"
 
-namespace oglre {
+namespace glr {
 
 namespace gui {
 

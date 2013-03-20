@@ -17,7 +17,7 @@
 #error C++ compiler required.
 #endif
 
-namespace oglre {
+namespace glr {
 
 
 

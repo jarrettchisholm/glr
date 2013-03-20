@@ -4,7 +4,7 @@
 
 #type vertex
 
-#include <oglre>
+#include <glr>
 #include <light>
 #include <material>
 

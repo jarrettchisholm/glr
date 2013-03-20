@@ -1,20 +1,20 @@
 /*
- * OglrePreProcessor.cpp
+ * GlrPreProcessor.cpp
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
  */
 
 
-#include "OglrePreProcessor.h"
+#include "GlrPreProcessor.h"
 
 #include "ShaderData.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-OglrePreProcessor::OglrePreProcessor(std::string source) : CPreProcessor(source) {
+GlrPreProcessor::GlrPreProcessor(std::string source) : CPreProcessor(source) {
 	CPreProcessor::files_ = SHADER_DATA;
 }
 

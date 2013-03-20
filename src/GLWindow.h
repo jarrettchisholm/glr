@@ -26,7 +26,7 @@
 
 #include "shaders/ShaderProgramManager.h"
 
-namespace oglre {
+namespace glr {
 
 struct LightSource {
 	glm::vec4 ambient;

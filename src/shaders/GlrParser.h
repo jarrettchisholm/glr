@@ -1,13 +1,13 @@
 /*
- * OglreParser.h
+ * GlrParser.h
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
  */
 
 
-#ifndef OGLREPARSER_H
-#define OGLREPARSER_H
+#ifndef GLRPARSER_H
+#define GLRPARSER_H
 
 #define BOOST_SPIRIT_DEBUG
 #include <iostream>
@@ -20,18 +20,18 @@
 
 namespace qi = boost::spirit::qi;
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-class OglreParser {
+class GlrParser {
 	typedef std::vector< std::pair<std::string, std::string> > Map;
 
 public:
 	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
 
-	OglreParser(std::string source);
-	virtual ~OglreParser();
+	GlrParser(std::string source);
+	virtual ~GlrParser();
 	
 	void parse();
 	
@@ -161,4 +161,4 @@ private:
 
 }
 
-#endif /* OGLREPARSER_H */ 
+#endif /* GLRPARSER_H */ 

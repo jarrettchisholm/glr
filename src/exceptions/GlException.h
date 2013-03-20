@@ -10,18 +10,18 @@
 
 #include "Exception.h"
 
-namespace oglre {
+namespace glr {
 
 namespace exception {
 
 class GlException: public Exception {
 public:
-	GlException(const std::string message="Oglre GlException");
+	GlException(const std::string message="Glr GlException");
 	virtual ~GlException() throw();
 };
 
 } /* namespace exception */
 
-} /* namespace oglre */
+} /* namespace glr */
 
 #endif /* GLEXCEPTION_H_ */

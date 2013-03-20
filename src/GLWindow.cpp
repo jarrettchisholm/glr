@@ -22,7 +22,7 @@
 #include "shaders/IShader.h"
 #include "exceptions/GlException.h"
 
-namespace oglre {
+namespace glr {
 
 GLWindow::GLWindow(int width, int height, std::string title) {
 	sf::ContextSettings settings;
@@ -155,7 +155,7 @@ void GLWindow::endRender() {
 void GLWindow::render() {
 	beginRender();
 	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
-	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("oglre_basic");
+	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
 
 	shader->bind();
 

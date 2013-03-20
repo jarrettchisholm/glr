@@ -1,13 +1,13 @@
 /*
- * OglreShader.h
+ * GlrShader.h
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
  */
 
 
-#ifndef OGLRESHADER_H
-#define OGLRESHADER_H
+#ifndef GLRSHADER_H
+#define GLRSHADER_H
 
 #include <vector>
 #include <map>
@@ -15,16 +15,16 @@
 
 #include "IShader.h"
 
-#include "OglreParser.h"
+#include "GlrParser.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-class OglreShader {
+class GlrShader {
 public:
-	OglreShader(std::string source);
-	virtual ~OglreShader();
+	GlrShader(std::string source);
+	virtual ~GlrShader();
 	
 	void process(std::map< std::string, std::string > defineMap);
 	
@@ -32,7 +32,7 @@ public:
 	IShader::Type getType();
 	std::string getProcessedSource();
 	std::string getSource();
-	OglreParser::StringBindingsMap getBindings();
+	GlrParser::StringBindingsMap getBindings();
 	
 	bool containsPreProcessorCommands();
 	
@@ -43,10 +43,10 @@ private:
 	std::string source_;
 	std::string processedSource_;
 	
-	OglreParser::StringBindingsMap bindings_;
+	GlrParser::StringBindingsMap bindings_;
 };
 
 }
 
 }
-#endif /* OGLRESHADER_H */ 
+#endif /* GLRSHADER_H */ 

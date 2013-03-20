@@ -25,7 +25,7 @@
 #include <boost/wave/cpplexer/cpp_lex_token.hpp>    // token class
 #include <boost/wave/cpplexer/cpp_lex_iterator.hpp> // lexer class
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

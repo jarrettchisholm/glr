@@ -1,4 +1,4 @@
-#name oglre_basic
+#name glr_basic
 #type program
 
 #include "shader.vert"

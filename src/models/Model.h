@@ -23,7 +23,7 @@
 #include "Material.h"
 #include "Animation.h"
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

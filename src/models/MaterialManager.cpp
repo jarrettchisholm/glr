@@ -12,7 +12,7 @@
 #include "MaterialManager.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

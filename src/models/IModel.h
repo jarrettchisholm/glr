@@ -8,7 +8,7 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

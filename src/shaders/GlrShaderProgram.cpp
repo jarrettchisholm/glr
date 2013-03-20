@@ -1,5 +1,5 @@
 /*
- * OglreShaderProgram.cpp
+ * GlrShaderProgram.cpp
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
@@ -7,28 +7,28 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "OglreShaderProgram.h"
+#include "GlrShaderProgram.h"
 
-#include "OglrePreProcessor.h"
+#include "GlrPreProcessor.h"
 
 #include "../exceptions/GlException.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-OglreShaderProgram::OglreShaderProgram(std::string source) : source_(source) {
+GlrShaderProgram::GlrShaderProgram(std::string source) : source_(source) {
 }
 
 
-OglreShaderProgram::~OglreShaderProgram() {	
+GlrShaderProgram::~GlrShaderProgram() {	
 }
 
-void OglreShaderProgram::process(std::map< std::string, std::shared_ptr<OglreShader> > oglreShaderMap) {	
+void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap) {	
 	BOOST_LOG_TRIVIAL(debug) << "Processing shader program.";
 	
 	// Pre-Process shaders
-	OglrePreProcessor pp(source_);
+	GlrPreProcessor pp(source_);
 	
 	pp.process();
 	
@@ -40,17 +40,17 @@ void OglreShaderProgram::process(std::map< std::string, std::shared_ptr<OglreSha
 	BOOST_LOG_TRIVIAL(debug) << "Initializing shaders: " << shaders.size();
 	
 	for ( CPreProcessor::ShaderData s : shaders) {
-		if ( oglreShaderMap.find(s.name) != oglreShaderMap.end() ) {
+		if ( glrShaderMap.find(s.name) != glrShaderMap.end() ) {
 			// Found shader
-			//shaders_[s.name] = OglreShader( s.name, oglreShaderMap[s.name].getSource(), s.defineMap );
-			//oglreShaderMap[s.name].setType();
+			//shaders_[s.name] = GlrShader( s.name, glrShaderMap[s.name].getSource(), s.defineMap );
+			//glrShaderMap[s.name].setType();
 			
-			shaders_.push_back( oglreShaderMap[s.name] );
+			shaders_.push_back( glrShaderMap[s.name] );
 			shaders_.back()->process( s.defineMap );
 		} else {
 			BOOST_LOG_TRIVIAL(error) << "Name requested: " << s.name;
 			BOOST_LOG_TRIVIAL(error) << "Names available: ";
-			for ( auto s : oglreShaderMap) {
+			for ( auto s : glrShaderMap) {
 				BOOST_LOG_TRIVIAL(error) << s.first;
 			}
 			std::string msg("Could not find shader.");
@@ -60,11 +60,11 @@ void OglreShaderProgram::process(std::map< std::string, std::shared_ptr<OglreSha
 	}
 }
 
-std::string OglreShaderProgram::getName() {
+std::string GlrShaderProgram::getName() {
 	return name_;
 }
 
-std::vector< std::shared_ptr<OglreShader> > OglreShaderProgram::getShaders() {
+std::vector< std::shared_ptr<GlrShader> > GlrShaderProgram::getShaders() {
 	return shaders_;
 }
 

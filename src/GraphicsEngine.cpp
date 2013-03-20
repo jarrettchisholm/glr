@@ -11,7 +11,7 @@
 
 #include "GLWindow.h"
 
-namespace oglre {
+namespace glr {
 
 
 

@@ -19,7 +19,7 @@
 
 #define DEBUG_PAINT true
 
-namespace oglre {
+namespace glr {
 
 namespace gui {
 

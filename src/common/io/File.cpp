@@ -12,7 +12,7 @@
 #include <fstream>
 #include <streambuf>
 
-namespace oglre {
+namespace glr {
 
 namespace io {
 

@@ -16,7 +16,7 @@
 #include "ISceneNode.h"
 
 
-namespace oglre {
+namespace glr {
 
 class ILight: public virtual ISceneNode {
 public:

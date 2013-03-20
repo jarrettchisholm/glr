@@ -15,7 +15,7 @@
 
 #include "../exceptions/GlException.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

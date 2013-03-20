@@ -12,7 +12,7 @@
 
 #include "IGUIComponent.h"
 
-namespace oglre {
+namespace glr {
 
 namespace gui {
 

@@ -1,5 +1,5 @@
 /*
- * OglreShader.cpp
+ * GlrShader.cpp
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
@@ -8,29 +8,29 @@
 #include <boost/log/trivial.hpp>
 #include <boost/regex.hpp>
 
-#include "OglreShader.h"
+#include "GlrShader.h"
 
-#include "OglrePreProcessor.h"
+#include "GlrPreProcessor.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-OglreShader::OglreShader(std::string source) : source_(source) {
+GlrShader::GlrShader(std::string source) : source_(source) {
 }
 
 
-OglreShader::~OglreShader() {	
+GlrShader::~GlrShader() {	
 }
 
-void OglreShader::process(std::map< std::string, std::string > defineMap) {
+void GlrShader::process(std::map< std::string, std::string > defineMap) {
 	BOOST_LOG_TRIVIAL(debug) << "Processing shader.";
-	OglrePreProcessor pp(source_);
+	GlrPreProcessor pp(source_);
 	pp.process(defineMap);
 	processedSource_ = pp.getProcessedSource();
 	type_ = IShader::parseType( pp.getType() );
 	
-	OglreParser op(processedSource_);
+	GlrParser op(processedSource_);
 	op.parse();
 	bindings_ = op.getBindings();
 	
@@ -40,27 +40,27 @@ void OglreShader::process(std::map< std::string, std::string > defineMap) {
     std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
-std::string OglreShader::getName() {
+std::string GlrShader::getName() {
 	return name_;
 }
 
-IShader::Type OglreShader::getType() {
+IShader::Type GlrShader::getType() {
 	return type_;
 }
 
-std::string OglreShader::getProcessedSource() {
+std::string GlrShader::getProcessedSource() {
 	return processedSource_;
 }
 
-std::string OglreShader::getSource() {
+std::string GlrShader::getSource() {
 	return source_;
 }
 
-OglreParser::StringBindingsMap OglreShader::getBindings() {
+GlrParser::StringBindingsMap GlrShader::getBindings() {
 	return bindings_;
 }
 
-bool OglreShader::containsPreProcessorCommands() {
+bool GlrShader::containsPreProcessorCommands() {
 	// TODO: implement
 	return true;
 }

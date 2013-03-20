@@ -1,30 +1,30 @@
 /*
- * OglreParser.cpp
+ * GlrParser.cpp
  * 
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * 
  */
 
 
-#include "OglreParser.h"
+#include "GlrParser.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
-OglreParser::OglreParser( std::string source ) : source_(source) {
+GlrParser::GlrParser( std::string source ) : source_(source) {
 }
 
 
-OglreParser::~OglreParser() {
+GlrParser::~GlrParser() {
 }
 
-void OglreParser::parse() {
+void GlrParser::parse() {
 	parse(source_.begin(), source_.end());
 }
 
 template <typename It>
-void OglreParser::parse(It f, It l) {
+void GlrParser::parse(It f, It l) {
 	grammar<It> p;
 
     StringBindingsMap mappings;
@@ -40,7 +40,7 @@ void OglreParser::parse(It f, It l) {
         std::cerr << "warning: remaing unparsed: '" << std::string(f,l) << "'\n";
 }
 
-OglreParser::StringBindingsMap OglreParser::getBindings() {
+GlrParser::StringBindingsMap GlrParser::getBindings() {
 	return bindings_;
 }
 

@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace oglre {
+namespace glr {
 
 namespace gui {
 

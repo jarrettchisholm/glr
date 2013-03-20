@@ -8,7 +8,7 @@
 #include "Texture.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

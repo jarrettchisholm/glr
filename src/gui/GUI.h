@@ -16,7 +16,7 @@
 #include "IGUIComponent.h"
 #include "HtmlGuiComponent.h"
 
-namespace oglre {
+namespace glr {
 
 namespace gui {
 

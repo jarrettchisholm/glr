@@ -22,7 +22,7 @@
 
 #include <iostream>
 
-namespace oglre {
+namespace glr {
 
 CameraSceneNode::CameraSceneNode() : DefaultSceneNode() {
 	setLookAt( 1, 1, 1 );

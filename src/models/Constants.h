@@ -3,7 +3,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

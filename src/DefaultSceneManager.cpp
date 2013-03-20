@@ -17,7 +17,7 @@
 #include "models/ModelManager.h"
 #include "exceptions/Exception.h"
 
-namespace oglre {
+namespace glr {
 
 DefaultSceneManager::DefaultSceneManager(shaders::ShaderProgramManager* shaderProgramManager) : shaderProgramManager_(shaderProgramManager) {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));

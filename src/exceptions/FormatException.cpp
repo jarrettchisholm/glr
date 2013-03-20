@@ -7,7 +7,7 @@
 
 #include "FormatException.h"
 
-namespace oglre {
+namespace glr {
 
 namespace exception {
 
@@ -19,4 +19,4 @@ FormatException::~FormatException() throw() {
 
 } /* namespace exception */
 
-} /* namespace oglre */
+} /* namespace glr */

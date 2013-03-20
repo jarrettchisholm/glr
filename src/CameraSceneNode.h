@@ -16,7 +16,7 @@
 
 //#include "IInputListener.h"
 
-namespace oglre {
+namespace glr {
 
 class CameraSceneNode: public virtual ICamera, public DefaultSceneNode {
 public:

@@ -19,7 +19,7 @@
 
 #include "Mesh.h"
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

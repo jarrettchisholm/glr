@@ -16,7 +16,7 @@
 
 #include "GlslShader.h"
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

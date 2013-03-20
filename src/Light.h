@@ -14,7 +14,7 @@
 #include "ILight.h"
 #include "DefaultSceneNode.h"
 
-namespace oglre {
+namespace glr {
 
 class Light: public virtual ILight, public DefaultSceneNode {
 public:

@@ -22,7 +22,7 @@
 
 #include "common/math/Math.h"
 
-namespace oglre {
+namespace glr {
 
 
 Light::Light() : DefaultSceneNode() {

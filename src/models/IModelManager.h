@@ -12,7 +12,7 @@
 
 #include "IModel.h"
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

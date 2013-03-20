@@ -42,7 +42,7 @@
 namespace wave = boost::wave;
 namespace alg = boost::algorithm;
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 

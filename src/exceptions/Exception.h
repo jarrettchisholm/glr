@@ -11,13 +11,13 @@
 #include <string>
 #include <exception>
 
-namespace oglre {
+namespace glr {
 
 namespace exception {
 
 class Exception : public std::exception {
 public:
-	Exception(const std::string message="Oglre Exception");
+	Exception(const std::string message="Glr Exception");
 	virtual ~Exception() throw();
 	
 	const char* what() throw();

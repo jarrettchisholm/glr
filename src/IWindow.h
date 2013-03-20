@@ -15,7 +15,7 @@
 
 #include "gui/IGUI.h"
 
-namespace oglre {
+namespace glr {
 
 class IWindow {
 public:

@@ -21,7 +21,7 @@
 //#include "../../vmath/Vector3f.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace models {
 

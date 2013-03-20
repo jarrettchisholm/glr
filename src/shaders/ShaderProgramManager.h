@@ -17,12 +17,12 @@
 #include "IShaderProgramManager.h"
 
 #include "GlslShaderProgram.h"
-#include "OglreShaderProgram.h"
+#include "GlrShaderProgram.h"
 #include "GlslShader.h"
-#include "OglreShader.h"
+#include "GlrShader.h"
 
 
-namespace oglre {
+namespace glr {
 
 namespace shaders {
 
@@ -46,12 +46,12 @@ public:
 	void load(std::map<std::string, std::string> dataMap);
 
 private:	
-	std::map< std::string, std::shared_ptr<OglreShaderProgram> >	oglreProgramMap_;
-	std::map< std::string, std::shared_ptr<OglreShader> >			oglreShaderMap_;
+	std::map< std::string, std::shared_ptr<GlrShaderProgram> >	glrProgramMap_;
+	std::map< std::string, std::shared_ptr<GlrShader> >			glrShaderMap_;
 	std::map< std::string, std::shared_ptr<GlslShaderProgram> >		glslProgramMap_;
 	std::map< std::string, std::shared_ptr<GlslShader> >			glslShaderMap_;
 	
-	std::unique_ptr<GlslShaderProgram> convertOglreProgramToGlslProgram( OglreShaderProgram* oglreProgram );
+	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram( GlrShaderProgram* glrProgram );
 	
 	bool isShader( std::string s );
 	bool isProgram( std::string s );

@@ -1,12 +1,12 @@
 /*
- * OGLREInclude.h
+ * GLRInclude.h
  *
  *  Created on: 2011-05-07
  *      Author: jarrett
  */
 
-#ifndef OGLREINCLUDE_H_
-#define OGLREINCLUDE_H_
+#ifndef GLRINCLUDE_H_
+#define GLRINCLUDE_H_
 
 #if HAVE_CONFIG_H
 #  include <config.h>
@@ -26,4 +26,4 @@
 #include "gui/IGUI.h"
 #include "gui/IGUIComponent.h"
 
-#endif /* OGLREINCLUDE_H_ */
+#endif /* GLRINCLUDE_H_ */
