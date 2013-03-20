@@ -11,6 +11,7 @@
 #include <string>
 
 #include "ISceneManager.h"
+#include "Configure.h"
 
 #include "gui/IGUI.h"
 
@@ -21,15 +22,12 @@ public:
 	virtual ~IWindow() {
 	}
 	;
-	
-#if defined(_WIN32)
-    // Windows
+
+#if defined(OS_LINUX)
+	typedef unsigned long WindowHandle;
+#elif defined(OS_WINDOWS)
     typedef HWND* WindowHandle;
-#elif defined(linux) || defined(freebsd)
-    // Unix - X11
-    typedef unsigned long WindowHandle;
-#elif defined(__APPLE__)
-    // Mac OS X - Cocoa
+#elif defined(OS_MAC)
     typedef void* WindowHandle;
 #endif
 

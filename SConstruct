@@ -107,11 +107,10 @@ env = Environment(ENV = os.environ, CCFLAGS=[])
 libraries = [
 'GL',
 'GLU',
-'GLEW',
+'liblibberkelium_d',
 'Xi',
 'sfml-window',
 'assimp',
-'jsoncpp',
 'boost_log', 
 'boost_date_time', 
 'boost_thread',
@@ -123,7 +122,7 @@ library_paths = ['../lwis/build']
 
 # Set our g++ compiler flags
 cpp_flags = [
-'-std=gnu++0x',
+'-std=c++11',
 '-Wall',
 #'-D_GLIBCXX_DEBUG'
 ]
