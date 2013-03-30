@@ -64,13 +64,6 @@ public:
 	
 	virtual gui::IGUI* getHtmlGui();
 	
-	void DrawAQuad();
-	void LoadAQuad();
-	
-	void testBindingLights(shaders::IShaderProgram* shader);
-	GLuint light_ubo;
-	bool bound_light_ubo;
-	
 protected:
 	std::unique_ptr<DefaultSceneManager> sMgr_;
 	
@@ -80,14 +73,15 @@ private:
 	
 	glm::mat4 projectionMatrix_;
 	
+	std::map<std::string, std::vector<GLuint>> lightUbos_;
+	
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	
-	unsigned int vaoID[1]; // Our Vertex Array Object  
-  
-	unsigned int vboID[1]; // Our Vertex Buffer Object
 
 	void initialize();
-	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
+	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
+	void setupLightUbo(std::string name);
+	void bindUniformBufferObjects();
 };
 
 }
