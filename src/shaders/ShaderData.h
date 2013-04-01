@@ -96,7 +96,9 @@ void main() {
 	R"<STRING>(
 #version 150 core
 
+#ifndef NUM_LIGHTS
 #define NUM_LIGHTS 1
+#endif
 
 #type vertex
 
