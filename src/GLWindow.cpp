@@ -190,47 +190,28 @@ void GLWindow::bindUniformBufferObjects(shaders::IShaderProgram* shader) {
 	ls.position = glm::vec4(2.5f, 2.5f, 2.5f, 0.f);
 	ls.direction = glm::vec4(0.5f, 0.5f, 0.5f, 0.f);
 	
-	// char array of the variable names in my shader program
-	//const GLchar* names[] = {"ambient", "diffuse", "specular", "position", "direction"};
-	//GLint uniActive; // how many active variables are in my shader program
-	//GLint uniBlockBind, uniBlockSize;
-	
-	//GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
-	
-	/*
-	if (light_ubo < 0) {
-		glGenBuffers(1, &light_ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * 5, nullptr, GL_STREAM_DRAW);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
-	
-	glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
-    glBufferData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &ls.ambient[0]);
-    glBufferData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.diffuse[0]);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.specular[0]);
-    glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.position[0]);
-    glBufferData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), sizeof(glm::vec4), &ls.direction[0]);
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	*/
-	
-	if (!bound_light_ubo) {
-		// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
-		GLuint bindingPoint = 1;
-		
-		GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
-		glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
-		 
-		glGenBuffers(1, &light_ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
-		 
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(ls), &ls, GL_DYNAMIC_DRAW);
-		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, light_ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		bound_light_ubo = true;
-	} else {
-		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ls), &ls);
+	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+		if (bindingsMap_.find(it->second) == bindingsMap_.end()) {
+			// TESTING
+			if (it->first != shaders::IShader::BIND_TYPE_LIGHT)
+				continue;
+			
+			// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
+			GLuint bindingPoint = 1;
+			
+			GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), it->second.c_str());
+			glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
+			 
+			glGenBuffers(1, &bindingsMap_[it->second]);
+			glBindBuffer(GL_UNIFORM_BUFFER, bindingsMap_[it->second]);
+			 
+			glBufferData(GL_UNIFORM_BUFFER, sizeof(ls), &ls, GL_DYNAMIC_DRAW);
+			glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, bindingsMap_[it->second]);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		} else {
+			glBindBuffer(GL_UNIFORM_BUFFER, bindingsMap_[it->second]);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ls), &ls);
+		}
 	}
 	
 	// Get uniform variable locations

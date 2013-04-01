@@ -82,6 +82,8 @@ private:
 	
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	
+	std::map<std::string, GLuint> bindingsMap_;
+	
 	unsigned int vaoID[1]; // Our Vertex Array Object  
   
 	unsigned int vboID[1]; // Our Vertex Buffer Object
