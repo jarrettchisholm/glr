@@ -44,7 +44,8 @@ public:
 	void endRender();
 	virtual void render();
 	
-	IWindow* createWindow();
+	IWindow* createWindow(std::string name = "Window", std::string title = "Untitled Window", glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
+			bool fullscreen = false, bool vsync = false);
 	ISceneManager* createSceneManager();
 	
 	IWindow* getWindow();
@@ -61,6 +62,7 @@ private:
 	std::map<std::string, std::vector<GLuint>> lightUbos_;
 	
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
+	std::unique_ptr< IWindow > window_;
 	
 	std::unique_ptr<gui::GUI> gui_;
 

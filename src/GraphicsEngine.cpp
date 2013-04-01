@@ -18,16 +18,10 @@ namespace glr {
 /**
  *
  */
-std::unique_ptr<IWindow> GraphicsEngine::createWindow(glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
-			bool fullscreen, bool vsync) {
-
-	std::unique_ptr<IWindow> window(new GLWindow(width, height, "SFML Test"));
+std::unique_ptr<GlrProgram> GraphicsEngine::createProgram() {
+	std::unique_ptr<GlrProgram> program(new GlrProgram());
 	
-	// VERY weird bug - I can call 'resize' all I want in the GLWindow class - the initial perspective
-	// doesn't seem to get set unless I call it OUTSIDE of the GLWindow class...wtf?
-	window->resize(width, height);
-	
-	return window;
+	return program;
 }
 
 }

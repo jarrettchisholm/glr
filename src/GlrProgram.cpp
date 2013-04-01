@@ -38,6 +38,26 @@ void GLWindow::initialize() {
 	//shaders::ShaderProgramManager::getInstance();
 }
 
+/**
+ *
+ */
+IWindow* GraphicsEngine::createWindow(std::string name, std::string title, 
+			glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
+			bool fullscreen, bool vsync) {
+
+	if (window_.get() != nullptr) {
+		// TODO: error
+	}
+
+	window_ = std::unique_ptr<IWindow>(new GLWindow(width, height, title));
+	
+	// VERY weird bug - I can call 'resize' all I want in the GLWindow class - the initial perspective
+	// doesn't seem to get set unless I call it OUTSIDE of the GLWindow class...wtf?
+	window_->resize(width, height);
+	
+	return window_.get();
+}
+
 void GLWindow::beginRender() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();

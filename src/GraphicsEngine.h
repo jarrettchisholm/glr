@@ -10,7 +10,7 @@
 
 #include <memory>
 
-#include "IWindow.h"
+#include "GlrProgram.h"
 
 // we require a C++ compiler.
 #if !defined(__cplusplus)
@@ -23,8 +23,7 @@ namespace glr {
 
 class GraphicsEngine {
 public:
-	static std::unique_ptr<IWindow> createWindow(glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
-			bool fullscreen = false, bool vsync = false);
+	static std::unique_ptr<GlrProgram> createProgram();
 
 private:
 	/**
