@@ -16,6 +16,19 @@ namespace shaders {
 
 static std::map<std::string, std::string> SHADER_DATA = {
 
+{"glr", std::string(
+	R"<STRING>(
+#type na
+
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 pvmMatrix;
+uniform mat3 normalMatrix;
+
+)<STRING>"
+)}	
+, 
 {"glr_basic.program", std::string(
 	R"<STRING>(
 #name glr_basic
@@ -27,11 +40,65 @@ static std::map<std::string, std::string> SHADER_DATA = {
 )<STRING>"
 )}	
 , 
+{"light", std::string(
+	R"<STRING>(
+#type na
+
+struct LightSource {
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	vec4 position;
+	vec4 direction;
+};
+
+)<STRING>"
+)}	
+, 
+{"material", std::string(
+	R"<STRING>(
+#type na
+
+struct Material {
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	float shininess;
+};
+
+)<STRING>"
+)}	
+, 
+{"shader.frag", std::string(
+	R"<STRING>(
+#version 150 core
+
+#type fragment
+
+@bind texture0
+uniform sampler2D texture;
+
+in vec4 pass_Color;
+in vec2 textureCoord;
+
+void main() {	
+	vec4 out_Color = texture2D(texture, textureCoord);
+	
+	gl_FragColor = pass_Color;
+	
+	//gl_FragColor = out_Color;
+}
+
+)<STRING>"
+)}	
+, 
 {"shader.vert", std::string(
 	R"<STRING>(
 #version 150 core
 
+#ifndef NUM_LIGHTS
 #define NUM_LIGHTS 1
+#endif
 
 #type vertex
 
@@ -130,71 +197,6 @@ void main() {
 	//pass_Color = vec4((0.5 * normalDirection) + vec3(0.5), 1.0);
 	//pass_Color = ambient;
 }
-
-)<STRING>"
-)}	
-, 
-{"material", std::string(
-	R"<STRING>(
-#type na
-
-struct Material {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	float shininess;
-};
-
-)<STRING>"
-)}	
-, 
-{"light", std::string(
-	R"<STRING>(
-#type na
-
-struct LightSource {
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 position;
-	vec4 direction;
-};
-
-)<STRING>"
-)}	
-, 
-{"shader.frag", std::string(
-	R"<STRING>(
-#version 150 core
-
-#type fragment
-
-@bind texture0
-uniform sampler2D texture;
-
-in vec4 pass_Color;
-in vec2 textureCoord;
-
-void main() {	
-	vec4 out_Color = texture2D(texture, textureCoord);
-	
-	gl_FragColor = pass_Color;
-	
-	//gl_FragColor = out_Color;
-}
-
-)<STRING>"
-)}	
-, 
-{"glr", std::string(
-	R"<STRING>(
-#type na
-
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
-uniform mat4 pvmMatrix;
-uniform mat3 normalMatrix;
 
 )<STRING>"
 )}	
