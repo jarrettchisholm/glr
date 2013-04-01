@@ -167,13 +167,19 @@ void GLWindow::render() {
 
 void GLWindow::bindUniformBufferObjects() {
 	// Bind lights
-	std::vector<ILight*> lights = sMgr_->getLights();
-	for (auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it) {
-		glBindBuffer(GL_UNIFORM_BUFFER, it->second);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(lights), &lights);
+	const std::vector<LightData> lightData = sMgr_->getLightData();
+	
+	if (lightData.size() > 0) {
+		for (auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it) {
+			glBindBuffer(GL_UNIFORM_BUFFER, it->second);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+		}
 	}
 	
 	// TODO: bind other stuff (i.e. materials, etc)	
+	
+	// TODO: bind number of lights, etc (We'll want to let the GLSL shader know how many lights to
+	// iterate through - we don't want it to use garbage data
 
 	// Get uniform variable locations
 	int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix");
@@ -208,6 +214,7 @@ void GLWindow::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader)
 	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
 		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 		
+		// TODO: Make keywords like 'Lights' into some sort of contstant, enum, whatever...
 		switch (it->first) {
 			case "Lights":
 				if (lightUbos_.find(it->second) == lightUbos_.end())
