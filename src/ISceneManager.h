@@ -50,6 +50,8 @@ public:
 	
 	virtual models::IModelManager* getModelManager() = 0;
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() = 0;
+	
+	virtual const std::vector<LightData>& getLightData() = 0;
 };
 
 }

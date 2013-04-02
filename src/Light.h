@@ -27,11 +27,13 @@ public:
 	virtual void render();
 	
 	virtual void attach(models::IModel* model);
+	
+	virtual void setLightData(LightData data);
+	
+	virtual const LightData& getLightData();
 
 private:
-	glm::vec4 ambient_;
-	glm::vec4 diffuse_;
-	glm::vec4 specular_;
+	LightData lightData_;
 	
 	void initialize();
 };

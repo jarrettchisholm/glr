@@ -36,8 +36,8 @@ void GlrParser::parse(It f, It l) {
             std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
     }
 
-    if (f!=l)
-        std::cerr << "warning: remaing unparsed: '" << std::string(f,l) << "'\n";
+	//if (f!=l)
+	//	std::cerr << "warning: remaing unparsed: '" << std::string(f,l) << "'\n";
 }
 
 GlrParser::StringBindingsMap GlrParser::getBindings() {

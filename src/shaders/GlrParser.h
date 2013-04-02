@@ -138,6 +138,8 @@ private:
 				combi = annot >> declaration;
 				start = *ignore >> combi % *ignore;
 				
+				// If debugging the parser, uncomment these lines - they are VERY useful for debugging
+				/*
 				BOOST_SPIRIT_DEBUG_NODE(start);
 				BOOST_SPIRIT_DEBUG_NODE(combi);
 				BOOST_SPIRIT_DEBUG_NODE(ignore);
@@ -145,6 +147,7 @@ private:
 				BOOST_SPIRIT_DEBUG_NODE(declaration);
 				BOOST_SPIRIT_DEBUG_NODE(annot);
 				BOOST_SPIRIT_DEBUG_NODE(ident);
+				*/
 			}
 			
 		private:

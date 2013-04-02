@@ -37,7 +37,7 @@ void GlrShader::process(std::map< std::string, std::string > defineMap) {
 	// Remove all '@bind' lines
 	const boost::regex e("@bind(\\s+)(\\S+)\\n+");
     processedSource_ = boost::regex_replace(processedSource_, e, "\n");
-    std::cout << "processedSource_: " << processedSource_ << std::endl;
+    //std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
 std::string GlrShader::getName() {

@@ -27,14 +27,6 @@
 
 namespace glr {
 
-struct LightSource {
-	glm::vec4 ambient;
-	glm::vec4 diffuse;
-	glm::vec4 specular;
-	glm::vec4 position;
-	glm::vec4 direction;
-};
-
 class GlrProgram {
 public:
 	GlrProgram();
@@ -46,29 +38,25 @@ public:
 	
 	IWindow* createWindow(std::string name = "Window", std::string title = "Untitled Window", glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
 			bool fullscreen = false, bool vsync = false);
-	ISceneManager* createSceneManager();
 	
 	IWindow* getWindow();
 	ISceneManager* getSceneManager();
 	gui::IGUI* getHtmlGui();
 	
-	void destroyWindow();
-	void destroySceneManager();
-	
-protected:
-	std::unique_ptr<DefaultSceneManager> sMgr_;
+	//void destroyWindow();
+	//void destroySceneManager();
 	
 private:
 	std::map<std::string, std::vector<GLuint>> lightUbos_;
 	
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
+	std::unique_ptr< DefaultSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
-	
-	std::unique_ptr<gui::GUI> gui_;
+	std::unique_ptr< gui::GUI > gui_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name);
-	void bindUniformBufferObjects();
+	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
 	void initialize();
 

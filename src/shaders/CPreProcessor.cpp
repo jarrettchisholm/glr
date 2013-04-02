@@ -70,7 +70,7 @@ void CPreProcessor::process( std::map< std::string, std::string > defineMap ) {
     // The preprocessing of the input stream is done on the fly behind the 
     // scenes during iteration over the context_type::iterator_type stream.
     //context_type ctx (source.begin(), source.end(), "lex_infile", hooks);
-    std::cout << "processing: " << std::endl << source_ << std::endl;
+    //std::cout << "processing: " << std::endl << source_ << std::endl;
     context_type ctx (source_.begin(), source_.end(), "lex_infile", *this);
 
     ctx.set_language(boost::wave::enable_long_long(ctx.get_language()));
@@ -170,7 +170,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 		}
 		
 		alg::trim(type_);
-		std::cout << type_ << std::endl;
+		//std::cout << type_ << std::endl;
 		
 		return true;
 	}
@@ -186,7 +186,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 		}
 		
 		alg::trim(name_);
-		std::cout << name_ << std::endl;
+		//std::cout << name_ << std::endl;
 		
 		return true;
 	}
@@ -212,7 +212,7 @@ template <typename ContextT, typename ContainerT>
 bool 
 CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typename ContextT::token_type const& act_token)
 {
-	std::cout << "in emit_line_directive" << std::endl;
+	//std::cout << "in emit_line_directive" << std::endl;
 	
 	// emit a #line directive showing the relative filename instead
 	typename ContextT::position_type pos = act_token.get_position();
@@ -245,7 +245,7 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typ
 	void CPreProcessor::opened_include_file(ContextT const& ctx, std::string const& relname, std::string const& filename, bool is_system_include)
 #endif
     {
-		std::cout << "opened_include_file: " << "relname: " << relname << " filename: " << filename << " is_system_include: " << is_system_include << std::endl;
+		//std::cout << "opened_include_file: " << "relname: " << relname << " filename: " << filename << " is_system_include: " << is_system_include << std::endl;
     }
 
 #if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
@@ -267,7 +267,7 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT &pending, typ
     template <typename ContextT>
     bool 
     CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next) {
-		std::cout << "found_include_directive:" << filename << std::endl;
+		//std::cout << "found_include_directive:" << filename << std::endl;
 		
 		boost::regex systemIncludeRegex("<.*>");
 	
@@ -292,7 +292,7 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string &file_path, bool i
 	//if (is_system) {
 		// Check if file is in the files map
 		if (CPreProcessor::files_.find(file_path) != CPreProcessor::files_.end()) {
-			std::cout << "locate_include_file: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
+			//std::cout << "locate_include_file: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 			native_name = file_path;
 			
 			return true;
@@ -307,7 +307,7 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string &file_path, bool i
         if (!fs::exists(native_path)) {
             //BOOST_WAVE_THROW_CTX(ctx, preprocess_exception, bad_include_file, 
             //    file_path.c_str(), ctx.get_main_pos());
-            std::cout << "error: doesn't exist" << std::endl;
+            //std::cout << "error: doesn't exist" << std::endl;
             return false;
         }
 

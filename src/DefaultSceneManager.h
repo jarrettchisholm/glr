@@ -48,6 +48,8 @@ public:
 	
 	virtual ISceneNode* getRootSceneNode();
 	
+	virtual const std::vector<LightData>& getLightData();
+	
 	ICamera* getActiveCameraSceneNode();
 	const glm::mat4& getModelMatrix();
 	
@@ -59,6 +61,8 @@ private:
 	
 	std::unique_ptr<models::IModelManager> modelManager_;
 	shaders::ShaderProgramManager* shaderProgramManager_;
+	
+	std::vector<LightData> lightData_;
 	
 	glm::mat4 modelMatrix_;
 };

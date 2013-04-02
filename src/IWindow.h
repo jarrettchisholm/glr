@@ -40,21 +40,12 @@ public:
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
 	virtual glm::detail::int32 handleEvents() = 0;
 	virtual void render() = 0;
-	virtual bool blah() = 0;
 	
 	virtual glm::detail::uint32 getWidth() = 0;
 	virtual glm::detail::uint32 getHeight() = 0;
 	virtual glm::vec2 getPosition() = 0;
 	virtual glm::detail::uint32 getDepth() = 0;
-
-	virtual ISceneManager* getSceneManager() = 0;
-	
-	virtual gui::IGUI* getHtmlGui() = 0;
-
-protected:
-	glm::detail::int32 x_, y_;
-	glm::detail::uint32 width_, height_;
-	glm::detail::uint32 depth_;
+	virtual const glm::mat4& getProjectionMatrix() = 0;
 };
 
 }

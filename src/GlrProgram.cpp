@@ -13,6 +13,8 @@
 #include "shaders/IShader.h"
 #include "exceptions/GlException.h"
 
+#include "GlrProgram.h"
+
 #include "Window.h"
 
 namespace glr {
@@ -24,20 +26,7 @@ GlrProgram::GlrProgram() {
 GlrProgram::~GlrProgram() {
 }
 
-void GlrProgram::initialize() {
-	
-	// Initialize GLEW
-	glewExperimental=true; // Needed in core profile
-	if (glewInit() != GLEW_OK) {
-		std::string msg("Failed to initialize GLEW.");
-		BOOST_LOG_TRIVIAL(warning) << msg;
-		throw exception::GlException(msg);
-	}
-	
-	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
-	
-	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
-	
+void GlrProgram::initialize() {		
 	// load all of the shaders
 	//std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
 	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
@@ -56,7 +45,10 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 			bool fullscreen, bool vsync) {
 
 	if (window_.get() != nullptr) {
-		// TODO: error
+		std::stringstream msg;
+		msg << "Cannot create window - Window already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception(msg.str());
 	}
 
 	window_ = std::unique_ptr<IWindow>(new Window(width, height, title));
@@ -64,6 +56,19 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	// VERY weird bug - I can call 'resize' all I want in the Window class - the initial perspective
 	// doesn't seem to get set unless I call it OUTSIDE of the Window class...wtf?
 	window_->resize(width, height);
+	
+	// Initialize GLEW
+	glewExperimental=true; // Needed in core profile
+	if (glewInit() != GLEW_OK) {
+		std::string msg("Failed to initialize GLEW.");
+		BOOST_LOG_TRIVIAL(warning) << msg;
+		throw exception::GlException(msg);
+	}
+	
+	// initialize shader program manager and scene manager AFTER we create the window
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
+	
+	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
 	
 	return window_.get();
 }
@@ -75,7 +80,7 @@ void GlrProgram::beginRender() {
 
 void GlrProgram::endRender() {
 	// display any changes we've made
-	window_->display();
+	window_->render();
 }
 
 void GlrProgram::render() {
@@ -85,8 +90,8 @@ void GlrProgram::render() {
 
 	shader->bind();
 
-	setupUniformBufferObjects(shader);
-	bindUniformBufferObjects();
+	setupUniformBufferObjectBindings(shader);
+	bindUniformBufferObjects(shader);
 
 	sMgr_->drawAll();
 	
@@ -98,14 +103,17 @@ void GlrProgram::render() {
 	endRender();
 }
 
-void GlrProgram::bindUniformBufferObjects() {
+void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader) {
 	// Bind lights
 	const std::vector<LightData> lightData = sMgr_->getLightData();
 	
 	if (lightData.size() > 0) {
 		for (auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it) {
-			glBindBuffer(GL_UNIFORM_BUFFER, it->second);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+			std::vector<GLuint> ubos = it->second;
+			for( auto ubo : ubos ) {
+				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+			}
 		}
 	}
 	
@@ -122,6 +130,7 @@ void GlrProgram::bindUniformBufferObjects() {
 	int normalMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "normalMatrix");
 	
 	glm::mat4 modelMatrix = sMgr_->getModelMatrix();
+	glm::mat4 projectionMatrix = window_->getProjectionMatrix();
 	
 	ICamera* camera = sMgr_->getActiveCameraSceneNode();
 	if (camera != nullptr) {
@@ -129,14 +138,14 @@ void GlrProgram::bindUniformBufferObjects() {
 		// Send uniform variable values to the shader
 		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
 		
-		glm::mat4 pvmMatrix(projectionMatrix_ * viewMatrix * modelMatrix);
+		glm::mat4 pvmMatrix(projectionMatrix * viewMatrix * modelMatrix);
 		glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
 		
 		glm::mat3 normalMatrix = glm::inverse(glm::transpose( glm::mat3(viewMatrix * modelMatrix) ));
 		glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 	}
 	
-	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix_[0][0]);
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
 	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
 	
 }
@@ -149,7 +158,7 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 		
 		// TODO: Make keywords like 'Lights' into some sort of contstant, enum, whatever...
 		switch (it->first) {
-			case "Lights":
+			case shaders::IShader::BIND_TYPE_LIGHT:
 				if (lightUbos_.find(it->second) == lightUbos_.end())
 					setupLightUbo(it->second);
 				break;
@@ -196,18 +205,17 @@ ISceneManager* GlrProgram::getSceneManager() {
 }
 
 gui::IGUI* GlrProgram::getHtmlGui() {
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
-
-	int result = gui_->initialize();
-	
-	if (result < 0) {
-		//delete gui_;
-		// TODO: Should I delete the raw pointer?
-		BOOST_LOG_TRIVIAL(warning) << "GUI did not initialize successfully.";
-		return 0;		
+	if (gui_.get() != nullptr) {
+		return gui_.get();
 	}
 	
+	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
+	
 	return gui_.get();
+}
+
+IWindow* GlrProgram::getWindow() {
+	return window_.get();
 }
 
 }

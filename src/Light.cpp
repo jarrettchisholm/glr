@@ -24,7 +24,6 @@
 
 namespace glr {
 
-
 Light::Light() : DefaultSceneNode() {
 	setLookAt( 1, 1, 1 );
 	setPosition( 0, 0, 0 );
@@ -56,6 +55,14 @@ void Light::render() {
 */ 
 void Light::attach(models::IModel* model) {
 	
+}
+
+void Light::setLightData(LightData data) {
+	lightData_ = data;
+}
+
+const LightData& Light::getLightData() {
+	return lightData_;
 }
 
 }

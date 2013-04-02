@@ -118,9 +118,9 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 				
 				typedef typename IterContextT::iterator_type iterator_type;
 				
-				std::cout << "init_iterators: " << iter_ctx.filename << std::endl;
+				//std::cout << "init_iterators: " << iter_ctx.filename << std::endl;
 				
-				std::streambuf* buffer = nullptr;
+				//std::streambuf* buffer = nullptr;
 				
 				const char* cString = iter_ctx.filename.c_str();
 				
@@ -136,7 +136,7 @@ class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
 					if (!instream.is_open()) {
 						//BOOST_WAVE_THROW_CTX(iter_ctx.ctx, wave::preprocess_exception,
 						//	wave::bad_include_file, iter_ctx.filename.c_str(), act_pos);
-						std::cout << "error: not open" << std::endl;
+						//std::cout << "error: not open" << std::endl;
 						return;
 					}
 					instream.unsetf(std::ios::skipws);

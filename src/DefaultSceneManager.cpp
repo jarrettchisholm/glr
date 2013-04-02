@@ -23,6 +23,15 @@ DefaultSceneManager::DefaultSceneManager(shaders::ShaderProgramManager* shaderPr
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 	modelManager_ = std::unique_ptr<models::IModelManager>( new models::ModelManager() );
 	rootSceneNode_ = std::shared_ptr<ISceneNode>( new DefaultSceneNode() );
+	
+	// TESTING ONLY
+	LightData ld;
+	ld.ambient = glm::vec4(0.5, 0.5, 0.5, 1);
+	ld.diffuse = glm::vec4(0.5, 0.5, 0.5, 1);
+	ld.specular = glm::vec4(0.5, 0.5, 0.5, 1);
+	ld.position = glm::vec4(2, 2, 2, 1);
+	ld.direction = glm::vec4(0, 0, 0, 1);
+	lightData_.push_back(ld);
 }
 
 DefaultSceneManager::~DefaultSceneManager() {
@@ -124,6 +133,11 @@ ILight* DefaultSceneManager::getLight( const std::string& name ) {
 	}
 	
 	return lights_[name].get();
+}
+
+const std::vector<LightData>& DefaultSceneManager::getLightData() {
+	// TODO: implement
+	return lightData_;
 }
 
 void DefaultSceneManager::destroySceneNode( const std::string& name ) {

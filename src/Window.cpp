@@ -56,6 +56,10 @@ IWindow::InternalWindow Window::getInternalWindowPointer() {
 	return window_.get();
 }
 
+void Window::render() {
+	window_->display();
+}
+
 void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 	/* prevent divide-by-zero */
 	if (height == 0)
@@ -135,6 +139,10 @@ glm::vec2 Window::getPosition() {
 
 glm::detail::uint32 Window::getDepth() {
 	return depth_;
+}
+
+const glm::mat4& Window::getProjectionMatrix() {
+	return projectionMatrix_;
 }
 
 }

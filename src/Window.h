@@ -30,14 +30,20 @@ public:
 
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height);
 	virtual void destroy();
+	virtual void render();
 	glm::detail::int32 handleEvents();
 
 	virtual glm::detail::uint32 getWidth();
 	virtual glm::detail::uint32 getHeight();
 	virtual glm::vec2 getPosition();
 	virtual glm::detail::uint32 getDepth();
+	virtual const glm::mat4& getProjectionMatrix();
 		
 private:
+	glm::detail::int32 x_, y_;
+	glm::detail::uint32 width_, height_;
+	glm::detail::uint32 depth_;
+
 	std::unique_ptr<sf::Window> window_;
 	
 	glm::mat4 projectionMatrix_;

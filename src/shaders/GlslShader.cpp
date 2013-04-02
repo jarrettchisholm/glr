@@ -73,7 +73,7 @@ void GlslShader::compile() {
 			throw exception::GlException(msg);
 	}
 	
-	BOOST_LOG_TRIVIAL(debug) << "Shader is a of type '" << type_ << "'.";
+	BOOST_LOG_TRIVIAL(debug) << "Shader is of type '" << type_ << "'.";
 	
 	shaderId_ = glCreateShader(shaderType);
 	

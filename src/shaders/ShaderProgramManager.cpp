@@ -118,7 +118,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap) {
 			glrProgramMap_[entry.first] = std::shared_ptr<GlrShaderProgram>( new GlrShaderProgram(entry.second) );
 		} else {
 			// Error
-			BOOST_LOG_TRIVIAL(error) << "ERROR loading shaders and shader programs";
+			BOOST_LOG_TRIVIAL(error) << "ERROR loading shaders and shader programs.";
+			// TODO: throw exception
 		}
 	}
 	
