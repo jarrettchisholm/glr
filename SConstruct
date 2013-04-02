@@ -1,4 +1,4 @@
-# IceEngine SConstruct file
+# Graphics Language Renderer (glr) SConstruct file
 
 import os, sys
 import glob
