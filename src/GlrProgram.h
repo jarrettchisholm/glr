@@ -55,7 +55,7 @@ private:
 	std::unique_ptr< gui::GUI > gui_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
-	void setupLightUbo(std::string name);
+	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);
 	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
 	void initialize();

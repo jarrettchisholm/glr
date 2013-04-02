@@ -156,11 +156,10 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
 		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 		
-		// TODO: Make keywords like 'Lights' into some sort of contstant, enum, whatever...
 		switch (it->first) {
 			case shaders::IShader::BIND_TYPE_LIGHT:
 				if (lightUbos_.find(it->second) == lightUbos_.end())
-					setupLightUbo(it->second);
+					setupLightUbo(it->second, shader);
 				break;
 			
 			// TODO: implement other bindings (materials, etc)
@@ -171,33 +170,27 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 	}
 }
 
-void GlrProgram::setupLightUbo(std::string name) {
-	// TODO: implement
+void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader) {
+	// TODO: Will we want to add multiple Ubos in a single shader for light sources
 	
-	//std::map<std::string, std::shared_ptr<ILight>> lights = sMgr_->getLights();
-	//for (auto it = lights.begin(); it != lights.end(); ++it) {
-	//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
-	//}
+	const std::vector<LightData> lightData = sMgr_->getLightData();
 	
-	//lightsUbos_[it->second] = 0;
+	lightUbos_[name] = std::vector<GLuint>();
+	lightUbos_[name].push_back(0);
 	
-	/*
-	if (!bound_light_ubo) {
-		// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
-		GLuint bindingPoint = 1;
-		
-		GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
-		glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
-		 
-		glGenBuffers(1, &light_ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, light_ubo);
-		 
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(ls), &ls, GL_DYNAMIC_DRAW);
-		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, light_ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		bound_light_ubo = true;
-	}
-	*/
+	// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
+	GLuint bindingPoint = 1;
+	
+	GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
+	glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
+	 
+	glGenBuffers(1, &lightUbos_[name][0]);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightUbos_[name][0]);
+	 
+	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[name][0]);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
 }
 
 ISceneManager* GlrProgram::getSceneManager() {
