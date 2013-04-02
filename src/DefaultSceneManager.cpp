@@ -26,11 +26,11 @@ DefaultSceneManager::DefaultSceneManager(shaders::ShaderProgramManager* shaderPr
 	
 	// TESTING ONLY
 	LightData ld;
-	ld.ambient = glm::vec4(0.5, 0.5, 0.5, 1);
-	ld.diffuse = glm::vec4(0.5, 0.5, 0.5, 1);
-	ld.specular = glm::vec4(0.5, 0.5, 0.5, 1);
-	ld.position = glm::vec4(2, 2, 2, 1);
-	ld.direction = glm::vec4(0, 0, 0, 1);
+	ld.ambient = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ld.diffuse = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ld.specular = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
+	ld.position = glm::vec4(2.5f, 2.5f, 2.5f, 0.f);
+	ld.direction = glm::vec4(0.5f, 0.5f, 0.5f, 0.f);
 	lightData_.push_back(ld);
 }
 
