@@ -1,5 +1,5 @@
 /*
- * GLWindow.h
+ * Window.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
@@ -20,10 +20,10 @@
 
 namespace glr {
 
-class GLWindow: public IWindow {
+class Window: public IWindow {
 public:
-	GLWindow(int width, int height, std::string title);
-	virtual ~GLWindow();
+	Window(int width, int height, std::string title);
+	virtual ~Window();
 
 	virtual WindowHandle getWindowHandle();
 	virtual IWindow::InternalWindow getInternalWindowPointer();

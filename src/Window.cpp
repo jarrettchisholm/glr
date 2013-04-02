@@ -1,5 +1,5 @@
 /*
- * GLWindow.cpp
+ * Window.cpp
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
@@ -16,11 +16,11 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "GLWindow.h"
+#include "Window.h"
 
 namespace glr {
 
-GLWindow::GLWindow(int width, int height, std::string title) {
+Window::Window(int width, int height, std::string title) {
 	sf::ContextSettings settings;
 	settings.depthBits = 32;
 	settings.stencilBits = 8;
@@ -35,14 +35,6 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 		settings
 	));
 	
-	// Initialize GLEW
-	glewExperimental=true; // Needed in core profile
-	if (glewInit() != GLEW_OK) {
-		std::string msg("Failed to initialize GLEW.");
-		BOOST_LOG_TRIVIAL(warning) << msg;
-		throw exception::GlException(msg);
-	}
-	
 	initialize();
 	//window_->setVerticalSyncEnabled(true);
 	//window_->setActive();
@@ -50,21 +42,21 @@ GLWindow::GLWindow(int width, int height, std::string title) {
 	//window_->setFramerateLimit(120);
 }
 
-GLWindow::~GLWindow() {
+Window::~Window() {
 	destroy();
 }
 
-IWindow::WindowHandle GLWindow::getWindowHandle() {
+IWindow::WindowHandle Window::getWindowHandle() {
 	sf::WindowHandle handle = window_->getSystemHandle();
 	
 	return (IWindow::WindowHandle) handle;
 }
 
-IWindow::InternalWindow GLWindow::getInternalWindowPointer() {
+IWindow::InternalWindow Window::getInternalWindowPointer() {
 	return window_.get();
 }
 
-void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
+void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 	/* prevent divide-by-zero */
 	if (height == 0)
 		height = 1;
@@ -77,7 +69,7 @@ void GLWindow::resize(glm::detail::uint32 width, glm::detail::uint32 height) {
 	projectionMatrix_ = glm::perspective(60.0f, (float)width / (float)height, 0.1f, 100.f);
 }
 
-void GLWindow::initialize() {
+void Window::initialize() {
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	//glClearDepth(1.0f);
@@ -100,10 +92,10 @@ void GLWindow::initialize() {
 	//shaders::ShaderProgramManager::getInstance();
 }
 
-void GLWindow::destroy() {
+void Window::destroy() {
 }
 
-glm::detail::int32 GLWindow::handleEvents() {
+glm::detail::int32 Window::handleEvents() {
 	sf::Event event;
 	
 	while (window_->pollEvent(event)) {		
@@ -127,21 +119,21 @@ glm::detail::int32 GLWindow::handleEvents() {
 	return 0;
 }
 
-glm::detail::uint32 GLWindow::getWidth() {
+glm::detail::uint32 Window::getWidth() {
 	return width_;
 }
 
-glm::detail::uint32 GLWindow::getHeight() {
+glm::detail::uint32 Window::getHeight() {
 	return height_;
 }
 
-glm::vec2 GLWindow::getPosition() {	
+glm::vec2 Window::getPosition() {	
 	const sf::Vector2i windowPosition = window_->getPosition();
 	
 	return glm::vec2( windowPosition.x, windowPosition.y );
 }
 
-glm::detail::uint32 GLWindow::getDepth() {
+glm::detail::uint32 Window::getDepth() {
 	return depth_;
 }
 

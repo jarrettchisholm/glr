@@ -13,17 +13,27 @@
 #include "shaders/IShader.h"
 #include "exceptions/GlException.h"
 
-#include "GLWindow.h"
+#include "Window.h"
 
 namespace glr {
 
 GlrProgram::GlrProgram() {
+	initialize();
 }
 
 GlrProgram::~GlrProgram() {
 }
 
-void GLWindow::initialize() {	
+void GlrProgram::initialize() {
+	
+	// Initialize GLEW
+	glewExperimental=true; // Needed in core profile
+	if (glewInit() != GLEW_OK) {
+		std::string msg("Failed to initialize GLEW.");
+		BOOST_LOG_TRIVIAL(warning) << msg;
+		throw exception::GlException(msg);
+	}
+	
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
 	
 	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
@@ -41,7 +51,7 @@ void GLWindow::initialize() {
 /**
  *
  */
-IWindow* GraphicsEngine::createWindow(std::string name, std::string title, 
+IWindow* GlrProgram::createWindow(std::string name, std::string title, 
 			glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
 			bool fullscreen, bool vsync) {
 
@@ -49,26 +59,26 @@ IWindow* GraphicsEngine::createWindow(std::string name, std::string title,
 		// TODO: error
 	}
 
-	window_ = std::unique_ptr<IWindow>(new GLWindow(width, height, title));
+	window_ = std::unique_ptr<IWindow>(new Window(width, height, title));
 	
-	// VERY weird bug - I can call 'resize' all I want in the GLWindow class - the initial perspective
-	// doesn't seem to get set unless I call it OUTSIDE of the GLWindow class...wtf?
+	// VERY weird bug - I can call 'resize' all I want in the Window class - the initial perspective
+	// doesn't seem to get set unless I call it OUTSIDE of the Window class...wtf?
 	window_->resize(width, height);
 	
 	return window_.get();
 }
 
-void GLWindow::beginRender() {
+void GlrProgram::beginRender() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 }
 
-void GLWindow::endRender() {
+void GlrProgram::endRender() {
 	// display any changes we've made
 	window_->display();
 }
 
-void GLWindow::render() {
+void GlrProgram::render() {
 	beginRender();
 	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
@@ -88,7 +98,7 @@ void GLWindow::render() {
 	endRender();
 }
 
-void GLWindow::bindUniformBufferObjects() {
+void GlrProgram::bindUniformBufferObjects() {
 	// Bind lights
 	const std::vector<LightData> lightData = sMgr_->getLightData();
 	
@@ -131,7 +141,7 @@ void GLWindow::bindUniformBufferObjects() {
 	
 }
 
-void GLWindow::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader) {
+void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader) {
 	shaders::IShader::BindingsMap bindings = shader->getBindings();
 	
 	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
@@ -152,7 +162,7 @@ void GLWindow::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader)
 	}
 }
 
-void GLWindow::setupLightUbo(std::string name) {
+void GlrProgram::setupLightUbo(std::string name) {
 	// TODO: implement
 	
 	//std::map<std::string, std::shared_ptr<ILight>> lights = sMgr_->getLights();
@@ -181,11 +191,11 @@ void GLWindow::setupLightUbo(std::string name) {
 	*/
 }
 
-ISceneManager* GLWindow::getSceneManager() {
+ISceneManager* GlrProgram::getSceneManager() {
 	return sMgr_.get();
 }
 
-gui::IGUI* GLWindow::getHtmlGui() {
+gui::IGUI* GlrProgram::getHtmlGui() {
 	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
 
 	int result = gui_->initialize();

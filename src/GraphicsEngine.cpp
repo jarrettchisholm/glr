@@ -9,7 +9,7 @@
 
 #include "GraphicsEngine.h"
 
-#include "GLWindow.h"
+#include "Window.h"
 
 namespace glr {
 
