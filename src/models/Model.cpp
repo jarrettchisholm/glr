@@ -274,7 +274,7 @@ void Model::loadTextures(const aiScene* scene)
 	for ( glm::detail::uint32 m = 0; m < scene->mNumMaterials; m++ )
 	{
 		aiReturn texFound = AI_SUCCESS;
-		aiString path;          // filename
+		aiString path;                                                          // filename
 
 		texFound = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE, 0, &path);
 

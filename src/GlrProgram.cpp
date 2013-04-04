@@ -61,7 +61,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	window_->resize(width, height);
 
 	// Initialize GLEW
-	glewExperimental = true;   // Needed in core profile
+	glewExperimental = true;                           // Needed in core profile
 	if ( glewInit() != GLEW_OK )
 	{
 		std::string msg("Failed to initialize GLEW.");

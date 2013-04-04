@@ -102,7 +102,7 @@ static std::map<std::string, std::string> SHADER_DATA = {
 # Parse our shader programs and create .h files out of them
 parseShadersIntoHeader()
 
-beautifyCode()
+#beautifyCode()
 
 
 # Tell SCons to create our build files in the 'build' directory
@@ -178,4 +178,4 @@ env.SetOption('num_jobs', 4)
 
 # Tell SCons the program to build
 #env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
-env.StaticLibrary('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
+env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)

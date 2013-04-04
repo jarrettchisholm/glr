@@ -162,7 +162,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 	wave::token_id id = wave::util::impl::skip_whitespace(it, line.end());
 
 	if ( id != wave::T_IDENTIFIER )
-		return false;               // nothing we could do
+		return false;                                                               // nothing we could do
 
 	if ((*it).get_value() == "version" || (*it).get_value() == "extension" )
 	{
@@ -243,7 +243,7 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT&pending, type
 
 	std::string comments = "// From file: ";
 	pending.push_back(result_type(wave::T_STRINGLIT, comments.c_str(), pos));
-	pos.set_column(column += (unsigned int)comments.size());        // account for comments
+	pos.set_column(column += (unsigned int)comments.size());                                // account for comments
 
 	std::string file("");
 	boost::filesystem::path filename(wave::util::create_path(ctx.get_current_filename().c_str()));
@@ -251,7 +251,7 @@ CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT&pending, type
 	file += boost::wave::util::impl::escape_lit(wave::util::native_file_string(filename)) + "";
 
 	pending.push_back(result_type(wave::T_STRINGLIT, file.c_str(), pos));
-	pos.set_column(column += (unsigned int)file.size());        // account for filename
+	pos.set_column(column += (unsigned int)file.size());                                // account for filename
 	pending.push_back(result_type(wave::T_GENERATEDNEWLINE, "\n", pos));
 
 	return true;
@@ -303,7 +303,7 @@ CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& f
 		shaderData_.push_back(ShaderData(editedFilename));
 	}
 
-	return false;        // ok to include this file
+	return false;                                // ok to include this file
 }
 #endif
 
@@ -325,7 +325,7 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is
 	{
 		//} else {
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
-			return false;   // could not locate file
+			return false;                                                                           // could not locate file
 
 		namespace fs = boost::filesystem;
 

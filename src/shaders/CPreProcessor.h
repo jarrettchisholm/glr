@@ -79,34 +79,34 @@ template <typename ContextT>
 bool
 locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name);
 
-			#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
+																																																																																																																																																																																																#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
 void opened_include_file(std::string const&relname, std::string const&filename,
 						 std::size_t /*include_depth*/, bool is_system_include);
-				#else
+																																																																																																																																																																																																																																																																#else
 template <typename ContextT>
 void opened_include_file(ContextT const& ctx, std::string const& relname,
 						 std::string const& filename, bool is_system_include);
-				#endif
+																																																																																																																																																																																																																																																																#endif
 
 
-				#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
+																																																																																																																																																																																																																																																																#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
 void returning_from_include_file();
-				#else
+																																																																																																																																																																																																																																																																#else
 template <typename ContextT>
 void returning_from_include_file(ContextT const& ctx);
-				#endif
+																																																																																																																																																																																																																																																																#endif
 
 
-				#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
+																																																																																																																																																																																																																																																																#if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
 // old signature
 void
 found_include_directive(std::string const& filename, bool include_next);
-				#else
+																																																																																																																																																																																																																																																																#else
 // new signature
 template <typename ContextT>
 bool
 found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next);
-				#endif
+																																																																																																																																																																																																																																																																#endif
 
 template <typename IterContextT>
 class inner {

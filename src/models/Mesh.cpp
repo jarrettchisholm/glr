@@ -84,7 +84,7 @@ Mesh::Mesh(const aiMesh* mesh)
 
 
 	// create our vbos
-	glGenBuffers(3, &vboIds_[0]);     // Using only '1' for now (otherwise causes seg fault)
+	glGenBuffers(3, &vboIds_[0]);                             // Using only '1' for now (otherwise causes seg fault)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
