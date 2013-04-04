@@ -7,17 +7,14 @@
  * and shader programs in the 'data/shaders/' directory.
  *
  */
- 
-#include <map> 
- 
+
+#include <map>
+
 namespace glr {
-
 namespace shaders {
-
 static std::map<std::string, std::string> SHADER_DATA = {
-
-{"glr_basic.program", std::string(
-	R"<STRING>(
+	{ "glr_basic.program", std::string(
+		  R"<STRING>(
 #name glr_basic
 #type program
 
@@ -25,10 +22,10 @@ static std::map<std::string, std::string> SHADER_DATA = {
 #include "shader.frag"
 
 )<STRING>"
-)}	
-, 
-{"shader.vert", std::string(
-	R"<STRING>(
+		  ) }
+	,
+	{ "shader.vert", std::string(
+		  R"<STRING>(
 #version 150 core
 
 #ifndef NUM_LIGHTS
@@ -53,15 +50,15 @@ out vec4 pass_Color;
 uniform sampler2D texture;
 
 @bind texture0
-uniform 
-sampler2D 
+uniform
+sampler2D
 texture2
 ;
 
 @bind Light
-layout(std140) 
-uniform 
-LightSources 
+layout(std140)
+uniform
+LightSources
 {
 	LightSource lightSources[ NUM_LIGHTS ];
 };
@@ -73,7 +70,7 @@ layout(std140) uniform LightSources2 {
 
 
 @bind Light2
-uniform LightSources3 
+uniform LightSources3
 {
 	LightSource lightSources3[ NUM_LIGHTS ];
 };
@@ -134,10 +131,10 @@ void main() {
 }
 
 )<STRING>"
-)}	
-, 
-{"material", std::string(
-	R"<STRING>(
+		  ) }
+	,
+	{ "material", std::string(
+		  R"<STRING>(
 #type na
 
 struct Material {
@@ -148,10 +145,10 @@ struct Material {
 };
 
 )<STRING>"
-)}	
-, 
-{"light", std::string(
-	R"<STRING>(
+		  ) }
+	,
+	{ "light", std::string(
+		  R"<STRING>(
 #type na
 
 struct LightSource {
@@ -163,10 +160,10 @@ struct LightSource {
 };
 
 )<STRING>"
-)}	
-, 
-{"shader.frag", std::string(
-	R"<STRING>(
+		  ) }
+	,
+	{ "shader.frag", std::string(
+		  R"<STRING>(
 #version 150 core
 
 #type fragment
@@ -186,10 +183,10 @@ void main() {
 }
 
 )<STRING>"
-)}	
-, 
-{"glr", std::string(
-	R"<STRING>(
+		  ) }
+	,
+	{ "glr", std::string(
+		  R"<STRING>(
 #type na
 
 uniform mat4 projectionMatrix;
@@ -199,10 +196,7 @@ uniform mat4 pvmMatrix;
 uniform mat3 normalMatrix;
 
 )<STRING>"
-)}	
-
+		  ) }
 };
-
 }
-
 }

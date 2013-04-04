@@ -23,46 +23,51 @@
 #include "common/math/Math.h"
 
 namespace glr {
-
-Light::Light() : DefaultSceneNode() {
-	setLookAt( 1, 1, 1 );
-	setPosition( 0, 0, 0 );
+Light::Light() : DefaultSceneNode()
+{
+	setLookAt(1, 1, 1);
+	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
 	initialize();
 }
 
-Light::Light(const std::string name) : DefaultSceneNode(name) {
-	setLookAt( 1, 1, 1 );
-	setPosition( 0, 0, 0 );
+Light::Light(const std::string name) : DefaultSceneNode(name)
+{
+	setLookAt(1, 1, 1);
+	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
 	initialize();
 }
 
-Light::~Light() {
+Light::~Light()
+{
 }
 
-void Light::initialize() {
+void Light::initialize()
+{
 	BOOST_LOG_TRIVIAL(debug) << "Light initialized.";
 }
 
-void Light::render() {
+void Light::render()
+{
 }
 
 /**
-* Does nothing in the Light.
-*/ 
-void Light::attach(models::IModel* model) {
-	
+ * Does nothing in the Light.
+ */
+void Light::attach(models::IModel* model)
+{
 }
 
-void Light::setLightData(LightData data) {
+void Light::setLightData(LightData data)
+{
 	lightData_ = data;
 }
 
-const LightData& Light::getLightData() {
+const LightData& Light::getLightData()
+{
 	return lightData_;
 }
-
 }

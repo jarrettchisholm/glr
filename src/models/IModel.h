@@ -9,26 +9,22 @@
 #define IMODEL_H_
 
 namespace glr {
-
 namespace models {
-
 class IModel {
 public:
-	IModel() {
-	}
-	;
-	
-	virtual ~IModel() {
-	}
-	;
-	
-	virtual void render() = 0;
-	
-
-};
-
+IModel()
+{
 }
+;
 
+virtual ~IModel()
+{
+}
+;
+
+virtual void render() = 0;
+};
+}
 }
 
 #endif /* IMODEL_H_ */

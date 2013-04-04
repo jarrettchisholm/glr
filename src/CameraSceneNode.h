@@ -17,44 +17,42 @@
 //#include "IInputListener.h"
 
 namespace glr {
-
-class CameraSceneNode: public virtual ICamera, public DefaultSceneNode {
+class CameraSceneNode : public virtual ICamera, public DefaultSceneNode {
 public:
-	CameraSceneNode();
-	CameraSceneNode(const std::string name);
-	virtual ~CameraSceneNode();
+CameraSceneNode();
+CameraSceneNode(const std::string name);
+virtual ~CameraSceneNode();
 
-	// inherited from ICamera
-	virtual bool isActive();
-	
-	virtual void render();
-	
-	virtual void attach(models::IModel* model);
+// inherited from ICamera
+virtual bool isActive();
 
-	virtual void move(MOVE_DIRECTION dir, bool enabled);
-	// up/down
-	virtual void rotateX(glm::detail::float32 degrees);
-	// left/right
-	virtual void rotateY(glm::detail::float32 degrees);
+virtual void render();
 
-	virtual void tick(glm::detail::float32 time);
-	
-	virtual const glm::mat4& getViewMatrix();
+virtual void attach(models::IModel* model);
+
+virtual void move(MOVE_DIRECTION dir, bool enabled);
+// up/down
+virtual void rotateX(glm::detail::float32 degrees);
+// left/right
+virtual void rotateY(glm::detail::float32 degrees);
+
+virtual void tick(glm::detail::float32 time);
+
+virtual const glm::mat4& getViewMatrix();
 
 private:
-	glm::quat rotation_;
-	glm::detail::int32 prevX_, prevY_;
-	
-	glm::mat4 viewMatrix_;
+glm::quat rotation_;
+glm::detail::int32 prevX_, prevY_;
 
-	char movement_[NUM_MOVE_DIRECTIONS];
-	glm::detail::float32 moveSpeed_, rotSpeed_;
-	void clearMovementBuffer();
-	glm::detail::float32 xRot_, yRot_;
+glm::mat4 viewMatrix_;
 
-	void initialize();
+char movement_[NUM_MOVE_DIRECTIONS];
+glm::detail::float32 moveSpeed_, rotSpeed_;
+void clearMovementBuffer();
+glm::detail::float32 xRot_, yRot_;
+
+void initialize();
 };
-
 }
 
 #endif /* CAMERASCENENODE_H_ */

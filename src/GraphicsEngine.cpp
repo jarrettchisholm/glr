@@ -12,15 +12,13 @@
 #include "Window.h"
 
 namespace glr {
-
-
 /**
  *
  */
-std::unique_ptr<GlrProgram> GraphicsEngine::createProgram() {
+std::unique_ptr<GlrProgram> GraphicsEngine::createProgram()
+{
 	std::unique_ptr<GlrProgram> program(new GlrProgram());
-	
+
 	return program;
 }
-
 }

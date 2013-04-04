@@ -11,11 +11,12 @@
 #include <stdlib.h>
 
 namespace math {
-
-Math::Math() {
+Math::Math()
+{
 }
 
-Math::~Math() {
+Math::~Math()
+{
 }
 
 /**
@@ -27,7 +28,8 @@ Math::~Math() {
  *
  * @return A value between a and b, based on the dist value given
  */
-float Math::linearInterp(float a, float b, float dist) {
+float Math::linearInterp(float a, float b, float dist)
+{
 	return a * (1 - dist) + b * dist;
 }
 
@@ -42,7 +44,8 @@ float Math::linearInterp(float a, float b, float dist) {
  *
  * @return A value between a and b, based on the dist value given
  */
-float Math::cosineInterp(float a, float b, float dist) {
+float Math::cosineInterp(float a, float b, float dist)
+{
 	float ft = dist * 3.1415927f;
 	float f = (1.0f - cos(ft)) * 0.5f;
 
@@ -62,7 +65,8 @@ float Math::cosineInterp(float a, float b, float dist) {
  *
  * @return A value between a and b, based on the dist value given
  */
-float Math::cubicInterp(float a0, float a1, float b1, float b2, float dist) {
+float Math::cubicInterp(float a0, float a1, float b1, float b2, float dist)
+{
 	float P = (b2 - b1) - (a0 - a1);
 	float Q = (a0 - a1) - P;
 	float R = b1 - a0;
@@ -75,7 +79,8 @@ float Math::cubicInterp(float a0, float a1, float b1, float b2, float dist) {
 /**
  *
  */
-int Math::random() {
+int Math::random()
+{
 	static unsigned int retVal = 5323;
 
 	retVal = (8253729 * retVal + 2396402);
@@ -84,10 +89,9 @@ int Math::random() {
 	return retVal % RANDOM_MAX;
 
 	/*
-	 int m_z = 36969 * (m_z & 65535) + (m_z >> 16);
-	 int m_w = 18000 * (m_w & 65535) + (m_w >> 16);
-	 return (m_z << 16) + m_w;
+	   int m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+	   int m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+	   return (m_z << 16) + m_w;
 	 */
 }
-
 }

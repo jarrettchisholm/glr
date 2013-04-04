@@ -1,8 +1,8 @@
 /*
  * GlrPreProcessor.cpp
- * 
+ *
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- * 
+ *
  */
 
 
@@ -11,14 +11,11 @@
 #include "ShaderData.h"
 
 namespace glr {
-
 namespace shaders {
-
-GlrPreProcessor::GlrPreProcessor(std::string source) : CPreProcessor(source) {
+GlrPreProcessor::GlrPreProcessor(std::string source) : CPreProcessor(source)
+{
 	CPreProcessor::files_ = SHADER_DATA;
 }
-
 }
-
 }
 

@@ -9,89 +9,99 @@
 #include "GlslShaderProgram.h"
 
 namespace glr {
-
 namespace shaders {
-
-GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders) : name_(name), shaders_(shaders) {
+GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders) : name_(name), shaders_(shaders)
+{
 	programId_ = -1;
 }
 
-GlslShaderProgram::~GlslShaderProgram() {
+GlslShaderProgram::~GlslShaderProgram()
+{
 }
 
-void GlslShaderProgram::compile() {
+void GlslShaderProgram::compile()
+{
 	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program.";
-	
-	if (programId_ < 0) {
+
+	if ( programId_ < 0 )
+	{
 		BOOST_LOG_TRIVIAL(error) << "Could not load shader program - shader program already has an OpenGL id assigned to it.";
 		return;
 	}
-	
+
 	// Compile all shaders
-	for (auto s : shaders_) {
+	for ( auto s : shaders_ )
+	{
 		s->compile();
 	}
-	
+
 	programId_ = glCreateProgram();
-	
-	for (auto s : shaders_) {
+
+	for ( auto s : shaders_ )
+	{
 		glAttachShader(programId_, s->getGLShaderId());
 	}
-	
+
 	//glBindAttribLocation(programId_, 0, "in_Position");
 	//glBindAttribLocation(programId_, 1, "in_Texture");
 	//glBindAttribLocation(programId_, 2, "in_Color");
-	
-	glLinkProgram(programId_); 
-	
+
+	glLinkProgram(programId_);
+
 	GLint linked;
 	glGetProgramiv(programId_, GL_LINK_STATUS, &linked);
-	
-	if (!linked) {
+
+	if ( !linked )
+	{
 		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader program.";
-		
-		GLchar errorLog[1024] = {0};
-	    glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
-	    
-	    BOOST_LOG_TRIVIAL(error) << errorLog;
-		
+
+		GLchar errorLog[1024] = { 0 };
+		glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
+
+		BOOST_LOG_TRIVIAL(error) << errorLog;
+
 		return;
-	}  
-	
-	
+	}
+
+
 	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
 	return;
 }
 
-GLuint GlslShaderProgram::getGLShaderProgramId() {
+GLuint GlslShaderProgram::getGLShaderProgramId()
+{
 	return programId_;
 }
-	
-void GlslShaderProgram::bind() {
+
+void GlslShaderProgram::bind()
+{
 	glUseProgram(programId_);
 }
 
-std::string GlslShaderProgram::getName() {
+std::string GlslShaderProgram::getName()
+{
 	return name_;
 }
 
-IShader::BindingsMap GlslShaderProgram::getBindings() {
+IShader::BindingsMap GlslShaderProgram::getBindings()
+{
 	IShader::BindingsMap bindings;
-	
-	for ( auto s : shaders_ ) {
+
+	for ( auto s : shaders_ )
+	{
 		IShader::BindingsMap b = s->getBindings();
-		for ( auto e : b ) {
-			bindings.push_back( e );
+		for ( auto e : b )
+		{
+			bindings.push_back(e);
 		}
 	}
-	
+
 	return bindings;
 }
 
-void GlslShaderProgram::unbindAll() {
+void GlslShaderProgram::unbindAll()
+{
 	glUseProgram(0);
 }
-
 }
-
 }

@@ -22,31 +22,26 @@
 
 
 namespace glr {
-
 namespace models {
-
 class Mesh {
 public:
-	Mesh(const aiMesh* mesh);
-	virtual ~Mesh();
-	
-	void render();
+Mesh(const aiMesh* mesh);
+virtual ~Mesh();
+
+void render();
 
 private:
-	glm::detail::uint32 vaoId_;
-	glm::detail::uint32 vboIds_[3];
+glm::detail::uint32 vaoId_;
+glm::detail::uint32 vboIds_[3];
 
-	std::vector< glm::vec3 > vertices_;
-	std::vector< glm::vec3 > normals_;
-	std::vector< glm::vec2 > textureCoordinates_;
-	std::vector< glm::vec4 > colors_;
-	
-	std::string textureFileName_;
+std::vector< glm::vec3 > vertices_;
+std::vector< glm::vec3 > normals_;
+std::vector< glm::vec2 > textureCoordinates_;
+std::vector< glm::vec4 > colors_;
 
+std::string textureFileName_;
 };
-
 }
-
 }
 
 #endif /* MESH_H_ */

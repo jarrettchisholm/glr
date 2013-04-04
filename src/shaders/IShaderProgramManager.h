@@ -15,23 +15,19 @@
 #include "IShaderProgram.h"
 
 namespace glr {
-
 namespace shaders {
-
 class IShaderProgramManager {
 public:
-	virtual ~IShaderProgramManager() {
-	}
-	;
-
-	virtual IShaderProgram* getShaderProgram(const std::string filename) = 0;
-	
-	virtual void loadShaderPrograms(const std::string directory) = 0;
-	
-};
-
+virtual ~IShaderProgramManager()
+{
 }
+;
 
+virtual IShaderProgram* getShaderProgram(const std::string filename) = 0;
+
+virtual void loadShaderPrograms(const std::string directory) = 0;
+};
+}
 }
 
 #endif /* ISHADERPROGRAMMANAGER_H_ */

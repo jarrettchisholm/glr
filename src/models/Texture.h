@@ -13,25 +13,21 @@
 #include "../common/utilities/ImageLoader.h"
 
 namespace glr {
-
 namespace models {
-
 class Texture {
 public:
-	Texture();
-	Texture(utilities::Image* image);
-	virtual ~Texture();
-	
-	void bind();
+Texture();
+Texture(utilities::Image* image);
+virtual ~Texture();
+
+void bind();
 
 private:
-	GLuint textureId_;
+GLuint textureId_;
 
-	void loadTexture(utilities::Image* image);
+void loadTexture(utilities::Image* image);
 };
-
 }
-
 }
 
 #endif /* TEXTURE_H_ */

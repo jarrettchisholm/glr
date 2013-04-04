@@ -8,16 +8,13 @@
 #include "IoException.h"
 
 namespace glr {
-
 namespace exception {
-
-IoException::IoException(const std::string message) : Exception(message) {
-
+IoException::IoException(const std::string message) : Exception(message)
+{
 }
 
-IoException::~IoException() throw() {
+IoException::~IoException() throw()
+{
 }
-
 } /* namespace exception */
-
 } /* namespace glr */

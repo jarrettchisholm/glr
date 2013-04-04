@@ -13,24 +13,21 @@
 #include "IShader.h"
 
 namespace glr {
-
 namespace shaders {
-
 class IShaderProgram {
 public:
-	virtual ~IShaderProgram() {
-	}
-	;
-	
-	virtual void bind() = 0;
-	
-	virtual GLuint getGLShaderProgramId() = 0;
-	
-	virtual IShader::BindingsMap getBindings() = 0;
-};
-
+virtual ~IShaderProgram()
+{
 }
+;
 
+virtual void bind() = 0;
+
+virtual GLuint getGLShaderProgramId() = 0;
+
+virtual IShader::BindingsMap getBindings() = 0;
+};
+}
 }
 
 #endif /* ISHADERPROGRAM_H_ */

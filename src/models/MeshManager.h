@@ -20,26 +20,20 @@
 #include "Mesh.h"
 
 namespace glr {
-
 namespace models {
-
 class MeshManager {
 public:
-	MeshManager();
-	virtual ~MeshManager();
+MeshManager();
+virtual ~MeshManager();
 
-	Mesh* getMesh(const std::string path);
-	
+Mesh* getMesh(const std::string path);
+
 private:
-	aiLogStream stream;
-	
-	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
-	
-	
+aiLogStream stream;
+
+std::map< std::string, std::unique_ptr<Mesh> > meshes_;
 };
-
 }
-
 }
 
 #endif /* MESHMANAGER_H_ */

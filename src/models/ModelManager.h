@@ -24,35 +24,29 @@
 #include "Model.h"
 
 namespace glr {
-
 namespace models {
-
 class ModelManager : public IModelManager {
 public:
-	ModelManager();
-	virtual ~ModelManager();
-	ModelManager(ModelManager const&);
-	ModelManager& operator=(ModelManager const&);
-	
-	static ModelManager* getInstance();
+ModelManager();
+virtual ~ModelManager();
+ModelManager(ModelManager const&);
+ModelManager& operator=(ModelManager const&);
 
-	IModel* loadModel(const std::string path);
-	
-	//void testLoadTexture();
-	//void testDrawTest1();
-	
+static ModelManager* getInstance();
+
+IModel* loadModel(const std::string path);
+
+//void testLoadTexture();
+//void testDrawTest1();
+
 private:
-	static ModelManager* modelManager_;
+static ModelManager* modelManager_;
 
-	aiLogStream stream;
-	
-	std::map< std::string, std::unique_ptr<Model> > models_;
-	
-	
+aiLogStream stream;
+
+std::map< std::string, std::unique_ptr<Model> > models_;
 };
-
 }
-
 }
 
 #endif /* MODELMANAGER_H_ */

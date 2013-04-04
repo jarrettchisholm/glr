@@ -18,36 +18,35 @@
 #endif
 
 namespace glr {
-
-
-
 class GraphicsEngine {
 public:
-	static std::unique_ptr<GlrProgram> createProgram();
+static std::unique_ptr<GlrProgram> createProgram();
 
 private:
-	/**
-	 * Private.
-	 */
-	GraphicsEngine() {
-	}
-	;
+/**
+ * Private.
+ */
+GraphicsEngine()
+{
+}
+;
 
-	/**
-	 * Private.
-	 */
-	GraphicsEngine(const GraphicsEngine& iceGE) {
-	}
-	;
+/**
+ * Private.
+ */
+GraphicsEngine(const GraphicsEngine& iceGE)
+{
+}
+;
 
-	/**
-	 * Private.
-	 */
-	virtual ~GraphicsEngine() {
-	}
-	;
+/**
+ * Private.
+ */
+virtual ~GraphicsEngine()
+{
+}
+;
 };
-
 }
 
 #endif /* GRAPHICSENGINE_H_ */

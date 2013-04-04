@@ -14,11 +14,11 @@ htmlGuiComponent2->setVisible(false); // do we need this?
 
 // do stuff
 
-igui->release( htmlGuiComponent2 );
+igui->release(htmlGuiComponent2);
 
 // do more stuff
 
-igui->release( htmlGuiComponent );
+igui->release(htmlGuiComponent);
 //window->release( igui );
 
 
@@ -72,10 +72,12 @@ glr::ISceneNode* node2 = rootNode->createSceneNode("my_model2", model2, glm::vec
 
 
 // Exceptions example
-try {
+try
+{
 	std::unique_ptr<glr::IWindow> window = glr::GraphicsEngine::createWindow();
 }
-catch (glr::Exception& e) {
+catch ( glr::Exception& e )
+{
 	BOOST_LOG_TRIVIAL(error) << "Error starting Glr engine: " << e.what();
 	exit(EXIT_FAILURE);
 }
@@ -85,18 +87,22 @@ glr::ISceneManager* scnMgr = window->getSceneManager();
 glr::IModelManager* modelMgr = scnMgr->getModelManager();
 glr::IShaderProgramManager* shaderProgramMgr = scnMgr->getShaderProgramManager();
 
-try {
+try
+{
 	shaderProgramMgr->loadShaderPrograms("shader_programs.glsl")
 }
-catch (glr::IoException& e) {
+catch ( glr::IoException& e )
+{
 	BOOST_LOG_TRIVIAL(error) << "Error loading shader programs: " << e.what();
 	exit(EXIT_FAILURE);
 }
-catch (glr::GlException& e) {
+catch ( glr::GlException& e )
+{
 	BOOST_LOG_TRIVIAL(error) << "Error loading shader programs: " << e.what();
 	exit(EXIT_FAILURE);
 }
-catch (glr::FormatException& e) {
+catch ( glr::FormatException& e )
+{
 	BOOST_LOG_TRIVIAL(error) << "Error loading shader programs: " << e.what();
 	exit(EXIT_FAILURE);
 }

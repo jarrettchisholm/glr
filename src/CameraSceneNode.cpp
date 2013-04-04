@@ -23,27 +23,30 @@
 #include <iostream>
 
 namespace glr {
-
-CameraSceneNode::CameraSceneNode() : DefaultSceneNode() {
-	setLookAt( 1, 1, 1 );
-	setPosition( 0, 0, 0 );
+CameraSceneNode::CameraSceneNode() : DefaultSceneNode()
+{
+	setLookAt(1, 1, 1);
+	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(const std::string name) : DefaultSceneNode(name) {
-	setLookAt( 1, 1, 1 );
-	setPosition( 0, 0, 0 );
+CameraSceneNode::CameraSceneNode(const std::string name) : DefaultSceneNode(name)
+{
+	setLookAt(1, 1, 1);
+	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
 	initialize();
 }
 
-CameraSceneNode::~CameraSceneNode() {
+CameraSceneNode::~CameraSceneNode()
+{
 }
 
-void CameraSceneNode::initialize() {
+void CameraSceneNode::initialize()
+{
 	clearMovementBuffer();
 
 	xRot_ = 0;
@@ -54,49 +57,55 @@ void CameraSceneNode::initialize() {
 
 	rotation_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
 	rotation_ = glm::normalize(rotation_);
-	
+
 	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	
+
 	BOOST_LOG_TRIVIAL(debug) << "Camera initialized.";
 	//rotation_.normalize();
 }
 
-void CameraSceneNode::render() {
-	if (isActive()) {
+void CameraSceneNode::render()
+{
+	if ( isActive())
+	{
 		glm::quat temp = glm::conjugate(rotation_);
-		viewMatrix_ = glm::mat4_cast( temp );
+		viewMatrix_ = glm::mat4_cast(temp);
 		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
 	}
 }
 
-const glm::mat4& CameraSceneNode::getViewMatrix() {
+const glm::mat4& CameraSceneNode::getViewMatrix()
+{
 	std::cout << "here1" << std::endl;
 	return viewMatrix_;
 }
 
-bool CameraSceneNode::isActive() {
+bool CameraSceneNode::isActive()
+{
 	return active_;
 }
 
 /**
-* Does nothing in the CameraSceneNode.
-*/ 
-void CameraSceneNode::attach(models::IModel* model) {
-	
+ * Does nothing in the CameraSceneNode.
+ */
+void CameraSceneNode::attach(models::IModel* model)
+{
 }
 
 /**
  *
  */
-void CameraSceneNode::clearMovementBuffer() {
-	for (glm::detail::uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++)
+void CameraSceneNode::clearMovementBuffer()
+{
+	for ( glm::detail::uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++ )
 		movement_[i] = 0;
 }
 
 /**
  *
  */
-void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled) {
+void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled)
+{
 	movement_[dir] = (enabled ? 1 : 0);
 }
 
@@ -104,7 +113,8 @@ void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled) {
 /**
  *
  */
-void CameraSceneNode::rotateX(glm::detail::float32 degrees) {
+void CameraSceneNode::rotateX(glm::detail::float32 degrees)
+{
 	xRot_ += degrees;
 }
 
@@ -112,25 +122,27 @@ void CameraSceneNode::rotateX(glm::detail::float32 degrees) {
 /**
  *
  */
-void CameraSceneNode::rotateY(glm::detail::float32 degrees) {
+void CameraSceneNode::rotateY(glm::detail::float32 degrees)
+{
 	yRot_ += degrees;
 }
 
 /**
  *
  */
-void CameraSceneNode::tick(glm::detail::float32 time) {
+void CameraSceneNode::tick(glm::detail::float32 time)
+{
 	// movement direction
-	if (movement_[MOVE_DIR_FORWARD] == 1)
+	if ( movement_[MOVE_DIR_FORWARD] == 1 )
 		pos_ += rotation_ * glm::vec3(0, 0, -moveSpeed_ * time);
 
-	if (movement_[MOVE_DIR_BACKWARD] == 1)
+	if ( movement_[MOVE_DIR_BACKWARD] == 1 )
 		pos_ += rotation_ * glm::vec3(0, 0, moveSpeed_ * time);
 
-	if (movement_[MOVE_DIR_LEFT] == 1)
+	if ( movement_[MOVE_DIR_LEFT] == 1 )
 		pos_ += rotation_ * glm::vec3(-moveSpeed_ * time, 0, 0);
 
-	if (movement_[MOVE_DIR_RIGHT] == 1)
+	if ( movement_[MOVE_DIR_RIGHT] == 1 )
 		pos_ += rotation_ * glm::vec3(moveSpeed_ * time, 0, 0);
 
 	// rotation
@@ -142,5 +154,4 @@ void CameraSceneNode::tick(glm::detail::float32 time) {
 
 	rotation_ = heading * pitch;
 }
-
 }

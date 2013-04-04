@@ -8,68 +8,78 @@
 #include "CallbackParameter.h"
 
 namespace glr {
-
 namespace gui {
-
-CallbackParameter::CallbackParameter() {	
+CallbackParameter::CallbackParameter()
+{
 }
 
-CallbackParameter::CallbackParameter(int i) {
+CallbackParameter::CallbackParameter(int i)
+{
 	intValue_ = i;
 }
 
-CallbackParameter::CallbackParameter(float f) {
+CallbackParameter::CallbackParameter(float f)
+{
 	floatValue_ = f;
 }
 
-CallbackParameter::CallbackParameter(double d) {
+CallbackParameter::CallbackParameter(double d)
+{
 	doubleValue_ = d;
 }
 
-CallbackParameter::CallbackParameter(std::wstring s) {
+CallbackParameter::CallbackParameter(std::wstring s)
+{
 	stringValue_ = s;
 }
 
-CallbackParameter::CallbackParameter(char c) {
+CallbackParameter::CallbackParameter(char c)
+{
 	charValue_ = c;
 }
 
-CallbackParameter::CallbackParameter(bool b) {
+CallbackParameter::CallbackParameter(bool b)
+{
 	boolValue_ = b;
 }
 
-CallbackParameter::~CallbackParameter() {
-	
+CallbackParameter::~CallbackParameter()
+{
 }
-	
-CallbackParameter::ParamType CallbackParameter::getType() {
+
+CallbackParameter::ParamType CallbackParameter::getType()
+{
 	return type_;
 }
 
-int CallbackParameter::getInt() {
+int CallbackParameter::getInt()
+{
 	return intValue_;
 }
 
-float CallbackParameter::getFloat() {
+float CallbackParameter::getFloat()
+{
 	return floatValue_;
 }
 
-double CallbackParameter::getDouble() {
+double CallbackParameter::getDouble()
+{
 	return doubleValue_;
 }
 
-std::wstring CallbackParameter::getString() {
+std::wstring CallbackParameter::getString()
+{
 	return stringValue_;
 }
 
-char CallbackParameter::getChar() {
+char CallbackParameter::getChar()
+{
 	return charValue_;
 }
 
-bool CallbackParameter::getBool() {
+bool CallbackParameter::getBool()
+{
 	return boolValue_;
 }
-
 }
-
 }

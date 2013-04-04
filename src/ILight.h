@@ -17,7 +17,6 @@
 
 
 namespace glr {
-
 struct LightData {
 	glm::vec4 ambient;
 	glm::vec4 diffuse;
@@ -26,24 +25,24 @@ struct LightData {
 	glm::vec4 direction;
 };
 
-class ILight: public virtual ISceneNode {
+class ILight : public virtual ISceneNode {
 public:
-	ILight() {
-	}
-	;
+ILight()
+{
+}
+;
 
-	virtual ~ILight() {
-	}
-	;
-	
-	virtual void setLightData(LightData data) = 0;
-	// TODO: add 'set' methods for each piece of light data
-	
-	virtual const LightData& getLightData() = 0;
-	// TODO: add 'get' methods for each piece of light data
+virtual ~ILight()
+{
+}
+;
 
+virtual void setLightData(LightData data) = 0;
+// TODO: add 'set' methods for each piece of light data
+
+virtual const LightData& getLightData() = 0;
+// TODO: add 'get' methods for each piece of light data
 };
-
 }
 
 #endif /* ILIGHT_H_ */

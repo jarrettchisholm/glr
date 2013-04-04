@@ -15,39 +15,35 @@
 #include "IShader.h"
 
 namespace glr {
-
 namespace shaders {
-
-class GlslShader : public IShader {	
+class GlslShader : public IShader {
 public:
-	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
+typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
 
-	GlslShader(std::string source, Type type);
-	GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings);
-	virtual ~GlslShader();
-	
-	virtual void bind();
-	virtual IShader::Type getType();
-	virtual GLuint getGLShaderId();
-	virtual IShader::BindingsMap getBindings();
-	
-	void compile();
-	
-	std::string getName();
+GlslShader(std::string source, Type type);
+GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings);
+virtual ~GlslShader();
+
+virtual void bind();
+virtual IShader::Type getType();
+virtual GLuint getGLShaderId();
+virtual IShader::BindingsMap getBindings();
+
+void compile();
+
+std::string getName();
 
 private:
-	GLuint shaderId_;
-	
-	Type type_;
-	std::string name_;
-	
-	std::string source_;
-	
-	BindingsMap bindings_;
+GLuint shaderId_;
+
+Type type_;
+std::string name_;
+
+std::string source_;
+
+BindingsMap bindings_;
 };
-
 }
-
 }
 
 #endif /* GLSLSHADER_H_ */

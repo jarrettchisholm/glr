@@ -13,38 +13,43 @@
 #include <streambuf>
 
 namespace glr {
-
 namespace io {
-
-File::File(char* file, bool read, bool write, bool truncate, bool append) {
+File::File(char* file, bool read, bool write, bool truncate, bool append)
+{
 	open(file, read, write, truncate, append);
 }
 
-File::~File() {
+File::~File()
+{
 	delete stream;
 }
 
-void File::open(char* file, bool read, bool write, bool truncate, bool append) {
-	if (file == NULL || (read == false && write == false) || (truncate == true && append == true))
+void File::open(char* file, bool read, bool write, bool truncate, bool append)
+{
+	if ( file == NULL || (read == false && write == false) || (truncate == true && append == true))
 		return;
 
 	read_ = read;
 	write_ = write;
 
 	_Ios_Openmode flags;
-	if (!read) {
+	if ( !read )
+	{
 		flags = ios::out;
-		if (truncate)
+		if ( truncate )
 			flags |= ios::trunc;
-		else if (append)
+		else if ( append )
 			flags |= ios::app;
-	} else {
+	}
+	else
+	{
 		flags = ios::in;
-		if (write) {
+		if ( write )
+		{
 			flags |= ios::out;
-			if (truncate)
+			if ( truncate )
 				flags |= ios::trunc;
-			else if (append)
+			else if ( append )
 				flags |= ios::app;
 		}
 	}
@@ -52,30 +57,34 @@ void File::open(char* file, bool read, bool write, bool truncate, bool append) {
 	stream = new fstream(file, flags);
 
 	// error check
-	if (stream == NULL || !stream->is_open())
+	if ( stream == NULL || !stream->is_open())
 		cout << "Could not open file: " << file << endl;
 }
 
-bool File::isOpen() {
-	if (stream == NULL)
+bool File::isOpen()
+{
+	if ( stream == NULL )
 		return false;
 
 	return stream->is_open();
 }
 
-void File::close() {
-	if (stream != NULL)
+void File::close()
+{
+	if ( stream != NULL )
 		stream->close();
 }
 
-bool File::exists(char* file) {
-	if (file == NULL)
+bool File::exists(char* file)
+{
+	if ( file == NULL )
 		return false;
 
 	bool val = false;
 
 	fstream temp(file, ios::in);
-	if (temp.is_open()) {
+	if ( temp.is_open())
+	{
 		val = true;
 	}
 	temp.close();
@@ -83,8 +92,10 @@ bool File::exists(char* file) {
 	return val;
 }
 
-bool File::write(char* text) {
-	if (text != NULL && isOpen() && write_) {
+bool File::write(char* text)
+{
+	if ( text != NULL && isOpen() && write_ )
+	{
 		*stream << text;
 		return true;
 	}
@@ -92,8 +103,10 @@ bool File::write(char* text) {
 	return false;
 }
 
-bool File::writeln(char* text) {
-	if (text != NULL && isOpen() && write_) {
+bool File::writeln(char* text)
+{
+	if ( text != NULL && isOpen() && write_ )
+	{
 		*stream << text << endl;
 		return true;
 	}
@@ -101,17 +114,21 @@ bool File::writeln(char* text) {
 	return false;
 }
 
-void File::flush() {
-	if (isOpen() && stream->good() && write_) {
+void File::flush()
+{
+	if ( isOpen() && stream->good() && write_ )
+	{
 		stream->flush();
 	}
 }
 
-int File::readInt() {
-	if (isOpen() && stream->good() && read_) {
+int File::readInt()
+{
+	if ( isOpen() && stream->good() && read_ )
+	{
 		char* value = readToken();
 		int retval = 0;
-		if (isdigit(value[0]))
+		if ( isdigit(value[0]))
 			retval = atoi(value);
 		delete value;
 		return retval;
@@ -120,28 +137,33 @@ int File::readInt() {
 	return 0;
 }
 
-void File::skipChars(char c) {
-	if (isOpen() && stream->good()) {
+void File::skipChars(char c)
+{
+	if ( isOpen() && stream->good())
+	{
 		char nextChar = stream->peek();
-		while (nextChar == c) {
+		while ( nextChar == c )
+		{
 			stream->seekg(1, ios_base::cur);
 			nextChar = stream->peek();
-
 		}
 	}
 }
 
-char* File::readToken(int max) {
+char* File::readToken(int max)
+{
 	// skip any empty spaces and newlines
 	skipChars(' ');
 	//skipChars('\n');
 
-	if (isOpen() && stream->good() && read_) {
+	if ( isOpen() && stream->good() && read_ )
+	{
 		char* value = new char[max + 1];
 		char c;
 		char nextChar = stream->peek();
 		int i = 0;
-		while (nextChar != '\n' && nextChar != ' ' && i < max) {
+		while ( nextChar != '\n' && nextChar != ' ' && i < max )
+		{
 			stream->get(c);
 			value[i] = c;
 			i++;
@@ -155,8 +177,10 @@ char* File::readToken(int max) {
 	return NULL;
 }
 
-char* File::read(int i) {
-	if (i >= 1 && isOpen() && stream->good() && read_) {
+char* File::read(int i)
+{
+	if ( i >= 1 && isOpen() && stream->good() && read_ )
+	{
 		char* value = new char[i];
 		stream->read(value, i);
 		return value;
@@ -166,15 +190,17 @@ char* File::read(int i) {
 }
 
 // todo: test this method
-void File::skipLine() {
+void File::skipLine()
+{
 	char* result = readln();
 
-	while (result != NULL && strchr(result, '\n') != NULL) {
+	while ( result != NULL && strchr(result, '\n') != NULL )
+	{
 		delete result;
 		result = readln();
 	}
 
-	if (result != NULL)
+	if ( result != NULL )
 		delete result;
 }
 
@@ -183,8 +209,10 @@ void File::skipLine() {
  *	reads characters until either (i-1) characters are read or the eol or oef
  *	character is read
  */
-char* File::readln(int i) {
-	if (i >= 1 && isOpen() && stream->good() && read_) {
+char* File::readln(int i)
+{
+	if ( i >= 1 && isOpen() && stream->good() && read_ )
+	{
 		char* value = new char[i + 1];
 		stream->getline(value, i);
 		return value;
@@ -193,14 +221,13 @@ char* File::readln(int i) {
 	return NULL;
 }
 
-std::string File::getFileContents(const std::string filename) {
+std::string File::getFileContents(const std::string filename)
+{
 	std::ifstream t(filename);
 	std::string str((std::istreambuf_iterator<char>(t)),
-	                 std::istreambuf_iterator<char>());
-	                 
+					std::istreambuf_iterator<char>());
+
 	return str;
 }
-
 }
-
 }

@@ -17,32 +17,28 @@
 #include <glm/glm.hpp>
 
 namespace glr {
-
 namespace models {
-
 class Material {
 public:
-	Material(const aiMaterial* mtl);
-	virtual ~Material();
+Material(const aiMaterial* mtl);
+virtual ~Material();
 
 private:
-	GLenum fill_mode_;
-	glm::detail::int32 ret1_, ret2_;
-	glm::vec4 diffuse_;
-	glm::vec4 specular_;
-	glm::vec4 ambient_;
-	glm::vec4 emission_;
-	glm::detail::float32 shininess_, strength_;
-	glm::detail::int32 two_sided_;
-	glm::detail::int32 two_sided_true_;
-	glm::detail::int32 wireframe_;
-	glm::detail::uint32 max_;	// changed: to unsigned
+GLenum fill_mode_;
+glm::detail::int32 ret1_, ret2_;
+glm::vec4 diffuse_;
+glm::vec4 specular_;
+glm::vec4 ambient_;
+glm::vec4 emission_;
+glm::detail::float32 shininess_, strength_;
+glm::detail::int32 two_sided_;
+glm::detail::int32 two_sided_true_;
+glm::detail::int32 wireframe_;
+glm::detail::uint32 max_;               // changed: to unsigned
 
-	void bind();
+void bind();
 };
-
 }
-
 }
 
 #endif /* MATERIAL_H_ */

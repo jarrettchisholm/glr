@@ -18,33 +18,36 @@
 #include "Window.h"
 
 namespace glr {
-
-GlrProgram::GlrProgram() {
+GlrProgram::GlrProgram()
+{
 	initialize();
 }
 
-GlrProgram::~GlrProgram() {
+GlrProgram::~GlrProgram()
+{
 }
 
-void GlrProgram::initialize() {		
+void GlrProgram::initialize()
+{
 	// load all of the shaders
 	//std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
 	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
 	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.frag", shaders::IShader::TYPE_FRAGMENT) );
-	
+
 	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
-	
+
 	//shaders::ShaderProgramManager::getInstance();
 }
 
 /**
  *
  */
-IWindow* GlrProgram::createWindow(std::string name, std::string title, 
-			glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
-			bool fullscreen, bool vsync) {
-
-	if (window_.get() != nullptr) {
+IWindow* GlrProgram::createWindow(std::string name, std::string title,
+								  glm::detail::uint32 width, glm::detail::uint32 height, glm::detail::uint32 depth,
+								  bool fullscreen, bool vsync)
+{
+	if ( window_.get() != nullptr )
+	{
 		std::stringstream msg;
 		msg << "Cannot create window - Window already exists.";
 		BOOST_LOG_TRIVIAL(error) << msg;
@@ -52,38 +55,42 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	}
 
 	window_ = std::unique_ptr<IWindow>(new Window(width, height, title));
-	
+
 	// VERY weird bug - I can call 'resize' all I want in the Window class - the initial perspective
 	// doesn't seem to get set unless I call it OUTSIDE of the Window class...wtf?
 	window_->resize(width, height);
-	
+
 	// Initialize GLEW
-	glewExperimental=true; // Needed in core profile
-	if (glewInit() != GLEW_OK) {
+	glewExperimental = true;   // Needed in core profile
+	if ( glewInit() != GLEW_OK )
+	{
 		std::string msg("Failed to initialize GLEW.");
 		BOOST_LOG_TRIVIAL(warning) << msg;
 		throw exception::GlException(msg);
 	}
-	
+
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
-	
+
 	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
-	
+
 	return window_.get();
 }
 
-void GlrProgram::beginRender() {
+void GlrProgram::beginRender()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 }
 
-void GlrProgram::endRender() {
+void GlrProgram::endRender()
+{
 	// display any changes we've made
 	window_->render();
 }
 
-void GlrProgram::render() {
+void GlrProgram::render()
+{
 	beginRender();
 	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
@@ -94,31 +101,35 @@ void GlrProgram::render() {
 	bindUniformBufferObjects(shader);
 
 	sMgr_->drawAll();
-	
+
 	shaders::GlslShaderProgram::unbindAll();
-	
-	if (gui_ != nullptr)
+
+	if ( gui_ != nullptr )
 		gui_->render();
-	
+
 	endRender();
 }
 
-void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader) {
+void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
+{
 	// Bind lights
 	const std::vector<LightData> lightData = sMgr_->getLightData();
-	
-	if (lightData.size() > 0) {
-		for (auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it) {
+
+	if ( lightData.size() > 0 )
+	{
+		for ( auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it )
+		{
 			std::vector<GLuint> ubos = it->second;
-			for( auto ubo : ubos ) {
+			for ( auto ubo : ubos )
+			{
 				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
 			}
 		}
 	}
-	
-	// TODO: bind other stuff (i.e. materials, etc)	
-	
+
+	// TODO: bind other stuff (i.e. materials, etc)
+
 	// TODO: bind number of lights, etc (We'll want to let the GLSL shader know how many lights to
 	// iterate through - we don't want it to use garbage data
 
@@ -128,87 +139,93 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader) {
 	int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix");
 	int pvmMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "pvmMatrix");
 	int normalMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "normalMatrix");
-	
+
 	glm::mat4 modelMatrix = sMgr_->getModelMatrix();
 	glm::mat4 projectionMatrix = window_->getProjectionMatrix();
-	
+
 	ICamera* camera = sMgr_->getActiveCameraSceneNode();
-	if (camera != nullptr) {
+	if ( camera != nullptr )
+	{
 		const glm::mat4 viewMatrix = camera->getViewMatrix();
 		// Send uniform variable values to the shader
 		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
-		
+
 		glm::mat4 pvmMatrix(projectionMatrix * viewMatrix * modelMatrix);
 		glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
-		
-		glm::mat3 normalMatrix = glm::inverse(glm::transpose( glm::mat3(viewMatrix * modelMatrix) ));
+
+		glm::mat3 normalMatrix = glm::inverse(glm::transpose(glm::mat3(viewMatrix * modelMatrix)));
 		glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
 	}
-	
+
 	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
 	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
-	
 }
 
-void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader) {
+void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader)
+{
 	shaders::IShader::BindingsMap bindings = shader->getBindings();
-	
-	for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+
+	for ( auto it = bindings.begin(); it != bindings.end(); ++it )
+	{
 		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
-		
-		switch (it->first) {
-			case shaders::IShader::BIND_TYPE_LIGHT:
-				if (lightUbos_.find(it->second) == lightUbos_.end())
-					setupLightUbo(it->second, shader);
-				break;
-			
-			// TODO: implement other bindings (materials, etc)
-			
-			default:
-				break;
+
+		switch ( it->first )
+		{
+		case shaders::IShader::BIND_TYPE_LIGHT:
+			if ( lightUbos_.find(it->second) == lightUbos_.end())
+				setupLightUbo(it->second, shader);
+			break;
+
+		// TODO: implement other bindings (materials, etc)
+
+		default:
+			break;
 		}
 	}
 }
 
-void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader) {
+void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader)
+{
 	// TODO: Will we want to add multiple Ubos in a single shader for light sources
-	
+
 	const std::vector<LightData> lightData = sMgr_->getLightData();
-	
+
 	lightUbos_[name] = std::vector<GLuint>();
 	lightUbos_[name].push_back(0);
-	
+
 	// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
 	GLuint bindingPoint = 1;
-	
+
 	GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
 	glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
-	 
+
 	glGenBuffers(1, &lightUbos_[name][0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, lightUbos_[name][0]);
-	 
+
 	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[name][0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	
 }
 
-ISceneManager* GlrProgram::getSceneManager() {
+ISceneManager* GlrProgram::getSceneManager()
+{
 	return sMgr_.get();
 }
 
-gui::IGUI* GlrProgram::getHtmlGui() {
-	if (gui_.get() != nullptr) {
+gui::IGUI* GlrProgram::getHtmlGui()
+{
+	if ( gui_.get() != nullptr )
+	{
 		return gui_.get();
 	}
-	
+
 	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
-	
+
 	return gui_.get();
 }
 
-IWindow* GlrProgram::getWindow() {
+IWindow* GlrProgram::getWindow()
+{
 	return window_.get();
 }
-
 }

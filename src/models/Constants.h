@@ -4,18 +4,14 @@
 #define CONSTANTS_H_
 
 namespace glr {
-
 namespace models {
-
 class Constants {
 public:
-	static const std::string MODEL_DIRECTORY;
+static const std::string MODEL_DIRECTORY;
 };
 
-const std::string Constants::MODEL_DIRECTORY			= std::string("/home/jarrett/projects/chisholmsoft/models/");
-
+const std::string Constants::MODEL_DIRECTORY = std::string("/home/jarrett/projects/chisholmsoft/models/");
 }
-
 }
 
 #endif /* CONSTANTS_H_ */

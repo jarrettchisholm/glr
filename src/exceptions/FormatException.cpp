@@ -8,15 +8,13 @@
 #include "FormatException.h"
 
 namespace glr {
-
 namespace exception {
-
-FormatException::FormatException(const std::string message) : Exception(message) {
+FormatException::FormatException(const std::string message) : Exception(message)
+{
 }
 
-FormatException::~FormatException() throw() {
+FormatException::~FormatException() throw()
+{
 }
-
 } /* namespace exception */
-
 } /* namespace glr */

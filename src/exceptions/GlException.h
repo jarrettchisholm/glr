@@ -11,17 +11,13 @@
 #include "Exception.h"
 
 namespace glr {
-
 namespace exception {
-
-class GlException: public Exception {
+class GlException : public Exception {
 public:
-	GlException(const std::string message="Glr GlException");
-	virtual ~GlException() throw();
+GlException(const std::string message = "Glr GlException");
+virtual ~GlException() throw();
 };
-
 } /* namespace exception */
-
 } /* namespace glr */
 
 #endif /* GLEXCEPTION_H_ */
