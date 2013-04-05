@@ -21,27 +21,27 @@ namespace glr {
 namespace shaders {
 class GlrShader {
 public:
-GlrShader(std::string source);
-virtual ~GlrShader();
+	GlrShader(std::string source);
+	virtual ~GlrShader();
 
-void process(std::map< std::string, std::string > defineMap);
+	void process(std::map< std::string, std::string > defineMap);
 
-std::string getName();
-IShader::Type getType();
-std::string getProcessedSource();
-std::string getSource();
-GlrParser::StringBindingsMap getBindings();
+	std::string getName();
+	IShader::Type getType();
+	std::string getProcessedSource();
+	std::string getSource();
+	GlrParser::StringBindingsMap getBindings();
 
-bool containsPreProcessorCommands();
+	bool containsPreProcessorCommands();
 
 private:
-std::string name_;
-IShader::Type type_;
+	std::string name_;
+	IShader::Type type_;
 
-std::string source_;
-std::string processedSource_;
+	std::string source_;
+	std::string processedSource_;
 
-GlrParser::StringBindingsMap bindings_;
+	GlrParser::StringBindingsMap bindings_;
 };
 }
 }

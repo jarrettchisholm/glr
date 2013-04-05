@@ -25,17 +25,16 @@ namespace glr {
 namespace models {
 class MaterialManager {
 public:
-MaterialManager();
-virtual ~MaterialManager();
+	MaterialManager();
+	virtual ~MaterialManager();
 
-Material* getMaterial(const std::string path);
+	Material* getMaterial(const std::string path);
 
 private:
-aiLogStream stream;
+	aiLogStream stream;
 
-std::map< std::string, std::unique_ptr<Material> > meshes_;
+	std::map< std::string, std::unique_ptr<Material> > meshes_;
 };
 }
 }
-
 #endif /* MATERIALMANAGER_H_ */

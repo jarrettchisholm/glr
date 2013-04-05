@@ -28,33 +28,32 @@ namespace fs = boost::filesystem;
 
 class ShaderProgramManager : public IShaderProgramManager {
 public:
-ShaderProgramManager(bool autoLoad = true);
-virtual ~ShaderProgramManager();
+	ShaderProgramManager(bool autoLoad = true);
+	virtual ~ShaderProgramManager();
 
-virtual IShaderProgram* getShaderProgram(const std::string name);
+	virtual IShaderProgram* getShaderProgram(const std::string name);
 
-virtual void loadShaderPrograms(const std::string directory);
+	virtual void loadShaderPrograms(const std::string directory);
 
-void loadStandardShaderPrograms();
+	void loadStandardShaderPrograms();
 
-void load(const std::string directory);
-void load(fs::path directory);
-void load(std::vector<std::string> filenames);
-void load(std::vector<fs::path> filePaths);
-void load(std::map<std::string, std::string> dataMap);
+	void load(const std::string directory);
+	void load(fs::path directory);
+	void load(std::vector<std::string> filenames);
+	void load(std::vector<fs::path> filePaths);
+	void load(std::map<std::string, std::string> dataMap);
 
 private:
-std::map< std::string, std::shared_ptr<GlrShaderProgram> >      glrProgramMap_;
-std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
-std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
-std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
+	std::map< std::string, std::shared_ptr<GlrShaderProgram> >      glrProgramMap_;
+	std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
+	std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
+	std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
 
-std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
+	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
 
-bool isShader(std::string s);
-bool isProgram(std::string s);
+	bool isShader(std::string s);
+	bool isProgram(std::string s);
 };
 }
 }
-
 #endif /* SHADERPROGRAMMANAGER_H_ */

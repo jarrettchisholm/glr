@@ -77,6 +77,7 @@ void CameraSceneNode::render()
 const glm::mat4& CameraSceneNode::getViewMatrix()
 {
 	std::cout << "here1" << std::endl;
+
 	return viewMatrix_;
 }
 

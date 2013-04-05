@@ -27,26 +27,25 @@ namespace glr {
 namespace models {
 class ModelManager : public IModelManager {
 public:
-ModelManager();
-virtual ~ModelManager();
-ModelManager(ModelManager const&);
-ModelManager& operator=(ModelManager const&);
+	ModelManager();
+	virtual ~ModelManager();
+	ModelManager(ModelManager const&);
+	ModelManager& operator=(ModelManager const&);
 
-static ModelManager* getInstance();
+	static ModelManager* getInstance();
 
-IModel* loadModel(const std::string path);
+	IModel* loadModel(const std::string path);
 
-//void testLoadTexture();
-//void testDrawTest1();
+	//void testLoadTexture();
+	//void testDrawTest1();
 
 private:
-static ModelManager* modelManager_;
+	static ModelManager* modelManager_;
 
-aiLogStream stream;
+	aiLogStream stream;
 
-std::map< std::string, std::unique_ptr<Model> > models_;
+	std::map< std::string, std::unique_ptr<Model> > models_;
 };
 }
 }
-
 #endif /* MODELMANAGER_H_ */

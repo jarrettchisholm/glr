@@ -10,5 +10,4 @@ static const std::string SHADER_DIRECTORY = std::string("/home/jarrett/projects/
 }
 }
 }
-
 #endif /* CONSTANTS_H_ */

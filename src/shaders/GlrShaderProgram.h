@@ -17,20 +17,20 @@ namespace glr {
 namespace shaders {
 class GlrShaderProgram {
 public:
-GlrShaderProgram(std::string source);
-virtual ~GlrShaderProgram();
+	GlrShaderProgram(std::string source);
+	virtual ~GlrShaderProgram();
 
-void process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap);
+	void process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap);
 
-std::string getName();
+	std::string getName();
 
-std::vector< std::shared_ptr<GlrShader> > getShaders();
+	std::vector< std::shared_ptr<GlrShader> > getShaders();
 
 private:
-std::string name_;
-std::string source_;
+	std::string name_;
+	std::string source_;
 
-std::vector< std::shared_ptr<GlrShader> > shaders_;
+	std::vector< std::shared_ptr<GlrShader> > shaders_;
 };
 }
 }

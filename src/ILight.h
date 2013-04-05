@@ -27,22 +27,21 @@ struct LightData {
 
 class ILight : public virtual ISceneNode {
 public:
-ILight()
-{
-}
-;
+	ILight()
+	{
+	}
+	;
 
-virtual ~ILight()
-{
-}
-;
+	virtual ~ILight()
+	{
+	}
+	;
 
-virtual void setLightData(LightData data) = 0;
-// TODO: add 'set' methods for each piece of light data
+	virtual void setLightData(LightData data) = 0;
+	// TODO: add 'set' methods for each piece of light data
 
-virtual const LightData& getLightData() = 0;
-// TODO: add 'get' methods for each piece of light data
+	virtual const LightData& getLightData() = 0;
+	// TODO: add 'get' methods for each piece of light data
 };
 }
-
 #endif /* ILIGHT_H_ */

@@ -43,23 +43,23 @@ void CPreProcessor::process(std::map< std::string, std::string > defineMap)
 	// current file position is saved for exception handling
 	boost::wave::util::file_position_type current_position;
 
-//  The template boost::wave::cpplexer::lex_token<> is the token type to be
-//  used by the Wave library.
+	//  The template boost::wave::cpplexer::lex_token<> is the token type to be
+	//  used by the Wave library.
 	typedef boost::wave::cpplexer::lex_token<> token_type;
 
-//  The template boost::wave::cpplexer::lex_iterator<> is the lexer type to
-//  be used by the Wave library.
+	//  The template boost::wave::cpplexer::lex_iterator<> is the lexer type to
+	//  be used by the Wave library.
 	typedef boost::wave::cpplexer::lex_iterator<token_type> lex_iterator_type;
 
-//  This is the resulting context type to use. The first template parameter
-//  should match the iterator type to be used during construction of the
-//  corresponding context object (see below).
+	//  This is the resulting context type to use. The first template parameter
+	//  should match the iterator type to be used during construction of the
+	//  corresponding context object (see below).
 	typedef boost::wave::context<
-		std::string::iterator,
-		lex_iterator_type,
-		CPreProcessor,
-		CPreProcessor
-		> context_type;
+			std::string::iterator,
+			lex_iterator_type,
+			CPreProcessor,
+			CPreProcessor
+			> context_type;
 
 	//CPreProcessor hooks(files);
 
@@ -97,27 +97,27 @@ void CPreProcessor::process(std::map< std::string, std::string > defineMap)
 	{
 		// some preprocessing error
 		std::cerr
-		<< e.file_name() << "(" << e.line_no() << "): "
-		<< e.description() << std::endl;
+			<< e.file_name() << "(" << e.line_no() << "): "
+			<< e.description() << std::endl;
 		return;
 	}
 	catch ( std::exception const& e )
 	{
 		// use last recognized token to retrieve the error position
 		std::cerr
-		<< current_position.get_file()
-		<< "(" << current_position.get_line() << "): "
-		<< "exception caught: " << e.what()
-		<< std::endl;
+			<< current_position.get_file()
+			<< "(" << current_position.get_line() << "): "
+			<< "exception caught: " << e.what()
+			<< std::endl;
 		return;
 	}
 	catch ( ... )
 	{
 		// use last recognized token to retrieve the error position
 		std::cerr
-		<< current_position.get_file()
-		<< "(" << current_position.get_line() << "): "
-		<< "unexpected exception caught." << std::endl;
+			<< current_position.get_file()
+			<< "(" << current_position.get_line() << "): "
+			<< "unexpected exception caught." << std::endl;
 		return;
 	}
 
@@ -162,7 +162,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 	wave::token_id id = wave::util::impl::skip_whitespace(it, line.end());
 
 	if ( id != wave::T_IDENTIFIER )
-		return false;                                                               // nothing we could do
+		return false;                                                                                                                                                            // nothing we could do
 
 	if ((*it).get_value() == "version" || (*it).get_value() == "extension" )
 	{
@@ -325,17 +325,17 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is
 	{
 		//} else {
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
-			return false;                                                                           // could not locate file
+			return false;                                                                                                                                                                                                // could not locate file
 
 		namespace fs = boost::filesystem;
 
 		fs::path native_path(wave::util::create_path(file_path));
 		if ( !fs::exists(native_path))
 		{
-		//BOOST_WAVE_THROW_CTX(ctx, preprocess_exception, bad_include_file,
-		//    file_path.c_str(), ctx.get_main_pos());
-		//std::cout << "error: doesn't exist" << std::endl;
-		return false;
+			//BOOST_WAVE_THROW_CTX(ctx, preprocess_exception, bad_include_file,
+			//    file_path.c_str(), ctx.get_main_pos());
+			//std::cout << "error: doesn't exist" << std::endl;
+			return false;
 		}
 
 		// return the unique full file system path of the located file

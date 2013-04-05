@@ -16,19 +16,18 @@ namespace glr {
 namespace models {
 class IModelManager {
 public:
-IModelManager()
-{
-}
-;
+	IModelManager()
+	{
+	}
+	;
 
-virtual ~IModelManager()
-{
-}
-;
+	virtual ~IModelManager()
+	{
+	}
+	;
 
-virtual IModel* loadModel(const std::string path) = 0;
+	virtual IModel* loadModel(const std::string path) = 0;
 };
 }
 }
-
 #endif /* IMODELMANAGER_H_ */

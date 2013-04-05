@@ -17,33 +17,32 @@ static const float RADTODEG = 180.0f / PI;
 
 class Math {
 public:
-Math();
-virtual ~Math();
+	Math();
+	virtual ~Math();
 
-static float linearInterp(float a, float b, float dist);
-static float cosineInterp(float a, float b, float dist);
-static float cubicInterp(float a0, float a1, float b1, float b2, float dist);
+	static float linearInterp(float a, float b, float dist);
+	static float cosineInterp(float a, float b, float dist);
+	static float cubicInterp(float a0, float a1, float b1, float b2, float dist);
 
-/**
- *	Compares a and b and returns the greater of the two.
- */
-template<class T> static T max(T a, T b)
-{
-	return(a > b ? a : b);
-}
+	/**
+	 *	Compares a and b and returns the greater of the two.
+	 */
+	template<class T> static T max(T a, T b)
+	{
+		return(a > b ? a : b);
+	}
 
-/**
- *	Compares a and b and returns the lesser of the two.
- */
-template<class T> static T min(T a, T b)
-{
-	return(a < b ? a : b);
-}
+	/**
+	 *	Compares a and b and returns the lesser of the two.
+	 */
+	template<class T> static T min(T a, T b)
+	{
+		return(a < b ? a : b);
+	}
 
-static int random();
+	static int random();
 
-static const int RANDOM_MAX = 32767;
+	static const int RANDOM_MAX = 32767;
 };
 }
-
 #endif /* MATH_H_ */

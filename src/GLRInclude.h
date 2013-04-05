@@ -25,5 +25,4 @@
 
 #include "gui/IGUI.h"
 #include "gui/IGUIComponent.h"
-
 #endif /* GLRINCLUDE_H_ */

@@ -23,12 +23,11 @@ namespace glr {
 namespace models {
 class Animation {
 public:
-Animation(const aiAnimation* mesh);
-virtual ~Animation();
+	Animation(const aiAnimation* mesh);
+	virtual ~Animation();
 
 private:
 };
 }
 }
-
 #endif /* ANIMATION_H_ */

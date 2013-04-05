@@ -15,15 +15,14 @@ namespace glr {
 namespace exception {
 class Exception : public std::exception {
 public:
-Exception(const std::string message = "Glr Exception");
-virtual ~Exception() throw();
+	Exception(const std::string message = "Glr Exception");
+	virtual ~Exception() throw();
 
-const char* what() throw();
+	const char* what() throw();
 
 protected:
-std::string message_;
+	std::string message_;
 };
 }
 }
-
 #endif /* EXCEPTION_H_ */

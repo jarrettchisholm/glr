@@ -16,18 +16,17 @@ namespace glr {
 namespace models {
 class Texture {
 public:
-Texture();
-Texture(utilities::Image* image);
-virtual ~Texture();
+	Texture();
+	Texture(utilities::Image* image);
+	virtual ~Texture();
 
-void bind();
+	void bind();
 
 private:
-GLuint textureId_;
+	GLuint textureId_;
 
-void loadTexture(utilities::Image* image);
+	void loadTexture(utilities::Image* image);
 };
 }
 }
-
 #endif /* TEXTURE_H_ */

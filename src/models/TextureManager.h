@@ -18,21 +18,20 @@ namespace glr {
 namespace models {
 class TextureManager {
 public:
-TextureManager();
-virtual ~TextureManager();
-TextureManager(TextureManager const&);
-TextureManager& operator=(TextureManager const&);
+	TextureManager();
+	virtual ~TextureManager();
+	TextureManager(TextureManager const&);
+	TextureManager& operator=(TextureManager const&);
 
-static TextureManager* getInstance();
+	static TextureManager* getInstance();
 
-Texture* getTexture(const std::string filename);
+	Texture* getTexture(const std::string filename);
 
 private:
-static TextureManager* textureManager_;
+	static TextureManager* textureManager_;
 
-std::map< std::string, std::unique_ptr<Texture> > textures_;
+	std::map< std::string, std::unique_ptr<Texture> > textures_;
 };
 }
 }
-
 #endif /* TEXTUREMANAGER_H_ */

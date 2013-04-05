@@ -54,6 +54,7 @@ void ShaderProgramManager::load(fs::path directory)
 
 	// find all of the files
 	fs::directory_iterator end_iter;
+
 	if ( fs::exists(directory) && fs::is_directory(directory))
 	{
 		for ( fs::directory_iterator dir_iter(directory); dir_iter != end_iter; ++dir_iter )

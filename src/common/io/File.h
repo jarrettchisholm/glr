@@ -18,37 +18,36 @@ namespace glr {
 namespace io {
 class File {
 public:
-File(char* file, bool read = true, bool write = false, bool truncate = true, bool append = false);
-virtual ~File();
+	File(char* file, bool read = true, bool write = false, bool truncate = true, bool append = false);
+	virtual ~File();
 
-void close();
-bool isOpen();
-static bool exists(char* file);
+	void close();
+	bool isOpen();
+	static bool exists(char* file);
 
-bool write(char* text);
-bool writeln(char* text);
-void flush();
+	bool write(char* text);
+	bool writeln(char* text);
+	void flush();
 
-void skipLine();
+	void skipLine();
 
-char* read(int i = 1);
-char* readln(int i = 256);
+	char* read(int i = 1);
+	char* readln(int i = 256);
 
-int readInt();
-char* readToken(int max = 256);
+	int readInt();
+	char* readToken(int max = 256);
 
-static std::string getFileContents(const std::string filename);
+	static std::string getFileContents(const std::string filename);
 
 private:
-fstream* stream;
+	fstream* stream;
 
-void open(char* file, bool read, bool write, bool truncate, bool append);
+	void open(char* file, bool read, bool write, bool truncate, bool append);
 
-void skipChars(char c);
+	void skipChars(char c);
 
-bool read_, write_;
+	bool read_, write_;
 };
 }
 }
-
 #endif /* FILE_H_ */

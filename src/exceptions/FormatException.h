@@ -14,10 +14,9 @@ namespace glr {
 namespace exception {
 class FormatException : public Exception {
 public:
-FormatException(const std::string message = "Glr FormatException");
-virtual ~FormatException() throw();
+	FormatException(const std::string message = "Glr FormatException");
+	virtual ~FormatException() throw();
 };
 } /* namespace exception */
 } /* namespace glr */
-
 #endif /* FORMATEXCEPTION_H_ */

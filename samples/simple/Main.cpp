@@ -24,13 +24,16 @@ Main::Main()
 
 
 
+	// TODO: Get a model to use for this sample (and others)
 	// Add model
-	glr::models::IModel* creature = smgr_->getModelManager()->loadModel("/home/jarrett/projects/chisholmsoft/glr/samples/data/PlainsWolf.x");
+	/*
+	glr::models::IModel* creature = smgr_->getModelManager()->loadModel("../data/my_model.obj");
 	glr::ISceneNode* node = smgr_->createSceneNode("test_node");
 
 	node->setScale(0.1f, 0.1f, 0.1f);
 
 	node->attach(creature);
+	*/
 }
 
 Main::~Main()

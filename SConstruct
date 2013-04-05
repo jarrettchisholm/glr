@@ -18,12 +18,7 @@ def beautifyCode():
 	
 	
 	for f in fileList:
-		stdout = open(f+".tmp", "wb")
-		stderr = open("temp_0123456789.tmp", "wb")
-		subprocess.call( shlex.split("uncrustify -f "+f+" -c xsupplicant.cfg"), stdout=stdout, stderr=stderr )
-		os.rename(f+".tmp", f) 
-
-	os.remove("temp_0123456789.tmp")
+		subprocess.call( shlex.split("uncrustify --mtime --no-backup -q -c xsupplicant.cfg "+f) )
 
 def parseShadersIntoHeader():
 	print('Parsing Shaders into header ShaderData.h')
@@ -99,10 +94,24 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	print('Done parsing Shaders into header ShaderData.h')
 
 
+# Argument flags
+doBeautification = False
+
+
+# Handle arguments
+for key, value in ARGLIST:
+	if key == 'beautify':
+		if (value == 'yes'):
+			doBeautification = True
+
+
+
 # Parse our shader programs and create .h files out of them
 parseShadersIntoHeader()
 
-#beautifyCode()
+
+if (doBeautification):
+	beautifyCode()
 
 
 # Tell SCons to create our build files in the 'build' directory

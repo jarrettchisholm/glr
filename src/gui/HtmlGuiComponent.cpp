@@ -142,6 +142,7 @@ void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32
 void HtmlGuiComponent::textEvent(const wchar_t*evt, size_t evtLength)
 {
 	std::cout << "TEXT EVENT: " << evt << std::endl;
+
 	if ( wcsncmp(evt, L"`", evtLength) == 0 || wcsncmp(evt, L"~", evtLength) == 0 )
 	{
 		/*
@@ -234,6 +235,7 @@ void HtmlGuiComponent::render()
 void HtmlGuiComponent::testDrawTestBerkelium()
 {
 	std::cout << "binding done wooo" << std::endl;
+
 	if ( webTextureReady_ )
 	{
 		//glDisable(GL_LIGHTING);
@@ -525,7 +527,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
 			{
 				memcpy(
 					outputBuffer + (jj * wid) * kBytesPerPixel,
-//scroll_buffer + (jj*wid * kBytesPerPixel),
+				    //scroll_buffer + (jj*wid * kBytesPerPixel),
 					inputBuffer + (
 						(scrolled_shared_rect.top() + jj) * dest_texture_width
 						+ scrolled_shared_rect.left()) * kBytesPerPixel,

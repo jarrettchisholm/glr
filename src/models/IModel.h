@@ -12,19 +12,18 @@ namespace glr {
 namespace models {
 class IModel {
 public:
-IModel()
-{
-}
-;
+	IModel()
+	{
+	}
+	;
 
-virtual ~IModel()
-{
-}
-;
+	virtual ~IModel()
+	{
+	}
+	;
 
-virtual void render() = 0;
+	virtual void render() = 0;
 };
 }
 }
-
 #endif /* IMODEL_H_ */
