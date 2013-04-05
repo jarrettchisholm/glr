@@ -18,10 +18,10 @@ out vec2 textureCoord;
 out vec4 pass_Color;
 
 
-@bind texture0
+//@bind texture0
 uniform sampler2D texture;
 
-@bind texture0
+//@bind texture0
 uniform 
 sampler2D 
 texture2

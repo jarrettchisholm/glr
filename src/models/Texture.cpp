@@ -79,7 +79,7 @@ void Texture::loadTexture(utilities::Image* image)
 	}
 }
 
-void Texture::bind()
+void Texture::bind(glmd::int32 samplerId)
 {
 	/*
 	   glEnable(GL_BLEND);
@@ -88,7 +88,7 @@ void Texture::bind()
 	   glBindTexture(GL_TEXTURE_2D, textureId_);
 	 */
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + samplerId);
 	glBindTexture(GL_TEXTURE_2D, textureId_);
 
 	// to unbind, we use the following

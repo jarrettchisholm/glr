@@ -9,18 +9,22 @@
 #define TEXTURE_H_
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include "../common/utilities/ImageLoader.h"
 
 namespace glr {
 namespace models {
+	
+namespace glmd = glm::detail;
+	
 class Texture {
 public:
 	Texture();
 	Texture(utilities::Image* image);
 	virtual ~Texture();
 
-	void bind();
+	void bind(glmd::int32 samplerId = 0);
 
 private:
 	GLuint textureId_;
