@@ -78,11 +78,11 @@ GLuint GlslShaderProgram::getGLShaderProgramId()
 
 void GlslShaderProgram::bind()
 {
-	// Notify all listeners that we are binding this shader program
+	glUseProgram(programId_);
+	
+	// Notify all listeners that we have bound this shader program
 	for ( auto bindListener : bindListeners_ )
 		bindListener->shaderBindCallback( this );
-
-	glUseProgram(programId_);
 }
 
 std::string GlslShaderProgram::getName()

@@ -22,7 +22,7 @@ public:
 
 	void process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap);
 
-	std::string getName();
+	virtual std::string getName();
 
 	std::vector< std::shared_ptr<GlrShader> > getShaders();
 

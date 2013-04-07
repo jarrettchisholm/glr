@@ -170,7 +170,7 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shader)
 {
 	shaders::IShader::BindingsMap bindings = shader->getBindings();
-
+	
 	for ( auto it = bindings.begin(); it != bindings.end(); ++it )
 	{
 		//std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";

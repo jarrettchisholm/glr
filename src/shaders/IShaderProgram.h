@@ -32,6 +32,8 @@ public:
 
 	virtual IShader::BindingsMap getBindings() = 0;
 	
+	virtual std::string getName() = 0;
+	
 	virtual void addBindListener(IShaderProgramBindListener* bindListener) = 0;
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener) = 0;
 };

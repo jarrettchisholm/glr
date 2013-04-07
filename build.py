@@ -40,6 +40,7 @@ os.system( 'echo' )
 
 # Argument flags
 doBeautification = False
+doClean = False
 
 
 # Handle arguments
