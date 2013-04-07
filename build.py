@@ -2,6 +2,7 @@
 
 import subprocess, sys, os
 import shlex
+import shutil
 import argparse
 
 def beautifyCode():
@@ -20,6 +21,9 @@ def beautifyCode():
 def compileGlr():
 	os.chdir( '../glr' )
 	return subprocess.call( "scons" )
+
+def clean():
+	shutil.rmtree( './build', True )
 
 def exitOnError(returnCode):
 	if ( returnCode != 0):
@@ -40,10 +44,13 @@ doBeautification = False
 
 # Handle arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("--beautify", help="will 'beautify' the source code using uncrustify")
+parser.add_argument("--beautify", action="store_true", help="will 'beautify' the source code using uncrustify")
+parser.add_argument("--clean", action="store_true", help="will clean your build directory of all files")
 args = parser.parse_args()
 if args.beautify:
 	doBeautification = True
+if args.clean:
+	doClean = True
     
 
 
@@ -53,6 +60,11 @@ if (doBeautification):
 	print("Done")
 	print("")
 
+
+if (doClean):
+	print("Cleaning Glr build directory")
+	clean();
+	print("Done")
 
 print("Compiling Glr")
 exitOnError( compileGlr() )
