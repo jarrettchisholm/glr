@@ -23,10 +23,11 @@
 #include "gui/GUI.h"
 
 #include "shaders/ShaderProgramManager.h"
+#include "shaders/IShaderProgramBindListener.h"
 
 
 namespace glr {
-class GlrProgram {
+class GlrProgram : public shaders::IShaderProgramBindListener {
 public:
 	GlrProgram();
 	virtual ~GlrProgram();
@@ -41,6 +42,8 @@ public:
 	IWindow* getWindow();
 	ISceneManager* getSceneManager();
 	gui::IGUI* getHtmlGui();
+	
+	void shaderBindCallback(shaders::IShaderProgram* shader);
 
 	//void destroyWindow();
 	//void destroySceneManager();

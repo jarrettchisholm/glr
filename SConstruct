@@ -8,18 +8,6 @@ import subprocess
 import shlex
 
 
-def beautifyCode():
-	fileList = []
-	
-	for r,d,f in os.walk("."):
-		for files in f:
-			if files.endswith(".h") or files.endswith(".cpp"):
-				fileList.append( os.path.join(r,files) )
-	
-	
-	for f in fileList:
-		subprocess.call( shlex.split("uncrustify --mtime --no-backup -c xsupplicant.cfg "+f) )
-
 def parseShadersIntoHeader():
 	print('Parsing Shaders into header ShaderData.h')
 	
@@ -94,24 +82,9 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	print('Done parsing Shaders into header ShaderData.h')
 
 
-# Argument flags
-doBeautification = False
-
-
-# Handle arguments
-for key, value in ARGLIST:
-	if key == 'beautify':
-		if (value == 'yes'):
-			doBeautification = True
-
-
 
 # Parse our shader programs and create .h files out of them
 parseShadersIntoHeader()
-
-
-if (doBeautification):
-	beautifyCode()
 
 
 # Tell SCons to create our build files in the 'build' directory

@@ -28,13 +28,13 @@ namespace fs = boost::filesystem;
 
 class ShaderProgramManager : public IShaderProgramManager {
 public:
-	ShaderProgramManager(bool autoLoad = true);
+	ShaderProgramManager(bool autoLoad = true, std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>());
 	virtual ~ShaderProgramManager();
 
 	virtual IShaderProgram* getShaderProgram(const std::string name);
 
 	virtual void loadShaderPrograms(const std::string directory);
-
+	
 	virtual void addDefaultBindListener(IShaderProgramBindListener* bindListener);
 	virtual void removeDefaultBindListener(IShaderProgramBindListener* bindListener);
 	void removeAllDefaultBindListeners();
@@ -48,12 +48,12 @@ public:
 	void load(std::map<std::string, std::string> dataMap);
 
 private:
-	std::map< std::string, std::shared_ptr<GlrShaderProgram> >      glrProgramMap_;
+	std::map< std::string, std::shared_ptr<GlrShaderProgram> >				glrProgramMap_;
 	std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
 	std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
 	std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
-
-	std::vector<IShaderProgramBindListener> defaultBindListeners_;
+	
+	std::vector<IShaderProgramBindListener*> defaultBindListeners_;
 
 	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
 

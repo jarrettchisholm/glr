@@ -234,7 +234,7 @@ void HtmlGuiComponent::render()
 
 void HtmlGuiComponent::testDrawTestBerkelium()
 {
-	std::cout << "binding done wooo" << std::endl;
+	//std::cout << "binding done wooo" << std::endl;
 
 	if ( webTextureReady_ )
 	{

@@ -100,12 +100,10 @@ void BasicSceneManager::drawAll()
 
 ICamera* BasicSceneManager::getActiveCameraSceneNode()
 {
-	std::cout << "here2" << std::endl;
 
 	if ( cameras_.size() > 0 )
 		return cameras_.begin()->second.get();
-
-	std::cout << "here3" << std::endl;
+		
 	return nullptr;
 }
 

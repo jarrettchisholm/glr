@@ -70,12 +70,15 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	}
 
 	// initialize shader program manager and scene manager AFTER we create the window
-	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
-	shaderProgramManager_->addDefaultBindListener(this);
-
+	
+	std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>();
+	defaultBindListeners.push_back( this );
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true, defaultBindListeners));
+	//shaderProgramManager_->addDefaultBindListener( this );
+	
 	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get()));
 
-
+	
 
 	return window_.get();
 }
@@ -100,8 +103,8 @@ void GlrProgram::render()
 
 	shader->bind();
 
-	setupUniformBufferObjectBindings(shader);
-	bindUniformBufferObjects(shader);
+	//setupUniformBufferObjectBindings(shader);
+	//bindUniformBufferObjects(shader);
 
 	sMgr_->drawAll();
 
@@ -170,7 +173,7 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 
 	for ( auto it = bindings.begin(); it != bindings.end(); ++it )
 	{
-		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+		//std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 
 		switch ( it->first )
 		{
@@ -225,6 +228,12 @@ gui::IGUI* GlrProgram::getHtmlGui()
 	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
 
 	return gui_.get();
+}
+
+void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)
+{
+	setupUniformBufferObjectBindings(shader);
+	bindUniformBufferObjects(shader);
 }
 
 IWindow* GlrProgram::getWindow()

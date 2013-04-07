@@ -79,8 +79,8 @@ GLuint GlslShaderProgram::getGLShaderProgramId()
 void GlslShaderProgram::bind()
 {
 	// Notify all listeners that we are binding this shader program
-	for ( IShaderProgramBindListener* bindListener : bindListeners_ )
-		bindListener->shaderBindCallback(this);
+	for ( auto bindListener : bindListeners_ )
+		bindListener->shaderBindCallback( this );
 
 	glUseProgram(programId_);
 }
@@ -106,14 +106,14 @@ IShader::BindingsMap GlslShaderProgram::getBindings()
 	return bindings;
 }
 
-void GlslShaderProgram::addBindListener(IShaderBindListener* bindListener)
+void GlslShaderProgram::addBindListener(IShaderProgramBindListener* bindListener)
 {
 	bindListeners_.push_back(bindListener);
 }
 
-void GlslShaderProgram::removeBindListener(IShaderBindListener* bindListener)
+void GlslShaderProgram::removeBindListener(IShaderProgramBindListener* bindListener)
 {
-	bindListeners_::iterator it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
 
 	if ( it != bindListeners_.end())
 		bindListeners_.erase(it);

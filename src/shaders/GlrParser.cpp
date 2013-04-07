@@ -35,8 +35,8 @@ void GlrParser::parse(It f, It l)
 	if ( ok )
 	{
 		bindings_ = mappings;
-		for ( auto it = mappings.begin(); it != mappings.end(); ++it )
-			std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+		//for ( auto it = mappings.begin(); it != mappings.end(); ++it )
+		//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 	}
 
 	//if (f!=l)

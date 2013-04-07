@@ -18,8 +18,10 @@
 
 namespace glr {
 namespace shaders {
-ShaderProgramManager::ShaderProgramManager(bool autoLoad)
+ShaderProgramManager::ShaderProgramManager(bool autoLoad, std::vector<IShaderProgramBindListener*> defaultBindListeners)
 {
+	defaultBindListeners_ = defaultBindListeners;
+	
 	if ( autoLoad )
 		loadStandardShaderPrograms();
 }
@@ -50,9 +52,9 @@ void ShaderProgramManager::addDefaultBindListener(IShaderProgramBindListener* bi
 
 void ShaderProgramManager::removeDefaultBindListener(IShaderProgramBindListener* bindListener)
 {
-	defaultBindListeners_::iterator it = std::find(defaultBindListeners_.begin(), defaultBindListeners_.end(), bindListener);
-
-	if ( it != defaultBindListeners_.end())
+	auto it = std::find(defaultBindListeners_.begin(), defaultBindListeners_.end(), bindListener);
+	
+	if (it != defaultBindListeners_.end())
 		defaultBindListeners_.erase(it);
 }
 
@@ -181,8 +183,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 	{
 		entry.second->compile();
 
-		for ( IShaderProgramBindListener* bindListener : defaultBindListeners_ )
-			entry.second->addBindListener(bindListener);
+		for ( IShaderProgramBindListener* bindListener : defaultBindListeners_)
+			entry.second->addBindListener( bindListener );
 	}
 }
 
