@@ -23,6 +23,8 @@ public:
 	Material(const aiMaterial* mtl);
 	virtual ~Material();
 
+	void bind();
+
 private:
 	GLenum fill_mode_;
 	glm::detail::int32 ret1_, ret2_;
@@ -35,8 +37,6 @@ private:
 	glm::detail::int32 two_sided_true_;
 	glm::detail::int32 wireframe_;
 	glm::detail::uint32 max_;               // changed: to unsigned
-
-	void bind();
 };
 }
 }

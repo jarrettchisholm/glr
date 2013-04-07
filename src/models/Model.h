@@ -51,10 +51,6 @@ protected:
 	glm::detail::uint32 scene_list;
 	aiVector3D scene_min, scene_max, scene_center;
 
-
-	// temporary method
-	void setLighting();
-
 	void loadMeshes(const aiScene* scene);
 	void loadTextures(const aiScene* scene);
 	void loadMaterials(const aiScene* scene);

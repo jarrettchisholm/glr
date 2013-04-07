@@ -47,38 +47,19 @@ in vec3 in_Normal;
 
 out vec2 textureCoord;
 out vec4 pass_Color;
-
+out vec3 normalDirection;
+out vec3 lightDirection;
 
 //@bind texture0
 uniform sampler2D texture;
 
-//@bind texture0
-uniform 
-sampler2D 
-texture2
-;
-
 @bind Light
-layout(std140) 
-uniform 
-LightSources 
+layout(std140) uniform LightSources 
 {
 	LightSource lightSources[ NUM_LIGHTS ];
 };
 
-@bind Light2
-layout(std140) uniform LightSources2 {
-	LightSource lightSources2[ NUM_LIGHTS ];
-};
-
-
-@bind Light2
-uniform LightSources3 
-{
-	LightSource lightSources3[ NUM_LIGHTS ];
-};
-
-@bind Material
+//@bind Material
 Material material = Material(
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
@@ -86,31 +67,14 @@ Material material = Material(
 	0.995
 );
 
-@bind Color
-Material color = Material (
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	0.995
-);
-
-@bind Color
-Material color2 = Material (
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	0.995
-)
-;
-
 
 void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
 	textureCoord = in_Texture;
 	
-	vec3 normalDirection = normalize(normalMatrix * in_Normal);
-	vec3 lightDirection = normalize(vec3(lightSources[0].direction));
+	normalDirection = normalize(normalMatrix * in_Normal);
+	lightDirection = normalize(vec3(lightSources[0].direction));
 	
 	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
@@ -171,18 +135,43 @@ struct LightSource {
 
 #type fragment
 
+#include <material>
+
 @bind texture0
 uniform sampler2D texture;
 
 in vec4 pass_Color;
 in vec2 textureCoord;
+in vec3 normalDirection;
+in vec3 lightDirection;
+
+Material material = Material(
+	vec4(1.0, 0.8, 0.8, 1.0),
+	vec4(1.0, 0.8, 0.8, 1.0),
+	vec4(1.0, 0.8, 0.8, 1.0),
+	0.995
+);
 
 void main() {	
-	vec4 out_Color = texture2D(texture, textureCoord);
+	//vec4 out_Color = texture2D(texture, textureCoord);
 	
-	gl_FragColor = pass_Color;
+	//gl_FragColor = pass_Color;
 	
 	//gl_FragColor = out_Color;
+	
+	vec3 ct, cf;
+	vec4 texel;
+	float intensity, at, af;
+	intensity = max( dot(lightDirection, normalize(normalDirection)), 0.0 );
+ 
+	cf = intensity * (material.diffuse).rgb + material.ambient.rgb;
+	af = material.diffuse.a;
+	texel = texture2D(texture, textureCoord);
+ 
+	ct = texel.rgb;
+	at = texel.a;
+	
+	gl_FragColor = vec4(ct * cf, at * af) + pass_Color;
 }
 
 )<STRING>"

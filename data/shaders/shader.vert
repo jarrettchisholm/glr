@@ -16,38 +16,19 @@ in vec3 in_Normal;
 
 out vec2 textureCoord;
 out vec4 pass_Color;
-
+out vec3 normalDirection;
+out vec3 lightDirection;
 
 //@bind texture0
 uniform sampler2D texture;
 
-//@bind texture0
-uniform 
-sampler2D 
-texture2
-;
-
 @bind Light
-layout(std140) 
-uniform 
-LightSources 
+layout(std140) uniform LightSources 
 {
 	LightSource lightSources[ NUM_LIGHTS ];
 };
 
-@bind Light2
-layout(std140) uniform LightSources2 {
-	LightSource lightSources2[ NUM_LIGHTS ];
-};
-
-
-@bind Light2
-uniform LightSources3 
-{
-	LightSource lightSources3[ NUM_LIGHTS ];
-};
-
-@bind Material
+//@bind Material
 Material material = Material(
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
@@ -55,31 +36,14 @@ Material material = Material(
 	0.995
 );
 
-@bind Color
-Material color = Material (
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	0.995
-);
-
-@bind Color
-Material color2 = Material (
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	0.995
-)
-;
-
 
 void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
 	textureCoord = in_Texture;
 	
-	vec3 normalDirection = normalize(normalMatrix * in_Normal);
-	vec3 lightDirection = normalize(vec3(lightSources[0].direction));
+	normalDirection = normalize(normalMatrix * in_Normal);
+	lightDirection = normalize(vec3(lightSources[0].direction));
 	
 	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	

@@ -42,6 +42,10 @@ void Model::render()
 		{
 			textures_[ textureMap_[i] ]->bind();
 		}
+		if ( materials_[ materialMap_[i] ] != nullptr )
+		{
+			materials_[ materialMap_[i] ]->bind();
+		}
 		meshes_[i]->render();
 	}
 
@@ -283,7 +287,7 @@ void Model::loadTextures(const aiScene* scene)
 		if ( texFound == AI_SUCCESS )
 		{
 			Texture* texture = TextureManager::getInstance()->getTexture(path.data);
-			if ( texture == 0 )
+			if ( texture == nullptr )
 			{
 				BOOST_LOG_TRIVIAL(warning) << "Not able to load texture.";
 			}
@@ -309,22 +313,6 @@ void Model::loadAnimations(const aiScene* scene)
 	// TODO: implement
 }
 
-// temporary method
-void Model::setLighting()
-{
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 50.0 };
-	GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glShadeModel(GL_SMOOTH);
-
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-	glEnable(GL_LIGHT0);
-}
 }
 }
 

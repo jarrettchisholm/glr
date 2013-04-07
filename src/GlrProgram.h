@@ -50,6 +50,7 @@ public:
 
 private:
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
+	std::map<std::string, std::vector<GLuint> > materialUbos_;
 
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	std::unique_ptr< BasicSceneManager > sMgr_;

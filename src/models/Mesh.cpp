@@ -26,13 +26,21 @@ Mesh::Mesh(const aiMesh* mesh)
 
 		switch ( face->mNumIndices )
 		{
-		case 1: face_mode = GL_POINTS; break;
-
-		case 2: face_mode = GL_LINES; break;
-
-		case 3: face_mode = GL_TRIANGLES; break;
-
-		default: face_mode = GL_POLYGON; break;
+			case 1: 
+				face_mode = GL_POINTS; 
+				break;
+	
+			case 2: 
+				face_mode = GL_LINES; 
+				break;
+	
+			case 3: 
+				face_mode = GL_TRIANGLES; 
+				break;
+	
+			default:
+				face_mode = GL_POLYGON; 
+				break;
 		}
 
 		glm::detail::uint32 numIndices = face->mNumIndices;
@@ -121,20 +129,6 @@ void Mesh::render()
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 	glBindVertexArray(0);
-
-	/*
-	   glBegin( GL_TRIANGLES );
-
-	   for (glm::detail::uint32 i = 0; i < vertices_.size(); i++) {
-	        //BOOST_LOG_TRIVIAL(debug) << "texCoords " << i << ": (" << textureCoordinates_[i].x << ", " << textureCoordinates_[i].y << ")";
-	        glTexCoord2fv( &textureCoordinates_[i].x );
-	        glNormal3fv( &normals_[i].x );
-	        glVertex3fv( &vertices_[i].x );
-	        //Color4f(&mesh->mColors[0][vertexIndex]);
-	   }
-
-	   glEnd();
-	 */
 }
 }
 }

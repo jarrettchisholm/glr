@@ -33,7 +33,7 @@ public:
 private:
 	aiLogStream stream;
 
-	std::map< std::string, std::unique_ptr<Material> > meshes_;
+	std::map< std::string, std::unique_ptr<Material> > materials_;
 };
 }
 }
