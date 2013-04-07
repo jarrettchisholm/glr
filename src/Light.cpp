@@ -23,7 +23,7 @@
 #include "common/math/Math.h"
 
 namespace glr {
-Light::Light() : DefaultSceneNode()
+Light::Light() : BasicSceneNode()
 {
 	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
@@ -32,7 +32,7 @@ Light::Light() : DefaultSceneNode()
 	initialize();
 }
 
-Light::Light(const std::string name) : DefaultSceneNode(name)
+Light::Light(const std::string name) : BasicSceneNode(name)
 {
 	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);

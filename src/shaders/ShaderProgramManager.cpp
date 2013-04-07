@@ -43,6 +43,24 @@ void ShaderProgramManager::loadShaderPrograms(const std::string directory)
 	load(directory);
 }
 
+void ShaderProgramManager::addDefaultBindListener(IShaderProgramBindListener* bindListener)
+{
+	defaultBindListeners_.push_back(bindListener);
+}
+
+void ShaderProgramManager::removeDefaultBindListener(IShaderProgramBindListener* bindListener)
+{
+	defaultBindListeners_::iterator it = std::find(defaultBindListeners_.begin(), defaultBindListeners_.end(), bindListener);
+
+	if ( it != defaultBindListeners_.end())
+		defaultBindListeners_.erase(it);
+}
+
+void ShaderProgramManager::removeAllDefaultBindListeners()
+{
+	defaultBindListeners_.clear();
+}
+
 void ShaderProgramManager::load(const std::string directory)
 {
 	return load(fs::path(directory));
@@ -158,10 +176,13 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		glslProgramMap_[entry.second->getName()] = convertGlrProgramToGlslProgram(entry.second.get());
 	}
 
-	// Compile each glsl shader program
+	// Compile each glsl shader program and add the default set of bind listeners
 	for ( auto entry : glslProgramMap_ )
 	{
 		entry.second->compile();
+
+		for ( IShaderProgramBindListener* bindListener : defaultBindListeners_ )
+			entry.second->addBindListener(bindListener);
 	}
 }
 

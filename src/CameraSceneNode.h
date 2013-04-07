@@ -12,12 +12,12 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include "ICamera.h"
-#include "DefaultSceneNode.h"
+#include "BasicSceneNode.h"
 
 //#include "IInputListener.h"
 
 namespace glr {
-class CameraSceneNode : public virtual ICamera, public DefaultSceneNode {
+class CameraSceneNode : public virtual ICamera, public BasicSceneNode {
 public:
 	CameraSceneNode();
 	CameraSceneNode(const std::string name);

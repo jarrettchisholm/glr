@@ -71,8 +71,11 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager());
+	shaderProgramManager_->addDefaultBindListener(this);
 
-	sMgr_ = std::unique_ptr<DefaultSceneManager>(new DefaultSceneManager(shaderProgramManager_.get()));
+	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get()));
+
+
 
 	return window_.get();
 }

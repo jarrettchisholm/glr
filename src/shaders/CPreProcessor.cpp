@@ -162,7 +162,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 	wave::token_id id = wave::util::impl::skip_whitespace(it, line.end());
 
 	if ( id != wave::T_IDENTIFIER )
-		return false;                                                                                                                                                            // nothing we could do
+		return false;                                                                                                                                                                                                                                                         // nothing we could do
 
 	if ((*it).get_value() == "version" || (*it).get_value() == "extension" )
 	{
@@ -325,7 +325,7 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is
 	{
 		//} else {
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
-			return false;                                                                                                                                                                                                // could not locate file
+			return false;                                                                                                                                                                                                                                                                                                                     // could not locate file
 
 		namespace fs = boost::filesystem;
 

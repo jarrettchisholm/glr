@@ -1,12 +1,12 @@
 /*
- * DefaultSceneNode.h
+ * BasicSceneNode.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
 
-#ifndef DEFAULTSCENENODE_H_
-#define DEFAULTSCENENODE_H_
+#ifndef BASICSCENENODE_H_
+#define BASICSCENENODE_H_
 
 #include <string>
 
@@ -17,19 +17,21 @@
 #include "ISceneManager.h"
 
 namespace glr {
-class DefaultSceneNode : public virtual ISceneNode {
+class BasicSceneNode : public virtual ISceneNode {
 public:
-	DefaultSceneNode();
-	DefaultSceneNode(const std::string name);
-	DefaultSceneNode(const std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale);
-	virtual ~DefaultSceneNode();
+	BasicSceneNode();
+	BasicSceneNode(const std::string name);
+	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale);
+	virtual ~BasicSceneNode();
 
-	virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt);
-	virtual void addChild(ISceneNode* node);
-	virtual ISceneNode* getChild(const std::string& name);
-	virtual void removeChild(ISceneNode* node);
-	virtual void removeAllChildren();
-	virtual glmd::uint32 getNumChildren();
+	/*
+	   virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt);
+	   virtual void addChild(ISceneNode* node);
+	   virtual ISceneNode* getChild(const std::string& name);
+	   virtual void removeChild(ISceneNode* node);
+	   virtual void removeAllChildren();
+	   virtual glmd::uint32 getNumChildren();
+	 */
 
 	virtual std::string getName();
 
@@ -71,4 +73,4 @@ protected:
 	bool active_;
 };
 }
-#endif /* DEFAULTSCENENODE_H_ */
+#endif /* BASICSCENENODE_H_ */

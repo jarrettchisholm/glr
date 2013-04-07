@@ -14,6 +14,8 @@
 
 #include "IShaderProgram.h"
 
+#include "IShaderProgramBindListener.h"
+
 namespace glr {
 namespace shaders {
 class IShaderProgramManager {
@@ -26,6 +28,9 @@ public:
 	virtual IShaderProgram* getShaderProgram(const std::string filename) = 0;
 
 	virtual void loadShaderPrograms(const std::string directory) = 0;
+
+	virtual void addDefaultBindListener(IShaderProgramBindListener* bindListener) = 0;
+	virtual void removeDefaultBindListener(IShaderProgramBindListener* bindListener) = 0;
 };
 }
 }

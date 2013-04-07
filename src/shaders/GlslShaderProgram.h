@@ -31,6 +31,10 @@ public:
 
 	std::string getName();
 
+	virtual void addBindListener(IShaderBindListener* bindListener);
+	virtual void removeBindListener(IShaderBindListener* bindListener);
+	void removeAllBindListeners();
+
 	static void unbindAll();
 
 private:
@@ -39,6 +43,8 @@ private:
 	std::string name_;
 
 	std::vector< std::shared_ptr<GlslShader> > shaders_;
+
+	std::vector<IShaderProgramBindListener> bindListeners_;
 };
 }
 }

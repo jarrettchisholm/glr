@@ -31,12 +31,12 @@ public:
 	}
 	;
 
-	virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt) = 0;
-	virtual void addChild(ISceneNode* node) = 0;
-	virtual ISceneNode* getChild(const std::string& name) = 0;
-	virtual void removeChild(ISceneNode* node) = 0;
-	virtual void removeAllChildren() = 0;
-	virtual glmd::uint32 getNumChildren() = 0;
+	//virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt) = 0;
+	//virtual void addChild(ISceneNode* node) = 0;
+	//virtual ISceneNode* getChild(const std::string& name) = 0;
+	//virtual void removeChild(ISceneNode* node) = 0;
+	//virtual void removeAllChildren() = 0;
+	//virtual glmd::uint32 getNumChildren() = 0;
 
 	virtual std::string getName() = 0;
 

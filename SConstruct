@@ -18,7 +18,7 @@ def beautifyCode():
 	
 	
 	for f in fileList:
-		subprocess.call( shlex.split("uncrustify --mtime --no-backup -q -c xsupplicant.cfg "+f) )
+		subprocess.call( shlex.split("uncrustify --mtime --no-backup -c xsupplicant.cfg "+f) )
 
 def parseShadersIntoHeader():
 	print('Parsing Shaders into header ShaderData.h')

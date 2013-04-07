@@ -15,9 +15,8 @@
 
 namespace glr {
 namespace models {
-	
 namespace glmd = glm::detail;
-	
+
 class Texture {
 public:
 	Texture();

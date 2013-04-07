@@ -4,6 +4,9 @@
  *  Created on: 2013-01-04
  *      Author: jarrett
  */
+
+#include <algorithm>
+
 #include <boost/log/trivial.hpp>
 
 #include "GlslShaderProgram.h"
@@ -75,6 +78,10 @@ GLuint GlslShaderProgram::getGLShaderProgramId()
 
 void GlslShaderProgram::bind()
 {
+	// Notify all listeners that we are binding this shader program
+	for ( IShaderProgramBindListener* bindListener : bindListeners_ )
+		bindListener->shaderBindCallback(this);
+
 	glUseProgram(programId_);
 }
 
@@ -97,6 +104,24 @@ IShader::BindingsMap GlslShaderProgram::getBindings()
 	}
 
 	return bindings;
+}
+
+void GlslShaderProgram::addBindListener(IShaderBindListener* bindListener)
+{
+	bindListeners_.push_back(bindListener);
+}
+
+void GlslShaderProgram::removeBindListener(IShaderBindListener* bindListener)
+{
+	bindListeners_::iterator it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+
+	if ( it != bindListeners_.end())
+		bindListeners_.erase(it);
+}
+
+void GlslShaderProgram::removeAllBindListeners()
+{
+	bindListeners_.clear();
 }
 
 void GlslShaderProgram::unbindAll()

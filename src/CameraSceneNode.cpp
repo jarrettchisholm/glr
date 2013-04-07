@@ -23,7 +23,7 @@
 #include <iostream>
 
 namespace glr {
-CameraSceneNode::CameraSceneNode() : DefaultSceneNode()
+CameraSceneNode::CameraSceneNode() : BasicSceneNode()
 {
 	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
@@ -32,7 +32,7 @@ CameraSceneNode::CameraSceneNode() : DefaultSceneNode()
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(const std::string name) : DefaultSceneNode(name)
+CameraSceneNode::CameraSceneNode(const std::string name) : BasicSceneNode(name)
 {
 	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);

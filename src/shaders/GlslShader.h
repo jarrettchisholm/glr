@@ -33,6 +33,9 @@ public:
 
 	std::string getName();
 
+	virtual void addBindListener(IShaderBindListener* bindListener);
+	virtual void removeBindListener(IShaderBindListener* bindListener);
+
 private:
 	GLuint shaderId_;
 

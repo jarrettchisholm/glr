@@ -12,10 +12,10 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include "ILight.h"
-#include "DefaultSceneNode.h"
+#include "BasicSceneNode.h"
 
 namespace glr {
-class Light : public virtual ILight, public DefaultSceneNode {
+class Light : public virtual ILight, public BasicSceneNode {
 public:
 	Light();
 	Light(const std::string name);

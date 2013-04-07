@@ -11,6 +11,7 @@
 #include <GL/glew.h>
 
 #include "IShader.h"
+#include "IShaderProgramBindListener.h"
 
 namespace glr {
 namespace shaders {
@@ -26,6 +27,9 @@ public:
 	virtual GLuint getGLShaderProgramId() = 0;
 
 	virtual IShader::BindingsMap getBindings() = 0;
+
+	virtual void addBindListener(IShaderBindListener* bindListener) = 0;
+	virtual void removeBindListener(IShaderBindListener* bindListener) = 0;
 };
 }
 }

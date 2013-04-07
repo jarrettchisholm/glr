@@ -1,12 +1,12 @@
 /*
- * DefaultSceneManager.h
+ * BasicSceneManager.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
 
-#ifndef DEFAULTSCENEMANAGER_H_
-#define DEFAULTSCENEMANAGER_H_
+#ifndef BASICSCENEMANAGER_H_
+#define BASICSCENEMANAGER_H_
 
 #include "ISceneManager.h"
 
@@ -14,10 +14,10 @@
 #include "shaders/ShaderProgramManager.h"
 
 namespace glr {
-class DefaultSceneManager : public ISceneManager {
+class BasicSceneManager : public ISceneManager {
 public:
-	DefaultSceneManager(shaders::ShaderProgramManager* shaderProgramManager);
-	virtual ~DefaultSceneManager();
+	BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager);
+	virtual ~BasicSceneManager();
 
 	virtual ISceneNode* createSceneNode(const std::string name);
 	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
@@ -66,4 +66,4 @@ private:
 	glm::mat4 modelMatrix_;
 };
 }
-#endif /* DEFAULTSCENEMANAGER_H_ */
+#endif /* BASICSCENEMANAGER_H_ */

@@ -15,8 +15,8 @@
 #endif
 
 #include "IWindow.h"
-#include "DefaultSceneNode.h"
-#include "DefaultSceneManager.h"
+#include "BasicSceneNode.h"
+#include "BasicSceneManager.h"
 #include "Light.h"
 
 //#include "gui/IGUI.h"
@@ -49,7 +49,7 @@ private:
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
 
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
-	std::unique_ptr< DefaultSceneManager > sMgr_;
+	std::unique_ptr< BasicSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
 	std::unique_ptr< gui::GUI > gui_;
 

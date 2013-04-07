@@ -86,7 +86,7 @@ public:
 				)
 
 
-				|                                                                                                  // or
+				|                                                                                               // or
 
 			    /*
 			     * Match to things like:

@@ -35,6 +35,10 @@ public:
 
 	virtual void loadShaderPrograms(const std::string directory);
 
+	virtual void addDefaultBindListener(IShaderProgramBindListener* bindListener);
+	virtual void removeDefaultBindListener(IShaderProgramBindListener* bindListener);
+	void removeAllDefaultBindListeners();
+
 	void loadStandardShaderPrograms();
 
 	void load(const std::string directory);
@@ -48,6 +52,8 @@ private:
 	std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
 	std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
 	std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
+
+	std::vector<IShaderProgramBindListener> defaultBindListeners_;
 
 	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
 
