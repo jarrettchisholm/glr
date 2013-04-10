@@ -25,13 +25,13 @@ public:
 	virtual ~BasicSceneNode();
 
 	/*
-	   virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt);
-	   virtual void addChild(ISceneNode* node);
-	   virtual ISceneNode* getChild(const std::string& name);
-	   virtual void removeChild(ISceneNode* node);
-	   virtual void removeAllChildren();
-	   virtual glmd::uint32 getNumChildren();
-	 */
+	virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt);
+	virtual void addChild(ISceneNode* node);
+	virtual ISceneNode* getChild(const std::string& name);
+	virtual void removeChild(ISceneNode* node);
+	virtual void removeAllChildren();
+	virtual glmd::uint32 getNumChildren();
+	*/
 
 	virtual std::string getName();
 
@@ -56,7 +56,7 @@ public:
 	virtual void attach(models::IModel* model);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);
 	virtual void detach(models::IModel* model);
-	virtual void render();
+	virtual void render(IMatrixData* matrixData);
 
 protected:
 	models::IModel* model_;

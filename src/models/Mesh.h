@@ -18,6 +18,9 @@
 
 #include <glm/glm.hpp>
 
+#include "../IMatrixData.h"
+#include "../shaders/IShaderProgram.h"
+
 //#include "../../vmath/Vector3f.h"
 
 
@@ -28,7 +31,7 @@ public:
 	Mesh(const aiMesh* mesh);
 	virtual ~Mesh();
 
-	void render();
+	void render(IMatrixData* matrixData, shaders::IShaderProgram* shader);
 
 private:
 	glm::detail::uint32 vaoId_;

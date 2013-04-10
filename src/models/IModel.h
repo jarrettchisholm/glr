@@ -8,6 +8,9 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
+#include "../IMatrixData.h"
+#include "../shaders/IShaderProgram.h"
+
 namespace glr {
 namespace models {
 class IModel {
@@ -22,7 +25,7 @@ public:
 	}
 	;
 
-	virtual void render() = 0;
+	virtual void render(IMatrixData* matrixData, shaders::IShaderProgram* shader) = 0;
 };
 }
 }

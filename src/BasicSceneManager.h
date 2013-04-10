@@ -22,7 +22,7 @@ public:
 	virtual ISceneNode* createSceneNode(const std::string name);
 	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
 	virtual ILight* createLight(const std::string name);
-	virtual void drawAll();
+	virtual void drawAll(IMatrixData* matrixData);
 
 	virtual models::IModelManager* getModelManager();
 	virtual shaders::IShaderProgramManager* getShaderProgramManager();
@@ -49,6 +49,8 @@ public:
 
 	virtual const std::vector<LightData>& getLightData();
 
+	void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
+
 	ICamera* getActiveCameraSceneNode();
 	const glm::mat4& getModelMatrix();
 
@@ -62,6 +64,8 @@ private:
 	shaders::ShaderProgramManager* shaderProgramManager_;
 
 	std::vector<LightData> lightData_;
+	
+	shaders::IShaderProgram* defaultShaderProgram_;
 
 	glm::mat4 modelMatrix_;
 };

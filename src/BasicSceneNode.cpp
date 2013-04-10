@@ -28,6 +28,7 @@ BasicSceneNode::BasicSceneNode()
 	active_ = true;
 
 	model_ = nullptr;
+	shaderProgram_ = nullptr;
 }
 
 BasicSceneNode::BasicSceneNode(const std::string name)
@@ -39,6 +40,7 @@ BasicSceneNode::BasicSceneNode(const std::string name)
 	active_ = true;
 
 	model_ = nullptr;
+	shaderProgram_ = nullptr;
 }
 
 BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale)
@@ -73,48 +75,48 @@ void BasicSceneNode::attach(shaders::IShaderProgram* shaderProgram)
 }
 
 /*
-   ISceneNode* BasicSceneNode::createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt)
-   {
-        ISceneNode* node = sceneManager_->createSceneNode(name);
+ISceneNode* BasicSceneNode::createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt)
+{
+	ISceneNode* node = sceneManager_->createSceneNode(name);
 
-        node->setPosition(position);
-        node->setLookAt(lookAt);
+	node->setPosition(position);
+	node->setLookAt(lookAt);
 
-        if ( node != nullptr )
-                children_[node->getName()] = node;
+	if ( node != nullptr )
+		children_[node->getName()] = node;
 
-        return node;
-   }
+	return node;
+}
 
-   void BasicSceneNode::addChild(ISceneNode* node)
-   {
-        children_[node->getName()] = node;
-   }
+void BasicSceneNode::addChild(ISceneNode* node)
+{
+	children_[node->getName()] = node;
+}
 
-   ISceneNode* BasicSceneNode::getChild(const std::string& name)
-   {
-        if ( children_.find(name) != children_.end())
-                return children_[name];
+ISceneNode* BasicSceneNode::getChild(const std::string& name)
+{
+	if ( children_.find(name) != children_.end())
+		return children_[name];
 
-        return nullptr;
-   }
+	return nullptr;
+}
 
-   void BasicSceneNode::removeChild(ISceneNode* node)
-   {
-        if ( children_.find(node->getName()) != children_.end())
-                children_.erase(node->getName());
-   }
+void BasicSceneNode::removeChild(ISceneNode* node)
+{
+	if ( children_.find(node->getName()) != children_.end())
+		children_.erase(node->getName());
+}
 
-   void BasicSceneNode::removeAllChildren()
-   {
-        children_.clear();
-   }
+void BasicSceneNode::removeAllChildren()
+{
+	children_.clear();
+}
 
-   glmd::uint32 BasicSceneNode::getNumChildren()
-   {
-        return children_.size();
-   }
- */
+glmd::uint32 BasicSceneNode::getNumChildren()
+{
+	return children_.size();
+}
+*/
 
 std::string BasicSceneNode::getName()
 {
@@ -182,7 +184,7 @@ void BasicSceneNode::rotate(glm::quat quaternion)
 {
 }
 
-void BasicSceneNode::render()
+void BasicSceneNode::render(IMatrixData* matrixData)
 {
 	if ( model_ != nullptr )
 	{
@@ -190,7 +192,7 @@ void BasicSceneNode::render()
 		//	shaderProgram_->bind();
 		//else
 		//	shaders::ShaderProgram::unbindAll();
-		model_->render();
+		model_->render(matrixData, shaderProgram_);
 	}
 }
 }

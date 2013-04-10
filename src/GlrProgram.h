@@ -14,6 +14,7 @@
 #include <windows.h>
 #endif
 
+#include "IMatrixData.h"
 #include "IWindow.h"
 #include "BasicSceneNode.h"
 #include "BasicSceneManager.h"
@@ -27,7 +28,7 @@
 
 
 namespace glr {
-class GlrProgram : public shaders::IShaderProgramBindListener {
+class GlrProgram : public shaders::IShaderProgramBindListener, public IMatrixData {
 public:
 	GlrProgram();
 	virtual ~GlrProgram();
@@ -43,7 +44,11 @@ public:
 	ISceneManager* getSceneManager();
 	gui::IGUI* getHtmlGui();
 	
-	void shaderBindCallback(shaders::IShaderProgram* shader);
+	virtual const glm::mat4& getViewMatrix();
+	virtual const glm::mat4& getProjectionMatrix();
+	virtual const glm::mat4& getModelMatrix();
+	
+	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
 
 	//void destroyWindow();
 	//void destroySceneManager();

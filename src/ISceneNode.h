@@ -13,11 +13,11 @@
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 
+#include "IMatrixData.h"
 #include "models/IModel.h"
 
 
 namespace glr {
-namespace glmd = glm::detail;
 
 class ISceneNode {
 public:
@@ -36,7 +36,7 @@ public:
 	//virtual ISceneNode* getChild(const std::string& name) = 0;
 	//virtual void removeChild(ISceneNode* node) = 0;
 	//virtual void removeAllChildren() = 0;
-	//virtual glmd::uint32 getNumChildren() = 0;
+	//virtual glm::detail::uint32 getNumChildren() = 0;
 
 	virtual std::string getName() = 0;
 
@@ -59,8 +59,9 @@ public:
 	virtual void rotate(glm::quat quaternion) = 0;
 
 	virtual void attach(models::IModel* model) = 0;
+	virtual void attach(shaders::IShaderProgram* shaderProgram) = 0;
 	virtual void detach(models::IModel* model) = 0;
-	virtual void render() = 0;
+	virtual void render(IMatrixData* matrixData) = 0;
 };
 }
 #endif /* ISCENENODE_H_ */

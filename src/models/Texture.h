@@ -11,6 +11,9 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include "../IMatrixData.h"
+#include "../shaders/IShaderProgram.h"
+
 #include "../common/utilities/ImageLoader.h"
 
 namespace glr {
@@ -23,7 +26,7 @@ public:
 	Texture(utilities::Image* image);
 	virtual ~Texture();
 
-	void bind(glmd::int32 samplerId = 0);
+	void bind(IMatrixData* matrixData, shaders::IShaderProgram* shader);
 
 private:
 	GLuint textureId_;

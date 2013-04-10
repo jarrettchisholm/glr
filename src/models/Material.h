@@ -16,6 +16,9 @@
 
 #include <glm/glm.hpp>
 
+#include "../IMatrixData.h"
+#include "../shaders/IShaderProgram.h"
+
 namespace glr {
 namespace models {
 class Material {
@@ -23,7 +26,7 @@ public:
 	Material(const aiMaterial* mtl);
 	virtual ~Material();
 
-	void bind();
+	void bind(IMatrixData* matrixData, shaders::IShaderProgram* shader);
 
 private:
 	GLenum fill_mode_;

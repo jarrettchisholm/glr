@@ -105,8 +105,8 @@ void GlrProgram::render()
 
 	//setupUniformBufferObjectBindings(shader);
 	//bindUniformBufferObjects(shader);
-
-	sMgr_->drawAll();
+	sMgr_->setDefaultShaderProgram(shader);
+	sMgr_->drawAll(this);
 
 	shaders::GlslShaderProgram::unbindAll();
 
@@ -228,6 +228,25 @@ gui::IGUI* GlrProgram::getHtmlGui()
 	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
 
 	return gui_.get();
+}
+
+const glm::mat4& GlrProgram::getViewMatrix()
+{
+	ICamera* camera = sMgr_->getActiveCameraSceneNode();
+	if (camera != nullptr)
+		return camera->getViewMatrix();
+	
+	return glm::mat4();
+}
+
+const glm::mat4& GlrProgram::getProjectionMatrix()
+{
+	return window_->getProjectionMatrix();
+}
+
+const glm::mat4& GlrProgram::getModelMatrix()
+{
+	return sMgr_->getModelMatrix();
 }
 
 void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)

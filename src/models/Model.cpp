@@ -32,21 +32,21 @@ Model::~Model()
 	//destroyAILogger();
 }
 
-void Model::render()
+void Model::render(IMatrixData* matrixData, shaders::IShaderProgram* shader)
 {
-	//setLighting();
-
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[ textureMap_[i] ] != nullptr )
 		{
-			textures_[ textureMap_[i] ]->bind();
+			textures_[ textureMap_[i] ]->bind(matrixData, shader);
 		}
+		
 		if ( materials_[ materialMap_[i] ] != nullptr )
 		{
-			materials_[ materialMap_[i] ]->bind();
+			materials_[ materialMap_[i] ]->bind(matrixData, shader);
 		}
-		meshes_[i]->render();
+		
+		meshes_[i]->render(matrixData, shader);
 	}
 
 	/*

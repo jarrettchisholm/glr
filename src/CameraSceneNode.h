@@ -26,7 +26,7 @@ public:
 	// inherited from ICamera
 	virtual bool isActive();
 
-	virtual void render();
+	virtual void render(IMatrixData* matrixData);
 
 	virtual void attach(models::IModel* model);
 

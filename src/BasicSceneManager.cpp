@@ -32,6 +32,8 @@ BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgra
 	ld.position = glm::vec4(2.5f, 2.5f, 2.5f, 0.f);
 	ld.direction = glm::vec4(0.5f, 0.5f, 0.5f, 0.f);
 	lightData_.push_back(ld);
+	
+	defaultShaderProgram_ = nullptr;
 }
 
 BasicSceneManager::~BasicSceneManager()
@@ -52,6 +54,8 @@ ISceneNode* BasicSceneManager::createSceneNode(const std::string name)
 	std::shared_ptr<ISceneNode> node = std::shared_ptr<ISceneNode>(new BasicSceneNode(name));
 	sceneNodes_[name] = node;
 
+	node->attach(defaultShaderProgram_);
+
 	return node.get();
 }
 
@@ -68,6 +72,8 @@ ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::ui
 
 	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>(new CameraSceneNode(name));
 	cameras_[name] = node;
+
+	node->attach(defaultShaderProgram_);
 
 	return node.get();
 }
@@ -89,13 +95,18 @@ ILight* BasicSceneManager::createLight(const std::string name)
 	return node.get();
 }
 
-void BasicSceneManager::drawAll()
+void BasicSceneManager::drawAll(IMatrixData* matrixData)
 {
 	for ( auto it = cameras_.begin(); it != cameras_.end(); ++it )
-		it->second->render();
+		it->second->render(matrixData);
 
 	for ( auto it = sceneNodes_.begin(); it != sceneNodes_.end(); ++it )
-		it->second->render();
+		it->second->render(matrixData);
+}
+
+void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram)
+{
+	defaultShaderProgram_ = shaderProgram;
 }
 
 ICamera* BasicSceneManager::getActiveCameraSceneNode()

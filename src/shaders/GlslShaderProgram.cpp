@@ -85,6 +85,64 @@ void GlslShaderProgram::bind()
 		bindListener->shaderBindCallback( this );
 }
 
+GLuint GlslShaderProgram::getBindPoint(std::string varName)
+{
+	// TODO: Will we want to add multiple Ubos in a single shader for light sources
+	/*
+	const std::vector<LightData> lightData = sMgr_->getLightData();
+
+	lightUbos_[varName] = std::vector<GLuint>();
+	lightUbos_[varName].push_back(0);
+
+	// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
+	GLuint bindingPoint = 1;
+
+	GLuint uniformBlockIndex = glGetUniformBlockIndex(this->getGLShaderProgramId(), "LightSources");
+	glUniformBlockBinding(this->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
+
+	glGenBuffers(1, &lightUbos_[varName][0]);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightUbos_[varName][0]);
+
+	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[varName][0]);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	*/
+	return 0;
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::vec2)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::vec3)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::vec4)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::mat2)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::mat3)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glm::mat4)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glmd::uint32)
+{
+}
+
+void GlslShaderProgram::bindData(GLuint, glmd::float32)
+{
+}
+
+
 std::string GlslShaderProgram::getName()
 {
 	return name_;

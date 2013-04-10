@@ -70,7 +70,7 @@ Material::~Material()
 {
 }
 
-void Material::bind()
+void Material::bind(IMatrixData* matrixData, shaders::IShaderProgram* shader)
 {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(diffuse_));
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(specular_));

@@ -11,10 +11,12 @@
 #include "ISceneNode.h"
 #include "ICamera.h"
 #include "ILight.h"
+#include "IMatrixData.h"
 #include "models/IModelManager.h"
 #include "shaders/IShaderProgramManager.h"
 
 namespace glr {
+namespace glmd = glm::detail;
 class ISceneManager {
 public:
 	virtual ~ISceneManager()
@@ -44,7 +46,7 @@ public:
 	virtual glmd::uint32 getNumCameras() = 0;
 	virtual glmd::uint32 getNumLights() = 0;
 
-	virtual void drawAll() = 0;
+	virtual void drawAll(IMatrixData* matrixData) = 0;
 
 	virtual ISceneNode* getRootSceneNode() = 0;
 

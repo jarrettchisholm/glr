@@ -28,6 +28,15 @@ public:
 	virtual IShader::BindingsMap getBindings();
 	void compile();
 
+	virtual GLuint getBindPoint(std::string varName);
+	virtual void bindData(GLuint, glm::vec2);
+	virtual void bindData(GLuint, glm::vec3);
+	virtual void bindData(GLuint, glm::vec4);
+	virtual void bindData(GLuint, glm::mat2);
+	virtual void bindData(GLuint, glm::mat3);
+	virtual void bindData(GLuint, glm::mat4);
+	virtual void bindData(GLuint, glmd::uint32);
+	virtual void bindData(GLuint, glmd::float32);
 
 	std::string getName();
 	

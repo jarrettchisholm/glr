@@ -7,6 +7,8 @@
 
 #include <boost/log/trivial.hpp>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "../common/utilities/AssImpUtilities.h"
 
 #include "Mesh.h"
@@ -122,8 +124,37 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::render()
+void Mesh::render(IMatrixData* matrixData, shaders::IShaderProgram* shader)
 {
+	static float temp = 0.0f;
+	if (shader != nullptr) {
+		int projectionMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "projectionMatrix");
+		int viewMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "viewMatrix");
+		int modelMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "modelMatrix");
+		int pvmMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "pvmMatrix");
+		int normalMatrixLocation = glGetUniformLocation(shader->getGLShaderProgramId(), "normalMatrix");
+	
+		const glm::mat4 modelMatrix = matrixData->getModelMatrix();
+		const glm::mat4 projectionMatrix = matrixData->getProjectionMatrix();
+		const glm::mat4 viewMatrix = matrixData->getViewMatrix();
+		
+		glm::vec3 translate = glm::vec3(temp, temp, temp);
+		glm::mat4 newModel = glm::translate(modelMatrix, translate);
+		
+		
+		// Send uniform variable values to the shader
+		glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
+	
+		glm::mat4 pvmMatrix(projectionMatrix * viewMatrix * newModel);
+		glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
+	
+		glm::mat3 normalMatrix = glm::inverse(glm::transpose(glm::mat3(viewMatrix * newModel)));
+		glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
+	
+		glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
+		glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &newModel[0][0]);
+	}
+	temp += 0.1f;
 	glBindVertexArray(vaoId_);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
