@@ -25,7 +25,6 @@
 namespace glr {
 Light::Light() : BasicSceneNode()
 {
-	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
@@ -34,7 +33,6 @@ Light::Light() : BasicSceneNode()
 
 Light::Light(const std::string name) : BasicSceneNode(name)
 {
-	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 

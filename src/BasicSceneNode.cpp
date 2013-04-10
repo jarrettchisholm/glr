@@ -24,7 +24,6 @@ namespace glr {
 BasicSceneNode::BasicSceneNode()
 {
 	setPosition(0, 0, 0);
-	setLookAt(1, 1, 1);
 	setScale(1, 1, 1);
 
 	active_ = true;
@@ -36,7 +35,6 @@ BasicSceneNode::BasicSceneNode()
 BasicSceneNode::BasicSceneNode(const std::string name)
 {
 	setPosition(0, 0, 0);
-	setLookAt(1, 1, 1);
 	setScale(1, 1, 1);
 
 	active_ = true;
@@ -45,10 +43,10 @@ BasicSceneNode::BasicSceneNode(const std::string name)
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale)
+BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
 {
 	setPosition(position);
-	setLookAt(lookAt);
+	rotate(rotation);
 	setScale(scale);
 
 	active_ = true;
@@ -140,21 +138,6 @@ void BasicSceneNode::setPosition(glm::detail::float32 x, glm::detail::float32 y,
 	pos_ = glm::vec3(x, y, z);
 }
 
-glm::vec3& BasicSceneNode::getLookAt()
-{
-	return direction_;
-}
-
-void BasicSceneNode::setLookAt(glm::vec3& newLookAt)
-{
-	direction_ = newLookAt;
-}
-
-void BasicSceneNode::setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z)
-{
-	direction_ = glm::vec3(x, y, z);
-}
-
 glm::vec3 BasicSceneNode::getScale()
 {
 	return scale_;
@@ -172,26 +155,37 @@ void BasicSceneNode::setScale(glm::detail::float32 x, glm::detail::float32 y, gl
 
 void BasicSceneNode::translate(glm::vec3 trans)
 {
+	pos_ += trans;
 }
 
 void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z)
 {
+	pos_ += glm::vec3(x, y, z);
 }
 
-void BasicSceneNode::rotate(glm::vec3 axis, glm::detail::float32 radians)
+void BasicSceneNode::rotate(glm::vec3 axis, glm::detail::float32 degrees)
 {
+	// TODO: implement
+	//rotation_ = glm::rotate(rotation_, degrees, axis);
 }
 
 void BasicSceneNode::rotate(glm::quat quaternion)
 {
+	// TODO: implement
+}
+
+void BasicSceneNode::rotate(glm::vec3 degrees)
+{
+	// TODO: implement
+	//rotation_ = glm::rotate(rotation_, degrees.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	//rotation_ = glm::rotate(rotation_, degrees.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	//rotation_ = glm::rotate(rotation_, degrees.z, glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void BasicSceneNode::render(IMatrixData* matrixData)
 {
 	if ( model_ != nullptr )
 	{
-		
-		static float temp = 0.0f;
 		if (shaderProgram_ != nullptr) {
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
 			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
@@ -201,8 +195,9 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 			const glm::mat4 projectionMatrix = matrixData->getProjectionMatrix();
 			const glm::mat4 viewMatrix = matrixData->getViewMatrix();
 			
-			glm::vec3 translate = glm::vec3(temp, temp, temp);
-			glm::mat4 newModel = glm::translate(modelMatrix, translate);
+			glm::mat4 newModel = glm::translate(modelMatrix, pos_);
+			//newModel = glm::rotate(newModel, Rotate.y, direction_);
+			newModel = glm::scale(newModel, scale_);
 			
 			
 			// Send uniform variable values to the shader		
@@ -214,7 +209,6 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 		
 			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &newModel[0][0]);
 		}
-		temp += 0.1f;
 		
 		//if (shaderProgram_ != nullptr)
 		//	shaderProgram_->bind();

@@ -25,7 +25,6 @@
 namespace glr {
 CameraSceneNode::CameraSceneNode() : BasicSceneNode()
 {
-	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
@@ -34,7 +33,6 @@ CameraSceneNode::CameraSceneNode() : BasicSceneNode()
 
 CameraSceneNode::CameraSceneNode(const std::string name) : BasicSceneNode(name)
 {
-	setLookAt(1, 1, 1);
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
@@ -146,10 +144,7 @@ void CameraSceneNode::tick(glm::detail::float32 time)
 
 	// rotation
 	glm::quat pitch = glm::angleAxis((xRot_ * time * rotSpeed_) * math::DEGTORAD, 1.0f, 0.0f, 0.0f);
-	//pitch.buildFromAxisAngle(1, 0, 0, (xRot_ * time * rotSpeed_) * math::DEGTORAD);
-
 	glm::quat heading = glm::angleAxis((yRot_ * time * rotSpeed_) * math::DEGTORAD, 0.0f, 1.0f, 0.0f);
-	//heading.buildFromAxisAngle(0, 1, 0, (yRot_ * time * rotSpeed_) * math::DEGTORAD);
 
 	rotation_ = heading * pitch;
 }

@@ -21,7 +21,7 @@ class BasicSceneNode : public virtual ISceneNode {
 public:
 	BasicSceneNode();
 	BasicSceneNode(const std::string name);
-	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& lookAt, glm::vec3& scale);
+	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale);
 	virtual ~BasicSceneNode();
 
 	/*
@@ -39,10 +39,6 @@ public:
 	virtual void setPosition(glm::vec3& newPos);
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
-	virtual glm::vec3& getLookAt();
-	virtual void setLookAt(glm::vec3& newPos);
-	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
-
 	virtual glm::vec3 getScale();
 	virtual void setScale(glm::vec3 scale);
 	virtual void setScale(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
@@ -50,7 +46,8 @@ public:
 	virtual void translate(glm::vec3 trans);
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
-	virtual void rotate(glm::vec3 axis, glm::detail::float32 radians);
+	virtual void rotate(glm::vec3 axis, glm::detail::float32 degrees);
+	virtual void rotate(glm::vec3 degrees);
 	virtual void rotate(glm::quat quaternion);
 
 	virtual void attach(models::IModel* model);
@@ -67,7 +64,7 @@ protected:
 	std::string name_;
 	std::map<std::string, ISceneNode*> children_;
 	glm::vec3 pos_;
-	glm::vec3 direction_;
+	glm::vec3 rotation_;
 	glm::vec3 scale_;
 
 	bool active_;

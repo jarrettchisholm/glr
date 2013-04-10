@@ -44,10 +44,6 @@ public:
 	virtual void setPosition(glm::vec3& newPos) = 0;
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
-	virtual glm::vec3& getLookAt() = 0;
-	virtual void setLookAt(glm::vec3& newPos) = 0;
-	virtual void setLookAt(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
-
 	virtual glm::vec3 getScale() = 0;
 	virtual void setScale(glm::vec3 scale) = 0;
 	virtual void setScale(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
@@ -55,7 +51,8 @@ public:
 	virtual void translate(glm::vec3 trans) = 0;
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
-	virtual void rotate(glm::vec3 axis, glm::detail::float32 radians) = 0;
+	virtual void rotate(glm::vec3 axis, glm::detail::float32 degrees) = 0;
+	virtual void rotate(glm::vec3 degrees) = 0;
 	virtual void rotate(glm::quat quaternion) = 0;
 
 	virtual void attach(models::IModel* model) = 0;
