@@ -13,6 +13,8 @@
 
 #include <boost/log/trivial.hpp>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "BasicSceneNode.h"
 
 #include "shaders/GlslShaderProgram.h"
@@ -188,6 +190,32 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 {
 	if ( model_ != nullptr )
 	{
+		
+		static float temp = 0.0f;
+		if (shaderProgram_ != nullptr) {
+			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
+			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
+			int normalMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "normalMatrix");
+		
+			const glm::mat4 modelMatrix = matrixData->getModelMatrix();
+			const glm::mat4 projectionMatrix = matrixData->getProjectionMatrix();
+			const glm::mat4 viewMatrix = matrixData->getViewMatrix();
+			
+			glm::vec3 translate = glm::vec3(temp, temp, temp);
+			glm::mat4 newModel = glm::translate(modelMatrix, translate);
+			
+			
+			// Send uniform variable values to the shader		
+			glm::mat4 pvmMatrix(projectionMatrix * viewMatrix * newModel);
+			glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
+		
+			glm::mat3 normalMatrix = glm::inverse(glm::transpose(glm::mat3(viewMatrix * newModel)));
+			glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
+		
+			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &newModel[0][0]);
+		}
+		temp += 0.1f;
+		
 		//if (shaderProgram_ != nullptr)
 		//	shaderProgram_->bind();
 		//else
