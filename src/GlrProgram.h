@@ -54,6 +54,7 @@ public:
 	//void destroySceneManager();
 
 private:
+	glm::detail::uint32 numLights_;
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
 	std::map<std::string, std::vector<GLuint> > materialUbos_;
 
@@ -64,6 +65,7 @@ private:
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);
+	void releaseLightUbo(std::string name);
 	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
 	void initialize();

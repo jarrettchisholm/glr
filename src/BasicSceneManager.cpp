@@ -24,14 +24,7 @@ BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgra
 	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager());
 	rootSceneNode_ = std::shared_ptr<ISceneNode>(new BasicSceneNode());
 
-	// TESTING ONLY
-	LightData ld;
-	ld.ambient = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
-	ld.diffuse = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
-	ld.specular = glm::vec4(0.5f, 0.5f, 0.5f, 0.5f);
-	ld.position = glm::vec4(2.5f, 2.5f, 2.5f, 0.f);
-	ld.direction = glm::vec4(0.5f, 0.5f, 0.5f, 0.f);
-	lightData_.push_back(ld);
+	lightData_ = std::vector<LightData>();
 	
 	defaultShaderProgram_ = nullptr;
 }
@@ -165,7 +158,13 @@ ILight* BasicSceneManager::getLight(const std::string& name)
 
 const std::vector<LightData>& BasicSceneManager::getLightData()
 {
-	// TODO: implement
+	lightData_ = std::vector<LightData>();
+	
+	for (auto it=lights_.begin(); it != lights_.end(); it++)
+	{
+		lightData_.push_back(it->second->getLightData());
+	}
+	
 	return lightData_;
 }
 

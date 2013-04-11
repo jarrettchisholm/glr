@@ -78,12 +78,12 @@ void main() {
 	
 	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
-	/*
+	
 	float bug = 0.0;	
 	bvec3 result = equal( diffuseReflection, vec3(0.0, 0.0, 0.0) );
 	if(result[0] && result[1] && result[2]) bug = 1.0;
 	diffuseReflection.x += bug;
-	*/
+	
 	
 	/*
 	float bug2 = 0.0;

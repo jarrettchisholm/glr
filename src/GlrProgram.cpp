@@ -123,6 +123,14 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 
 	if ( lightData.size() > 0 )
 	{
+		if (numLights_ != lightData.size())
+		{
+			releaseLightUbo(lightUbos_.begin()->first);
+			setupUniformBufferObjectBindings(shader);
+		}
+		
+		numLights_ = lightData.size();
+		
 		for ( auto it = lightUbos_.begin(); it != lightUbos_.end(); ++it )
 		{
 			std::vector<GLuint> ubos = it->second;
@@ -193,7 +201,7 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader)
 {
 	// TODO: Will we want to add multiple Ubos in a single shader for light sources
-
+	
 	const std::vector<LightData> lightData = sMgr_->getLightData();
 
 	lightUbos_[name] = std::vector<GLuint>();
@@ -211,6 +219,16 @@ void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader
 	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[name][0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void GlrProgram::releaseLightUbo(std::string name)
+{
+	if (lightUbos_.find(name) == lightUbos_.end())
+		return;
+	
+	glDeleteBuffers(1, &lightUbos_[name][0]);
+	
+	lightUbos_.erase(name);
 }
 
 ISceneManager* GlrProgram::getSceneManager()
