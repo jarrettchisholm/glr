@@ -51,7 +51,6 @@ public:
 	virtual void translate(glm::vec3 trans) = 0;
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
-	virtual void rotate(glm::vec3 axis, glm::detail::float32 degrees) = 0;
 	virtual void rotate(glm::vec3 degrees) = 0;
 	virtual void rotate(glm::quat quaternion) = 0;
 

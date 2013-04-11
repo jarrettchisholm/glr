@@ -163,12 +163,6 @@ void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, g
 	pos_ += glm::vec3(x, y, z);
 }
 
-void BasicSceneNode::rotate(glm::vec3 axis, glm::detail::float32 degrees)
-{
-	// TODO: implement
-	//rotation_ = glm::rotate(rotation_, degrees, axis);
-}
-
 void BasicSceneNode::rotate(glm::quat quaternion)
 {
 	// TODO: implement
@@ -176,10 +170,7 @@ void BasicSceneNode::rotate(glm::quat quaternion)
 
 void BasicSceneNode::rotate(glm::vec3 degrees)
 {
-	// TODO: implement
-	//rotation_ = glm::rotate(rotation_, degrees.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	//rotation_ = glm::rotate(rotation_, degrees.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	//rotation_ = glm::rotate(rotation_, degrees.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	rotation_ += degrees;
 }
 
 void BasicSceneNode::render(IMatrixData* matrixData)
@@ -196,7 +187,9 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 			const glm::mat4 viewMatrix = matrixData->getViewMatrix();
 			
 			glm::mat4 newModel = glm::translate(modelMatrix, pos_);
-			//newModel = glm::rotate(newModel, Rotate.y, direction_);
+			newModel = glm::rotate(newModel, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			newModel = glm::rotate(newModel, rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			newModel = glm::rotate(newModel, rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
 			newModel = glm::scale(newModel, scale_);
 			
 			
