@@ -171,38 +171,68 @@ const std::vector<LightData>& BasicSceneManager::getLightData()
 
 void BasicSceneManager::destroySceneNode(const std::string& name)
 {
+	sceneNodes_.erase( name );
 }
 
 void BasicSceneManager::destroySceneNode(ISceneNode* node)
 {
+	for (auto it=sceneNodes_.begin(); it != sceneNodes_.end(); it++)
+	{
+		if (it->second.get() == node)
+		{
+			sceneNodes_.erase(it);
+			return;
+		}
+	}
 }
 
 void BasicSceneManager::destroyAllSceneNodes()
 {
+	sceneNodes_.clear();
 }
 
 void BasicSceneManager::destroyCamera(const std::string& name)
 {
+	cameras_.erase( name );
 }
 
 void BasicSceneManager::destroyCamera(ICamera* node)
 {
+	for (auto it=cameras_.begin(); it != cameras_.end(); it++)
+	{
+		if (it->second.get() == node)
+		{
+			cameras_.erase(it);
+			return;
+		}
+	}
 }
 
 void BasicSceneManager::destroyAllCameras()
 {
+	cameras_.clear();
 }
 
 void BasicSceneManager::destroyLight(const std::string& name)
 {
+	lights_.erase( name );
 }
 
 void BasicSceneManager::destroyLight(ILight* node)
 {
+	for (auto it=lights_.begin(); it != lights_.end(); it++)
+	{
+		if (it->second.get() == node)
+		{
+			lights_.erase(it);
+			return;
+		}
+	}
 }
 
 void BasicSceneManager::destroyAllLights()
 {
+	lights_.clear();
 }
 
 glmd::uint32 BasicSceneManager::getNumSceneNodes()
