@@ -36,10 +36,9 @@ public:
 private:
 	GLuint shaderId_;
 
-	Type type_;
 	std::string name_;
-
 	std::string source_;
+	Type type_;
 
 	BindingsMap bindings_;
 };

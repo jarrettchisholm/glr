@@ -95,7 +95,7 @@ void ShaderProgramManager::load(std::vector<std::string> filenames)
 {
 	std::vector<fs::path> filePaths;
 
-	for ( int i = 0; i < filenames.size(); i++ )
+	for ( glmd::uint32 i = 0; i < filenames.size(); i++ )
 	{
 		if ( fs::exists(filenames[i]) && !fs::is_directory(filenames[i]))
 			filePaths.push_back(fs::path(filenames[i]));
@@ -111,7 +111,7 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 	std::map<std::string, std::string> dataMap;
 
 	// Load data from files and put into map
-	for ( int i = 0; i < filePaths.size(); i++ )
+	for ( glmd::uint32 i = 0; i < filePaths.size(); i++ )
 	{
 		if ( fs::exists(filePaths[i]))
 		{

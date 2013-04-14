@@ -68,9 +68,9 @@ protected:
 private:
 	IOpenGlDevice* openGlDevice_;
 	
+	IMeshManager* meshManager_;
 	IMaterialManager* materialManager_;
 	ITextureManager* textureManager_;
-	IMeshManager* meshManager_;
 
 };
 }
