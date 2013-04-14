@@ -62,7 +62,7 @@ void CameraSceneNode::initialize()
 	//rotation_.normalize();
 }
 
-void CameraSceneNode::render(IMatrixData* matrixData)
+void CameraSceneNode::render()
 {
 	if ( isActive() )
 	{
