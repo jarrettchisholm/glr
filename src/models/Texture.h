@@ -26,7 +26,7 @@ public:
 	Texture(utilities::Image* image);
 	virtual ~Texture();
 
-	void bind(IMatrixData* matrixData, shaders::IShaderProgram* shader);
+	void bind(GLuint texturePosition = 0);
 
 private:
 	GLuint textureId_;

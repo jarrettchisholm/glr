@@ -23,7 +23,7 @@
 #include <iostream>
 
 namespace glr {
-CameraSceneNode::CameraSceneNode() : BasicSceneNode()
+CameraSceneNode::CameraSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -31,7 +31,7 @@ CameraSceneNode::CameraSceneNode() : BasicSceneNode()
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(const std::string name) : BasicSceneNode(name)
+CameraSceneNode::CameraSceneNode(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(name, matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

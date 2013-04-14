@@ -57,7 +57,7 @@ public:
 	virtual void attach(models::IModel* model) = 0;
 	virtual void attach(shaders::IShaderProgram* shaderProgram) = 0;
 	virtual void detach(models::IModel* model) = 0;
-	virtual void render(IMatrixData* matrixData) = 0;
+	virtual void render() = 0;
 };
 }
 #endif /* ISCENENODE_H_ */

@@ -324,8 +324,9 @@ CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is
 	else
 	{
 		//} else {
+		// could not locate file
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
-			return false;                                                                                                                                                                                                                                                                                                                     // could not locate file
+			return false;
 
 		namespace fs = boost::filesystem;
 

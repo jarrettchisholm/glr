@@ -9,6 +9,8 @@
 #define BASICSCENEMANAGER_H_
 
 #include "ISceneManager.h"
+#include "IMatrixData.h"
+#include "IOpenGlDevice.h"
 
 #include "CameraSceneNode.h"
 #include "shaders/ShaderProgramManager.h"
@@ -16,7 +18,7 @@
 namespace glr {
 class BasicSceneManager : public ISceneManager {
 public:
-	BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager);
+	BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneManager();
 
 	virtual ISceneNode* createSceneNode(const std::string name);
@@ -61,7 +63,10 @@ private:
 	std::map<std::string, std::shared_ptr<ILight> > lights_;
 
 	std::unique_ptr<models::IModelManager> modelManager_;
+	
 	shaders::ShaderProgramManager* shaderProgramManager_;
+	IMatrixData* matrixData_;
+	IOpenGlDevice* openGlDevice_;
 
 	std::vector<LightData> lightData_;
 	

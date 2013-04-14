@@ -9,12 +9,14 @@
 #define GLRPROGRAM_H_
 
 #include <memory>
+#include <unordered_map>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #include "IMatrixData.h"
+#include "IOpenGlDevice.h"
 #include "IWindow.h"
 #include "BasicSceneNode.h"
 #include "BasicSceneManager.h"
@@ -28,7 +30,7 @@
 
 
 namespace glr {
-class GlrProgram : public shaders::IShaderProgramBindListener, public IMatrixData {
+class GlrProgram : public shaders::IShaderProgramBindListener, public IMatrixData, public IOpenGlDevice {
 public:
 	GlrProgram();
 	virtual ~GlrProgram();
@@ -48,6 +50,11 @@ public:
 	virtual const glm::mat4& getProjectionMatrix();
 	virtual const glm::mat4& getModelMatrix();
 	
+	virtual GLuint createBufferObject(glmd::uint32 totalSize, void* dataPointer);
+	virtual void releaseBufferObject(GLuint bufferId);
+	virtual GLuint bindBuffer(GLuint bufferId);
+	virtual GLuint unbindBuffer(GLuint bufferId);
+	
 	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
 
 	//void destroyWindow();
@@ -57,6 +64,11 @@ private:
 	glm::detail::uint32 numLights_;
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
 	std::map<std::string, std::vector<GLuint> > materialUbos_;
+	
+	std::vector<GLuint> bufferIds_;
+	std::vector<GLuint> bindPoints_;
+	std::unordered_map<GLuint, GLuint> boundBuffers_;
+	GLint maxNumBindPoints_;
 
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	std::unique_ptr< BasicSceneManager > sMgr_;

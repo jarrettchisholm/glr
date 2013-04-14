@@ -145,6 +145,7 @@ if (os.name == "nt" or os.name == "win32"):
 #else:
 #	cpp_defines.append('NDEBUG')
 cpp_flags.append('-g')
+cpp_flags.append('-O0') # optimization level 0
 cpp_defines.append('DEBUG')	
 	
 	

@@ -20,6 +20,11 @@
 #include <assimp/postprocess.h>
 
 #include "IModelManager.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
+#include "MeshManager.h"
+
+#include "../IOpenGlDevice.h"
 
 #include "Model.h"
 
@@ -27,24 +32,24 @@ namespace glr {
 namespace models {
 class ModelManager : public IModelManager {
 public:
-	ModelManager();
+	ModelManager(IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
-	ModelManager(ModelManager const&);
-	ModelManager& operator=(ModelManager const&);
-
-	static ModelManager* getInstance();
 
 	IModel* loadModel(const std::string path);
 
 	//void testLoadTexture();
 	//void testDrawTest1();
 
-private:
-	static ModelManager* modelManager_;
+private:	
+	IOpenGlDevice* openGlDevice_;
 
 	aiLogStream stream;
 
 	std::map< std::string, std::unique_ptr<Model> > models_;
+	
+	std::unique_ptr<IMaterialManager> materialManager_;
+	std::unique_ptr<ITextureManager> textureManager_;
+	std::unique_ptr<IMeshManager> meshManager_;
 };
 }
 }

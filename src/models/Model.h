@@ -17,6 +17,11 @@
 #include <assimp/postprocess.h>
 
 #include "IModel.h"
+#include "../IOpenGlDevice.h"
+
+#include "IMaterialManager.h"
+#include "ITextureManager.h"
+#include "IMeshManager.h"
 
 #include "Mesh.h"
 #include "Texture.h"
@@ -27,11 +32,11 @@ namespace glr {
 namespace models {
 class Model : public IModel {
 public:
-	Model();
-	Model(const aiScene* scene);
+	Model(IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager);
+	Model(const aiScene* scene, IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager);
 	virtual ~Model();
 
-	virtual void render(IMatrixData* matrixData, shaders::IShaderProgram* shader);
+	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																#define aisgl_min(x, y) (x < y ? x : y)
@@ -59,6 +64,14 @@ protected:
 	//void loadMeshesRecursive(const aiScene* scene, const aiNode* node);
 
 	//void recursive_render(const aiScene *sc, const aiNode* nd);
+	
+private:
+	IOpenGlDevice* openGlDevice_;
+	
+	IMaterialManager* materialManager_;
+	ITextureManager* textureManager_;
+	IMeshManager* meshManager_;
+
 };
 }
 }

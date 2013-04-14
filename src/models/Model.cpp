@@ -11,11 +11,13 @@
 
 namespace glr {
 namespace models {
-Model::Model()
+Model::Model(IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager)
+	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
 {
 }
 
-Model::Model(const aiScene* scene)
+Model::Model(const aiScene* scene, IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager)
+	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
 {
 	BOOST_LOG_TRIVIAL(debug) << "load meshes...";
 	loadMeshes(scene);
@@ -32,21 +34,23 @@ Model::~Model()
 	//destroyAILogger();
 }
 
-void Model::render(IMatrixData* matrixData, shaders::IShaderProgram* shader)
+void Model::render(shaders::IShaderProgram* shader)
 {
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[ textureMap_[i] ] != nullptr )
 		{
-			textures_[ textureMap_[i] ]->bind(matrixData, shader);
+			// TODO: bind to an actual texture position (for multiple textures per mesh, which we currently don't support...maybe at some point we will???  Why would we need multiple textures?)
+			textures_[ textureMap_[i] ]->bind();
 		}
 		
 		if ( materials_[ materialMap_[i] ] != nullptr )
 		{
-			materials_[ materialMap_[i] ]->bind(matrixData, shader);
+			materials_[ materialMap_[i] ]->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_MATERIAL, materials_[ materialMap_[i] ]->getBindPoint() );
 		}
 		
-		meshes_[i]->render(matrixData, shader);
+		meshes_[i]->render();
 	}
 
 	/*
@@ -286,7 +290,7 @@ void Model::loadTextures(const aiScene* scene)
 
 		if ( texFound == AI_SUCCESS )
 		{
-			Texture* texture = TextureManager::getInstance()->getTexture(path.data);
+			Texture* texture = textureManager_->getTexture(path.data);
 			if ( texture == nullptr )
 			{
 				BOOST_LOG_TRIVIAL(warning) << "Not able to load texture.";
@@ -303,7 +307,7 @@ void Model::loadMaterials(const aiScene* scene)
 	for ( glm::detail::uint32 m = 0; m < scene->mNumMaterials; m++ )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "load material..." << m;
-		materials_[m] = std::unique_ptr<Material>(new Material(scene->mMaterials[m]));
+		materials_[m] = std::unique_ptr<Material>(new Material(scene->mMaterials[m], openGlDevice_));
 		BOOST_LOG_TRIVIAL(debug) << "done loading material " << m;
 	}
 }

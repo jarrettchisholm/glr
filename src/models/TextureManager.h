@@ -12,23 +12,23 @@
 #include <map>
 #include <string>
 
+#include "../IOpenGlDevice.h"
+
+#include "ITextureManager.h"
+
 #include "Texture.h"
 
 namespace glr {
 namespace models {
-class TextureManager {
+class TextureManager : public ITextureManager {
 public:
-	TextureManager();
+	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
-	TextureManager(TextureManager const&);
-	TextureManager& operator=(TextureManager const&);
 
-	static TextureManager* getInstance();
-
-	Texture* getTexture(const std::string filename);
+	virtual Texture* getTexture(const std::string filename);
 
 private:
-	static TextureManager* textureManager_;
+	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Texture> > textures_;
 };

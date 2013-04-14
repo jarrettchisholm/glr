@@ -122,7 +122,7 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::render(IMatrixData* matrixData, shaders::IShaderProgram* shader)
+void Mesh::render()
 {
 	glBindVertexArray(vaoId_);
 

@@ -17,8 +17,8 @@
 namespace glr {
 class Light : public virtual ILight, public BasicSceneNode {
 public:
-	Light();
-	Light(const std::string name);
+	Light(IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	Light(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
 	virtual ~Light();
 
 

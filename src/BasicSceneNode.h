@@ -11,6 +11,8 @@
 #include <string>
 
 #include "ISceneNode.h"
+#include "IMatrixData.h"
+#include "IOpenGlDevice.h"
 
 #include "shaders/IShaderProgram.h"
 
@@ -19,9 +21,9 @@
 namespace glr {
 class BasicSceneNode : public virtual ISceneNode {
 public:
-	BasicSceneNode();
-	BasicSceneNode(const std::string name);
-	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale);
+	BasicSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
 	/*
@@ -52,13 +54,15 @@ public:
 	virtual void attach(models::IModel* model);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);
 	virtual void detach(models::IModel* model);
-	virtual void render(IMatrixData* matrixData);
+	virtual void render();
 
 protected:
 	models::IModel* model_;
 	shaders::IShaderProgram* shaderProgram_;
 
 	ISceneManager* sceneManager_;
+	IMatrixData* matrixData_;
+	IOpenGlDevice* openGlDevice_;
 
 	std::string name_;
 	std::map<std::string, ISceneNode*> children_;

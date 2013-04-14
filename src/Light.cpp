@@ -23,7 +23,7 @@
 #include "common/math/Math.h"
 
 namespace glr {
-Light::Light() : BasicSceneNode()
+Light::Light(IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -31,7 +31,7 @@ Light::Light() : BasicSceneNode()
 	initialize();
 }
 
-Light::Light(const std::string name) : BasicSceneNode(name)
+Light::Light(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(name, matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

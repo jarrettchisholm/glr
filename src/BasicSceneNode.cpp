@@ -21,7 +21,7 @@
 
 
 namespace glr {
-BasicSceneNode::BasicSceneNode()
+BasicSceneNode::BasicSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : matrixData_(matrixData), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -32,7 +32,7 @@ BasicSceneNode::BasicSceneNode()
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name)
+BasicSceneNode::BasicSceneNode(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : matrixData_(matrixData), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -43,7 +43,8 @@ BasicSceneNode::BasicSceneNode(const std::string name)
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
+BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, IMatrixData* matrixData, IOpenGlDevice* openGlDevice)
+	 : matrixData_(matrixData), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
 	rotate(rotation);
@@ -173,7 +174,7 @@ void BasicSceneNode::rotate(glm::vec3 degrees)
 	rotation_ += degrees;
 }
 
-void BasicSceneNode::render(IMatrixData* matrixData)
+void BasicSceneNode::render()
 {
 	if ( model_ != nullptr )
 	{
@@ -182,9 +183,9 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
 			int normalMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "normalMatrix");
 		
-			const glm::mat4 modelMatrix = matrixData->getModelMatrix();
-			const glm::mat4 projectionMatrix = matrixData->getProjectionMatrix();
-			const glm::mat4 viewMatrix = matrixData->getViewMatrix();
+			const glm::mat4 modelMatrix = matrixData_->getModelMatrix();
+			const glm::mat4 projectionMatrix = matrixData_->getProjectionMatrix();
+			const glm::mat4 viewMatrix = matrixData_->getViewMatrix();
 			
 			glm::mat4 newModel = glm::translate(modelMatrix, pos_);
 			newModel = glm::rotate(newModel, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -207,7 +208,7 @@ void BasicSceneNode::render(IMatrixData* matrixData)
 		//	shaderProgram_->bind();
 		//else
 		//	shaders::ShaderProgram::unbindAll();
-		model_->render(matrixData, shaderProgram_);
+		model_->render(shaderProgram_);
 	}
 }
 }

@@ -14,7 +14,8 @@
 
 namespace glr {
 namespace models {
-MeshManager::MeshManager()
+MeshManager::MeshManager(IOpenGlDevice* openGlDevice)
+	: openGlDevice_(openGlDevice)
 {
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
@@ -35,6 +36,8 @@ MeshManager::~MeshManager()
 Mesh* MeshManager::getMesh(const std::string filename)
 {
 	// TODO: implement
+	
+	return nullptr;
 }
 }
 }

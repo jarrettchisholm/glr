@@ -16,19 +16,38 @@
 
 #include <glm/glm.hpp>
 
-#include "../IMatrixData.h"
+#include "../IOpenGlDevice.h"
 #include "../shaders/IShaderProgram.h"
 
 namespace glr {
 namespace models {
+	
+struct MaterialData
+{
+	glm::vec4 diffuse;
+	glm::vec4 specular;
+	glm::vec4 ambient;
+	glm::vec4 emission;
+	glm::detail::float32 shininess;
+	glm::detail::float32 strength;
+};
+	
 class Material {
 public:
-	Material(const aiMaterial* mtl);
+	Material(const aiMaterial* mtl, IOpenGlDevice* openGlDevice);
 	virtual ~Material();
 
-	void bind(IMatrixData* matrixData, shaders::IShaderProgram* shader);
+	void bind();
+	GLuint getBufferId();
+	GLuint getBindPoint();
 
 private:
+	void loadIntoVideoMemory();
+	
+	IOpenGlDevice* openGlDevice_;
+	GLuint bufferId_;
+	GLuint bindPoint_;
+
 	GLenum fill_mode_;
 	glm::detail::int32 ret1_, ret2_;
 	glm::vec4 diffuse_;

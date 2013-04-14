@@ -65,7 +65,9 @@ void GlslShaderProgram::compile()
 
 		return;
 	}
-
+	
+	
+	generateBindings();
 
 	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
 	return;
@@ -85,83 +87,56 @@ void GlslShaderProgram::bind()
 		bindListener->shaderBindCallback( this );
 }
 
-GLuint GlslShaderProgram::getBindPoint(std::string varName)
+void GlslShaderProgram::bindVariable(std::string varName, GLuint bindPoint)
 {
-	// TODO: Will we want to add multiple Ubos in a single shader for light sources
-	/*
-	const std::vector<LightData> lightData = sMgr_->getLightData();
+	GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_, varName.c_str());
+	glUniformBlockBinding(programId_, uniformBlockIndex, bindPoint);
 
-	lightUbos_[varName] = std::vector<GLuint>();
-	lightUbos_[varName].push_back(0);
-
-	// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
-	GLuint bindingPoint = 1;
-
-	GLuint uniformBlockIndex = glGetUniformBlockIndex(this->getGLShaderProgramId(), "LightSources");
-	glUniformBlockBinding(this->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
-
-	glGenBuffers(1, &lightUbos_[varName][0]);
-	glBindBuffer(GL_UNIFORM_BUFFER, lightUbos_[varName][0]);
-
-	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[varName][0]);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	*/
-	return 0;
+	
+	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, ubo);
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GlslShaderProgram::bindData(GLuint, glm::vec2)
+void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint)
 {
+	for ( auto it = bindings_.begin(); it != bindings_.end(); it++)
+	//for ( auto p : bindings_)
+	{
+		if (it->first == bindType)
+		{
+			GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  it->second.c_str());
+			glUniformBlockBinding(programId_, uniformBlockIndex, bindPoint);
+		}
+	}
+	
+	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+	//glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, ubo);
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
-
-void GlslShaderProgram::bindData(GLuint, glm::vec3)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glm::vec4)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glm::mat2)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glm::mat3)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glm::mat4)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glmd::uint32)
-{
-}
-
-void GlslShaderProgram::bindData(GLuint, glmd::float32)
-{
-}
-
 
 std::string GlslShaderProgram::getName()
 {
 	return name_;
 }
 
-IShader::BindingsMap GlslShaderProgram::getBindings()
+void GlslShaderProgram::generateBindings()
 {
-	IShader::BindingsMap bindings;
+	bindings_ = IShader::BindingsMap();
 
 	for ( auto s : shaders_ )
 	{
 		IShader::BindingsMap b = s->getBindings();
 		for ( auto e : b )
 		{
-			bindings.push_back(e);
+			bindings_.push_back(e);
 		}
 	}
+}
 
-	return bindings;
+IShader::BindingsMap GlslShaderProgram::getBindings()
+{
+	return bindings_;
 }
 
 void GlslShaderProgram::addBindListener(IShaderProgramBindListener* bindListener)

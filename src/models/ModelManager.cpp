@@ -16,7 +16,8 @@
 
 namespace glr {
 namespace models {
-ModelManager::ModelManager()
+ModelManager::ModelManager(IOpenGlDevice* openGlDevice)
+	: openGlDevice_(openGlDevice)
 {
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
@@ -24,6 +25,10 @@ ModelManager::ModelManager()
 	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
 	aiAttachLogStream(&stream);
+	
+	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(openGlDevice_) );
+	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(openGlDevice_) );
+	meshManager_ = std::unique_ptr<IMeshManager>( new MeshManager(openGlDevice_) );
 }
 
 ModelManager::~ModelManager()
@@ -32,19 +37,6 @@ ModelManager::~ModelManager()
 	// again. This will definitely release the last resources allocated
 	// by Assimp.
 	aiDetachAllLogStreams();
-}
-
-ModelManager::ModelManager(ModelManager const&)
-{
-}
-
-ModelManager* ModelManager::modelManager_ = 0;
-ModelManager* ModelManager::getInstance()
-{
-	if ( ModelManager::modelManager_ == 0 )
-		ModelManager::modelManager_ = new ModelManager();
-
-	return ModelManager::modelManager_;
 }
 
 /*
@@ -110,7 +102,7 @@ IModel* ModelManager::loadModel(const std::string filename)
 	//scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
 
 	//std::shared_ptr<aiScene> sharedScene = std::shared_ptr<aiScene>(scene);
-	models_[filename] = std::unique_ptr<Model>(new Model(scene));
+	models_[filename] = std::unique_ptr<Model>(new Model(scene, openGlDevice_, meshManager_.get(), materialManager_.get(), textureManager_.get()));
 
 	// cleanup - calling 'aiReleaseImport' is important, as the library
 	// keeps internal resources until the scene is freed again. Not

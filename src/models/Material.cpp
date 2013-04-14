@@ -13,7 +13,8 @@
 
 namespace glr {
 namespace models {
-Material::Material(const aiMaterial* mtl)
+Material::Material(const aiMaterial* mtl, IOpenGlDevice* openGlDevice)
+	: openGlDevice_(openGlDevice), bufferId_(0)
 {
 	BOOST_LOG_TRIVIAL(debug) << "loading material...";
 	aiColor4D c;
@@ -63,40 +64,43 @@ Material::Material(const aiMaterial* mtl)
 
 	max_ = 1;
 	two_sided_true_ = aiGetMaterialIntegerArray(mtl, AI_MATKEY_TWOSIDED, &two_sided_, &max_);
+	
+	loadIntoVideoMemory();
+	
 	BOOST_LOG_TRIVIAL(debug) << "done loading material.";
+}
+
+void Material::loadIntoVideoMemory()
+{
+	MaterialData md = MaterialData();
+	md.diffuse = diffuse_;
+	md.specular = specular_;
+	md.ambient = ambient_;
+	md.emission = emission_;
+	md.shininess = shininess_;
+	md.strength = strength_;
+	
+	bufferId_ = openGlDevice_->createBufferObject(sizeof(MaterialData), &md);
 }
 
 Material::~Material()
 {
+	openGlDevice_->releaseBufferObject( bufferId_ );
 }
 
-void Material::bind(IMatrixData* matrixData, shaders::IShaderProgram* shader)
+void Material::bind()
 {
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(diffuse_));
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(specular_));
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, glm::value_ptr(ambient_));
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glm::value_ptr(emission_));
+	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+}
 
+GLuint Material::getBufferId()
+{
+	return bufferId_;
+}
 
-	if ((ret1_ == AI_SUCCESS) && (ret2_ == AI_SUCCESS))
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess_ * strength_);
-	else
-	{
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
-		glm::vec4 temp;
-		temp[0] = 0.0f;
-		temp[1] = 0.0f;
-		temp[2] = 0.0f;
-		temp[3] = 0.0f;
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(temp));
-	}
-
-	glPolygonMode(GL_FRONT_AND_BACK, fill_mode_);
-
-	if ((AI_SUCCESS == two_sided_true_) && two_sided_ )
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
+GLuint Material::getBindPoint()
+{
+	return bindPoint_;
 }
 }
 }

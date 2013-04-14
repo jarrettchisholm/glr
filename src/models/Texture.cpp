@@ -79,7 +79,7 @@ void Texture::loadTexture(utilities::Image* image)
 	}
 }
 
-void Texture::bind(IMatrixData* matrixData, shaders::IShaderProgram* shader)
+void Texture::bind(GLuint texturePosition)
 {
 	/*
 	   glEnable(GL_BLEND);
@@ -88,7 +88,7 @@ void Texture::bind(IMatrixData* matrixData, shaders::IShaderProgram* shader)
 	   glBindTexture(GL_TEXTURE_2D, textureId_);
 	 */
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0 + texturePosition);
 	glBindTexture(GL_TEXTURE_2D, textureId_);
 
 	// to unbind, we use the following

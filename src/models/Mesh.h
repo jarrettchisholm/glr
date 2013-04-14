@@ -31,7 +31,7 @@ public:
 	Mesh(const aiMesh* mesh);
 	virtual ~Mesh();
 
-	void render(IMatrixData* matrixData, shaders::IShaderProgram* shader);
+	void render();
 
 private:
 	glm::detail::uint32 vaoId_;

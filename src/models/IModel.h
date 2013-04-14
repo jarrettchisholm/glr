@@ -25,7 +25,7 @@ public:
 	}
 	;
 
-	virtual void render(IMatrixData* matrixData, shaders::IShaderProgram* shader) = 0;
+	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
 }
 }

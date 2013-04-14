@@ -17,25 +17,13 @@
 
 namespace glr {
 namespace models {
-TextureManager::TextureManager()
+TextureManager::TextureManager(IOpenGlDevice* openGlDevice)
+	: openGlDevice_(openGlDevice)
 {
 }
 
 TextureManager::~TextureManager()
 {
-}
-
-TextureManager::TextureManager(TextureManager const&)
-{
-}
-
-TextureManager* TextureManager::textureManager_ = 0;
-TextureManager* TextureManager::getInstance()
-{
-	if ( TextureManager::textureManager_ == 0 )
-		TextureManager::textureManager_ = new TextureManager();
-
-	return TextureManager::textureManager_;
 }
 
 Texture* TextureManager::getTexture(const std::string filename)

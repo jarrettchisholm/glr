@@ -17,19 +17,25 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "IMeshManager.h"
+
+#include "../IOpenGlDevice.h"
+
 #include "Mesh.h"
 
 namespace glr {
 namespace models {
-class MeshManager {
+class MeshManager : public IMeshManager {
 public:
-	MeshManager();
+	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
 
-	Mesh* getMesh(const std::string path);
+	virtual Mesh* getMesh(const std::string path);
 
 private:
 	aiLogStream stream;
+	
+	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
 };

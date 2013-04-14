@@ -38,15 +38,8 @@ public:
 	
 	virtual std::string getName() = 0;
 	
-	virtual GLuint getBindPoint(std::string varName) = 0;
-	virtual void bindData(GLuint, glm::vec2) = 0;
-	virtual void bindData(GLuint, glm::vec3) = 0;
-	virtual void bindData(GLuint, glm::vec4) = 0;
-	virtual void bindData(GLuint, glm::mat2) = 0;
-	virtual void bindData(GLuint, glm::mat3) = 0;
-	virtual void bindData(GLuint, glm::mat4) = 0;
-	virtual void bindData(GLuint, glmd::uint32) = 0;
-	virtual void bindData(GLuint, glmd::float32) = 0;
+	virtual void bindVariable(std::string varName, GLuint bindPoint) = 0;
+	virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint) = 0;
 	
 	virtual void addBindListener(IShaderProgramBindListener* bindListener) = 0;
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener) = 0;

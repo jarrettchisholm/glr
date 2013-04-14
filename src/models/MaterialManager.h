@@ -19,19 +19,25 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "../IOpenGlDevice.h"
+
+#include "IMaterialManager.h"
+
 #include "Material.h"
 
 namespace glr {
 namespace models {
-class MaterialManager {
+class MaterialManager : public IMaterialManager {
 public:
-	MaterialManager();
+	MaterialManager(IOpenGlDevice* openGlDevice);
 	virtual ~MaterialManager();
 
-	Material* getMaterial(const std::string path);
+	virtual Material* getMaterial(const std::string path);
 
 private:
 	aiLogStream stream;
+	
+	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;
 };

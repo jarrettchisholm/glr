@@ -18,11 +18,14 @@
 #include "exceptions/Exception.h"
 
 namespace glr {
-BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager) : shaderProgramManager_(shaderProgramManager)
+BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) 
+	: shaderProgramManager_(shaderProgramManager), matrixData_(matrixData), openGlDevice_(openGlDevice)
 {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager());
-	rootSceneNode_ = std::shared_ptr<ISceneNode>(new BasicSceneNode());
+	
+	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager(openGlDevice_));
+	
+	rootSceneNode_ = std::shared_ptr<ISceneNode>(new BasicSceneNode(matrixData_, openGlDevice_));
 
 	lightData_ = std::vector<LightData>();
 	
@@ -44,7 +47,7 @@ ISceneNode* BasicSceneManager::createSceneNode(const std::string name)
 		throw exception::Exception(msg.str());
 	}
 
-	std::shared_ptr<ISceneNode> node = std::shared_ptr<ISceneNode>(new BasicSceneNode(name));
+	std::shared_ptr<ISceneNode> node = std::shared_ptr<ISceneNode>(new BasicSceneNode(name, matrixData_, openGlDevice_));
 	sceneNodes_[name] = node;
 
 	node->attach(defaultShaderProgram_);
@@ -63,7 +66,7 @@ ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::ui
 		throw exception::Exception(msg.str());
 	}
 
-	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>(new CameraSceneNode(name));
+	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>(new CameraSceneNode(name, matrixData_, openGlDevice_));
 	cameras_[name] = node;
 
 	node->attach(defaultShaderProgram_);
@@ -82,7 +85,7 @@ ILight* BasicSceneManager::createLight(const std::string name)
 		throw exception::Exception(msg.str());
 	}
 
-	std::shared_ptr<ILight> node = std::shared_ptr<ILight>(new Light(name));
+	std::shared_ptr<ILight> node = std::shared_ptr<ILight>(new Light(name, matrixData_, openGlDevice_));
 	lights_[name] = node;
 
 	return node.get();
@@ -91,10 +94,10 @@ ILight* BasicSceneManager::createLight(const std::string name)
 void BasicSceneManager::drawAll(IMatrixData* matrixData)
 {
 	for ( auto it = cameras_.begin(); it != cameras_.end(); ++it )
-		it->second->render(matrixData);
+		it->second->render();
 
 	for ( auto it = sceneNodes_.begin(); it != sceneNodes_.end(); ++it )
-		it->second->render(matrixData);
+		it->second->render();
 }
 
 void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram)
