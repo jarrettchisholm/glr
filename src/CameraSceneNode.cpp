@@ -64,7 +64,7 @@ void CameraSceneNode::initialize()
 
 void CameraSceneNode::render(IMatrixData* matrixData)
 {
-	if ( isActive())
+	if ( isActive() )
 	{
 		glm::quat temp = glm::conjugate(rotation_);
 		viewMatrix_ = glm::mat4_cast(temp);
