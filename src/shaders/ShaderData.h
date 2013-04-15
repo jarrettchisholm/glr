@@ -51,7 +51,7 @@ out vec3 normalDirection;
 out vec3 lightDirection;
 
 //@bind texture0
-uniform sampler2D texture;
+uniform sampler2DArray texture;
 
 @bind Light
 layout(std140) uniform LightSources 
@@ -133,12 +133,14 @@ struct LightSource {
 	R"<STRING>(
 #version 150 core
 
+#extension GL_EXT_texture_array : enable
+
 #type fragment
 
 #include <material>
 
 @bind texture0
-uniform sampler2D texture;
+uniform sampler2DArray tex;
 
 in vec4 pass_Color;
 in vec2 textureCoord;
@@ -166,7 +168,7 @@ void main() {
  
 	cf = intensity * (material.diffuse).rgb + material.ambient.rgb;
 	af = material.diffuse.a;
-	texel = texture2D(texture, textureCoord);
+	texel = texture2DArray(tex, vec3(textureCoord, 1));
  
 	ct = texel.rgb;
 	at = texel.a;

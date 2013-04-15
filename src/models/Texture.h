@@ -13,6 +13,7 @@
 
 #include "../IMatrixData.h"
 #include "../shaders/IShaderProgram.h"
+#include "../IOpenGlDevice.h"
 
 #include "../common/utilities/ImageLoader.h"
 
@@ -22,13 +23,15 @@ namespace glmd = glm::detail;
 
 class Texture {
 public:
-	Texture();
-	Texture(utilities::Image* image);
+	Texture(IOpenGlDevice* openGlDevice);
+	Texture(utilities::Image* image, IOpenGlDevice* openGlDevice);
 	virtual ~Texture();
 
 	void bind(GLuint texturePosition = 0);
 
 private:
+	IOpenGlDevice* openGlDevice_;
+	
 	GLuint textureId_;
 
 	void loadTexture(utilities::Image* image);

@@ -47,7 +47,7 @@ void GlrProgram::initialize()
 	maxNumBindPoints_ = 0;
 	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
 	
-	for (GLuint i=1; i < maxNumBindPoints_+1; i++)
+	for (GLint i=1; i < maxNumBindPoints_+1; i++)
 	{
 		bindPoints_.push_back(i);
 	}
@@ -92,7 +92,6 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	
 	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), this, this));
 
-	
 
 	return window_.get();
 }
@@ -130,6 +129,11 @@ void GlrProgram::render()
 	endRender();
 }
 
+void GlrProgram::reloadShaders()
+{
+	shaderProgramManager_->reloadShaders();
+}
+
 void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 {
 	// Bind lights
@@ -139,7 +143,10 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 	{
 		if (numLights_ != lightData.size())
 		{
-			releaseLightUbo(lightUbos_.begin()->first);
+			if (lightUbos_.begin() != lightUbos_.end())
+			{
+				releaseLightUbo(lightUbos_.begin()->first);
+			}
 			setupUniformBufferObjectBindings(shader);
 		}
 		
@@ -281,14 +288,14 @@ const glm::mat4& GlrProgram::getModelMatrix()
 	return sMgr_->getModelMatrix();
 }
 
-GLuint GlrProgram::createBufferObject(glmd::uint32 totalSize, void* dataPointer)
+GLuint GlrProgram::createBufferObject(GLenum target, glmd::uint32 totalSize, void* dataPointer)
 {
 	GLuint bufferId = 0;
 	glGenBuffers(1, &bufferId);
-	glBindBuffer(GL_UNIFORM_BUFFER, bufferId);
+	glBindBuffer(target, bufferId);
 
-	glBufferData(GL_UNIFORM_BUFFER, totalSize, dataPointer, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
+	glBindBuffer(target, 0);
 	
 	bufferIds_.push_back(bufferId);
 	
@@ -361,13 +368,62 @@ GLuint GlrProgram::bindBuffer(GLuint bufferId)
 	return 1;
 }
 
-GLuint GlrProgram::unbindBuffer(GLuint bufferId)
+void GlrProgram::unbindBuffer(GLuint bufferId)
 {
 	auto it = boundBuffers_.find( bufferId );
 	if (it != boundBuffers_.end())
 	{
 		boundBuffers_.erase( it );
 	}
+}
+
+GlError GlrProgram::getGlError()
+{
+	GlError glErrorObj = GlError();
+	
+	GLenum glError = glGetError();
+	if ( glError )
+	{
+		switch ( glError )
+		{
+		case GL_INVALID_ENUM:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_ENUM";
+			break;
+
+		case GL_INVALID_VALUE:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_VALUE";
+			break;
+
+		case GL_INVALID_OPERATION:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_OPERATION";
+			break;
+
+		case GL_STACK_OVERFLOW:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_STACK_OVERFLOW";
+			break;
+
+		case GL_STACK_UNDERFLOW:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_STACK_UNDERFLOW";
+			break;
+
+		case GL_OUT_OF_MEMORY:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_OUT_OF_MEMORY";
+			break;
+
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_FRAMEBUFFER_OPERATION​";
+			break;
+		}
+	}
+	
+	return glErrorObj;
 }
 
 void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)

@@ -51,7 +51,7 @@ Texture* TextureManager::getTexture(const std::string filename)
 	BOOST_LOG_TRIVIAL(debug) << "TextureManager::getTexture: image: " << image->width << "x" << image->height;
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating texture.";
-	textures_[filename] = std::unique_ptr<Texture>(new Texture(image));
+	textures_[filename] = std::unique_ptr<Texture>(new Texture(image, openGlDevice_));
 
 	delete image;
 

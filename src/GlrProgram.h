@@ -46,14 +46,18 @@ public:
 	ISceneManager* getSceneManager();
 	gui::IGUI* getHtmlGui();
 	
+	void reloadShaders();
+	
 	virtual const glm::mat4& getViewMatrix();
 	virtual const glm::mat4& getProjectionMatrix();
 	virtual const glm::mat4& getModelMatrix();
 	
-	virtual GLuint createBufferObject(glmd::uint32 totalSize, void* dataPointer);
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, void* dataPointer);
 	virtual void releaseBufferObject(GLuint bufferId);
 	virtual GLuint bindBuffer(GLuint bufferId);
-	virtual GLuint unbindBuffer(GLuint bufferId);
+	virtual void unbindBuffer(GLuint bufferId);
+	
+	virtual GlError getGlError();
 	
 	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
 

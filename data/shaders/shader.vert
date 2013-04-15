@@ -20,7 +20,7 @@ out vec3 normalDirection;
 out vec3 lightDirection;
 
 //@bind texture0
-uniform sampler2D texture;
+uniform sampler2DArray texture;
 
 @bind Light
 layout(std140) uniform LightSources 

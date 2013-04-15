@@ -35,6 +35,16 @@ void ShaderProgramManager::loadStandardShaderPrograms()
 	load(SHADER_DATA);
 }
 
+void ShaderProgramManager::reloadShaders()
+{
+	glrProgramMap_.clear();
+	glrShaderMap_.clear();
+	glslProgramMap_.clear();
+	glslShaderMap_.clear();
+	
+	loadStandardShaderPrograms();
+}
+
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name)
 {
 	return glslProgramMap_[ name ].get();

@@ -14,6 +14,12 @@
 
 namespace glr {
 
+struct GlError
+{
+	GLenum type = GL_NONE;
+	std::string name = "";
+};
+
 class IOpenGlDevice {
 public:
 	virtual ~IOpenGlDevice()
@@ -21,10 +27,12 @@ public:
 	}
 	;
 
-	virtual GLuint createBufferObject(glm::detail::uint32 totalSize, void* dataPointer) = 0;
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, void* dataPointer) = 0;
 	virtual void releaseBufferObject(GLuint bufferId) = 0;
 	virtual GLuint bindBuffer(GLuint bufferId) = 0;
-	virtual GLuint unbindBuffer(GLuint bufferId) = 0;
+	virtual void unbindBuffer(GLuint bufferId) = 0;
+	
+	virtual GlError getGlError() = 0;
 };
 }
 #endif /* IOPENGLDEVICE_H_ */

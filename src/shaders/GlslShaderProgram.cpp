@@ -20,6 +20,7 @@ GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_
 
 GlslShaderProgram::~GlslShaderProgram()
 {
+	glDeleteProgram(programId_);
 }
 
 void GlslShaderProgram::compile()

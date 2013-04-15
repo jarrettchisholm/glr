@@ -39,6 +39,7 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, StringBi
 
 GlslShader::~GlslShader()
 {
+	glDeleteShader(shaderId_);
 }
 
 void GlslShader::compile()

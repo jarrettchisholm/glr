@@ -80,7 +80,7 @@ void Material::loadIntoVideoMemory()
 	md.shininess = shininess_;
 	md.strength = strength_;
 	
-	bufferId_ = openGlDevice_->createBufferObject(sizeof(MaterialData), &md);
+	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
 }
 
 Material::~Material()
