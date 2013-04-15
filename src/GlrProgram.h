@@ -73,6 +73,7 @@ private:
 	std::vector<GLuint> bindPoints_;
 	std::unordered_map<GLuint, GLuint> boundBuffers_;
 	GLint maxNumBindPoints_;
+	glmd::uint32 currentBindPoint_;
 
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	std::unique_ptr< BasicSceneManager > sMgr_;

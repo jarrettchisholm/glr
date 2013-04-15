@@ -130,7 +130,7 @@ public:
 				iter_ctx.instring.assign(
 					std::istreambuf_iterator<char>(ss.rdbuf()),
 					std::istreambuf_iterator<char>()
-					);
+				);
 			}
 			else
 			{

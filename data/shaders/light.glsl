@@ -1,4 +1,5 @@
 #type na
+#name light
 
 struct LightSource {
 	vec4 ambient;

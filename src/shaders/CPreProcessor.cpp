@@ -31,6 +31,10 @@ std::map<std::string, std::string> CPreProcessor::files_ = std::map<std::string,
 
 CPreProcessor::CPreProcessor(std::string source) : source_(source)
 {
+	name_ = "";
+	type_ = "";
+	shaderData_ = std::vector<ShaderData>();
+	processedSource_ = std::string();
 }
 
 
@@ -190,20 +194,25 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 		return true;
 	}
 
-	if ((*it).get_value() == "name" )
+	if ((*it).get_value() == "name")
 	{
-		// Handle type directive
-		typedef typename ContextT::token_type result_type;
-		for ( result_type t : line )
+		// Once the name is set, we ignore #name directives
+		if ( name_.size() == 0 )
 		{
-			const char* text = t.get_value().c_str();
-			if ( strcmp("#", text) != 0 && strcmp("name", text) != 0 )
+			// Handle name directive
+			typedef typename ContextT::token_type result_type;
+			for ( result_type t : line )
 			{
-				name_ += t.get_value().c_str();
+				const char* text = t.get_value().c_str();
+				if ( strcmp("#", text) != 0 && strcmp("name", text) != 0 )
+				{
+					name_ += t.get_value().c_str();
+				}
 			}
+			
+			alg::trim(name_);
 		}
-
-		alg::trim(name_);
+		
 		//std::cout << name_ << std::endl;
 
 		return true;

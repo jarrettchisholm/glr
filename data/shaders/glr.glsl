@@ -1,4 +1,5 @@
 #type na
+#name glr
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;

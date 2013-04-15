@@ -1,5 +1,0 @@
-#name glr_basic
-#type program
-
-#include "shader.vert"
-#include "shader.frag"

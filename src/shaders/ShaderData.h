@@ -46,12 +46,11 @@ in vec2 in_Texture;
 in vec3 in_Normal;
 
 out vec2 textureCoord;
-out vec4 pass_Color;
 out vec3 normalDirection;
 out vec3 lightDirection;
 
 //@bind texture0
-uniform sampler2DArray texture;
+//uniform sampler2DArray texture;
 
 @bind Light
 layout(std140) uniform LightSources 
@@ -91,10 +90,6 @@ void main() {
 	if(result2) bug2 = 1.0;
 	diffuseReflection.x += bug2;
 	*/
-	
-	pass_Color = vec4(diffuseReflection, 1.0);
-	//pass_Color = vec4((0.5 * normalDirection) + vec3(0.5), 1.0);
-	//pass_Color = ambient;
 }
 
 )<STRING>"
@@ -103,6 +98,7 @@ void main() {
 {"material", std::string(
 	R"<STRING>(
 #type na
+#name material
 
 struct Material {
 	vec4 ambient;
@@ -117,6 +113,7 @@ struct Material {
 {"light", std::string(
 	R"<STRING>(
 #type na
+#name light
 
 struct LightSource {
 	vec4 ambient;
@@ -142,25 +139,18 @@ struct LightSource {
 @bind texture0
 uniform sampler2DArray tex;
 
-in vec4 pass_Color;
 in vec2 textureCoord;
 in vec3 normalDirection;
 in vec3 lightDirection;
 
 Material material = Material(
-	vec4(1.0, 0.8, 0.8, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
+	vec4(0.4, 0.4, 0.4, 1.0),
+	vec4(0.6, 0.6, 0.6, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
 	0.995
 );
 
-void main() {	
-	//vec4 out_Color = texture2D(texture, textureCoord);
-	
-	//gl_FragColor = pass_Color;
-	
-	//gl_FragColor = out_Color;
-	
+void main() {
 	vec3 ct, cf;
 	vec4 texel;
 	float intensity, at, af;
@@ -173,7 +163,7 @@ void main() {
 	ct = texel.rgb;
 	at = texel.a;
 	
-	gl_FragColor = vec4(ct * cf, at * af) + pass_Color;
+	gl_FragColor = vec4(ct * cf, at * af);
 }
 
 )<STRING>"
@@ -182,6 +172,7 @@ void main() {
 {"glr", std::string(
 	R"<STRING>(
 #type na
+#name glr
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;

@@ -86,7 +86,7 @@ void GlslShader::compile()
 
 	const char* source = source_.c_str();
 
-	BOOST_LOG_TRIVIAL(debug) << "source: " << source;
+	//BOOST_LOG_TRIVIAL(debug) << "source: " << source;
 
 	glShaderSourceARB(shaderId_, 1, &source, nullptr);
 	//glShaderSourceARB(fragmentGlslShaderObject, 1, &FragmentShaderSource, &flength);

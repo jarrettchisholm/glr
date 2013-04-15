@@ -6,15 +6,19 @@
  */
 
 #include <sstream>
+#include <algorithm>
 #include <boost/regex.hpp>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "ShaderProgramManager.h"
 
 #include "ShaderData.h"
 #include "Constants.h"
+
+namespace alg = boost::algorithm;
 
 namespace glr {
 namespace shaders {
@@ -42,7 +46,8 @@ void ShaderProgramManager::reloadShaders()
 	glslProgramMap_.clear();
 	glslShaderMap_.clear();
 	
-	loadStandardShaderPrograms();
+	//loadStandardShaderPrograms();
+	loadShaderPrograms(constants::SHADER_DIRECTORY);
 }
 
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name)
@@ -91,9 +96,7 @@ void ShaderProgramManager::load(fs::path directory)
 		{
 			if ( fs::is_regular_file(dir_iter->status()))
 			{
-				std::stringstream temp;
-				temp << dir_iter->path().filename();
-				filenames.push_back(temp.str());
+				filenames.push_back( dir_iter->path().string() );
 			}
 		}
 	}
@@ -108,7 +111,9 @@ void ShaderProgramManager::load(std::vector<std::string> filenames)
 	for ( glmd::uint32 i = 0; i < filenames.size(); i++ )
 	{
 		if ( fs::exists(filenames[i]) && !fs::is_directory(filenames[i]))
+		{
 			filePaths.push_back(fs::path(filenames[i]));
+		}
 	}
 
 	return load(filePaths);
@@ -132,14 +137,19 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 
 			while ( getline(file, line))
 			{
-				contents += line;
+				contents += line + '\n';
 			}
 
 			file.close();
 
+			// Strip out '"' characters in filename (for some reason fs::path includes '"' characters around the filename)
 			std::stringstream temp;
 			temp << filePaths[i].filename();
-			dataMap[ temp.str() ] = contents;
+			std::string tempStr = temp.str();
+			std::replace( tempStr.begin(), tempStr.end(), '"', ' ');
+			alg::trim(tempStr);
+			
+			dataMap[ tempStr ] = contents;
 		}
 	}
 
@@ -156,7 +166,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		if ( isShader(entry.second))
 		{
 			BOOST_LOG_TRIVIAL(debug) << "Shader: " << entry.first;
-			glrShaderMap_[entry.first] = std::shared_ptr<GlrShader>(new GlrShader(entry.second));
+			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.second));
+			glrShaderMap_[entry.first] = s;
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
 			//if (!glrShaderMap_[entry.first]->containsPreProcessorCommands()) {
 			//	glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
@@ -165,7 +176,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		else if ( isProgram(entry.second))
 		{
 			BOOST_LOG_TRIVIAL(debug) << "Shader Program: " << entry.first;
-			glrProgramMap_[entry.first] = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.second));
+			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.second));
+			glrProgramMap_[entry.first] = sp;
 		}
 		else
 		{
@@ -184,7 +196,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 	for ( auto entry : glrProgramMap_ )
 	{
 		entry.second->process(glrShaderMap_);
-
+		BOOST_LOG_TRIVIAL(debug) << "entry.second->getName(): " << entry.second->getName();
 		glslProgramMap_[entry.second->getName()] = convertGlrProgramToGlslProgram(entry.second.get());
 	}
 
@@ -236,7 +248,7 @@ bool ShaderProgramManager::isShader(std::string s)
 }
 
 bool ShaderProgramManager::isProgram(std::string s)
-{
+{	
 	boost::regex shaderRegex(".*(\\s+)\\#type(\\s+)program(\\s*|\\s+\\n+.*)", boost::regex_constants::icase);
 
 	return(boost::regex_match(s, shaderRegex));

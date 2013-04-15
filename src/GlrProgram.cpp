@@ -45,12 +45,7 @@ void GlrProgram::initialize()
 	boundBuffers_ = std::unordered_map<GLuint, GLuint>();
 	
 	maxNumBindPoints_ = 0;
-	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
-	
-	for (GLint i=1; i < maxNumBindPoints_+1; i++)
-	{
-		bindPoints_.push_back(i);
-	}
+	currentBindPoint_ = 0;
 }
 
 /**
@@ -92,6 +87,14 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	
 	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), this, this));
 
+	
+	// find and set the number of bind points available
+	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
+		
+	for (GLint i=1; i < maxNumBindPoints_+1; i++)
+	{
+		bindPoints_.push_back(i);
+	}
 
 	return window_.get();
 }
@@ -323,13 +326,26 @@ void GlrProgram::releaseBufferObject(GLuint bufferId)
  */
 GLuint GlrProgram::bindBuffer(GLuint bufferId)
 {
-	// TODO: implement
 	
+	// TODO: Do I need a better algorithm here?
+	GLuint bindPoint = bindPoints_[currentBindPoint_];
+	currentBindPoint_++;
+	
+	if ( currentBindPoint_ > bindPoints_.size() )
+		currentBindPoint_ = 1;
+		
+	return bindPoint;
+	
+
+	// This algorithm was my first attempt at making it more 'efficient' by keeping a cache, and by moving
+	// recently used bind points to the bottom of a 'queue' (so they wouldn't be chosen again for a longer
+	// period of time).  However, it didn't work :S
 	/*
-	GLuint bindPoint = 0;
-	
+	GLuint bindPoint = 0; 
+	 
 	// Check if we have bound this buffer already
 	auto boundBufferIter = boundBuffers_.find( bufferId );
+
 	if (boundBufferIter != boundBuffers_.end())
 	{
 		// Pull bind point out of the list and push it on the back
@@ -341,31 +357,29 @@ GLuint GlrProgram::bindBuffer(GLuint bufferId)
 	{
 		// If we haven't bound it already, use the first available bind point
 		bindPoint = bindPoints_[0];
-		
+
 		// Remove any buffers from the bound buffers list that were bound to bindPoint (as it is now used by a different buffer)
 		auto it = std::find( bindPoints_.begin(), bindPoints_.end(), bindPoint);
 		if ( it != bindPoints_.end() ) 
 		{
 		    bindPoints_.erase( it );
 		}
-		
+
 		// Pop bind point off the top of the list and push it on the back
-		bindPoints_.erase( bindPoints_.front() );
+		bindPoints_.erase( bindPoints_.begin() );
 		bindPoints_.push_back( bindPoint );
-		
+
 		// Bind the buffer
 		boundBuffers_[bufferId] = bindPoint;
 		
 	}
-	
+
 	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
 	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	
 	return bindPoint;
 	*/
-	
-	return 1;
 }
 
 void GlrProgram::unbindBuffer(GLuint bufferId)

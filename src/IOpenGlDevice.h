@@ -8,6 +8,8 @@
 #ifndef IOPENGLDEVICE_H_
 #define IOPENGLDEVICE_H_
 
+#include <string>
+
 #include <GL/glew.h>
 
 #include "glm/glm.hpp"

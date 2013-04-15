@@ -1,4 +1,5 @@
 #type na
+#name material
 
 struct Material {
 	vec4 ambient;

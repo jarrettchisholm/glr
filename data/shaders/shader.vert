@@ -15,12 +15,11 @@ in vec2 in_Texture;
 in vec3 in_Normal;
 
 out vec2 textureCoord;
-out vec4 pass_Color;
 out vec3 normalDirection;
 out vec3 lightDirection;
 
 //@bind texture0
-uniform sampler2DArray texture;
+//uniform sampler2DArray texture;
 
 @bind Light
 layout(std140) uniform LightSources 
@@ -60,8 +59,4 @@ void main() {
 	if(result2) bug2 = 1.0;
 	diffuseReflection.x += bug2;
 	*/
-	
-	pass_Color = vec4(diffuseReflection, 1.0);
-	//pass_Color = vec4((0.5 * normalDirection) + vec3(0.5), 1.0);
-	//pass_Color = ambient;
 }
