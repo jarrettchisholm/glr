@@ -52,7 +52,7 @@ public:
 	virtual const glm::mat4& getProjectionMatrix();
 	virtual const glm::mat4& getModelMatrix();
 	
-	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, void* dataPointer);
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
 	virtual void releaseBufferObject(GLuint bufferId);
 	virtual GLuint bindBuffer(GLuint bufferId);
 	virtual void unbindBuffer(GLuint bufferId);

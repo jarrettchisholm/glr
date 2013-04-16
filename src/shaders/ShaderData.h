@@ -39,7 +39,7 @@ static std::map<std::string, std::string> SHADER_DATA = {
 
 #include <glr>
 #include <light>
-#include <material>
+//#include <material>
 
 in vec3 in_Position;
 in vec2 in_Texture;
@@ -53,19 +53,22 @@ out vec3 lightDirection;
 //uniform sampler2DArray texture;
 
 @bind Light
-layout(std140) uniform LightSources 
+layout(std140) uniform Lights 
 {
-	LightSource lightSources[ NUM_LIGHTS ];
+	Light lights[ NUM_LIGHTS ];
 };
 
 //@bind Material
+/*
 Material material = Material(
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
 	vec4(1.0, 0.8, 0.8, 1.0),
+	vec4(1.0, 0.8, 0.8, 1.0),
+	0.995,
 	0.995
 );
-
+*/
 
 void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
@@ -73,9 +76,9 @@ void main() {
 	textureCoord = in_Texture;
 	
 	normalDirection = normalize(normalMatrix * in_Normal);
-	lightDirection = normalize(vec3(lightSources[0].direction));
+	lightDirection = normalize(vec3(lights[0].direction));
 	
-	vec3 diffuseReflection = vec3(lightSources[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
+	//vec3 diffuseReflection = vec3(lights[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
 	/*
 	float bug = 0.0;	
@@ -104,7 +107,9 @@ struct Material {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
-	float shininess;
+	vec4 emission;
+	//float shininess;
+	//float strength;
 };
 
 )<STRING>"
@@ -115,7 +120,7 @@ struct Material {
 #type na
 #name light
 
-struct LightSource {
+struct Light {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
@@ -132,23 +137,27 @@ struct LightSource {
 
 #extension GL_EXT_texture_array : enable
 
+#ifndef NUM_MATERIALS
+#define NUM_MATERIALS 1
+#endif
+
 #type fragment
 
 #include <material>
-
-@bind texture0
-uniform sampler2DArray tex;
 
 in vec2 textureCoord;
 in vec3 normalDirection;
 in vec3 lightDirection;
 
-Material material = Material(
-	vec4(0.4, 0.4, 0.4, 1.0),
-	vec4(0.6, 0.6, 0.6, 1.0),
-	vec4(1.0, 0.8, 0.8, 1.0),
-	0.995
-);
+@bind texture0
+uniform sampler2DArray tex;
+
+@bind Material
+layout(std140) uniform Materials 
+{
+	Material materials[ NUM_MATERIALS ];
+};
+
 
 void main() {
 	vec3 ct, cf;
@@ -156,14 +165,21 @@ void main() {
 	float intensity, at, af;
 	intensity = max( dot(lightDirection, normalize(normalDirection)), 0.0 );
  
-	cf = intensity * (material.diffuse).rgb + material.ambient.rgb;
-	af = material.diffuse.a;
+	cf = intensity * (materials[0].diffuse).rgb + materials[0].ambient.rgb;
+	af = materials[0].diffuse.a;
 	texel = texture2DArray(tex, vec3(textureCoord, 1));
  
 	ct = texel.rgb;
 	at = texel.a;
 	
 	gl_FragColor = vec4(ct * cf, at * af);
+	
+	/*
+	float bug = 0.0;	
+	bvec4 result = equal( materials[0].diffuse, vec4(0.0, 0.0, 0.0, 0.0) );
+	if(result[0] && result[1] && result[2]) bug = 1.0;
+	gl_FragColor.x += bug;
+	*/
 }
 
 )<STRING>"

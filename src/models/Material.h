@@ -24,12 +24,12 @@ namespace models {
 	
 struct MaterialData
 {
-	glm::vec4 diffuse;
-	glm::vec4 specular;
 	glm::vec4 ambient;
+	glm::vec4 diffuse;
+	glm::vec4 specular;	
 	glm::vec4 emission;
-	glm::detail::float32 shininess;
-	glm::detail::float32 strength;
+	//glm::detail::float32 shininess;
+	//glm::detail::float32 strength;
 };
 	
 class Material {
@@ -50,11 +50,14 @@ private:
 
 	GLenum fill_mode_;
 	glm::detail::int32 ret1_, ret2_;
+	glm::vec4 ambient_;
 	glm::vec4 diffuse_;
 	glm::vec4 specular_;
-	glm::vec4 ambient_;
 	glm::vec4 emission_;
 	glm::detail::float32 shininess_, strength_;
+	
+	MaterialData materialData_;
+	
 	glm::detail::int32 two_sided_;
 	glm::detail::int32 two_sided_true_;
 	glm::detail::int32 wireframe_;

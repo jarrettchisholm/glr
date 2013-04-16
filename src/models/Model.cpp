@@ -42,6 +42,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		{
 			// TODO: bind to an actual texture position (for multiple textures per mesh, which we currently don't support...maybe at some point we will???  Why would we need multiple textures?)
 			textures_[ textureMap_[i] ]->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, textures_[ textureMap_[i] ]->getBindPoint() );
 		}
 		
 		if ( materials_[ materialMap_[i] ] != nullptr )

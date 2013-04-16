@@ -18,20 +18,20 @@ Texture::Texture(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 Texture::Texture(utilities::Image* image, IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	if ( image == 0 )
-		textureId_ = 0;
+		bufferId_ = 0;
 	else
-		loadTexture(image);
+		loadIntoVideoMemory(image);
 }
 
 Texture::~Texture()
 {
 }
 
-void Texture::loadTexture(utilities::Image* image)
+void Texture::loadIntoVideoMemory(utilities::Image* image)
 {
-	glGenTextures(1, &textureId_);
+	glGenTextures(1, &bufferId_);
 
-	glBindTexture(GL_TEXTURE_2D_ARRAY, textureId_);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, bufferId_);
 	
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -49,7 +49,7 @@ void Texture::loadTexture(utilities::Image* image)
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Texture::loadTexture: error loading texture in opengl";
+		BOOST_LOG_TRIVIAL(error) << "Texture::loadIntoVideoMemory: error loading texture in opengl";
 		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
 	}
 	else
@@ -60,18 +60,24 @@ void Texture::loadTexture(utilities::Image* image)
 
 void Texture::bind(GLuint texturePosition)
 {
-	/*
-	   glEnable(GL_BLEND);
-	   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	   glEnable( GL_TEXTURE_2D );
-	   glBindTexture(GL_TEXTURE_2D, textureId_);
-	 */
-
-	glActiveTexture(GL_TEXTURE0 + texturePosition);
-	glBindTexture(GL_TEXTURE_2D, textureId_);
+	//glActiveTexture(GL_TEXTURE0 + texturePosition);
+	//glBindTexture(GL_TEXTURE_2D, bufferId_);
+	
+	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 
 	// to unbind, we use the following
 	// glBindTexture(GL_TEXTURE_2D,0);
 }
+
+GLuint Texture::getBufferId()
+{
+	return bufferId_;
+}
+
+GLuint Texture::getBindPoint()
+{
+	return bindPoint_;
+}
+
 }
 }

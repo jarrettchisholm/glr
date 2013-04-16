@@ -102,7 +102,6 @@ void GlslShaderProgram::bindVariable(std::string varName, GLuint bindPoint)
 void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint)
 {
 	for ( auto it = bindings_.begin(); it != bindings_.end(); it++)
-	//for ( auto p : bindings_)
 	{
 		if (it->first == bindType)
 		{

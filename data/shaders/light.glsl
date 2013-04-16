@@ -1,7 +1,7 @@
 #type na
 #name light
 
-struct LightSource {
+struct Light {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;

@@ -162,6 +162,13 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 			{
 				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+				
+				GLuint bindPoint = this->bindBuffer( ubo );
+				
+				shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
+				
+				//GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
+				//glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
 			}
 		}
 	}
@@ -231,18 +238,7 @@ void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader
 	lightUbos_[name] = std::vector<GLuint>();
 	lightUbos_[name].push_back(0);
 
-	// the binding point must be smaller than GL_MAX_UNIFORM_BUFFER_BINDINGS
-	GLuint bindingPoint = 1;
-
-	GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
-	glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
-
-	glGenBuffers(1, &lightUbos_[name][0]);
-	glBindBuffer(GL_UNIFORM_BUFFER, lightUbos_[name][0]);
-
-	glBufferData(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0], GL_DYNAMIC_DRAW);
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, lightUbos_[name][0]);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	lightUbos_[name][0] = this->createBufferObject(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0]);
 }
 
 void GlrProgram::releaseLightUbo(std::string name)
@@ -291,7 +287,7 @@ const glm::mat4& GlrProgram::getModelMatrix()
 	return sMgr_->getModelMatrix();
 }
 
-GLuint GlrProgram::createBufferObject(GLenum target, glmd::uint32 totalSize, void* dataPointer)
+GLuint GlrProgram::createBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
 {
 	GLuint bufferId = 0;
 	glGenBuffers(1, &bufferId);
@@ -333,6 +329,8 @@ GLuint GlrProgram::bindBuffer(GLuint bufferId)
 	
 	if ( currentBindPoint_ > bindPoints_.size() )
 		currentBindPoint_ = 1;
+		
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
 		
 	return bindPoint;
 	

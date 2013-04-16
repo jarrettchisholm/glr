@@ -28,13 +28,18 @@ public:
 	virtual ~Texture();
 
 	void bind(GLuint texturePosition = 0);
-
-private:
-	IOpenGlDevice* openGlDevice_;
 	
-	GLuint textureId_;
+	GLuint getBufferId();
+	GLuint getBindPoint();
 
-	void loadTexture(utilities::Image* image);
+private:	
+	IOpenGlDevice* openGlDevice_;
+	GLuint bufferId_;
+	GLuint bindPoint_;
+	
+	//GLuint textureId_;
+
+	void loadIntoVideoMemory(utilities::Image* image);
 };
 }
 }

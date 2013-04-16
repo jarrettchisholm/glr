@@ -29,7 +29,7 @@ public:
 	}
 	;
 
-	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, void* dataPointer) = 0;
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer) = 0;
 	virtual void releaseBufferObject(GLuint bufferId) = 0;
 	virtual GLuint bindBuffer(GLuint bufferId) = 0;
 	virtual void unbindBuffer(GLuint bufferId) = 0;

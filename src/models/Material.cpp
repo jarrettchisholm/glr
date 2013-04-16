@@ -67,18 +67,18 @@ Material::Material(const aiMaterial* mtl, IOpenGlDevice* openGlDevice)
 	
 	loadIntoVideoMemory();
 	
-	BOOST_LOG_TRIVIAL(debug) << "done loading material.";
+	BOOST_LOG_TRIVIAL(debug) << "done loading material.  Buffer id: " << bufferId_;
 }
 
 void Material::loadIntoVideoMemory()
 {
 	MaterialData md = MaterialData();
+	md.ambient = ambient_;
 	md.diffuse = diffuse_;
 	md.specular = specular_;
-	md.ambient = ambient_;
 	md.emission = emission_;
-	md.shininess = shininess_;
-	md.strength = strength_;
+	//md.shininess = shininess_;
+	//md.strength = strength_;
 	
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
 }
@@ -91,6 +91,22 @@ Material::~Material()
 void Material::bind()
 {
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	
+	/*
+	for (int i=0; i < 4; i++)
+		std::cout << ambient_[i] << " ";
+	std::cout << std::endl;
+	for (int i=0; i < 4; i++)
+		std::cout << diffuse_[i] << " ";
+	std::cout << std::endl;
+	for (int i=0; i < 4; i++)
+		std::cout << specular_[i] << " ";
+	std::cout << std::endl;
+	for (int i=0; i < 4; i++)
+		std::cout << emission_[i] << " ";
+	
+	std::cout << std::endl << std::endl;
+	*/
 }
 
 GLuint Material::getBufferId()
