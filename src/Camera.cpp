@@ -1,5 +1,5 @@
 /*
- * CameraSceneNode.cpp
+ * Camera.cpp
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -10,7 +10,7 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "CameraSceneNode.h"
+#include "Camera.h"
 
 #include "common/math/Math.h"
 
@@ -23,7 +23,7 @@
 #include <iostream>
 
 namespace glr {
-CameraSceneNode::CameraSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(matrixData, openGlDevice)
+Camera::Camera(IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -31,7 +31,7 @@ CameraSceneNode::CameraSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlD
 	initialize();
 }
 
-CameraSceneNode::CameraSceneNode(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(name, matrixData, openGlDevice)
+Camera::Camera(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice) : BasicSceneNode(name, matrixData, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -39,11 +39,11 @@ CameraSceneNode::CameraSceneNode(const std::string name, IMatrixData* matrixData
 	initialize();
 }
 
-CameraSceneNode::~CameraSceneNode()
+Camera::~Camera()
 {
 }
 
-void CameraSceneNode::initialize()
+void Camera::initialize()
 {
 	clearMovementBuffer();
 
@@ -62,7 +62,7 @@ void CameraSceneNode::initialize()
 	//rotation_.normalize();
 }
 
-void CameraSceneNode::render()
+void Camera::render()
 {
 	if ( isActive() )
 	{
@@ -72,27 +72,27 @@ void CameraSceneNode::render()
 	}
 }
 
-const glm::mat4& CameraSceneNode::getViewMatrix()
+const glm::mat4& Camera::getViewMatrix()
 {
 	return viewMatrix_;
 }
 
-bool CameraSceneNode::isActive()
+bool Camera::isActive()
 {
 	return active_;
 }
 
 /**
- * Does nothing in the CameraSceneNode.
+ * Does nothing in the Camera.
  */
-void CameraSceneNode::attach(models::IModel* model)
+void Camera::attach(models::IModel* model)
 {
 }
 
 /**
  *
  */
-void CameraSceneNode::clearMovementBuffer()
+void Camera::clearMovementBuffer()
 {
 	for ( glm::detail::uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++ )
 		movement_[i] = 0;
@@ -101,7 +101,7 @@ void CameraSceneNode::clearMovementBuffer()
 /**
  *
  */
-void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled)
+void Camera::move(MOVE_DIRECTION dir, bool enabled)
 {
 	movement_[dir] = (enabled ? 1 : 0);
 }
@@ -110,7 +110,7 @@ void CameraSceneNode::move(MOVE_DIRECTION dir, bool enabled)
 /**
  *
  */
-void CameraSceneNode::rotateX(glm::detail::float32 degrees)
+void Camera::rotateX(glm::detail::float32 degrees)
 {
 	xRot_ += degrees;
 }
@@ -119,7 +119,7 @@ void CameraSceneNode::rotateX(glm::detail::float32 degrees)
 /**
  *
  */
-void CameraSceneNode::rotateY(glm::detail::float32 degrees)
+void Camera::rotateY(glm::detail::float32 degrees)
 {
 	yRot_ += degrees;
 }
@@ -127,7 +127,7 @@ void CameraSceneNode::rotateY(glm::detail::float32 degrees)
 /**
  *
  */
-void CameraSceneNode::tick(glm::detail::float32 time)
+void Camera::tick(glm::detail::float32 time)
 {
 	// movement direction
 	if ( movement_[MOVE_DIR_FORWARD] == 1 )

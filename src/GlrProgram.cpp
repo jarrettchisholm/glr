@@ -188,7 +188,7 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 	glm::mat4 modelMatrix = sMgr_->getModelMatrix();
 	glm::mat4 projectionMatrix = window_->getProjectionMatrix();
 
-	ICamera* camera = sMgr_->getActiveCameraSceneNode();
+	ICamera* camera = sMgr_->getActiveCamera();
 	if ( camera != nullptr )
 	{
 		const glm::mat4 viewMatrix = camera->getViewMatrix();
@@ -270,7 +270,7 @@ gui::IGUI* GlrProgram::getHtmlGui()
 
 const glm::mat4& GlrProgram::getViewMatrix()
 {
-	ICamera* camera = sMgr_->getActiveCameraSceneNode();
+	ICamera* camera = sMgr_->getActiveCamera();
 	if (camera != nullptr)
 		return camera->getViewMatrix();
 	

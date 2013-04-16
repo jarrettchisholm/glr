@@ -43,7 +43,7 @@ void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
 	textureCoord = in_Texture;
-	
+
 	normalDirection = normalize(normalMatrix * in_Normal);
 	lightDirection = normalize(vec3(lights[0].direction));
 	

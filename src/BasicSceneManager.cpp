@@ -11,7 +11,7 @@
 
 #include "BasicSceneManager.h"
 
-#include "CameraSceneNode.h"
+#include "Camera.h"
 #include "BasicSceneNode.h"
 #include "Light.h"
 #include "models/ModelManager.h"
@@ -66,7 +66,7 @@ ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::ui
 		throw exception::Exception(msg.str());
 	}
 
-	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>(new CameraSceneNode(name, matrixData_, openGlDevice_));
+	std::shared_ptr<ICamera> node = std::shared_ptr<ICamera>(new Camera(name, matrixData_, openGlDevice_));
 	cameras_[name] = node;
 
 	node->attach(defaultShaderProgram_);
@@ -105,7 +105,7 @@ void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderP
 	defaultShaderProgram_ = shaderProgram;
 }
 
-ICamera* BasicSceneManager::getActiveCameraSceneNode()
+ICamera* BasicSceneManager::getActiveCamera()
 {
 
 	if ( cameras_.size() > 0 )

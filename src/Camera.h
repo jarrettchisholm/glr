@@ -1,12 +1,12 @@
 /*
- * CameraSceneNode.h
+ * Camera.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
 
-#ifndef CAMERASCENENODE_H_
-#define CAMERASCENENODE_H_
+#ifndef CAMERA_H_
+#define CAMERA_H_
 
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
@@ -17,11 +17,11 @@
 //#include "IInputListener.h"
 
 namespace glr {
-class CameraSceneNode : public virtual ICamera, public BasicSceneNode {
+class Camera : public virtual ICamera, public BasicSceneNode {
 public:
-	CameraSceneNode(IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
-	CameraSceneNode(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
-	virtual ~CameraSceneNode();
+	Camera(IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	Camera(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	virtual ~Camera();
 
 	// inherited from ICamera
 	virtual bool isActive();
@@ -54,4 +54,4 @@ private:
 	void initialize();
 };
 }
-#endif /* CAMERASCENENODE_H_ */
+#endif /* CAMERA_H_ */

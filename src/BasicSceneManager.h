@@ -12,7 +12,7 @@
 #include "IMatrixData.h"
 #include "IOpenGlDevice.h"
 
-#include "CameraSceneNode.h"
+#include "Camera.h"
 #include "shaders/ShaderProgramManager.h"
 
 namespace glr {
@@ -53,7 +53,7 @@ public:
 
 	void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
 
-	ICamera* getActiveCameraSceneNode();
+	ICamera* getActiveCamera();
 	const glm::mat4& getModelMatrix();
 
 private:
