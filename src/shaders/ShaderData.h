@@ -73,10 +73,12 @@ Material material = Material(
 void main() {
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
+	vec4 lightDirTemp = viewMatrix * lights[0].direction;
+	
 	textureCoord = in_Texture;
 
 	normalDirection = normalize(normalMatrix * in_Normal);
-	lightDirection = normalize(vec3(lights[0].direction));
+	lightDirection = normalize(vec3(lightDirTemp));
 	
 	//vec3 diffuseReflection = vec3(lights[0].diffuse) * vec3(material.diffuse) * max(0.0, dot(normalDirection, lightDirection));
 	
