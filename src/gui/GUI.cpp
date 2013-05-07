@@ -14,8 +14,9 @@
 
 namespace glr {
 namespace gui {
-GUI::GUI()
+GUI::GUI(glmd::uint32 width, glmd::uint32 height) : width_(width), height_(height)
 {
+	initialize();
 }
 
 GUI::~GUI()
@@ -24,6 +25,12 @@ GUI::~GUI()
 
 int GUI::initialize()
 {
+	if ( !Berkelium::init(Berkelium::FileString::empty()) )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Failed to initialize berkelium!";
+		return -1;
+	}
+	
 	return 0;
 }
 
@@ -31,9 +38,12 @@ void GUI::destroy()
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		views_.at(i)->unload();
-		delete views_.at(i);
+		views_.at(i).get()->unload();
 	}
+	
+	views_.clear();
+	
+	Berkelium::destroy();
 }
 
 
@@ -43,8 +53,8 @@ void GUI::update()
 	//window_->executeJavascript( Berkelium::WideString::point_to(L"update();") );
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		if ( views_.at(i)->isVisible())
-			views_.at(i)->executeScript(L"update();");
+		if ( views_.at(i).get()->isVisible())
+			views_.at(i).get()->executeScript(L"update();");
 	}
 }
 
@@ -52,8 +62,8 @@ void GUI::render()
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		if ( views_.at(i)->isVisible())
-			views_.at(i)->render();
+		if ( views_.at(i).get()->isVisible())
+			views_.at(i).get()->render();
 	}
 }
 
@@ -73,9 +83,9 @@ void GUI::textEvent(const wchar_t*evt, size_t evtLength)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		if ( views_.at(i)->isVisible())
+		if ( views_.at(i).get()->isVisible())
 		{
-			views_.at(i)->textEvent(evt, evtLength);
+			views_.at(i).get()->textEvent(evt, evtLength);
 		}
 	}
 }
@@ -84,9 +94,9 @@ void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		if ( views_.at(i)->isVisible())
+		if ( views_.at(i).get()->isVisible())
 		{
-			views_.at(i)->keyEvent(pressed, mods, vk_code, scancode);
+			views_.at(i).get()->keyEvent(pressed, mods, vk_code, scancode);
 		}
 	}
 }
@@ -97,49 +107,49 @@ void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_
  */
 IGUIComponent* GUI::loadFromFile(std::string filename)
 {
-	HtmlGuiComponent* comp = new HtmlGuiComponent();
+	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(width_, height_) );
 
 	comp->loadContentsFromFile(filename);
 
 	if ( comp->load() < 0 )
 	{
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load gui component.";
 		comp->unload();
-		delete comp;
-		return 0;
+		return nullptr;
 	}
 
-	views_.push_back(comp);
+	views_.push_back( std::move(comp) );
 
-	return comp;
+	return views_.back().get();
 }
 
 IGUIComponent* GUI::loadFromData(std::string data)
 {
-	HtmlGuiComponent* comp = new HtmlGuiComponent();
+	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(width_, height_) );
 
 	comp->setContents(data);
 
 	if ( comp->load() < 0 )
 	{
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load gui component.";
 		comp->unload();
-		delete comp;
 		return 0;
 	}
 
-	views_.push_back(comp);
+	views_.push_back( std::move(comp) );
 
-	return comp;
+	return views_.back().get();
 }
 
 int GUI::release(IGUIComponent* comp)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
-		if ( views_.at(i) == comp )
+		if ( views_.at(i).get() == comp )
 		{
 			views_.erase(views_.begin() + i);
 			comp->unload();
-			delete comp;
+			//delete comp;
 		}
 	}
 

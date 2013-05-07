@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include <berkelium/Berkelium.hpp>
+
 #include "IGUI.h"
 
 #include "IGUIComponent.h"
@@ -20,7 +22,7 @@ namespace glr {
 namespace gui {
 class GUI : public IGUI {
 public:
-	GUI();
+	GUI(glmd::uint32 width, glmd::uint32 height);
 	virtual ~GUI();
 
 	virtual glm::detail::int32 initialize();
@@ -40,7 +42,10 @@ public:
 	virtual glm::detail::int32 release(IGUIComponent*);
 
 private:
-	std::vector<HtmlGuiComponent*> views_;
+	std::vector< std::unique_ptr<HtmlGuiComponent> > views_;
+	
+	// Width and height of our window.
+	glmd::uint32 width_, height_;
 };
 }
 }

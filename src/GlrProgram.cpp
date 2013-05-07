@@ -70,7 +70,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	window_->resize(width, height);
 
 	// Initialize GLEW
-	glewExperimental = true;                           // Needed in core profile
+	glewExperimental = true; // Needed in core profile
 	if ( glewInit() != GLEW_OK )
 	{
 		std::string msg("Failed to initialize GLEW.");
@@ -85,7 +85,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true, defaultBindListeners));
 	//shaderProgramManager_->addDefaultBindListener( this );
 	
-	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), this, this));
+	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), this));
 
 	
 	// find and set the number of bind points available
@@ -122,7 +122,7 @@ void GlrProgram::render()
 	//setupUniformBufferObjectBindings(shader);
 	//bindUniformBufferObjects(shader);
 	sMgr_->setDefaultShaderProgram(shader);
-	sMgr_->drawAll(this);
+	sMgr_->drawAll();
 
 	shaders::GlslShaderProgram::unbindAll();
 
@@ -166,9 +166,6 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 				GLuint bindPoint = this->bindBuffer( ubo );
 				
 				shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
-				
-				//GLuint uniformBlockIndex = glGetUniformBlockIndex(shader->getGLShaderProgramId(), "LightSources");
-				//glUniformBlockBinding(shader->getGLShaderProgramId(), uniformBlockIndex, bindingPoint);
 			}
 		}
 	}
@@ -263,7 +260,7 @@ gui::IGUI* GlrProgram::getHtmlGui()
 		return gui_.get();
 	}
 
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI());
+	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
 }

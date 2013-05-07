@@ -8,7 +8,6 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-#include "../IMatrixData.h"
 #include "../shaders/IShaderProgram.h"
 
 namespace glr {

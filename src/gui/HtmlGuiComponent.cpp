@@ -21,11 +21,10 @@
 
 namespace glr {
 namespace gui {
-HtmlGuiComponent::HtmlGuiComponent()
+HtmlGuiComponent::HtmlGuiComponent(glmd::uint32 width, glmd::uint32 height) : width_(width), height_(height)
 {
 	isVisible_ = false;
 }
-
 
 HtmlGuiComponent::~HtmlGuiComponent()
 {
@@ -33,12 +32,6 @@ HtmlGuiComponent::~HtmlGuiComponent()
 
 int HtmlGuiComponent::load()
 {
-	if ( !Berkelium::init(Berkelium::FileString::empty()))
-	{
-		BOOST_LOG_TRIVIAL(debug) << "Failed to initialize berkelium!";
-		return -1;
-	}
-
 	// Create texture to hold rendered view
 	glGenTextures(1, &web_texture);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
@@ -49,14 +42,11 @@ int HtmlGuiComponent::load()
 	window_ = Berkelium::Window::create(context);
 	delete context;
 
-	width = 1024;
-	height = 768;
-
-	scroll_buffer = new char[width * (height + 1) * 4];
+	scroll_buffer = new char[width_ * (width_ + 1) * 4];
 
 	//MyDelegate* delegate = new MyDelegate();
 	window_->setDelegate(this);
-	window_->resize(width, height);
+	window_->resize(width_, height_);
 	window_->setTransparent(true);
 	//std::string url = "file:///home/jarrett/projects/chisholmsoft/dark_horizon/data/test.html";
 	window_->navigateTo(Berkelium::URLString::point_to(url_.data(), url_.length()));
@@ -124,7 +114,6 @@ void HtmlGuiComponent::unload()
 {
 	this->setVisible(false);
 	window_ = 0;
-	Berkelium::destroy();
 }
 
 void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
@@ -234,11 +223,8 @@ void HtmlGuiComponent::render()
 
 void HtmlGuiComponent::testDrawTestBerkelium()
 {
-	//std::cout << "binding done wooo" << std::endl;
-
 	if ( webTextureReady_ )
 	{
-		//glDisable(GL_LIGHTING);
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
@@ -269,7 +255,6 @@ void HtmlGuiComponent::testDrawTestBerkelium()
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
-		//glEnable(GL_LIGHTING);
 	}
 
 	// wait a bit before calling Berkelium::update() again
@@ -397,16 +382,32 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMs
 	}
 }
 
-void HtmlGuiComponent::onPaint(Berkelium::Window* wini,
-							   const unsigned char*bitmap_in, const Berkelium::Rect&bitmap_rect,
-							   size_t num_copy_rects, const Berkelium::Rect* copy_rects,
-							   int dx, int dy, const Berkelium::Rect& scroll_rect)
+void HtmlGuiComponent::onPaint(
+		Berkelium::Window* wini,
+		const unsigned char*bitmap_in, 
+		const Berkelium::Rect&bitmap_rect,
+		size_t num_copy_rects, 
+		const Berkelium::Rect* copy_rects,
+		int dx, 
+		int dy, 
+		const Berkelium::Rect& scroll_rect
+	)
 {
 	bool updated = mapOnPaintToTexture(
-		wini, bitmap_in, bitmap_rect, num_copy_rects, copy_rects,
-		dx, dy, scroll_rect,
-		web_texture, width, height, needs_full_refresh, scroll_buffer
-		);
+		wini, 
+		bitmap_in, 
+		bitmap_rect, 
+		num_copy_rects, 
+		copy_rects,
+		dx,
+		dy, 
+		scroll_rect,
+		web_texture, 
+		width_, 
+		height_, 
+		needs_full_refresh, 
+		scroll_buffer
+	);
 
 
 	if ( updated )

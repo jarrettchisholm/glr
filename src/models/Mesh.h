@@ -18,7 +18,6 @@
 
 #include <glm/glm.hpp>
 
-#include "../IMatrixData.h"
 #include "../shaders/IShaderProgram.h"
 
 //#include "../../vmath/Vector3f.h"

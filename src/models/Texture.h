@@ -11,7 +11,6 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "../IMatrixData.h"
 #include "../shaders/IShaderProgram.h"
 #include "../IOpenGlDevice.h"
 

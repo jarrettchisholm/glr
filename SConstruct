@@ -123,7 +123,7 @@ libraries = [
 'boost_regex'
 ]
 
-library_paths = ['../lwis/build']
+library_paths = []
 
 # Set our g++ compiler flags
 cpp_flags = [

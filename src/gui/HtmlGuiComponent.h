@@ -24,11 +24,14 @@
 
 #include "GUIObject.h"
 
+namespace glmd = glm::detail;
+
 namespace glr {
 namespace gui {
+
 class HtmlGuiComponent : public IGUIComponent,  public Berkelium::WindowDelegate {
 public:
-	HtmlGuiComponent();
+	HtmlGuiComponent(glmd::uint32 width, glmd::uint32 height);
 	virtual ~HtmlGuiComponent();
 
 	virtual int load();
@@ -61,7 +64,7 @@ private:
 	std::string url_;
 
 	// Width and height of our window.
-	glm::detail::uint32 width, height;
+	glmd::uint32 width_, height_;
 	// Storage for a texture
 	glm::detail::uint32 web_texture;
 	// Buffer used to store data for scrolling

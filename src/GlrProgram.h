@@ -15,7 +15,6 @@
 #include <windows.h>
 #endif
 
-#include "IMatrixData.h"
 #include "IOpenGlDevice.h"
 #include "IWindow.h"
 #include "BasicSceneNode.h"
@@ -30,7 +29,7 @@
 
 
 namespace glr {
-class GlrProgram : public shaders::IShaderProgramBindListener, public IMatrixData, public IOpenGlDevice {
+class GlrProgram : public shaders::IShaderProgramBindListener, public IOpenGlDevice {
 public:
 	GlrProgram();
 	virtual ~GlrProgram();

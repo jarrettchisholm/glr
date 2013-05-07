@@ -19,8 +19,8 @@
 namespace glr {
 class Camera : public virtual ICamera, public BasicSceneNode {
 public:
-	Camera(IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
-	Camera(const std::string name, IMatrixData* matrixData, IOpenGlDevice* openGlDevice);
+	Camera(IOpenGlDevice* openGlDevice);
+	Camera(const std::string name, IOpenGlDevice* openGlDevice);
 	virtual ~Camera();
 
 	// inherited from ICamera
