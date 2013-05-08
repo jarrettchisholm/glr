@@ -69,17 +69,38 @@ void GUI::render()
 
 void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
+	for ( int i = 0; i < views_.size(); i++ )
+	{
+		if ( views_.at(i).get()->isVisible())
+		{
+			views_.at(i).get()->mouseMoved(xPos, yPos);
+		}
+	}
 }
 
 void GUI::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount)
 {
+	for ( int i = 0; i < views_.size(); i++ )
+	{
+		if ( views_.at(i).get()->isVisible())
+		{
+			views_.at(i).get()->mouseButton(buttonID, down, clickCount);
+		}
+	}
 }
 
 void GUI::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
+	for ( int i = 0; i < views_.size(); i++ )
+	{
+		if ( views_.at(i).get()->isVisible())
+		{
+			views_.at(i).get()->mouseWheel(xScroll, yScroll);
+		}
+	}
 }
 
-void GUI::textEvent(const wchar_t*evt, size_t evtLength)
+void GUI::textEvent(const wchar_t* evt, size_t evtLength)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{

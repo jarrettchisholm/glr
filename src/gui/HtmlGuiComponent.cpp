@@ -116,19 +116,46 @@ void HtmlGuiComponent::unload()
 	window_ = 0;
 }
 
+/** Maps an input coordinate to a texture coordinate for injection into
+ *  Berkelium.
+ *  \param glut_size the size of the GLUT window
+ *  \param glut_coord the coordinate value received from GLUT
+ *  \param tex_size the size of the texture/Berkelium window
+ *  \returns the coordinate transformed to the correct value for the texture /
+ *           Berkelium window
+ */
+unsigned int HtmlGuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size)
+{
+    return (glut_coord * tex_size) / glut_size;
+}
+
 void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
+	//std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
+	
+	unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
+    unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
+    //std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
+	window_->mouseMoved(tex_coord_x, tex_coord_y);
 }
 
 void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount)
 {
+	//std::cout << "MOUSE BUTTON EVENT: " << buttonID << " " << down << std::endl;
+	window_->mouseButton(buttonID, down, clickCount);
+}
+
+void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonID)
+{
+	window_->mouseButton(buttonID, true, 1);
 }
 
 void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
+	
 }
 
-void HtmlGuiComponent::textEvent(const wchar_t*evt, size_t evtLength)
+void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 {
 	std::cout << "TEXT EVENT: " << evt << std::endl;
 
@@ -225,15 +252,14 @@ void HtmlGuiComponent::testDrawTestBerkelium()
 {
 	if ( webTextureReady_ )
 	{
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		glLoadIdentity();
+		//glMatrixMode(GL_PROJECTION);
+		//glPushMatrix();
+		//glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
 
-		glColor3f(1.0, 1.0, 1.0);
-
+		glColor4f(1.0, 1.0, 1.0, 1.0);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_TEXTURE_2D);
@@ -251,8 +277,8 @@ void HtmlGuiComponent::testDrawTestBerkelium()
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
+		//glMatrixMode(GL_PROJECTION);
+		//glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 	}
@@ -432,16 +458,20 @@ void HtmlGuiComponent::onPaint(
  *  \returns true if the texture was updated, false otherwiase
  */
 bool HtmlGuiComponent::mapOnPaintToTexture(
-	Berkelium::Window*wini,
-	const unsigned char* bitmap_in, const Berkelium::Rect& bitmap_rect,
-	size_t num_copy_rects, const Berkelium::Rect*copy_rects,
-	int dx, int dy,
-	const Berkelium::Rect& scroll_rect,
-	unsigned int dest_texture,
-	unsigned int dest_texture_width,
-	unsigned int dest_texture_height,
-	bool ignore_partial,
-	char* scroll_buffer)
+		Berkelium::Window*wini,
+		const unsigned char* bitmap_in, 
+		const Berkelium::Rect& bitmap_rect,
+		size_t num_copy_rects, 
+		const Berkelium::Rect*copy_rects,
+		int dx, 
+		int dy,
+		const Berkelium::Rect& scroll_rect,
+		unsigned int dest_texture,
+		unsigned int dest_texture_width,
+		unsigned int dest_texture_height,
+		bool ignore_partial,
+		char* scroll_buffer
+	)
 {
 	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
 
