@@ -1,6 +1,8 @@
 /*
  * GlslShader.h
  *
+ * Class representing a 'glsl' shader.  This is a shader that contains the final, processed shader source.
+ * 
  *  Created on: 2013-01-04
  *      Author: jarrett
  */

@@ -1,7 +1,25 @@
 /*
  * GlrShader.h
  *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * Class representing a 'glr' shader.  This is a shader that contains the 'raw' shader source (i.e. before it has been processed).
+ * 
+ * Note that, in the shader source, there are 2 kinds of #include directives.  The first one looks like this:
+ * 
+ * #include <lights>
+ * 
+ * The '<' and '>' around the filename indicate that this is a 'system' file to include.  GLR has several of these system shader source
+ * files available for use.
+ * 
+ * The second one looks like this:
+ * 
+ * #include "myshader.vs"
+ * 
+ * This will include a file named 'myshader.vs' from the disk.  This is so that you can include your own, user-defined shader files.
+ * 
+ * You can use this class to then process the 'raw' shader source into something more amenable to an opengl shader.
+ * 
+ * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * Date: 2013
  *
  */
 

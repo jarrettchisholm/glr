@@ -158,8 +158,7 @@ std::string CPreProcessor::getProcessedSource()
 
 
 template <typename ContextT, typename ContainerT>
-bool
-CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& line, ContainerT& pending)
+bool CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& line, ContainerT& pending)
 {
 	typedef typename ContainerT::const_iterator iterator_type;
 	iterator_type it = line.begin();
@@ -237,8 +236,7 @@ CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT const& li
 
 
 template <typename ContextT, typename ContainerT>
-bool
-CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT&pending, typename ContextT::token_type const& act_token)
+bool CPreProcessor::emit_line_directive(ContextT const& ctx, ContainerT&pending, typename ContextT::token_type const& act_token)
 {
 	//std::cout << "in emit_line_directive" << std::endl;
 
@@ -294,8 +292,7 @@ void CPreProcessor::found_include_directive(std::string const& filename, bool in
 #else
 // new signature
 template <typename ContextT>
-bool
-CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next)
+bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next)
 {
 	//std::cout << "found_include_directive:" << filename << std::endl;
 
@@ -318,8 +315,7 @@ CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& f
 
 
 template <typename ContextT>
-bool
-CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name)
+bool CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name)
 {
 	//if (is_system) {
 	// Check if file is in the files map

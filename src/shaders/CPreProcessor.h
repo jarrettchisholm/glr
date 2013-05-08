@@ -1,7 +1,12 @@
 /*
- * cpreproccessor.h
+ * CPreProccessor.h
  *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * This class is used to pre-process a c-style file.
+ * 
+ * It will perform the usual c-like pre-processor acitivies, such as processing #include, #define, #ifdef, #endif, etc., macros.
+ * 
+ * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * Date: 2013
  *
  */
 
@@ -44,11 +49,15 @@ namespace alg = boost::algorithm;
 
 namespace glr {
 namespace shaders {
+
 class CPreProcessor : public wave::context_policies::default_preprocessing_hooks {
 public:
 	CPreProcessor(std::string source);
 	virtual ~CPreProcessor();
 
+	/**
+	 * Simple structure to hold shader information.
+	 */ 
 	struct ShaderData {
 		ShaderData(std::string name) : name(name)
 		{
@@ -58,6 +67,12 @@ public:
 		std::map< std::string, std::string > defineMap;
 	};
 
+	/**
+	 * Processess the shader source code.
+	 * 
+	 * @param defineMap this is an optional map that can contain any extra/special #defines that have been
+	 * defined.
+	 */
 	void process(std::map< std::string, std::string > defineMap = std::map< std::string, std::string >());
 
 	std::string getName();
@@ -67,25 +82,21 @@ public:
 	std::string getProcessedSource();
 
 
+	/* Below is a bunch of Boost Wave call-back functions */
 	template <typename ContextT, typename ContainerT>
-	bool
-	found_unknown_directive(ContextT const& ctx, ContainerT const& line, ContainerT& pending);
+	bool found_unknown_directive(ContextT const& ctx, ContainerT const& line, ContainerT& pending);
 
 	template <typename ContextT, typename ContainerT>
-	bool
-		emit_line_directive(ContextT const & ctx, ContainerT & pending, typename ContextT::token_type const & act_token);
+	bool emit_line_directive(ContextT const & ctx, ContainerT & pending, typename ContextT::token_type const & act_token);
 
 	template <typename ContextT>
-	bool
-	locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name);
+	bool locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name);
 
 #if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
-	void opened_include_file(std::string const&relname, std::string const&filename,
-							 std::size_t /*include_depth*/, bool is_system_include);
+	void opened_include_file(std::string const&relname, std::string const&filename, std::size_t /*include_depth*/, bool is_system_include);
 #else
 	template <typename ContextT>
-	void opened_include_file(ContextT const& ctx, std::string const& relname,
-							 std::string const& filename, bool is_system_include);
+	void opened_include_file(ContextT const& ctx, std::string const& relname, std::string const& filename, bool is_system_include);
 #endif
 
 
@@ -99,20 +110,22 @@ public:
 
 #if BOOST_WAVE_USE_DEPRECIATED_PREPROCESSING_HOOKS != 0
 	// old signature
-	void
-	found_include_directive(std::string const& filename, bool include_next);
+	void found_include_directive(std::string const& filename, bool include_next);
 #else
 	// new signature
 	template <typename ContextT>
-	bool
-	found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next);
+	bool found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next);
 #endif
 
+	/**
+	 * Inner class to do the loading of a shader file.  The shader source can come from either a string or from a file
+	 * on the disk.
+	 */
 	template <typename IterContextT>
 	class inner {
-public:
+	public:
 		template <typename PositionT>
-		static void init_iterators(IterContextT&iter_ctx, PositionT const&act_pos, wave::language_support language)
+		static void init_iterators(IterContextT& iter_ctx, PositionT const& act_pos, wave::language_support language)
 		{
 			static std::map<std::string, std::string> theFiles;
 
@@ -124,6 +137,7 @@ public:
 
 			const char* cString = iter_ctx.filename.c_str();
 
+			// Load data from string
 			if ( CPreProcessor::files_.find(std::string(cString)) != CPreProcessor::files_.end())
 			{
 				std::stringstream ss(CPreProcessor::files_[std::string(cString)]);
@@ -132,6 +146,7 @@ public:
 					std::istreambuf_iterator<char>()
 				);
 			}
+			// Load data from disk
 			else
 			{
 				// read in the file
@@ -148,16 +163,19 @@ public:
 				iter_ctx.instring.assign(
 					std::istreambuf_iterator<char>(instream.rdbuf()),
 					std::istreambuf_iterator<char>()
-					);
+				);
 			}
 
 			iter_ctx.first = iterator_type(
-				iter_ctx.instring.begin(), iter_ctx.instring.end(),
-				PositionT(iter_ctx.filename), language);
+				iter_ctx.instring.begin(), 
+				iter_ctx.instring.end(),
+				PositionT(iter_ctx.filename), 
+				language
+			);
 			iter_ctx.last = iterator_type();
 		}
 
-private:
+	private:
 		std::string instring;
 	};
 

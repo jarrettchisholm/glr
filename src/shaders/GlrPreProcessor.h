@@ -1,7 +1,11 @@
 /*
  * GlrPreProcessor.h
  *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * Class that will extend the functionality of the CPreProcessor class for anything specific to processing
+ * 'glr' shader source data.
+ * 
+ * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
+ * Date: 2013
  *
  *
  */

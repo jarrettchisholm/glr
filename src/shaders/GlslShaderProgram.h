@@ -1,6 +1,8 @@
 /*
  * GlslShaderProgram.h
  *
+ * Class representing a 'glsl' shader program.  This is a shader program that holds all of the processed shader source required for this shader program.
+ * 
  *  Created on: 2013-01-04
  *      Author: jarrett
  */
