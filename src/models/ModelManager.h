@@ -47,9 +47,9 @@ private:
 
 	std::map< std::string, std::unique_ptr<Model> > models_;
 	
-	std::unique_ptr<IMaterialManager> materialManager_;
-	std::unique_ptr<ITextureManager> textureManager_;
-	std::unique_ptr<IMeshManager> meshManager_;
+	std::unique_ptr<glw::IMaterialManager> materialManager_;
+	std::unique_ptr<glw::ITextureManager> textureManager_;
+	std::unique_ptr<glw::IMeshManager> meshManager_;
 };
 }
 }

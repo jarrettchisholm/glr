@@ -28,6 +28,7 @@ public:
 	virtual IShaderProgram* getShaderProgram(const std::string filename) = 0;
 
 	virtual void loadShaderPrograms(const std::string directory) = 0;
+	virtual void reloadShaders() = 0;
 
 	virtual void addDefaultBindListener(IShaderProgramBindListener* bindListener) = 0;
 	virtual void removeDefaultBindListener(IShaderProgramBindListener* bindListener) = 0;

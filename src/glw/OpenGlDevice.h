@@ -5,8 +5,8 @@
  *      Author: jarrett
  */
 
-#ifndef GLRPROGRAM_H_
-#define GLRPROGRAM_H_
+#ifndef OPENGLDEVICE_H_
+#define OPENGLDEVICE_H_
 
 #include <memory>
 #include <unordered_map>
@@ -20,9 +20,11 @@
 #include "shaders/ShaderProgramManager.h"
 #include "shaders/IShaderProgramBindListener.h"
 
+namespace glmd = glm::detail;
 
 namespace glr {
 namespace glw {
+	
 class OpenGlDevice : public IOpenGlDevice {
 public:
 	OpenGlDevice();
@@ -33,9 +35,9 @@ public:
 	virtual const glm::mat4& getProjectionMatrix();
 	virtual const glm::mat4& getModelMatrix();
 	
-	virtual void setModelMatrix(glm::mat4& modelMatrix);
-	virtual void setViewMatrix(glm::mat4& viewMatrix);
-	virtual void setProjectionMatrix(glm::mat4& projectionMatrix);
+	virtual void setModelMatrix(const glm::mat4& modelMatrix);
+	virtual void setViewMatrix(const glm::mat4& viewMatrix);
+	virtual void setProjectionMatrix(const glm::mat4& projectionMatrix);
 	
 	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
 	virtual void releaseBufferObject(GLuint bufferId);
@@ -45,6 +47,8 @@ public:
 	virtual void unbindBuffer(GLuint bufferId);
 	
 	virtual GlError getGlError();
+	
+	virtual shaders::IShaderProgramManager* getShaderProgramManager();
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -68,6 +72,7 @@ private:
 	void initialize();
 	void destroy();
 };
+
 }
 }
-#endif /* GLRPROGRAM_H_ */
+#endif /* OPENGLDEVICE_H_ */

@@ -26,9 +26,9 @@ ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice)
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
 	aiAttachLogStream(&stream);
 	
-	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(openGlDevice_) );
-	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(openGlDevice_) );
-	meshManager_ = std::unique_ptr<IMeshManager>( new MeshManager(openGlDevice_) );
+	materialManager_ = std::unique_ptr<glw::IMaterialManager>( new glw::MaterialManager(openGlDevice_) );
+	textureManager_ = std::unique_ptr<glw::ITextureManager>( new glw::TextureManager(openGlDevice_) );
+	meshManager_ = std::unique_ptr<glw::IMeshManager>( new glw::MeshManager(openGlDevice_) );
 }
 
 ModelManager::~ModelManager()

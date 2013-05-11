@@ -47,6 +47,8 @@ void OpenGlDevice::initialize()
 	{
 		bindPoints_.push_back(i);
 	}
+	
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true));
 }
 
 void OpenGlDevice::destroy()
@@ -68,17 +70,17 @@ const glm::mat4& OpenGlDevice::getModelMatrix()
 	return modelMatrix_;
 }
 
-void OpenGlDevice::setModelMatrix(glm::mat4& modelMatrix)
+void OpenGlDevice::setModelMatrix(const glm::mat4& modelMatrix)
 {
 	modelMatrix_ = modelMatrix;
 }
 
-void OpenGlDevice::setViewMatrix(glm::mat4& viewMatrix)
+void OpenGlDevice::setViewMatrix(const glm::mat4& viewMatrix)
 {
 	viewMatrix_ = viewMatrix;
 }
 
-void OpenGlDevice::setProjectionMatrix(glm::mat4& projectionMatrix)
+void OpenGlDevice::setProjectionMatrix(const glm::mat4& projectionMatrix)
 {
 	projectionMatrix_ = projectionMatrix;
 }
@@ -264,6 +266,11 @@ GlError OpenGlDevice::getGlError()
 	}
 	
 	return glErrorObj;
+}
+
+shaders::IShaderProgramManager* OpenGlDevice::getShaderProgramManager()
+{
+	return shaderProgramManager_.get();
 }
 
 }

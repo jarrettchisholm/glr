@@ -40,7 +40,7 @@ public:
 	void removeAllDefaultBindListeners();
 
 	void loadStandardShaderPrograms();
-	void reloadShaders();
+	virtual void reloadShaders();
 
 	void load(const std::string directory);
 	void load(fs::path directory);

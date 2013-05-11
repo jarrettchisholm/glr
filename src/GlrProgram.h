@@ -24,11 +24,12 @@
 //#include "gui/IGUI.h"
 #include "gui/GUI.h"
 
-#include "glw/shaders/ShaderProgramManager.h"
+#include "glw/shaders/IShaderProgramManager.h"
 #include "glw/shaders/IShaderProgramBindListener.h"
 
 
 namespace glr {
+
 class GlrProgram : public shaders::IShaderProgramBindListener {
 public:
 	GlrProgram();
@@ -47,20 +48,6 @@ public:
 	
 	void reloadShaders();
 	
-	/* Implementation of IOpenGlDevice methods */
-	virtual const glm::mat4& getViewMatrix();
-	virtual const glm::mat4& getProjectionMatrix();
-	virtual const glm::mat4& getModelMatrix();
-	
-	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
-	virtual void releaseBufferObject(GLuint bufferId);
-	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
-	virtual void releaseFrameBufferObject(GLuint bufferId);
-	virtual GLuint bindBuffer(GLuint bufferId);
-	virtual void unbindBuffer(GLuint bufferId);
-	
-	virtual GlError getGlError();
-	
 	/* Implementation of IShaderProgramBindListener method */
 	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
 
@@ -74,7 +61,7 @@ private:
 	std::unique_ptr< IWindow > window_;
 	std::unique_ptr< gui::GUI > gui_;
 	
-	shaders::ShaderProgramManager* shaderProgramManager_;
+	shaders::IShaderProgramManager* shaderProgramManager_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);

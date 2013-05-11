@@ -14,6 +14,8 @@
 
 #include "glm/glm.hpp"
 
+#include "shaders/IShaderProgramManager.h"
+
 namespace glr {
 namespace glw {
 
@@ -39,14 +41,16 @@ public:
 	
 	virtual GlError getGlError() = 0;
 	
+	virtual shaders::IShaderProgramManager* getShaderProgramManager() = 0;
+	
 	// Matrix data
 	virtual const glm::mat4& getViewMatrix() = 0;
 	virtual const glm::mat4& getProjectionMatrix() = 0;
 	virtual const glm::mat4& getModelMatrix() = 0;
 	
-	virtual void setModelMatrix(glm::mat4& modelMatrix) = 0;
-	virtual void setViewMatrix(glm::mat4& viewMatrix) = 0;
-	virtual void setProjectionMatrix(glm::mat4& projectionMatrix) = 0;
+	virtual void setModelMatrix(const glm::mat4& modelMatrix) = 0;
+	virtual void setViewMatrix(const glm::mat4& viewMatrix) = 0;
+	virtual void setProjectionMatrix(const glm::mat4& projectionMatrix) = 0;
 };
 
 }

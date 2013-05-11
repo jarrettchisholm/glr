@@ -18,7 +18,7 @@
 #include "exceptions/Exception.h"
 
 namespace glr {
-BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice) 
+BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice) 
 	: shaderProgramManager_(shaderProgramManager), openGlDevice_(openGlDevice)
 {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));

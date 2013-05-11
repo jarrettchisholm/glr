@@ -261,7 +261,7 @@ void Model::loadMeshes(const aiScene* scene)
 	for ( glm::detail::uint32 n = 0; n < scene->mNumMeshes; n++ )
 	{
 		// create new mesh
-		meshes_[n] = std::unique_ptr<Mesh>(new Mesh(scene->mMeshes[n]));
+		meshes_[n] = std::unique_ptr<glw::Mesh>(new glw::Mesh(scene->mMeshes[n]));
 		materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 		textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	}
@@ -291,7 +291,7 @@ void Model::loadTextures(const aiScene* scene)
 
 		if ( texFound == AI_SUCCESS )
 		{
-			Texture* texture = textureManager_->getTexture(path.data);
+			glw::Texture* texture = textureManager_->getTexture(path.data);
 			if ( texture == nullptr )
 			{
 				BOOST_LOG_TRIVIAL(warning) << "Not able to load texture.";
@@ -308,7 +308,7 @@ void Model::loadMaterials(const aiScene* scene)
 	for ( glm::detail::uint32 m = 0; m < scene->mNumMaterials; m++ )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "load material..." << m;
-		materials_[m] = std::unique_ptr<Material>(new Material(scene->mMaterials[m], openGlDevice_));
+		materials_[m] = std::unique_ptr<glw::Material>(new glw::Material(scene->mMaterials[m], openGlDevice_));
 		BOOST_LOG_TRIVIAL(debug) << "done loading material " << m;
 	}
 }

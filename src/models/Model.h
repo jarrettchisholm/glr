@@ -46,9 +46,9 @@ protected:
 	//const aiScene* scene_;
 
 	std::vector< std::unique_ptr<glw::Mesh> > meshes_;
-	std::vector<Texture*> textures_;
+	std::vector<glw::Texture*> textures_;
 	std::vector< std::unique_ptr<glw::Material> > materials_;
-	std::vector<Animation*> animations_;
+	std::vector<glw::Animation*> animations_;
 
 	std::vector<glm::detail::uint32> textureMap_;
 	std::vector<glm::detail::uint32> materialMap_;

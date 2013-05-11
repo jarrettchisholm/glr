@@ -17,7 +17,7 @@
 namespace glr {
 class BasicSceneManager : public ISceneManager {
 public:
-	BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneManager();
 
 	virtual ISceneNode* createSceneNode(const std::string name);
@@ -63,7 +63,7 @@ private:
 
 	std::unique_ptr<models::IModelManager> modelManager_;
 	
-	shaders::ShaderProgramManager* shaderProgramManager_;
+	shaders::IShaderProgramManager* shaderProgramManager_;
 	glw::IOpenGlDevice* openGlDevice_;
 
 	std::vector<LightData> lightData_;

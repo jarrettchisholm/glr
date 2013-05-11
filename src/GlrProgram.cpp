@@ -39,14 +39,6 @@ void GlrProgram::initialize()
 	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 
 	//shaders::ShaderProgramManager::getInstance();
-	
-	bufferIds_ = std::vector<GLuint>();
-	bindPoints_ = std::vector<GLuint>();
-	boundBuffers_ = std::unordered_map<GLuint, GLuint>();
-	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice() );
-	
-	maxNumBindPoints_ = 0;
-	currentBindPoint_ = 0;
 }
 
 /**
@@ -78,12 +70,14 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		BOOST_LOG_TRIVIAL(warning) << msg;
 		throw exception::GlException(msg);
 	}
+	
+	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice() );
 
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = openGlDevice_->getShaderProgramManager();
 	shaderProgramManager_->addDefaultBindListener( this );
 	
-	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), openGlDevice_));
+	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
 
 	// Set the default shader for the scene manager
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
@@ -159,7 +153,7 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
 				
-				GLuint bindPoint = this->bindBuffer( ubo );
+				GLuint bindPoint = openGlDevice_->bindBuffer( ubo );
 				
 				shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
 			}
@@ -231,7 +225,7 @@ void GlrProgram::setupLightUbo(std::string name, shaders::IShaderProgram* shader
 	lightUbos_[name] = std::vector<GLuint>();
 	lightUbos_[name].push_back(0);
 
-	lightUbos_[name][0] = this->createBufferObject(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0]);
+	lightUbos_[name][0] = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, lightData.size() * sizeof(LightData), &lightData[0]);
 }
 
 void GlrProgram::releaseLightUbo(std::string name)
@@ -256,7 +250,7 @@ gui::IGUI* GlrProgram::getHtmlGui()
 		return gui_.get();
 	}
 
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(shaderProgramManager_.get(), window_->getWidth(), window_->getHeight()));
+	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(shaderProgramManager_, window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
 }
