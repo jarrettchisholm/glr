@@ -1,0 +1,5 @@
+#name glr_gui
+#type program
+
+#include "glr_gui.vert"
+#include "glr_gui.frag"

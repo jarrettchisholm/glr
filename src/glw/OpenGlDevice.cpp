@@ -1,0 +1,270 @@
+/*
+ * OpenGlDevice.cpp
+ *
+ *  Created on: 2013-04-01
+ *      Author: jarrett
+ */
+
+#include <algorithm>
+
+#include <GL/glew.h>
+
+#include <boost/log/trivial.hpp>
+
+#include "shaders/ShaderProgramManager.h"
+#include "shaders/IShader.h"
+
+#include "OpenGlDevice.h"
+
+namespace glr {
+namespace glw {
+	
+OpenGlDevice::OpenGlDevice()
+{
+	initialize();
+}
+
+OpenGlDevice::~OpenGlDevice()
+{
+}
+
+void OpenGlDevice::initialize()
+{	
+	bufferIds_ = std::vector<GLuint>();
+	bindPoints_ = std::vector<GLuint>();
+	boundBuffers_ = std::unordered_map<GLuint, GLuint>();
+	
+	maxNumBindPoints_ = 0;
+	currentBindPoint_ = 0;
+	
+	modelMatrix_ = glm::mat4();
+	viewMatrix_ = glm::mat4();
+	projectionMatrix_ = glm::mat4();
+	
+	// Find and set the number of bind points available
+	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
+	for (GLint i=1; i < maxNumBindPoints_+1; i++)
+	{
+		bindPoints_.push_back(i);
+	}
+}
+
+void OpenGlDevice::destroy()
+{
+}
+
+const glm::mat4& OpenGlDevice::getViewMatrix()
+{	
+	return viewMatrix_;
+}
+
+const glm::mat4& OpenGlDevice::getProjectionMatrix()
+{
+	return projectionMatrix_;
+}
+
+const glm::mat4& OpenGlDevice::getModelMatrix()
+{
+	return modelMatrix_;
+}
+
+void OpenGlDevice::setModelMatrix(glm::mat4& modelMatrix)
+{
+	modelMatrix_ = modelMatrix;
+}
+
+void OpenGlDevice::setViewMatrix(glm::mat4& viewMatrix)
+{
+	viewMatrix_ = viewMatrix;
+}
+
+void OpenGlDevice::setProjectionMatrix(glm::mat4& projectionMatrix)
+{
+	projectionMatrix_ = projectionMatrix;
+}
+
+GLuint OpenGlDevice::createBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
+{
+	GLuint bufferId = 0;
+	glGenBuffers(1, &bufferId);
+	glBindBuffer(target, bufferId);
+
+	glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
+	glBindBuffer(target, 0);
+	
+	bufferIds_.push_back(bufferId);
+	
+	return bufferId;
+}
+
+void OpenGlDevice::releaseBufferObject(GLuint bufferId)
+{
+	auto it = std::find(bufferIds_.begin(), bufferIds_.end(), bufferId);
+	
+	if (it == bufferIds_.end())
+	{
+		// warning - buffer object not present
+		return;
+	}	
+	
+	unbindBuffer( bufferId );
+	
+	bufferIds_.erase(it);
+	glDeleteBuffers(1, &bufferId);
+}
+
+GLuint OpenGlDevice::createFrameBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
+{	
+	GLuint bufferId = 0;
+	glGenFramebuffers(1, &bufferId);
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferId);
+
+	//glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_FRAMEBUFFER, 0);
+	
+	bufferIds_.push_back(bufferId);
+	
+	return bufferId;
+}
+
+void OpenGlDevice::releaseFrameBufferObject(GLuint bufferId)
+{
+	/*
+	auto it = std::find(bufferIds_.begin(), bufferIds_.end(), bufferId);
+	
+	if (it == bufferIds_.end())
+	{
+		// warning - buffer object not present
+		return;
+	}	
+	
+	unbindBuffer( bufferId );
+	
+	bufferIds_.erase(it);
+	glDeleteBuffers(1, &bufferId);
+	*/
+}
+
+/**
+ * 
+ */
+GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
+{
+	
+	// TODO: Do I need a better algorithm here?
+	GLuint bindPoint = bindPoints_[currentBindPoint_];
+	currentBindPoint_++;
+	
+	if ( currentBindPoint_ > bindPoints_.size() )
+		currentBindPoint_ = 1;
+		
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
+		
+	return bindPoint;
+	
+
+	// This algorithm was my first attempt at making it more 'efficient' by keeping a cache, and by moving
+	// recently used bind points to the bottom of a 'queue' (so they wouldn't be chosen again for a longer
+	// period of time).  However, it didn't work :S
+	/*
+	GLuint bindPoint = 0; 
+	 
+	// Check if we have bound this buffer already
+	auto boundBufferIter = boundBuffers_.find( bufferId );
+
+	if (boundBufferIter != boundBuffers_.end())
+	{
+		// Pull bind point out of the list and push it on the back
+		auto it = std::find( bindPoints_.begin(), bindPoints_.end(), boundBufferIter->second );
+		bindPoint = *it;
+		bindPoints_.erase( it );
+		bindPoints_.push_back( bindPoint );
+	} else
+	{
+		// If we haven't bound it already, use the first available bind point
+		bindPoint = bindPoints_[0];
+
+		// Remove any buffers from the bound buffers list that were bound to bindPoint (as it is now used by a different buffer)
+		auto it = std::find( bindPoints_.begin(), bindPoints_.end(), bindPoint);
+		if ( it != bindPoints_.end() ) 
+		{
+		    bindPoints_.erase( it );
+		}
+
+		// Pop bind point off the top of the list and push it on the back
+		bindPoints_.erase( bindPoints_.begin() );
+		bindPoints_.push_back( bindPoint );
+
+		// Bind the buffer
+		boundBuffers_[bufferId] = bindPoint;
+		
+	}
+
+	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
+	return bindPoint;
+	*/
+}
+
+void OpenGlDevice::unbindBuffer(GLuint bufferId)
+{
+	auto it = boundBuffers_.find( bufferId );
+	if (it != boundBuffers_.end())
+	{
+		boundBuffers_.erase( it );
+	}
+}
+
+GlError OpenGlDevice::getGlError()
+{
+	GlError glErrorObj = GlError();
+	
+	GLenum glError = glGetError();
+	if ( glError )
+	{
+		switch ( glError )
+		{
+		case GL_INVALID_ENUM:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_ENUM";
+			break;
+
+		case GL_INVALID_VALUE:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_VALUE";
+			break;
+
+		case GL_INVALID_OPERATION:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_OPERATION";
+			break;
+
+		case GL_STACK_OVERFLOW:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_STACK_OVERFLOW";
+			break;
+
+		case GL_STACK_UNDERFLOW:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_STACK_UNDERFLOW";
+			break;
+
+		case GL_OUT_OF_MEMORY:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_OUT_OF_MEMORY";
+			break;
+
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			glErrorObj.type = glError;
+			glErrorObj.name = "GL_INVALID_FRAMEBUFFER_OPERATION​";
+			break;
+		}
+	}
+	
+	return glErrorObj;
+}
+
+}
+}
