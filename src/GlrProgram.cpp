@@ -110,6 +110,15 @@ void GlrProgram::render()
 {
 	beginRender();
 
+	// Set our opengl matrices
+	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
+	ICamera* camera = sMgr_->getActiveCamera();
+	if (camera != nullptr)
+	{
+		openGlDevice_->setViewMatrix( camera->getViewMatrix() );
+	}
+	openGlDevice_->setProjectionMatrix( window_->getProjectionMatrix() );
+
 	//setupUniformBufferObjectBindings(shader);
 	//bindUniformBufferObjects(shader);
 	sMgr_->drawAll();

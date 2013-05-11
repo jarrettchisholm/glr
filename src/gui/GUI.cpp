@@ -176,8 +176,8 @@ int GUI::release(IGUIComponent* comp)
 	{
 		if ( views_.at(i).get() == comp )
 		{
-			views_.erase(views_.begin() + i);
 			comp->unload();
+			views_.erase(views_.begin() + i);
 			//delete comp;
 		}
 	}
