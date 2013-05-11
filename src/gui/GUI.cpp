@@ -38,11 +38,6 @@ int GUI::initialize()
 
 void GUI::destroy()
 {
-	for ( int i = 0; i < views_.size(); i++ )
-	{
-		views_.at(i).get()->unload();
-	}
-	
 	views_.clear();
 	
 	Berkelium::destroy();
@@ -142,6 +137,7 @@ IGUIComponent* GUI::loadFromFile(std::string filename)
 
 	if ( comp->load() < 0 )
 	{
+		// TODO: throw error instead of returning a 'return status' from load() method
 		BOOST_LOG_TRIVIAL(debug) << "Unable to load gui component.";
 		comp->unload();
 		return nullptr;
@@ -160,6 +156,7 @@ IGUIComponent* GUI::loadFromData(std::string data)
 
 	if ( comp->load() < 0 )
 	{
+		// TODO: throw error instead of returning a 'return status' from load() method
 		BOOST_LOG_TRIVIAL(debug) << "Unable to load gui component.";
 		comp->unload();
 		return 0;
@@ -176,9 +173,7 @@ int GUI::release(IGUIComponent* comp)
 	{
 		if ( views_.at(i).get() == comp )
 		{
-			comp->unload();
 			views_.erase(views_.begin() + i);
-			//delete comp;
 		}
 	}
 

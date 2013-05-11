@@ -28,6 +28,7 @@ HtmlGuiComponent::HtmlGuiComponent(glmd::uint32 width, glmd::uint32 height) : wi
 
 HtmlGuiComponent::~HtmlGuiComponent()
 {
+	unload();
 }
 
 int HtmlGuiComponent::load()
