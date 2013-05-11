@@ -12,7 +12,7 @@
 #include "ICamera.h"
 #include "ILight.h"
 #include "models/IModelManager.h"
-#include "shaders/IShaderProgramManager.h"
+#include "glw/shaders/IShaderProgramManager.h"
 
 namespace glr {
 namespace glmd = glm::detail;

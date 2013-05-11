@@ -12,9 +12,11 @@
 
 #include "GUI.h"
 
+#include "../glw/shaders/GlslShaderProgram.h"
+
 namespace glr {
 namespace gui {
-GUI::GUI(glmd::uint32 width, glmd::uint32 height) : width_(width), height_(height)
+GUI::GUI(shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
 {
 	initialize();
 }
@@ -60,11 +62,17 @@ void GUI::update()
 
 void GUI::render()
 {
+	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
+
+	//shader->bind();
+	
 	for ( int i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
-			views_.at(i).get()->render();
+			views_.at(i).get()->render(nullptr);
 	}
+	
+	shaders::GlslShaderProgram::unbindAll();
 }
 
 void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)

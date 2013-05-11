@@ -11,8 +11,8 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "shaders/ShaderProgramManager.h"
-#include "shaders/IShader.h"
+#include "glw/shaders/ShaderProgramManager.h"
+#include "glw/shaders/IShader.h"
 #include "exceptions/GlException.h"
 
 #include "GlrProgram.h"
@@ -43,6 +43,7 @@ void GlrProgram::initialize()
 	bufferIds_ = std::vector<GLuint>();
 	bindPoints_ = std::vector<GLuint>();
 	boundBuffers_ = std::unordered_map<GLuint, GLuint>();
+	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice() );
 	
 	maxNumBindPoints_ = 0;
 	currentBindPoint_ = 0;
@@ -79,49 +80,44 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	}
 
 	// initialize shader program manager and scene manager AFTER we create the window
+	shaderProgramManager_ = openGlDevice_->getShaderProgramManager();
+	shaderProgramManager_->addDefaultBindListener( this );
 	
-	std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>();
-	defaultBindListeners.push_back( this );
-	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true, defaultBindListeners));
-	//shaderProgramManager_->addDefaultBindListener( this );
-	
-	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), this));
+	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_.get(), openGlDevice_));
 
+	// Set the default shader for the scene manager
+	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
+	sMgr_->setDefaultShaderProgram(shader);
 	
-	// find and set the number of bind points available
-	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
-		
-	for (GLint i=1; i < maxNumBindPoints_+1; i++)
+	// Set our opengl matrices
+	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
+	ICamera* camera = sMgr_->getActiveCamera();
+	if (camera != nullptr)
 	{
-		bindPoints_.push_back(i);
+		openGlDevice_->setViewMatrix( camera->getViewMatrix() );
 	}
-
+	openGlDevice_->setProjectionMatrix( window_->getProjectionMatrix() );
+	
 	return window_.get();
 }
 
 void GlrProgram::beginRender()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glLoadIdentity();
 }
 
 void GlrProgram::endRender()
 {
-	// display any changes we've made
+	// Display any changes we've made
 	window_->render();
 }
 
 void GlrProgram::render()
 {
 	beginRender();
-	//BOOST_LOG_TRIVIAL(debug) << "Begin render.";
-	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
-
-	shader->bind();
 
 	//setupUniformBufferObjectBindings(shader);
 	//bindUniformBufferObjects(shader);
-	sMgr_->setDefaultShaderProgram(shader);
 	sMgr_->drawAll();
 
 	shaders::GlslShaderProgram::unbindAll();
@@ -260,179 +256,9 @@ gui::IGUI* GlrProgram::getHtmlGui()
 		return gui_.get();
 	}
 
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(window_->getWidth(), window_->getHeight()));
+	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(shaderProgramManager_.get(), window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
-}
-
-const glm::mat4& GlrProgram::getViewMatrix()
-{
-	ICamera* camera = sMgr_->getActiveCamera();
-	if (camera != nullptr)
-		return camera->getViewMatrix();
-	
-	return glm::mat4();
-}
-
-const glm::mat4& GlrProgram::getProjectionMatrix()
-{
-	return window_->getProjectionMatrix();
-}
-
-const glm::mat4& GlrProgram::getModelMatrix()
-{
-	return sMgr_->getModelMatrix();
-}
-
-GLuint GlrProgram::createBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
-{
-	GLuint bufferId = 0;
-	glGenBuffers(1, &bufferId);
-	glBindBuffer(target, bufferId);
-
-	glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
-	glBindBuffer(target, 0);
-	
-	bufferIds_.push_back(bufferId);
-	
-	return bufferId;
-}
-
-void GlrProgram::releaseBufferObject(GLuint bufferId)
-{
-	auto it = std::find(bufferIds_.begin(), bufferIds_.end(), bufferId);
-	
-	if (it == bufferIds_.end())
-	{
-		// warning - buffer object not present
-		return;
-	}	
-	
-	unbindBuffer( bufferId );
-	
-	bufferIds_.erase(it);
-	glDeleteBuffers(1, &bufferId);
-}
-
-/**
- * 
- */
-GLuint GlrProgram::bindBuffer(GLuint bufferId)
-{
-	
-	// TODO: Do I need a better algorithm here?
-	GLuint bindPoint = bindPoints_[currentBindPoint_];
-	currentBindPoint_++;
-	
-	if ( currentBindPoint_ > bindPoints_.size() )
-		currentBindPoint_ = 1;
-		
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
-		
-	return bindPoint;
-	
-
-	// This algorithm was my first attempt at making it more 'efficient' by keeping a cache, and by moving
-	// recently used bind points to the bottom of a 'queue' (so they wouldn't be chosen again for a longer
-	// period of time).  However, it didn't work :S
-	/*
-	GLuint bindPoint = 0; 
-	 
-	// Check if we have bound this buffer already
-	auto boundBufferIter = boundBuffers_.find( bufferId );
-
-	if (boundBufferIter != boundBuffers_.end())
-	{
-		// Pull bind point out of the list and push it on the back
-		auto it = std::find( bindPoints_.begin(), bindPoints_.end(), boundBufferIter->second );
-		bindPoint = *it;
-		bindPoints_.erase( it );
-		bindPoints_.push_back( bindPoint );
-	} else
-	{
-		// If we haven't bound it already, use the first available bind point
-		bindPoint = bindPoints_[0];
-
-		// Remove any buffers from the bound buffers list that were bound to bindPoint (as it is now used by a different buffer)
-		auto it = std::find( bindPoints_.begin(), bindPoints_.end(), bindPoint);
-		if ( it != bindPoints_.end() ) 
-		{
-		    bindPoints_.erase( it );
-		}
-
-		// Pop bind point off the top of the list and push it on the back
-		bindPoints_.erase( bindPoints_.begin() );
-		bindPoints_.push_back( bindPoint );
-
-		// Bind the buffer
-		boundBuffers_[bufferId] = bindPoint;
-		
-	}
-
-	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	
-	return bindPoint;
-	*/
-}
-
-void GlrProgram::unbindBuffer(GLuint bufferId)
-{
-	auto it = boundBuffers_.find( bufferId );
-	if (it != boundBuffers_.end())
-	{
-		boundBuffers_.erase( it );
-	}
-}
-
-GlError GlrProgram::getGlError()
-{
-	GlError glErrorObj = GlError();
-	
-	GLenum glError = glGetError();
-	if ( glError )
-	{
-		switch ( glError )
-		{
-		case GL_INVALID_ENUM:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_INVALID_ENUM";
-			break;
-
-		case GL_INVALID_VALUE:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_INVALID_VALUE";
-			break;
-
-		case GL_INVALID_OPERATION:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_INVALID_OPERATION";
-			break;
-
-		case GL_STACK_OVERFLOW:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_STACK_OVERFLOW";
-			break;
-
-		case GL_STACK_UNDERFLOW:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_STACK_UNDERFLOW";
-			break;
-
-		case GL_OUT_OF_MEMORY:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_OUT_OF_MEMORY";
-			break;
-
-		case GL_INVALID_FRAMEBUFFER_OPERATION:
-			glErrorObj.type = glError;
-			glErrorObj.name = "GL_INVALID_FRAMEBUFFER_OPERATION​";
-			break;
-		}
-	}
-	
-	return glErrorObj;
 }
 
 void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)

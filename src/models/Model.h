@@ -17,23 +17,23 @@
 #include <assimp/postprocess.h>
 
 #include "IModel.h"
-#include "../IOpenGlDevice.h"
+#include "../glw/IOpenGlDevice.h"
 
-#include "IMaterialManager.h"
-#include "ITextureManager.h"
-#include "IMeshManager.h"
+#include "../glw/IMaterialManager.h"
+#include "../glw/ITextureManager.h"
+#include "../glw/IMeshManager.h"
 
-#include "Mesh.h"
-#include "Texture.h"
-#include "Material.h"
-#include "Animation.h"
+#include "../glw/Mesh.h"
+#include "../glw/Texture.h"
+#include "../glw/Material.h"
+#include "../glw/Animation.h"
 
 namespace glr {
 namespace models {
 class Model : public IModel {
 public:
-	Model(IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager);
-	Model(const aiScene* scene, IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager);
+	Model(glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager);
+	Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager);
 	virtual ~Model();
 
 	virtual void render(shaders::IShaderProgram* shader);
@@ -45,9 +45,9 @@ protected:
 	// the global Assimp scene object
 	//const aiScene* scene_;
 
-	std::vector< std::unique_ptr<Mesh> > meshes_;
+	std::vector< std::unique_ptr<glw::Mesh> > meshes_;
 	std::vector<Texture*> textures_;
-	std::vector< std::unique_ptr<Material> > materials_;
+	std::vector< std::unique_ptr<glw::Material> > materials_;
 	std::vector<Animation*> animations_;
 
 	std::vector<glm::detail::uint32> textureMap_;
@@ -66,11 +66,11 @@ protected:
 	//void recursive_render(const aiScene *sc, const aiNode* nd);
 	
 private:
-	IOpenGlDevice* openGlDevice_;
+	glw::IOpenGlDevice* openGlDevice_;
 	
-	IMeshManager* meshManager_;
-	IMaterialManager* materialManager_;
-	ITextureManager* textureManager_;
+	glw::IMeshManager* meshManager_;
+	glw::IMaterialManager* materialManager_;
+	glw::ITextureManager* textureManager_;
 
 };
 }

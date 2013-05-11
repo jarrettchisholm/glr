@@ -15,7 +15,7 @@
 #include <windows.h>
 #endif
 
-#include "IOpenGlDevice.h"
+#include "glw/OpenGlDevice.h"
 #include "IWindow.h"
 #include "BasicSceneNode.h"
 #include "BasicSceneManager.h"
@@ -24,12 +24,12 @@
 //#include "gui/IGUI.h"
 #include "gui/GUI.h"
 
-#include "shaders/ShaderProgramManager.h"
-#include "shaders/IShaderProgramBindListener.h"
+#include "glw/shaders/ShaderProgramManager.h"
+#include "glw/shaders/IShaderProgramBindListener.h"
 
 
 namespace glr {
-class GlrProgram : public shaders::IShaderProgramBindListener, public IOpenGlDevice {
+class GlrProgram : public shaders::IShaderProgramBindListener {
 public:
 	GlrProgram();
 	virtual ~GlrProgram();
@@ -47,37 +47,34 @@ public:
 	
 	void reloadShaders();
 	
+	/* Implementation of IOpenGlDevice methods */
 	virtual const glm::mat4& getViewMatrix();
 	virtual const glm::mat4& getProjectionMatrix();
 	virtual const glm::mat4& getModelMatrix();
 	
 	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
 	virtual void releaseBufferObject(GLuint bufferId);
+	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
+	virtual void releaseFrameBufferObject(GLuint bufferId);
 	virtual GLuint bindBuffer(GLuint bufferId);
 	virtual void unbindBuffer(GLuint bufferId);
 	
 	virtual GlError getGlError();
 	
+	/* Implementation of IShaderProgramBindListener method */
 	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
-
-	//void destroyWindow();
-	//void destroySceneManager();
 
 private:
 	glm::detail::uint32 numLights_;
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
 	std::map<std::string, std::vector<GLuint> > materialUbos_;
-	
-	std::vector<GLuint> bufferIds_;
-	std::vector<GLuint> bindPoints_;
-	std::unordered_map<GLuint, GLuint> boundBuffers_;
-	GLint maxNumBindPoints_;
-	glmd::uint32 currentBindPoint_;
 
-	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
+	std::unique_ptr< glw::OpenGlDevice > openGlDevice_;
 	std::unique_ptr< BasicSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
 	std::unique_ptr< gui::GUI > gui_;
+	
+	shaders::ShaderProgramManager* shaderProgramManager_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);

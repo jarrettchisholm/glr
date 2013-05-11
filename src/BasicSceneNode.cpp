@@ -17,11 +17,11 @@
 
 #include "BasicSceneNode.h"
 
-#include "shaders/GlslShaderProgram.h"
+#include "glw/shaders/GlslShaderProgram.h"
 
 
 namespace glr {
-BasicSceneNode::BasicSceneNode(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -32,7 +32,7 @@ BasicSceneNode::BasicSceneNode(IOpenGlDevice* openGlDevice) : openGlDevice_(open
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -43,7 +43,7 @@ BasicSceneNode::BasicSceneNode(const std::string name, IOpenGlDevice* openGlDevi
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, IOpenGlDevice* openGlDevice)
+BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
 	 : openGlDevice_(openGlDevice)
 {
 	setPosition(position);

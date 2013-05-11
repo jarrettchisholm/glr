@@ -20,11 +20,11 @@
 #include <assimp/postprocess.h>
 
 #include "IModelManager.h"
-#include "MaterialManager.h"
-#include "TextureManager.h"
-#include "MeshManager.h"
+#include "../glw/MaterialManager.h"
+#include "../glw/TextureManager.h"
+#include "../glw/MeshManager.h"
 
-#include "../IOpenGlDevice.h"
+#include "../glw/IOpenGlDevice.h"
 
 #include "Model.h"
 
@@ -32,7 +32,7 @@ namespace glr {
 namespace models {
 class ModelManager : public IModelManager {
 public:
-	ModelManager(IOpenGlDevice* openGlDevice);
+	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
 
 	IModel* loadModel(const std::string path);
@@ -41,7 +41,7 @@ public:
 	//void testDrawTest1();
 
 private:	
-	IOpenGlDevice* openGlDevice_;
+	glw::IOpenGlDevice* openGlDevice_;
 
 	aiLogStream stream;
 

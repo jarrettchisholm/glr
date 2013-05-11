@@ -16,7 +16,7 @@
 
 namespace glr {
 namespace models {
-ModelManager::ModelManager(IOpenGlDevice* openGlDevice)
+ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice)
 	: openGlDevice_(openGlDevice)
 {
 	// get a handle to the predefined STDOUT log stream and attach

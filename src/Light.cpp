@@ -24,7 +24,7 @@
 #include "common/math/Math.h"
 
 namespace glr {
-Light::Light(IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
+Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -32,7 +32,7 @@ Light::Light(IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 	initialize();
 }
 
-Light::Light(const std::string name, IOpenGlDevice* openGlDevice) : BasicSceneNode(name, openGlDevice)
+Light::Light(const std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(name, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

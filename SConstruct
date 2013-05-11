@@ -21,7 +21,7 @@ def parseShadersIntoHeader():
 	data = file.read()
 	
 	# Save json as a std::string in a .h file
-	shaderDataFile = open( os.path.join('src/shaders', shaderDataOutputFilename), 'w' )
+	shaderDataFile = open( os.path.join('src/glw/shaders', shaderDataOutputFilename), 'w' )
 	
 	cpp = """
 /**
@@ -103,7 +103,10 @@ source_files = source_files + Glob('build/*.cpp', 'build/*.h')
 source_files = source_files + Glob('build/exceptions/*.cpp', 'build/exceptions/*.h')
 source_files = source_files + Glob('build/gui/*.cpp', 'build/gui/*.h')
 source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
-source_files = source_files + Glob('build/shaders/*.cpp', 'build/shaders/*.h')
+
+# OpenGL Wrapper stuff
+source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
+source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
 
 env = Environment(ENV = os.environ, CCFLAGS=[]) 
 

@@ -8,7 +8,7 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-#include "../shaders/IShaderProgram.h"
+#include "../glw/shaders/IShaderProgram.h"
 
 namespace glr {
 namespace models {

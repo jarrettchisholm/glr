@@ -18,7 +18,7 @@
 #include "exceptions/Exception.h"
 
 namespace glr {
-BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, IOpenGlDevice* openGlDevice) 
+BasicSceneManager::BasicSceneManager(shaders::ShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice) 
 	: shaderProgramManager_(shaderProgramManager), openGlDevice_(openGlDevice)
 {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
@@ -93,6 +93,8 @@ ILight* BasicSceneManager::createLight(const std::string name)
 
 void BasicSceneManager::drawAll()
 {
+	defaultShaderProgram_->bind();
+	
 	for ( auto it = cameras_.begin(); it != cameras_.end(); ++it )
 		it->second->render();
 		

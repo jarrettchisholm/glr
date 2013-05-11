@@ -20,6 +20,8 @@
 #include <berkelium/Berkelium.hpp>
 #include <berkelium/Context.hpp>
 
+#include "../glw/shaders/IShaderProgram.h"
+
 #include "IGUIComponent.h"
 
 #include "GUIObject.h"
@@ -49,7 +51,7 @@ public:
 	int loadContentsFromFile(std::string filename);
 
 	virtual void update();
-	virtual void render();
+	virtual void render(shaders::IShaderProgram* shader);
 
 	virtual void executeScript(std::wstring script);
 
@@ -104,7 +106,6 @@ private:
 
 	void testLoadTexture();
 	void testDrawTest1();
-	void testDrawTestBerkelium();
 	glm::detail::int32 testint;
 	bool needs_full_refresh;
 	bool webTextureReady_;

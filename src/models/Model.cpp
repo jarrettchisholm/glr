@@ -7,16 +7,16 @@
 
 #include "Model.h"
 
-#include "TextureManager.h"
+#include "../glw/TextureManager.h"
 
 namespace glr {
 namespace models {
-Model::Model(IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager)
+Model::Model(glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager)
 	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
 {
 }
 
-Model::Model(const aiScene* scene, IOpenGlDevice* openGlDevice, IMeshManager* meshManager, IMaterialManager* materialManager, ITextureManager* textureManager)
+Model::Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager)
 	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
 {
 	BOOST_LOG_TRIVIAL(debug) << "load meshes...";

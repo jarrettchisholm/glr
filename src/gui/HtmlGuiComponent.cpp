@@ -243,18 +243,13 @@ void HtmlGuiComponent::update()
 }
 
 
-void HtmlGuiComponent::render()
+void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
 {
-	testDrawTestBerkelium();
-}
-
-void HtmlGuiComponent::testDrawTestBerkelium()
-{
+	//texture_->bind();
+	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
+	
 	if ( webTextureReady_ )
 	{
-		//glMatrixMode(GL_PROJECTION);
-		//glPushMatrix();
-		//glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
@@ -277,8 +272,6 @@ void HtmlGuiComponent::testDrawTestBerkelium()
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 
-		//glMatrixMode(GL_PROJECTION);
-		//glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 	}

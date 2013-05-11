@@ -11,18 +11,18 @@
 #include <string>
 
 #include "ISceneNode.h"
-#include "IOpenGlDevice.h"
+#include "glw/IOpenGlDevice.h"
 
-#include "shaders/IShaderProgram.h"
+#include "glw/shaders/IShaderProgram.h"
 
 #include "ISceneManager.h"
 
 namespace glr {
 class BasicSceneNode : public virtual ISceneNode {
 public:
-	BasicSceneNode(IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string name, IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, IOpenGlDevice* openGlDevice);
+	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
 	/*
@@ -60,7 +60,7 @@ protected:
 	shaders::IShaderProgram* shaderProgram_;
 
 	ISceneManager* sceneManager_;
-	IOpenGlDevice* openGlDevice_;
+	glw::IOpenGlDevice* openGlDevice_;
 
 	std::string name_;
 	std::map<std::string, ISceneNode*> children_;
