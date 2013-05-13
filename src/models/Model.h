@@ -32,16 +32,15 @@ namespace glr {
 namespace models {
 class Model : public IModel {
 public:
-	Model(glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager);
-	Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager);
+	Model(glw::IOpenGlDevice* openGlDevice);
+	Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Model();
 
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																#define aisgl_min(x, y) (x < y ? x : y)
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																#define aisgl_max(x, y) (y > x ? y : x)
-
+#define aisgl_min(x, y) (x < y ? x : y)
+#define aisgl_max(x, y) (y > x ? y : x)
 	// the global Assimp scene object
 	//const aiScene* scene_;
 
@@ -66,6 +65,9 @@ protected:
 	//void recursive_render(const aiScene *sc, const aiNode* nd);
 	
 private:
+	void initialize();
+	void destroy();
+
 	glw::IOpenGlDevice* openGlDevice_;
 	
 	glw::IMeshManager* meshManager_;

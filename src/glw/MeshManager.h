@@ -19,7 +19,7 @@
 
 #include "IMeshManager.h"
 
-#include "../glw/IOpenGlDevice.h"
+#include "IOpenGlDevice.h"
 
 #include "Mesh.h"
 

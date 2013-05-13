@@ -14,7 +14,7 @@ Main::Main()
 	smgr_ = glrProgram_->getSceneManager();
 	camera_ = smgr_->createCamera("camera");
 	camera_->setPosition(0, 0, 0);
-	camera_->setLookAt(0, 0, 1);
+	//camera_->setLookAt(0, 0, 1);
 
 	igui_ = glrProgram_->getHtmlGui();
 

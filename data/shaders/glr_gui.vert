@@ -2,6 +2,8 @@
 
 #type vertex
 
+#include <glr>
+
 in vec3 in_Position;
 in vec2 in_Texture;
 in vec3 in_Normal;

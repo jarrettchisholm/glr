@@ -11,14 +11,15 @@
 
 namespace glr {
 namespace models {
-Model::Model(glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager)
-	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
+Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
+	initialize();
 }
 
-Model::Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice, glw::IMeshManager* meshManager, glw::IMaterialManager* materialManager, glw::ITextureManager* textureManager)
-	: openGlDevice_(openGlDevice), meshManager_(meshManager), materialManager_(materialManager), textureManager_(textureManager)
+Model::Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
+	initialize();
+	
 	BOOST_LOG_TRIVIAL(debug) << "load meshes...";
 	loadMeshes(scene);
 	BOOST_LOG_TRIVIAL(debug) << "load textures...";
@@ -32,6 +33,17 @@ Model::Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice, glw::IMeshM
 Model::~Model()
 {
 	//destroyAILogger();
+}
+
+void Model::initialize()
+{
+	meshManager_ = openGlDevice_->getMeshManager();
+	materialManager_ = openGlDevice_->getMaterialManager();
+	textureManager_ = openGlDevice_->getTextureManager();
+}
+
+void Model::destroy()
+{
 }
 
 void Model::render(shaders::IShaderProgram* shader)

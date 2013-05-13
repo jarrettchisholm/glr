@@ -1,5 +1,13 @@
-build/*
-tests/build/*
+# Compiled source #
+###################
+build/
+*.o
+
+# Documentation #
+#################
 dox/*
+
+# Logs and databases #
+######################
 .sconsign.dblite
 iceengine.log

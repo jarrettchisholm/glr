@@ -15,6 +15,8 @@
 namespace glr {
 namespace glw {
 
+class Material;
+
 class IMaterialManager {
 public:
 	virtual ~IMaterialManager()

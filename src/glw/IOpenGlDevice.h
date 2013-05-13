@@ -1,5 +1,5 @@
 /*
- * glw/IOpenGlDevice.h
+ * IOpenGlDevice.h
  *
  *  Created on: 2011-05-06
  *      Author: jarrett
@@ -15,6 +15,10 @@
 #include "glm/glm.hpp"
 
 #include "shaders/IShaderProgramManager.h"
+
+#include "IMaterialManager.h"
+#include "ITextureManager.h"
+#include "IMeshManager.h"
 
 namespace glr {
 namespace glw {
@@ -41,7 +45,12 @@ public:
 	
 	virtual GlError getGlError() = 0;
 	
+	/* Getters */
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() = 0;
+	
+	virtual IMaterialManager* getMaterialManager() = 0;
+	virtual ITextureManager* getTextureManager() = 0;
+	virtual IMeshManager* getMeshManager() = 0;
 	
 	// Matrix data
 	virtual const glm::mat4& getViewMatrix() = 0;

@@ -12,7 +12,7 @@
 #include <map>
 #include <string>
 
-#include "../glw/IOpenGlDevice.h"
+#include "IOpenGlDevice.h"
 
 #include "ITextureManager.h"
 

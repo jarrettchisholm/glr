@@ -14,6 +14,9 @@
 
 namespace glr {
 namespace glw {
+	
+class Texture;
+	
 class ITextureManager {
 public:
 	virtual ~ITextureManager()

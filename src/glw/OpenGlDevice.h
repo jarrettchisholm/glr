@@ -49,6 +49,10 @@ public:
 	virtual GlError getGlError();
 	
 	virtual shaders::IShaderProgramManager* getShaderProgramManager();
+	
+	virtual IMaterialManager* getMaterialManager();
+	virtual ITextureManager* getTextureManager();
+	virtual IMeshManager* getMeshManager();
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -56,6 +60,10 @@ private:
 	std::unordered_map<GLuint, GLuint> boundBuffers_;
 	GLint maxNumBindPoints_;
 	glmd::uint32 currentBindPoint_;
+	
+	std::unique_ptr<IMaterialManager> materialManager_;
+	std::unique_ptr<ITextureManager> textureManager_;
+	std::unique_ptr<IMeshManager> meshManager_;
 	
 	// Matrices
 	glm::mat4 modelMatrix_;

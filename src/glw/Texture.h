@@ -11,14 +11,16 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "../glw/shaders/IShaderProgram.h"
-#include "../glw/IOpenGlDevice.h"
+#include "shaders/IShaderProgram.h"
+#include "IOpenGlDevice.h"
 
 #include "../common/utilities/ImageLoader.h"
 
 namespace glr {
 namespace glw {
 namespace glmd = glm::detail;
+
+class IOpenGlDevice;
 
 class Texture {
 public:

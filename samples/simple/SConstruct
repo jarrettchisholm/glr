@@ -1,4 +1,5 @@
 import os
+import shutil
 
 # Tell SCons to create our build files in the 'build' directory
 VariantDir('build', 'src', duplicate=0)
@@ -40,9 +41,6 @@ cpp_flags = [
 
 cpp_defines = []
 
-if (os.name == "nt" or os.name == "win32"):
-	cpp_flags.append( '-I"C:\lib\Assimp\include"' )
-
 cpp_flags.append('-g')
 cpp_defines.append('DEBUG')	
        
@@ -54,3 +52,19 @@ env.SetOption('num_jobs', 4)
 
 # Tell SCons the program to build
 env.Program('build/simple', source_files, LIBS = libraries, LIBPATH = library_paths)
+
+# do some stuff for berkelium
+if (not os.path.exists('build')):
+	os.makedirs('build')
+
+if (not os.path.exists('./build/berkelium')):
+	shutil.copyfile('../../../../berkelium/berkelium', './build/berkelium')
+	os.chmod('./build/berkelium', 0755)
+
+if (not os.path.exists('./build/chrome.pak')):
+	shutil.copyfile('../../../../berkelium/build/chromium/src/out/Release/chrome.pak', 'build/chrome.pak')
+	os.chmod('build/chrome.pak', 0755)
+
+if (not os.path.exists('./build/locales')):
+	shutil.copytree('../../../../berkelium/build/chromium/src/out/Release/locales', 'build/locales')
+	os.chmod('build/locales', 0755)

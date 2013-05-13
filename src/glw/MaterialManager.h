@@ -19,7 +19,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../glw/IOpenGlDevice.h"
+#include "IOpenGlDevice.h"
 
 #include "IMaterialManager.h"
 

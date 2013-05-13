@@ -47,7 +47,6 @@ void GUI::destroy()
 
 void GUI::update()
 {
-	//window_->executeJavascript( Berkelium::WideString::point_to(L"update();") );
 	for ( int i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())

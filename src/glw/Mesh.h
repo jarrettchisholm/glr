@@ -18,7 +18,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../glw/shaders/IShaderProgram.h"
+#include "shaders/IShaderProgram.h"
 
 //#include "../../vmath/Vector3f.h"
 

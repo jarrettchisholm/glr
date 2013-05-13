@@ -16,8 +16,7 @@
 
 namespace glr {
 namespace models {
-ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice)
-	: openGlDevice_(openGlDevice)
+ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
@@ -25,10 +24,6 @@ ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice)
 	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
 	aiAttachLogStream(&stream);
-	
-	materialManager_ = std::unique_ptr<glw::IMaterialManager>( new glw::MaterialManager(openGlDevice_) );
-	textureManager_ = std::unique_ptr<glw::ITextureManager>( new glw::TextureManager(openGlDevice_) );
-	meshManager_ = std::unique_ptr<glw::IMeshManager>( new glw::MeshManager(openGlDevice_) );
 }
 
 ModelManager::~ModelManager()
@@ -102,7 +97,7 @@ IModel* ModelManager::loadModel(const std::string filename)
 	//scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
 
 	//std::shared_ptr<aiScene> sharedScene = std::shared_ptr<aiScene>(scene);
-	models_[filename] = std::unique_ptr<Model>(new Model(scene, openGlDevice_, meshManager_.get(), materialManager_.get(), textureManager_.get()));
+	models_[filename] = std::unique_ptr<Model>(new Model(scene, openGlDevice_));
 
 	// cleanup - calling 'aiReleaseImport' is important, as the library
 	// keeps internal resources until the scene is freed again. Not

@@ -16,11 +16,13 @@
 
 #include <glm/glm.hpp>
 
-#include "../glw/IOpenGlDevice.h"
-#include "../glw/shaders/IShaderProgram.h"
+#include "IOpenGlDevice.h"
+#include "shaders/IShaderProgram.h"
 
 namespace glr {
 namespace glw {
+	
+class IOpenGlDevice;
 	
 struct MaterialData
 {
@@ -63,6 +65,7 @@ private:
 	glm::detail::int32 wireframe_;
 	glm::detail::uint32 max_;               // changed: to unsigned
 };
+
 }
 }
 #endif /* MATERIAL_H_ */

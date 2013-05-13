@@ -20,9 +20,9 @@
 #include <assimp/postprocess.h>
 
 #include "IModelManager.h"
-#include "../glw/MaterialManager.h"
-#include "../glw/TextureManager.h"
-#include "../glw/MeshManager.h"
+//#include "../glw/MaterialManager.h"
+//#include "../glw/TextureManager.h"
+//#include "../glw/MeshManager.h"
 
 #include "../glw/IOpenGlDevice.h"
 
@@ -47,9 +47,9 @@ private:
 
 	std::map< std::string, std::unique_ptr<Model> > models_;
 	
-	std::unique_ptr<glw::IMaterialManager> materialManager_;
-	std::unique_ptr<glw::ITextureManager> textureManager_;
-	std::unique_ptr<glw::IMeshManager> meshManager_;
+	//glw::IMaterialManager* materialManager_;
+	//glw::ITextureManager* textureManager_;
+	//glw::IMeshManager* meshManager_;
 };
 }
 }

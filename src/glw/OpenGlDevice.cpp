@@ -16,6 +16,10 @@
 
 #include "OpenGlDevice.h"
 
+#include "MaterialManager.h"
+#include "TextureManager.h"
+#include "MeshManager.h"
+
 namespace glr {
 namespace glw {
 	
@@ -49,6 +53,10 @@ void OpenGlDevice::initialize()
 	}
 	
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true));
+	
+	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(this) );
+	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(this) );
+	meshManager_ = std::unique_ptr<IMeshManager>( new MeshManager(this) );
 }
 
 void OpenGlDevice::destroy()
@@ -271,6 +279,21 @@ GlError OpenGlDevice::getGlError()
 shaders::IShaderProgramManager* OpenGlDevice::getShaderProgramManager()
 {
 	return shaderProgramManager_.get();
+}
+
+IMaterialManager* OpenGlDevice::getMaterialManager()
+{
+	return materialManager_.get();
+}
+
+ITextureManager* OpenGlDevice::getTextureManager()
+{
+	return textureManager_.get();
+}
+
+IMeshManager* OpenGlDevice::getMeshManager()
+{
+	return meshManager_.get();
 }
 
 }
