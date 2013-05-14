@@ -53,6 +53,7 @@ public:
 	virtual IMaterialManager* getMaterialManager();
 	virtual ITextureManager* getTextureManager();
 	virtual IMeshManager* getMeshManager();
+	virtual IAnimationManager* getAnimationManager();
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -64,6 +65,7 @@ private:
 	std::unique_ptr<IMaterialManager> materialManager_;
 	std::unique_ptr<ITextureManager> textureManager_;
 	std::unique_ptr<IMeshManager> meshManager_;
+	std::unique_ptr<IAnimationManager> animationManager_;
 	
 	// Matrices
 	glm::mat4 modelMatrix_;

@@ -12,11 +12,6 @@
 #include <string>
 #include <map>
 
-// assimp include files. These three are usually needed.
-#include <assimp/cimport.h>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include "IMeshManager.h"
 
 #include "IOpenGlDevice.h"
@@ -31,10 +26,15 @@ public:
 	virtual ~MeshManager();
 
 	virtual Mesh* getMesh(const std::string path);
-
-private:
-	aiLogStream stream;
+	virtual Mesh* addMesh(
+		const std::string path, 
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	);
 	
+private:	
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;

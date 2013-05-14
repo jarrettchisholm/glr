@@ -14,26 +14,36 @@
 
 namespace glr {
 namespace glw {
-MaterialManager::MaterialManager(IOpenGlDevice* openGlDevice)
-	: openGlDevice_(openGlDevice)
+MaterialManager::MaterialManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
-	// get a handle to the predefined STDOUT log stream and attach
-	// it to the logging system. It remains active for all further
-	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
-	aiAttachLogStream(&stream);
 }
 
 MaterialManager::~MaterialManager()
 {
-	// We added a log stream to the library, it's our job to disable it
-	// again. This will definitely release the last resources allocated
-	// by Assimp.
-	aiDetachAllLogStreams();
 }
 
 Material* MaterialManager::getMaterial(const std::string filename)
+{
+	if ( materials_.find(filename) != materials_.end() )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Material found.";
+		return materials_[filename].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Material not found.";
+	
+	return nullptr;
+}
+
+Material* MaterialManager::addMaterial(
+		const std::string path,
+		glm::vec4 ambient,
+		glm::vec4 diffuse,
+		glm::vec4 specular,
+		glm::vec4 emission,
+		glm::detail::float32 shininess,
+		glm::detail::float32 strength
+	)
 {
 	// TODO: implement
 	

@@ -19,6 +19,7 @@
 #include "IMaterialManager.h"
 #include "ITextureManager.h"
 #include "IMeshManager.h"
+#include "IAnimationManager.h"
 
 namespace glr {
 namespace glw {
@@ -51,6 +52,7 @@ public:
 	virtual IMaterialManager* getMaterialManager() = 0;
 	virtual ITextureManager* getTextureManager() = 0;
 	virtual IMeshManager* getMeshManager() = 0;
+	virtual IAnimationManager* getAnimationManager() = 0;
 	
 	// Matrix data
 	virtual const glm::mat4& getViewMatrix() = 0;

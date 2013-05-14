@@ -16,8 +16,11 @@
 
 namespace glr {
 namespace models {
+
 ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
+	modelLoader_ = ModelLoader();
+	
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
@@ -78,32 +81,10 @@ IModel* ModelManager::loadModel(const std::string filename)
 		return models_[filename].get();
 	}
 
+	// Note: We allow the modelData shared pointer to die at the end of this method
+	std::vector< std::shared_ptr<ModelData> > modelData = modelLoader_.loadModel( filename );
 
-
-	// we are taking one of the postprocessing presets to avoid
-	// spelling out 20+ single postprocessing flags here.
-	const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-
-	if ( scene == 0 )
-	{
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load model...";
-		return 0;
-	}
-
-
-	//get_bounding_box(&scene_min,&scene_max);
-	//scene_center.x = (scene_min.x + scene_max.x) / 2.0f;
-	//scene_center.y = (scene_min.y + scene_max.y) / 2.0f;
-	//scene_center.z = (scene_min.z + scene_max.z) / 2.0f;
-
-	//std::shared_ptr<aiScene> sharedScene = std::shared_ptr<aiScene>(scene);
-	models_[filename] = std::unique_ptr<Model>(new Model(scene, openGlDevice_));
-
-	// cleanup - calling 'aiReleaseImport' is important, as the library
-	// keeps internal resources until the scene is freed again. Not
-	// doing so can cause severe resource leaking.
-	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
-	aiReleaseImport(scene);
+	models_[filename] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
 
 	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
 

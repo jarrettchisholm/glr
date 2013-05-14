@@ -14,11 +14,6 @@
 
 #include <GL/glew.h>
 
-// assimp include files. These three are usually needed.
-#include <assimp/cimport.h>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include "IOpenGlDevice.h"
 
 #include "IMaterialManager.h"
@@ -33,10 +28,16 @@ public:
 	virtual ~MaterialManager();
 
 	virtual Material* getMaterial(const std::string path);
-
-private:
-	aiLogStream stream;
-	
+	virtual Material* addMaterial(
+		const std::string path,
+		glm::vec4 ambient,
+		glm::vec4 diffuse,
+		glm::vec4 specular,
+		glm::vec4 emission,
+		glm::detail::float32 shininess,
+		glm::detail::float32 strength
+	);
+private:	
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;

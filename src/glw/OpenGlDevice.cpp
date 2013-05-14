@@ -19,6 +19,7 @@
 #include "MaterialManager.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
+#include "AnimationManager.h"
 
 namespace glr {
 namespace glw {
@@ -57,6 +58,7 @@ void OpenGlDevice::initialize()
 	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(this) );
 	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(this) );
 	meshManager_ = std::unique_ptr<IMeshManager>( new MeshManager(this) );
+	animationManager_ = std::unique_ptr<IAnimationManager>( new AnimationManager(this) );
 }
 
 void OpenGlDevice::destroy()
@@ -296,5 +298,9 @@ IMeshManager* OpenGlDevice::getMeshManager()
 	return meshManager_.get();
 }
 
+IAnimationManager* OpenGlDevice::getAnimationManager()
+{
+	return animationManager_.get();
+}
 }
 }

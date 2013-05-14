@@ -25,6 +25,7 @@ public:
 	;
 
 	virtual Texture* getTexture(const std::string filename) = 0;
+	virtual Texture* addTexture(const std::string filename) = 0;
 };
 
 }

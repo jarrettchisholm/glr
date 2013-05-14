@@ -22,6 +22,7 @@
 #include "../glw/IMaterialManager.h"
 #include "../glw/ITextureManager.h"
 #include "../glw/IMeshManager.h"
+#include "../glw/IAnimationManager.h"
 
 #include "../glw/Mesh.h"
 #include "../glw/Texture.h"
@@ -33,7 +34,7 @@ namespace models {
 class Model : public IModel {
 public:
 	Model(glw::IOpenGlDevice* openGlDevice);
-	Model(const aiScene* scene, glw::IOpenGlDevice* openGlDevice);
+	Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Model();
 
 	virtual void render(shaders::IShaderProgram* shader);
@@ -44,16 +45,10 @@ protected:
 	// the global Assimp scene object
 	//const aiScene* scene_;
 
-	std::vector< std::unique_ptr<glw::Mesh> > meshes_;
+	std::vector<glw::Mesh*> meshes_;
 	std::vector<glw::Texture*> textures_;
-	std::vector< std::unique_ptr<glw::Material> > materials_;
+	std::vector<glw::Material*> materials_;
 	std::vector<glw::Animation*> animations_;
-
-	std::vector<glm::detail::uint32> textureMap_;
-	std::vector<glm::detail::uint32> materialMap_;
-
-	glm::detail::uint32 scene_list;
-	aiVector3D scene_min, scene_max, scene_center;
 
 	void loadMeshes(const aiScene* scene);
 	void loadTextures(const aiScene* scene);
@@ -65,7 +60,7 @@ protected:
 	//void recursive_render(const aiScene *sc, const aiNode* nd);
 	
 private:
-	void initialize();
+	void initialize(std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >());
 	void destroy();
 
 	glw::IOpenGlDevice* openGlDevice_;
@@ -73,6 +68,7 @@ private:
 	glw::IMeshManager* meshManager_;
 	glw::IMaterialManager* materialManager_;
 	glw::ITextureManager* textureManager_;
+	glw::IAnimationManager* animationManager_;
 
 };
 }

@@ -23,6 +23,7 @@
 //#include "../glw/MaterialManager.h"
 //#include "../glw/TextureManager.h"
 //#include "../glw/MeshManager.h"
+#include "ModelLoader.h"
 
 #include "../glw/IOpenGlDevice.h"
 
@@ -46,6 +47,8 @@ private:
 	aiLogStream stream;
 
 	std::map< std::string, std::unique_ptr<Model> > models_;
+	
+	ModelLoader modelLoader_;
 	
 	//glw::IMaterialManager* materialManager_;
 	//glw::ITextureManager* textureManager_;

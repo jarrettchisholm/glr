@@ -14,30 +14,40 @@
 
 namespace glr {
 namespace glw {
-MeshManager::MeshManager(IOpenGlDevice* openGlDevice)
-	: openGlDevice_(openGlDevice)
+	
+MeshManager::MeshManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
-	// get a handle to the predefined STDOUT log stream and attach
-	// it to the logging system. It remains active for all further
-	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
-	aiAttachLogStream(&stream);
 }
 
 MeshManager::~MeshManager()
 {
-	// We added a log stream to the library, it's our job to disable it
-	// again. This will definitely release the last resources allocated
-	// by Assimp.
-	aiDetachAllLogStreams();
 }
 
 Mesh* MeshManager::getMesh(const std::string filename)
+{
+	if ( meshes_.find(filename) != meshes_.end() )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Mesh found.";
+		return meshes_[filename].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Mesh not found.";
+	
+	return nullptr;
+}
+
+Mesh* MeshManager::addMesh(
+		const std::string path, 
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	)
 {
 	// TODO: implement
 	
 	return nullptr;
 }
+
 }
 }
