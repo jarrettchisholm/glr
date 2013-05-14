@@ -19,20 +19,30 @@
 #include <glm/glm.hpp>
 
 #include "shaders/IShaderProgram.h"
+#include "IOpenGlDevice.h"
 
 //#include "../../vmath/Vector3f.h"
 
 
 namespace glr {
 namespace glw {
+	
+class IOpenGlDevice;
+	
 class Mesh {
 public:
-	Mesh(const aiMesh* mesh);
+	Mesh(IOpenGlDevice* openGlDevice,
+		const std::string path, 
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors);
 	virtual ~Mesh();
 
 	void render();
 
 private:
+	IOpenGlDevice* openGlDevice_;
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[3];
 

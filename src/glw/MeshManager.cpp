@@ -44,9 +44,18 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec4 > colors
 	)
 {
-	// TODO: implement
-	
-	return nullptr;
+	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
+
+	if ( meshes_.find(path) != meshes_.end() && meshes_[path].get() != nullptr )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Mesh already exists.";
+		return meshes_[path].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
+	meshes_[path] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, path, vertices, normals, textureCoordinates, colors));
+
+	return meshes_[path].get();
 }
 
 }

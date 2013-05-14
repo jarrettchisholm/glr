@@ -24,6 +24,8 @@
 namespace glr {
 namespace glw {
 
+class IMeshManager;
+
 struct GlError
 {
 	GLenum type = GL_NONE;

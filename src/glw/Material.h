@@ -36,7 +36,16 @@ struct MaterialData
 	
 class Material {
 public:
-	Material(const aiMaterial* mtl, IOpenGlDevice* openGlDevice);
+	Material(
+		IOpenGlDevice* openGlDevice,
+		const std::string path,
+		glm::vec4 ambient,
+		glm::vec4 diffuse,
+		glm::vec4 specular,
+		glm::vec4 emission,
+		glm::detail::float32 shininess,
+		glm::detail::float32 strength
+	);
 	virtual ~Material();
 
 	void bind();

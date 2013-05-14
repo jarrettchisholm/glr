@@ -15,6 +15,8 @@
 namespace glr {
 namespace glw {
 
+class Mesh;
+
 class IMeshManager {
 public:
 	virtual ~IMeshManager()

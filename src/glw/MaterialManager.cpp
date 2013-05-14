@@ -45,9 +45,17 @@ Material* MaterialManager::addMaterial(
 		glm::detail::float32 strength
 	)
 {
-	// TODO: implement
-	
-	return nullptr;
+	BOOST_LOG_TRIVIAL(debug) << "Loading material...";
+
+	if ( materials_.find(path) != materials_.end() && materials_[path].get() != nullptr )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Material already exists.";
+		return materials_[path].get();
+	}
+
+	materials_[path] = std::unique_ptr<Material>(new Material(openGlDevice_, path, ambient, diffuse, specular, emission, shininess, strength));
+
+	return materials_[path].get();
 }
 }
 }
