@@ -234,6 +234,7 @@ GlError OpenGlDevice::getGlError()
 	GlError glErrorObj = GlError();
 	
 	GLenum glError = glGetError();
+	
 	if ( glError )
 	{
 		switch ( glError )

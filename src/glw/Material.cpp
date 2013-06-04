@@ -29,7 +29,17 @@ Material::Material(
 	
 	loadIntoVideoMemory();
 	
-	BOOST_LOG_TRIVIAL(debug) << "done loading material.  Buffer id: " << bufferId_;
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// TODO: throw error
+		BOOST_LOG_TRIVIAL(error) << "Error loading material in opengl";
+		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+	}
+	else
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded material.  Buffer id: " << bufferId_;
+	}
 }
 
 void Material::loadIntoVideoMemory()

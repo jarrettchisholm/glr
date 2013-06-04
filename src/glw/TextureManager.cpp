@@ -56,7 +56,7 @@ Texture* TextureManager::addTexture(const std::string filename)
 
 	if ( image == nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load texture.";
+		BOOST_LOG_TRIVIAL(debug) << "Unable to load texture: " << filename;
 		return nullptr;
 	}
 

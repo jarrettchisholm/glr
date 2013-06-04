@@ -5,8 +5,8 @@
  *      Author: jarrett
  */
 
-#ifndef CAMERA_H_
-#define CAMERA_H_
+#ifndef GLR_CAMERA_H_
+#define GLR_CAMERA_H_
 
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
@@ -30,11 +30,8 @@ public:
 
 	virtual void attach(models::IModel* model);
 
-	virtual void move(MOVE_DIRECTION dir, bool enabled);
-	// up/down
-	virtual void rotateX(glm::detail::float32 degrees);
-	// left/right
-	virtual void rotateY(glm::detail::float32 degrees);
+	virtual void move(const glm::vec3& moveVector);
+	virtual void rotate(const glm::vec3& radians);
 
 	virtual void tick(glm::detail::float32 time);
 
@@ -46,12 +43,13 @@ private:
 
 	glm::mat4 viewMatrix_;
 
-	char movement_[NUM_MOVE_DIRECTIONS];
+	glm::vec3 movementBuffer_;
+	glm::vec3 rotationBuffer_;
 	glm::detail::float32 moveSpeed_, rotSpeed_;
-	void clearMovementBuffer();
+	void clearBuffers();
 	glm::detail::float32 xRot_, yRot_;
 
 	void initialize();
 };
 }
-#endif /* CAMERA_H_ */
+#endif /* GLR_CAMERA_H_ */

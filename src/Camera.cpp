@@ -45,7 +45,7 @@ Camera::~Camera()
 
 void Camera::initialize()
 {
-	clearMovementBuffer();
+	clearBuffers();
 
 	xRot_ = 0;
 	yRot_ = 0;
@@ -92,36 +92,26 @@ void Camera::attach(models::IModel* model)
 /**
  *
  */
-void Camera::clearMovementBuffer()
+void Camera::clearBuffers()
 {
-	for ( glm::detail::uint32 i = 0; i < NUM_MOVE_DIRECTIONS; i++ )
-		movement_[i] = 0;
+	movementBuffer_ = glm::vec3(0.0f, 0.0f, 0.0f);
+	rotationBuffer_ = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 /**
  *
  */
-void Camera::move(MOVE_DIRECTION dir, bool enabled)
+void Camera::move(const glm::vec3& moveVector)
 {
-	movement_[dir] = (enabled ? 1 : 0);
+	movementBuffer_ += moveVector;
 }
 
-// up/down
 /**
  *
  */
-void Camera::rotateX(glm::detail::float32 degrees)
+void Camera::rotate(const glm::vec3& radians)
 {
-	xRot_ += degrees;
-}
-
-// left/right
-/**
- *
- */
-void Camera::rotateY(glm::detail::float32 degrees)
-{
-	yRot_ += degrees;
+	rotationBuffer_ += radians;
 }
 
 /**
@@ -129,23 +119,16 @@ void Camera::rotateY(glm::detail::float32 degrees)
  */
 void Camera::tick(glm::detail::float32 time)
 {
-	// movement direction
-	if ( movement_[MOVE_DIR_FORWARD] == 1 )
-		pos_ += rotation_ * glm::vec3(0, 0, -moveSpeed_ * time);
-
-	if ( movement_[MOVE_DIR_BACKWARD] == 1 )
-		pos_ += rotation_ * glm::vec3(0, 0, moveSpeed_ * time);
-
-	if ( movement_[MOVE_DIR_LEFT] == 1 )
-		pos_ += rotation_ * glm::vec3(-moveSpeed_ * time, 0, 0);
-
-	if ( movement_[MOVE_DIR_RIGHT] == 1 )
-		pos_ += rotation_ * glm::vec3(moveSpeed_ * time, 0, 0);
+	//pos_ += rotation_ * movementBuffer_ * time;
+	pos_ += rotation_ * movementBuffer_;
 
 	// rotation
-	glm::quat pitch = glm::angleAxis((xRot_ * time * rotSpeed_) * math::DEGTORAD, 1.0f, 0.0f, 0.0f);
-	glm::quat heading = glm::angleAxis((yRot_ * time * rotSpeed_) * math::DEGTORAD, 0.0f, 1.0f, 0.0f);
+	glm::quat pitch = glm::angleAxis(rotationBuffer_.x, 1.0f, 0.0f, 0.0f);
+	glm::quat heading = glm::angleAxis(rotationBuffer_.y, 0.0f, 1.0f, 0.0f);
+	glm::quat other = glm::angleAxis(rotationBuffer_.z, 0.0f, 0.0f, 1.0f);
 
-	rotation_ = heading * pitch;
+	rotation_ = glm::normalize(heading * pitch * other);
+	
+	clearBuffers();
 }
 }

@@ -35,11 +35,8 @@ public:
 
 	virtual bool isActive() = 0;
 
-	virtual void move(MOVE_DIRECTION dir, bool enabled) = 0;
-	// up/down
-	virtual void rotateX(glm::detail::float32 degrees) = 0;
-	// left/right
-	virtual void rotateY(glm::detail::float32 degrees) = 0;
+	virtual void move(const glm::vec3& moveVector) = 0;
+	virtual void rotate(const glm::vec3& radians) = 0;
 
 	virtual void tick(glm::detail::float32 time) = 0;
 
