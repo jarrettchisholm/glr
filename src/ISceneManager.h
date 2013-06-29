@@ -27,6 +27,8 @@ public:
 	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5) = 0;
 	virtual ILight* createLight(const std::string name) = 0;
 
+	virtual void addCamera(std::shared_ptr<ICamera> camera) = 0;
+
 	virtual ISceneNode* getSceneNode(const std::string& name) = 0;
 	virtual ICamera* getCamera(const std::string& name) = 0;
 	virtual ILight* getLight(const std::string& name) = 0;

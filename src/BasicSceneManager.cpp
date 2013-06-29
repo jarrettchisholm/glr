@@ -105,6 +105,23 @@ void BasicSceneManager::drawAll()
 		it->second->render();
 }
 
+void BasicSceneManager::addCamera(std::shared_ptr<ICamera> camera)
+{
+	// Error check
+	if ( cameras_.find(camera->getName()) != cameras_.end())
+	{
+		std::stringstream msg;
+		msg << "Camera with name '" << camera->getName() << "' already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception(msg.str());
+	}
+
+	std::shared_ptr<ICamera> node = camera;
+	cameras_[camera->getName()] = node;
+
+	node->attach(defaultShaderProgram_);
+}
+
 void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram)
 {
 	defaultShaderProgram_ = shaderProgram;

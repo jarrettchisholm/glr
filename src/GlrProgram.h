@@ -45,6 +45,7 @@ public:
 	IWindow* getWindow();
 	ISceneManager* getSceneManager();
 	gui::IGUI* getHtmlGui();
+	glw::IOpenGlDevice* getOpenGlDevice();
 	
 	void reloadShaders();
 	

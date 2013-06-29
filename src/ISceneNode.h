@@ -20,11 +20,6 @@ namespace glr {
 
 class ISceneNode {
 public:
-	ISceneNode()
-	{
-	}
-	;
-
 	virtual ~ISceneNode()
 	{
 	}

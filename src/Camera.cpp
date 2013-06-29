@@ -45,7 +45,7 @@ Camera::~Camera()
 
 void Camera::initialize()
 {
-	clearBuffers();
+	clearMovementBuffer();
 
 	xRot_ = 0;
 	yRot_ = 0;
@@ -53,20 +53,21 @@ void Camera::initialize()
 	moveSpeed_ = 0.05f;
 	rotSpeed_ = 18.0f;
 
-	rotation_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
-	rotation_ = glm::normalize(rotation_);
+	rotationQuaternion_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
+	rotationQuaternion_ = glm::normalize(rotationQuaternion_);
+	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 	BOOST_LOG_TRIVIAL(debug) << "Camera initialized.";
-	//rotation_.normalize();
+	//rotationQuaternion_.normalize();
 }
 
 void Camera::render()
 {
 	if ( isActive() )
 	{
-		glm::quat temp = glm::conjugate(rotation_);
+		glm::quat temp = glm::conjugate(rotationQuaternion_);
 		viewMatrix_ = glm::mat4_cast(temp);
 		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
 	}
@@ -92,10 +93,9 @@ void Camera::attach(models::IModel* model)
 /**
  *
  */
-void Camera::clearBuffers()
+void Camera::clearMovementBuffer()
 {
 	movementBuffer_ = glm::vec3(0.0f, 0.0f, 0.0f);
-	rotationBuffer_ = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -111,7 +111,7 @@ void Camera::move(const glm::vec3& moveVector)
  */
 void Camera::rotate(const glm::vec3& radians)
 {
-	rotationBuffer_ += radians;
+	rotation_ += radians;
 }
 
 /**
@@ -119,16 +119,16 @@ void Camera::rotate(const glm::vec3& radians)
  */
 void Camera::tick(glm::detail::float32 time)
 {
-	//pos_ += rotation_ * movementBuffer_ * time;
-	pos_ += rotation_ * movementBuffer_;
+	//pos_ += rotationQuaternion_ * movementBuffer_ * time;
+	pos_ += rotationQuaternion_ * movementBuffer_;
 
 	// rotation
-	glm::quat pitch = glm::angleAxis(rotationBuffer_.x, 1.0f, 0.0f, 0.0f);
-	glm::quat heading = glm::angleAxis(rotationBuffer_.y, 0.0f, 1.0f, 0.0f);
-	glm::quat other = glm::angleAxis(rotationBuffer_.z, 0.0f, 0.0f, 1.0f);
+	glm::quat pitch = glm::angleAxis(rotation_.x, 1.0f, 0.0f, 0.0f);
+	glm::quat heading = glm::angleAxis(rotation_.y, 0.0f, 1.0f, 0.0f);
+	glm::quat other = glm::angleAxis(rotation_.z, 0.0f, 0.0f, 1.0f);
 
-	rotation_ = glm::normalize(heading * pitch * other);
+	rotationQuaternion_ = glm::normalize(heading * pitch * other);
 	
-	clearBuffers();
+	clearMovementBuffer();
 }
 }

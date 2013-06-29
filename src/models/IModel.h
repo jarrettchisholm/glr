@@ -50,11 +50,6 @@ struct ModelData {
 	
 class IModel {
 public:
-	IModel()
-	{
-	}
-	;
-
 	virtual ~IModel()
 	{
 	}

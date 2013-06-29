@@ -20,9 +20,7 @@
 #include <assimp/postprocess.h>
 
 #include "IModelManager.h"
-//#include "../glw/MaterialManager.h"
-//#include "../glw/TextureManager.h"
-//#include "../glw/MeshManager.h"
+
 #include "ModelLoader.h"
 
 #include "../glw/IOpenGlDevice.h"
@@ -38,9 +36,6 @@ public:
 
 	IModel* loadModel(const std::string path);
 
-	//void testLoadTexture();
-	//void testDrawTest1();
-
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
 
@@ -49,10 +44,6 @@ private:
 	std::map< std::string, std::unique_ptr<Model> > models_;
 	
 	ModelLoader modelLoader_;
-	
-	//glw::IMaterialManager* materialManager_;
-	//glw::ITextureManager* textureManager_;
-	//glw::IMeshManager* meshManager_;
 };
 }
 }

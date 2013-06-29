@@ -108,6 +108,9 @@ source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
 source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
 source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
 
+# 'Extras' stuff - comment out if you don't want them
+source_files = source_files + Glob('build/extras/*.cpp', 'build/extras/*.h')
+
 env = Environment(ENV = os.environ, CCFLAGS=[]) 
 
 

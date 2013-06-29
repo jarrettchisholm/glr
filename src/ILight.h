@@ -27,11 +27,6 @@ struct LightData {
 
 class ILight : public virtual ISceneNode {
 public:
-	ILight()
-	{
-	}
-	;
-
 	virtual ~ILight()
 	{
 	}

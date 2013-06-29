@@ -264,6 +264,11 @@ gui::IGUI* GlrProgram::getHtmlGui()
 	return gui_.get();
 }
 
+glw::IOpenGlDevice* GlrProgram::getOpenGlDevice()
+{
+	return openGlDevice_.get();
+}
+
 void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)
 {
 	setupUniformBufferObjectBindings(shader);

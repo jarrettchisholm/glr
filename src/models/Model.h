@@ -42,8 +42,6 @@ public:
 protected:
 #define aisgl_min(x, y) (x < y ? x : y)
 #define aisgl_max(x, y) (y > x ? y : x)
-	// the global Assimp scene object
-	//const aiScene* scene_;
 
 	std::vector<glw::Mesh*> meshes_;
 	std::vector<glw::Texture*> textures_;
@@ -54,10 +52,6 @@ protected:
 	void loadTextures(const aiScene* scene);
 	void loadMaterials(const aiScene* scene);
 	void loadAnimations(const aiScene* scene);
-
-	//void loadMeshesRecursive(const aiScene* scene, const aiNode* node);
-
-	//void recursive_render(const aiScene *sc, const aiNode* nd);
 	
 private:
 	void initialize(std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >());

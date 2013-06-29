@@ -38,15 +38,15 @@ public:
 	virtual const glm::mat4& getViewMatrix();
 
 private:
-	glm::quat rotation_;
+	glm::quat rotationQuaternion_;
+	glm::vec3 rotation_;
 	glm::detail::int32 prevX_, prevY_;
 
 	glm::mat4 viewMatrix_;
 
 	glm::vec3 movementBuffer_;
-	glm::vec3 rotationBuffer_;
 	glm::detail::float32 moveSpeed_, rotSpeed_;
-	void clearBuffers();
+	void clearMovementBuffer();
 	glm::detail::float32 xRot_, yRot_;
 
 	void initialize();

@@ -23,7 +23,6 @@ Model::Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDe
 
 Model::~Model()
 {
-	//destroyAILogger();
 }
 
 void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)

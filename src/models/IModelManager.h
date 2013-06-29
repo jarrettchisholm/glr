@@ -16,11 +16,6 @@ namespace glr {
 namespace models {
 class IModelManager {
 public:
-	IModelManager()
-	{
-	}
-	;
-
 	virtual ~IModelManager()
 	{
 	}

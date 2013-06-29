@@ -24,6 +24,8 @@ public:
 	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
 	virtual ILight* createLight(const std::string name);
 	virtual void drawAll();
+	
+	virtual void addCamera(std::shared_ptr<ICamera> camera);
 
 	virtual models::IModelManager* getModelManager();
 	virtual shaders::IShaderProgramManager* getShaderProgramManager();

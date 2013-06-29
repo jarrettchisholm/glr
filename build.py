@@ -23,6 +23,7 @@ def compileGlr():
 	return subprocess.call( "scons" )
 
 def clean():
+	os.chdir( '../glr' )
 	shutil.rmtree( './build', True )
 
 def exitOnError(returnCode):

@@ -25,4 +25,8 @@
 
 #include "gui/IGUI.h"
 #include "gui/IGUIComponent.h"
+
+#include "glw/IOpenGlDevice.h"
+
 #endif /* GLRINCLUDE_H_ */
+
