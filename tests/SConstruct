@@ -9,25 +9,6 @@ VariantDir('build', 'src', duplicate=0)
 # Set our source files
 source_files = Glob('build/*.cpp', 'build/*.h')
 
-source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h')
-source_files = source_files + Glob('build/common/logging/*.cpp', 'build/common/logging/*.h')
-source_files = source_files + Glob('build/common/as_wrapper/*.cpp', 'build/common/as_wrapper/*.h')
-source_files = source_files + Glob('build/common/as_wrapper/scriptstdstring/*.cpp', 'build/common/as_wrapper/scriptstdstring/*.h')
-source_files = source_files + Glob('build/common/as_wrapper/scriptbuilder/*.cpp', 'build/common/as_wrapper/scriptbuilder/*.h')
-source_files = source_files + Glob('build/common/as_wrapper/scriptarray/*.cpp', 'build/common/as_wrapper/scriptarray/*.h')
-source_files = source_files + Glob('build/game/*.cpp', 'build/game/*.h')
-source_files = source_files + Glob('build/game/angel_script/*.cpp', 'build/game/angel_script/*.h')
-
-#source_files = source_files + Glob('build/common/compatibility/*.cpp', 'build/common/compatibility/*.h')
-#source_files = source_files + Glob('build/common/math/*.cpp', 'build/common/math/*.h')
-#source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common/utilities/*.h')
-#source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
-
-#source_files = source_files + Glob('build/engine/*.cpp', 'build/engine/*.h')
-#source_files = source_files + Glob('build/linux/*.cpp', 'build/linux/*.h')
-#source_files = source_files + Glob('build/osx/*.cpp', 'build/osx/*.h')
-#source_files = source_files + Glob('build/windows/*.cpp', 'build/windows/*.h')
-
 # Set our required libraries
 libraries = [
 'glr',
@@ -44,7 +25,8 @@ libraries = [
 'boost_date_time', 
 'boost_thread',
 'boost_wave',
-'boost_regex'
+'boost_regex',
+'boost_unit_test_framework'
 ]
 library_paths = [  
 '../build',
@@ -56,7 +38,7 @@ env = Environment(ENV = os.environ, CCFLAGS=[])
 cpp_flags = [
 '-std=c++11',
 '-Wall',
-'-I"../glr/src"',
+'-I"../../glr/src"',
 ]
 
 cpp_defines = []
