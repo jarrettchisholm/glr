@@ -20,7 +20,13 @@ def beautifyCode():
 
 def compileGlr():
 	os.chdir( '../glr' )
-	return subprocess.call( "scons" )
+	return subprocess.Popen( 'scons', shell=True )
+
+def clear():
+	if (os.name == 'nt'):
+		os.system('cls')
+	else:
+		os.system('clear')
 
 def clean():
 	os.chdir( '../glr' )
@@ -28,15 +34,17 @@ def clean():
 
 def exitOnError(returnCode):
 	if ( returnCode != 0):
+		print( returnCode )
 		print( "Script halted due to error(s)!" )
 		sys.exit(1)
 
 
 
-os.system( 'clear' )
-os.system( 'echo' )
-os.system( 'echo' )
-os.system( 'echo' )
+clear()
+if (os.name != 'nt'):
+	os.system( 'echo' )
+	os.system( 'echo' )
+	os.system( 'echo' )
 
 
 # Argument flags
@@ -53,7 +61,7 @@ if args.beautify:
 	doBeautification = True
 if args.clean:
 	doClean = True
-    
+	
 
 
 if (doBeautification):
@@ -69,5 +77,5 @@ if (doClean):
 	print("Done")
 
 print("Compiling Glr")
-exitOnError( compileGlr() )
+exitOnError( compileGlr().wait() )
 print("Done")

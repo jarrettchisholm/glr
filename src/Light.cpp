@@ -51,9 +51,9 @@ void Light::initialize()
 
 void Light::render()
 {
-	glm::quat xQuat = glm::angleAxis((rotation_.x) * math::DEGTORAD, 1.0f, 0.0f, 0.0f);
-	glm::quat yQuat = glm::angleAxis((rotation_.y) * math::DEGTORAD, 0.0f, 1.0f, 0.0f);
-	glm::quat zQuat = glm::angleAxis((rotation_.z) * math::DEGTORAD, 0.0f, 0.0f, 1.0f);
+	glm::quat xQuat = glm::angleAxis((rotation_.x) * math::DEGTORAD, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::quat yQuat = glm::angleAxis((rotation_.y) * math::DEGTORAD, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat zQuat = glm::angleAxis((rotation_.z) * math::DEGTORAD, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	glm::quat rotation = yQuat * xQuat; // Where to put zQuat??
 	

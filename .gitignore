@@ -1,3 +1,7 @@
+# Generated source #
+####################
+src/glw/shaders/ShaderData.h
+
 # Compiled source #
 ###################
 build/
@@ -10,4 +14,4 @@ dox/*
 # Logs and databases #
 ######################
 .sconsign.dblite
-iceengine.log
+glr.log

@@ -123,9 +123,9 @@ void Camera::tick(glm::detail::float32 time)
 	pos_ += rotationQuaternion_ * movementBuffer_;
 
 	// rotation
-	glm::quat pitch = glm::angleAxis(rotation_.x, 1.0f, 0.0f, 0.0f);
-	glm::quat heading = glm::angleAxis(rotation_.y, 0.0f, 1.0f, 0.0f);
-	glm::quat other = glm::angleAxis(rotation_.z, 0.0f, 0.0f, 1.0f);
+	glm::quat pitch = glm::angleAxis(rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::quat heading = glm::angleAxis(rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat other = glm::angleAxis(rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	rotationQuaternion_ = glm::normalize(heading * pitch * other);
 	

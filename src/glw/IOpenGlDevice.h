@@ -28,8 +28,15 @@ class IMeshManager;
 
 struct GlError
 {
-	GLenum type = GL_NONE;
-	std::string name = "";
+	GLenum type;
+	std::string name;
+	
+	/**
+	 * Default constructor (only doing this so that I can have default values for the member variables)
+	 */
+	GlError() : type(GL_NONE), name(std::string(""))
+	{
+	}	
 };
 
 class IOpenGlDevice {

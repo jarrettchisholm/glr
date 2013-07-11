@@ -9,6 +9,7 @@ import shlex
 
 
 def parseShadersIntoHeader():
+	"""Parse the OpenGL Shader files into a single C++ Header file."""
 	print('Parsing Shaders into header ShaderData.h')
 	
 	shaderDataOutputFilename = "ShaderData.h"
@@ -87,10 +88,13 @@ static std::map<std::string, std::string> SHADER_DATA = {
 parseShadersIntoHeader()
 
 
+
 # Tell SCons to create our build files in the 'build' directory
 VariantDir('build', 'src', duplicate=0)
 
-# Set our source files
+
+
+### Set our source files
 source_files = Glob('build/*.cpp', 'build/*.h')
 
 source_files = source_files + Glob('build/common/compatibility/*.cpp', 'build/common/compatibility/*.h')
@@ -111,7 +115,8 @@ source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders
 env = Environment(ENV = os.environ, CCFLAGS=[]) 
 
 
-# Set our required libraries
+
+### Set our required libraries
 libraries = [
 'GL',
 'GLU',
@@ -126,42 +131,61 @@ libraries = [
 'boost_regex'
 ]
 
-library_paths = []
+
+
+### Set our general compiler variables
+library_paths = [
+]
 
 # Set our g++ compiler flags
 cpp_flags = [
-'-std=c++11',
 '-Wall',
 #'-D_GLIBCXX_DEBUG'
 ]
 
 cpp_defines = []
-
-if (os.name == "nt" or os.name == "win32"):
-	cpp_flags.append( '-I"C:\lib\Assimp\include"' )
-
-
 #debug = ARGUMENTS.get('debug', 0)
 #if int(debug):
 #	cpp_flags.append('-g')
 #	cpp_defines.append('DEBUG')
 #else:
 #	cpp_defines.append('NDEBUG')
-cpp_flags.append('-g')
-cpp_flags.append('-O0') # optimization level 0
 cpp_defines.append('DEBUG')	
+
+cpp_paths = []
+
+
+
+### Set our OS specific compiler variables
+if (os.name != 'nt'):
+	cpp_flags.append('-g')
+	cpp_flags.append('-O0') # optimization level 0
+	cpp_flags.append('-std=c++11')
+else:
+	cpp_flags.append('/w') # disables warnings (Windows)
+	cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
 	
-	
+	cpp_paths.append('C:\\Program Files (x86)\\Boost\\include\\boost-1_54')
+	cpp_paths.append('C:\\Program Files\\Assimp\\include')
+	cpp_paths.append('C:\\Users\\Jarrett\\projects\\glm')
+	cpp_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
+	cpp_paths.append('C:\\Users\\Jarrett\\projects\\berkelium\\include')
+	cpp_paths.append('C:\\Users\\Jarrett\\projects\\SFML\\include')
+
+
+
 #for key, value in ARGLIST:
 #	if key == 'define':
 #		cppdefines.append(value)
        
-
+### Set our environment variables
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
+env.Append( CPPPATH = cpp_paths )
 
 env.SetOption('num_jobs', 4)
 
-# Tell SCons the program to build
-#env.Program('build/iceengine', source_files, LIBS = libraries, LIBPATH = library_paths)
+
+
+# Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
