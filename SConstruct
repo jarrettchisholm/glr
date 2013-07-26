@@ -151,6 +151,7 @@ cpp_defines = []
 #else:
 #	cpp_defines.append('NDEBUG')
 cpp_defines.append('DEBUG')	
+cpp_defines.append('BOOST_LOG_DYN_LINK')
 
 cpp_paths = []
 
