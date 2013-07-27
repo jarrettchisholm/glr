@@ -151,7 +151,6 @@ cpp_defines = []
 #else:
 #	cpp_defines.append('NDEBUG')
 cpp_defines.append('DEBUG')	
-cpp_defines.append('BOOST_LOG_DYN_LINK')
 
 cpp_paths = []
 
@@ -162,6 +161,9 @@ if (os.name != 'nt'):
 	cpp_flags.append('-g')
 	cpp_flags.append('-O0') # optimization level 0
 	cpp_flags.append('-std=c++11')
+	
+	# Dynamically link to boost log
+	cpp_defines.append('BOOST_LOG_DYN_LINK')
 else:
 	cpp_flags.append('/w') # disables warnings (Windows)
 	cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
@@ -190,3 +192,4 @@ env.SetOption('num_jobs', 4)
 
 # Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
+#env.Library('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
