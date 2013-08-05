@@ -164,6 +164,11 @@ void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, g
 	pos_ += glm::vec3(x, y, z);
 }
 
+glm::vec3& BasicSceneNode::getRotation()
+{
+	return rotation_;
+}
+
 void BasicSceneNode::rotate(glm::quat quaternion)
 {
 	// TODO: implement

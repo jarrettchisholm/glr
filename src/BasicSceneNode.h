@@ -47,6 +47,7 @@ public:
 	virtual void translate(glm::vec3 trans);
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
+	virtual glm::vec3& getRotation();
 	virtual void rotate(glm::vec3 degrees);
 	virtual void rotate(glm::quat quaternion);
 
