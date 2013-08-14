@@ -17,10 +17,11 @@
 #error C++ compiler required.
 #endif
 
-namespace glr {
+namespace glr {	
 class GraphicsEngine {
 public:
 	static std::unique_ptr<GlrProgram> createProgram();
+	static std::unique_ptr<GlrProgram> createProgram(ProgramSettings settings);
 
 private:
 	/**

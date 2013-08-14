@@ -17,7 +17,12 @@ namespace glr {
  */
 std::unique_ptr<GlrProgram> GraphicsEngine::createProgram()
 {
-	std::unique_ptr<GlrProgram> program(new GlrProgram());
+	return GraphicsEngine::createProgram( ProgramSettings() );
+}
+
+std::unique_ptr<GlrProgram> GraphicsEngine::createProgram(ProgramSettings settings)
+{
+	std::unique_ptr<GlrProgram> program(new GlrProgram( settings ));
 
 	return program;
 }

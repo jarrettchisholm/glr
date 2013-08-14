@@ -39,6 +39,16 @@ struct GlError
 	}	
 };
 
+/**
+ * Used to pass in OpenGlDeviceSettings settings (so we don't have to have a method with a whole ton of parameters).
+ */
+struct OpenGlDeviceSettings {
+	std::string defaultTextureDir = "";
+};
+
+/**
+ * 
+ */
 class IOpenGlDevice {
 public:
 	virtual ~IOpenGlDevice()
@@ -71,6 +81,8 @@ public:
 	virtual void setModelMatrix(const glm::mat4& modelMatrix) = 0;
 	virtual void setViewMatrix(const glm::mat4& viewMatrix) = 0;
 	virtual void setProjectionMatrix(const glm::mat4& projectionMatrix) = 0;
+	
+	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings() = 0;
 };
 
 }

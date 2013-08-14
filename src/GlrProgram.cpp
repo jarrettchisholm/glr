@@ -20,17 +20,23 @@
 #include "Window.h"
 
 namespace glr {
-GlrProgram::GlrProgram()
+GlrProgram::GlrProgram(ProgramSettings settings)
 {
-	initialize();
+	initialize( settings );
 }
 
 GlrProgram::~GlrProgram()
 {
 }
 
-void GlrProgram::initialize()
+/**
+ * Will setup our GlrProgram.
+ * 
+ * @param settings Used to initialize the GlrProgram settings
+ */
+void GlrProgram::initialize(ProgramSettings settings)
 {
+	initializeProperties( settings );
 	// load all of the shaders
 	//std::vector< std::pair <std::string, shaders::IShader::Type> > shaders;
 	//shaders.push_back( std::pair <std::string, shaders::IShader::Type>("shader.vert", shaders::IShader::TYPE_VERTEX) );
@@ -39,6 +45,19 @@ void GlrProgram::initialize()
 	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 
 	//shaders::ShaderProgramManager::getInstance();
+}
+
+/**
+ * Will override any settings in the GlrProgram settings with values set in the parameter settings.
+ * 
+ * @param settings The settings used to override the GlrProgram settings
+ */
+void GlrProgram::initializeProperties(ProgramSettings settings)
+{
+	if ( !settings.defaultTextureDir.empty() )
+	{
+		settings_.defaultTextureDir = settings.defaultTextureDir;
+	}
 }
 
 /**
@@ -71,7 +90,11 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		throw exception::GlException(msg);
 	}
 	
-	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice() );
+	// Setup settings for open gl device
+	glr::glw::OpenGlDeviceSettings settings = glr::glw::OpenGlDeviceSettings();
+	if ( !settings_.defaultTextureDir.empty() )
+		settings.defaultTextureDir = settings_.defaultTextureDir;
+	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice(settings) );
 
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = openGlDevice_->getShaderProgramManager();

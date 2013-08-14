@@ -27,7 +27,7 @@ namespace glw {
 	
 class OpenGlDevice : public IOpenGlDevice {
 public:
-	OpenGlDevice();
+	OpenGlDevice(OpenGlDeviceSettings settings);
 	virtual ~OpenGlDevice();
 	
 	/* Implementation of IOpenGlDevice methods */
@@ -54,6 +54,8 @@ public:
 	virtual ITextureManager* getTextureManager();
 	virtual IMeshManager* getMeshManager();
 	virtual IAnimationManager* getAnimationManager();
+	
+	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings();
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -73,13 +75,16 @@ private:
 	glm::mat4 projectionMatrix_;
 
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
+	
+	OpenGlDeviceSettings settings_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);
 	void releaseLightUbo(std::string name);
 	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
-	void initialize();
+	void initialize(OpenGlDeviceSettings settings);
+	void initializeSettings(OpenGlDeviceSettings settings);
 	void destroy();
 };
 

@@ -48,7 +48,7 @@ Texture* TextureManager::addTexture(const std::string filename)
 		return textures_[filename].get();
 	}
 
-	std::string basepath = Constants::MODEL_DIRECTORY;
+	std::string basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
 
 	BOOST_LOG_TRIVIAL(debug) << "Loading texture image.";
 	utilities::ImageLoader il = utilities::ImageLoader();

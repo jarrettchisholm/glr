@@ -30,9 +30,19 @@
 
 namespace glr {
 
+/**
+ * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).
+ */
+struct ProgramSettings {
+	std::string defaultTextureDir = "";
+};
+
+/**
+ * 
+ */
 class GlrProgram : public shaders::IShaderProgramBindListener {
 public:
-	GlrProgram();
+	GlrProgram(ProgramSettings properties = ProgramSettings());
 	virtual ~GlrProgram();
 
 	void beginRender();
@@ -63,13 +73,16 @@ private:
 	std::unique_ptr< gui::GUI > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
+	
+	ProgramSettings settings_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);
 	void releaseLightUbo(std::string name);
 	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
-	void initialize();
+	void initialize(ProgramSettings settings);
+	void initializeProperties(ProgramSettings settings);
 };
 }
 #endif /* GLRPROGRAM_H_ */

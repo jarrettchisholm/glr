@@ -24,17 +24,22 @@
 namespace glr {
 namespace glw {
 	
-OpenGlDevice::OpenGlDevice()
+OpenGlDevice::OpenGlDevice(OpenGlDeviceSettings settings)
 {
-	initialize();
+	initialize( settings );
 }
 
 OpenGlDevice::~OpenGlDevice()
 {
 }
-
-void OpenGlDevice::initialize()
+/**
+ * Will setup our OpenGlDevice.
+ * 
+ * @param properties Used to initialize the OpenGlDevice settings
+ */
+void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 {	
+	initializeSettings( settings );
 	bufferIds_ = std::vector<GLuint>();
 	bindPoints_ = std::vector<GLuint>();
 	boundBuffers_ = std::unordered_map<GLuint, GLuint>();
@@ -59,6 +64,19 @@ void OpenGlDevice::initialize()
 	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(this) );
 	meshManager_ = std::unique_ptr<IMeshManager>( new MeshManager(this) );
 	animationManager_ = std::unique_ptr<IAnimationManager>( new AnimationManager(this) );
+}
+
+/**
+ * Will override any properties in the OpenGlDevice settings with values set in the parameter settings.
+ * 
+ * @param settings The settings used to override the OpenGlDevice settings
+ */
+void OpenGlDevice::initializeSettings(OpenGlDeviceSettings settings)
+{
+	if ( !settings.defaultTextureDir.empty() )
+	{
+		settings_.defaultTextureDir = settings.defaultTextureDir;
+	}
 }
 
 void OpenGlDevice::destroy()
@@ -302,6 +320,11 @@ IMeshManager* OpenGlDevice::getMeshManager()
 IAnimationManager* OpenGlDevice::getAnimationManager()
 {
 	return animationManager_.get();
+}
+
+const OpenGlDeviceSettings& OpenGlDevice::getOpenGlDeviceSettings()
+{
+	return settings_;
 }
 }
 }
