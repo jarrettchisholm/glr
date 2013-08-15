@@ -10,7 +10,6 @@
 #endif
 
 #include "TextureManager.h"
-#include "Constants.h"
 
 #include "../common/utilities/ImageLoader.h"
 

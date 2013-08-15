@@ -21,6 +21,8 @@
 #include "IMeshManager.h"
 #include "IAnimationManager.h"
 
+#include "Constants.h"
+
 namespace glr {
 namespace glw {
 
@@ -43,7 +45,7 @@ struct GlError
  * Used to pass in OpenGlDeviceSettings settings (so we don't have to have a method with a whole ton of parameters).
  */
 struct OpenGlDeviceSettings {
-	std::string defaultTextureDir = "";
+	std::string defaultTextureDir = glr::glw::Constants::MODEL_DIRECTORY;
 };
 
 /**

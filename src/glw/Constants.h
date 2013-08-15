@@ -1,16 +1,18 @@
 
 
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#ifndef GLR_GLW_CONSTANTS_H_
+#define GLR_GLW_CONSTANTS_H_
+
+#include <string>
 
 namespace glr {
 namespace glw {
+	
 class Constants {
 public:
 	static const std::string MODEL_DIRECTORY;
 };
 
-const std::string Constants::MODEL_DIRECTORY = std::string("/home/jarrett/projects/chisholmsoft/models/");
 }
 }
-#endif /* CONSTANTS_H_ */
+#endif /* GLR_GLW_CONSTANTS_H_ */
