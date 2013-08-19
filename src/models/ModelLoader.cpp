@@ -2,7 +2,7 @@
  * ModelLoader.cpp
  *
  *  Created on: 2011-05-08
- *      Author: jarrett
+ *	  Author: jarrett
  */
 
 #ifdef _WIN32
@@ -38,30 +38,30 @@ ModelLoader::~ModelLoader()
 
 /*
    void ModelLoader::testLoadTexture() {
-        glBindTexture(GL_TEXTURE_2D, textureid_);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // If the u,v coordinates overflow the range 0,1 the image is repeated
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glBindTexture(GL_TEXTURE_2D, textureid_);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // If the u,v coordinates overflow the range 0,1 the image is repeated
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // i don't combine the color with the original surface color, use only the texture map.
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // i don't combine the color with the original surface color, use only the texture map.
 
-    utilities::ImageLoader il;
-    utilities::Image* image = il.loadImageData("/home/jarrett/projects/chisholmsoft/models/Crea2.jpg");
-    BOOST_LOG_TRIVIAL(debug) << "ModelLoader::testLoadTexture: image: " << image->width << "x" << image->height;
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
+	utilities::ImageLoader il;
+	utilities::Image* image = il.loadImageData("/home/jarrett/projects/chisholmsoft/models/Crea2.jpg");
+	BOOST_LOG_TRIVIAL(debug) << "ModelLoader::testLoadTexture: image: " << image->width << "x" << image->height;
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->data);
 
-    // And create 2d mipmaps for the minifying function
-    //gluBuild2DMipmaps(GL_TEXTURE_2D, 4, infoheader.biWidth, infoheader.biHeight, GL_RGBA, GL_UNSIGNED_BYTE, l_texture);
+	// And create 2d mipmaps for the minifying function
+	//gluBuild2DMipmaps(GL_TEXTURE_2D, 4, infoheader.biWidth, infoheader.biHeight, GL_RGBA, GL_UNSIGNED_BYTE, l_texture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-        GLenum huboError = glGetError();
-        if(huboError){
-                BOOST_LOG_TRIVIAL(debug) << "HtmlGuiComponent::initialize: error loading texture in opengl";
-        }
+		GLenum huboError = glGetError();
+		if(huboError){
+				BOOST_LOG_TRIVIAL(debug) << "HtmlGuiComponent::initialize: error loading texture in opengl";
+		}
 
-    delete image;
+	delete image;
    }
  */
 
@@ -89,7 +89,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 		
 		throw exception::Exception(msg);
 	}
-	else if ( scene->HasTextures())
+	else if ( scene->HasTextures() )
 	{		
 		std::string msg = std::string("Support for meshes with embedded textures is not implemented.");
 
@@ -100,14 +100,14 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	modelData.resize( scene->mNumMeshes );
 	
-	for ( glmd::uint32 i=0; i < modelData.size(); i++)
+	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
 		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i] );
 		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[i] );
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[i] );
-		modelData[i]->animationData = loadAnimation(path, i, scene);
+		modelData[i]->animationData = loadAnimation(path, i, scene->mMeshes[i]);
 	}
 	
 
@@ -124,20 +124,20 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 
 /*
    void ModelLoader::testDrawTest1() {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable( GL_TEXTURE_2D );
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable( GL_TEXTURE_2D );
 
-        glBindTexture(GL_TEXTURE_2D, textureid_);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
-            glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
-            glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
-            glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
-        glEnd();
+		glBindTexture(GL_TEXTURE_2D, textureid_);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.f, 0.f); glVertex3f(-10.f, -10.f, 0.f);
+			glTexCoord2f(0.f, 1.f); glVertex3f(-10.f,  10.f, 0.f);
+			glTexCoord2f(1.f, 1.f); glVertex3f( 10.f,  10.f, 0.f);
+			glTexCoord2f(1.f, 0.f); glVertex3f( 10.f, -10.f, 0.f);
+		glEnd();
 
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
    }
  */
 
@@ -318,10 +318,114 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 	return data;
 }
 
-AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 index, const aiScene* scene)
+AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 index, const aiMesh* mesh)
 {
 	// TODO: implement
-	AnimationData data = AnimationData();
+	AnimationData animation = AnimationData();
+	
+	BOOST_LOG_TRIVIAL(debug) << "loading animation...";
+	
+	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
+		Bone data = Bone();
+		glmd::uint32 boneIndex = 0; 
+		
+		// Set the bone name
+		if (mesh->mName.length > 0)
+			data.name = std::string( mesh->mName.C_Str() );
+		else
+			data.name = std::string( path ) + "_bone_" + std::to_string(index);
+
+		if (animation.bones.find(data.name) == animation.bones.end()) {
+			boneIndex = m_NumBones;
+			m_BoneInfo.push_back(data);
+		}
+		else {
+			boneIndex = m_BoneMapping[BoneName];
+		}
+
+		m_BoneMapping[BoneName] = boneIndex;
+		m_BoneInfo[boneIndex].BoneOffset = mesh->mBones[i]->mOffsetMatrix;
+
+		for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
+			glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+			float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
+			Bones[VertexID].AddBoneData(boneIndex, Weight);
+		}
+	} 
+	
+	
+	// Set the mesh name
+	if (mesh->mName.length > 0)
+		data.name = std::string( mesh->mName.C_Str() );
+	else
+		data.name = std::string( path ) + "_mesh_" + std::to_string(index);
+
+	glmd::uint32 currentIndex = 0;
+
+	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
+	{
+		const aiFace* face = &mesh->mFaces[t];
+		GLenum face_mode;
+
+		switch ( face->mNumIndices )
+		{
+			case 1: 
+				face_mode = GL_POINTS; 
+				break;
+	
+			case 2: 
+				face_mode = GL_LINES; 
+				break;
+	
+			case 3: 
+				face_mode = GL_TRIANGLES; 
+				break;
+	
+			default:
+				face_mode = GL_POLYGON; 
+				break;
+		}
+
+		glm::detail::uint32 numIndices = face->mNumIndices;
+
+		data.vertices.resize(currentIndex + numIndices);
+		data.normals.resize(currentIndex + numIndices);
+		data.textureCoordinates.resize(currentIndex + numIndices);
+		data.colors.resize(currentIndex + numIndices);
+
+		// go through all vertices in face
+		for ( glmd::uint32 i = 0; i < numIndices; i++ )
+		{
+			// get group index for current index i
+			int vertexIndex = face->mIndices[i];
+
+			if ( mesh->mNormals != 0 )
+			{
+				data.vertices[currentIndex + i] = glm::vec3(mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z);
+				data.normals[currentIndex + i] = glm::vec3(mesh->mNormals[vertexIndex].x, mesh->mNormals[vertexIndex].y, mesh->mNormals[vertexIndex].z);
+			}
+
+			if ( mesh->HasTextureCoords(0))
+			{
+				data.textureCoordinates[currentIndex + i] = glm::vec2(mesh->mTextureCoords[0][vertexIndex].x, mesh->mTextureCoords[0][vertexIndex].y);
+			}
+
+			//utilities::AssImpUtilities::color4_to_vec4(&mesh->mColors[0][vertexIndex], data.colors[data.colors.size() + i]);
+			if ( mesh->mColors[0] != 0 )
+			{
+				data.colors[currentIndex + i] = glm::vec4(
+					(float)mesh->mColors[0][vertexIndex].a,
+					(float)mesh->mColors[0][vertexIndex].b,
+					(float)mesh->mColors[0][vertexIndex].g,
+					(float)mesh->mColors[0][vertexIndex].r
+					);
+			}
+		}
+
+		currentIndex += 3;
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 	
 	return data;
 }

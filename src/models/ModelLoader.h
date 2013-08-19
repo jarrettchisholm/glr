@@ -36,7 +36,7 @@ private:
 	MeshData loadMesh(const std::string path, glmd::uint32 index, const aiMesh* mesh);
 	TextureData loadTexture(const std::string path, glmd::uint32 index, const aiMaterial* material);
 	MaterialData loadMaterial(const std::string path, glmd::uint32 index, const aiMaterial* material);
-	AnimationData loadAnimation(const std::string path, glmd::uint32 index, const aiScene* scene);
+	AnimationData loadAnimation(const std::string path, glmd::uint32 index, const aiMesh* mesh);
 };
 
 }
