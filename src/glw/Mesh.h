@@ -45,7 +45,7 @@ public:
 private:
 	IOpenGlDevice* openGlDevice_;
 	glm::detail::uint32 vaoId_;
-	glm::detail::uint32 vboIds_[3];
+	glm::detail::uint32 vboIds_[4];
 
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec3 > normals_;
