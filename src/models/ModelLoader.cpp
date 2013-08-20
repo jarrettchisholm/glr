@@ -160,6 +160,8 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	else
 		data.name = std::string( path ) + "_mesh_" + std::to_string(index);
 
+
+	// Load vertices, normals, texture coordinates, and colors
 	glm::detail::uint32 currentIndex = 0;
 
 	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
@@ -224,6 +226,37 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 
 		currentIndex += 3;
 	}
+	
+	
+	// Load bone data
+	/*
+	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
+		glmd::uint32 boneIndex = 0;
+		
+		// Set the bone name
+		if (mesh->mName.length > 0)
+			data.name = std::string( mesh->mName.C_Str() );
+		else
+			data.name = std::string( path ) + "_bone_" + std::to_string(index);
+
+		if (animation.bones.find(data.name) == animation.bones.end()) {
+			boneIndex = m_NumBones;
+			m_BoneInfo.push_back(data);
+		}
+		else {
+			boneIndex = m_BoneMapping[BoneName];
+		}
+
+		m_BoneMapping[BoneName] = boneIndex;
+		m_BoneInfo[boneIndex].BoneOffset = mesh->mBones[i]->mOffsetMatrix;
+
+		for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
+			glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+			float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
+			Bones[VertexID].AddBoneData(boneIndex, Weight);
+		}
+	}
+	*/
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 
@@ -320,14 +353,14 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 
 AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 index, const aiMesh* mesh)
 {
-	// TODO: implement
 	AnimationData animation = AnimationData();
-	
+	// TODO: implement
+	/*	
 	BOOST_LOG_TRIVIAL(debug) << "loading animation...";
 	
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
 		Bone data = Bone();
-		glmd::uint32 boneIndex = 0; 
+		glmd::uint32 boneIndex = 0;
 		
 		// Set the bone name
 		if (mesh->mName.length > 0)
@@ -426,8 +459,8 @@ AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 in
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
-	
-	return data;
+	*/
+	return animation;
 }
 
 }

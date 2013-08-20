@@ -41,7 +41,8 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors
+		std::vector< glm::vec4 > colors,
+		std::vector< glm::vec2 > bones
 	)
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
@@ -53,7 +54,7 @@ Mesh* MeshManager::addMesh(
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
-	meshes_[path] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, path, vertices, normals, textureCoordinates, colors));
+	meshes_[path] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, path, vertices, normals, textureCoordinates, colors, bones));
 
 	return meshes_[path].get();
 }

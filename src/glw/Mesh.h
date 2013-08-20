@@ -36,7 +36,8 @@ public:
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors);
+		std::vector< glm::vec4 > colors,
+		std::vector< glm::vec2 > bones);
 	virtual ~Mesh();
 
 	void render();
@@ -50,6 +51,7 @@ private:
 	std::vector< glm::vec3 > normals_;
 	std::vector< glm::vec2 > textureCoordinates_;
 	std::vector< glm::vec4 > colors_;
+	std::vector< glm::vec2 > bones_;
 
 	std::string textureFileName_;
 };

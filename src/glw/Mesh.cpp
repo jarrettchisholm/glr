@@ -18,8 +18,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors)
-	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors)
+		std::vector< glm::vec4 > colors,
+		std::vector< glm::vec2 > bones)
+	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones)
 {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh into video memory...";
 
@@ -28,7 +29,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glBindVertexArray(vaoId_);
 
 	// create our vbos
-	glGenBuffers(3, &vboIds_[0]);                             // Using only '1' for now (otherwise causes seg fault)
+	glGenBuffers(4, &vboIds_[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
@@ -44,6 +45,12 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3), &normals_[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	// TODO: deal with not having any bones?
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
+	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(glm::vec2), &bones_[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 
 	// Disable our Vertex Array Object

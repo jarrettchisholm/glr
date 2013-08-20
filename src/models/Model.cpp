@@ -36,7 +36,7 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 	{
 		glw::Mesh* mesh = meshManager_->getMesh(d->meshData.name);
 		if (mesh == nullptr)
-			mesh = meshManager_->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors);
+			mesh = meshManager_->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones);
 		
 		meshes_.push_back( mesh );
 		

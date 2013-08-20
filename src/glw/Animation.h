@@ -1,7 +1,7 @@
 /*
  * Animation.h
  *
- *  Created on: 2011-05-08
+ *  Created on: 2012-05-08
  *      Author: jarrett
  */
 
@@ -24,7 +24,8 @@ namespace glw {
 	
 class Animation {
 public:
-	Animation(const aiAnimation* mesh);
+	Animation(const std::string path, 
+			std::vector< glm::vec3 > vertices);
 	virtual ~Animation();
 
 private:

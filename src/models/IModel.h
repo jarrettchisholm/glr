@@ -19,6 +19,7 @@ struct MeshData {
 	std::vector< glm::vec3 > normals;
 	std::vector< glm::vec2 > textureCoordinates;
 	std::vector< glm::vec4 > colors;
+	std::vector< glm::vec2 > bones;
 };
 
 struct MaterialData {
