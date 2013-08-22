@@ -18,9 +18,9 @@ def beautifyCode():
 		subprocess.call( shlex.split("uncrustify --mtime --no-backup -q -c xsupplicant.cfg "+f) )
 
 
-def compileGlr():
+def compileGlr(compiler):
 	os.chdir( '../glr' )
-	return subprocess.Popen( 'scons', shell=True )
+	return subprocess.Popen( 'scons compiler='+compiler, shell=True )
 
 def clear():
 	if (os.name == 'nt'):
@@ -50,17 +50,49 @@ if (os.name != 'nt'):
 # Argument flags
 doBeautification = False
 doClean = False
+compiler = ""
 
 
 # Handle arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--beautify", action="store_true", help="will 'beautify' the source code using uncrustify")
 parser.add_argument("--clean", action="store_true", help="will clean your build directory of all files")
+parser.add_argument("--gcc", action="store_true", help="will use gcc if available")
+parser.add_argument("--msvc", action="store_true", help="will use Microsofts compiler if available")
+parser.add_argument("--clang", action="store_true", help="will use clang if available")
 args = parser.parse_args()
 if args.beautify:
 	doBeautification = True
 if args.clean:
 	doClean = True
+
+if args.gcc:
+	if compiler == "":
+		if os.name == 'nt':
+			compiler = 'mingw'
+		else:
+			compiler = 'gcc'
+	else:
+		print( "Cannot use more than one compiler!" )
+		sys.exit(1)
+
+if args.msvc:
+	if compiler == "":
+		if os.name == 'nt':
+			compiler = 'msvc'
+		else:
+			print( "Cannot use msvc in this environment!" )
+			sys.exit(1)
+	else:
+		print( "Cannot use more than one compiler!" )
+		sys.exit(1)
+	
+if args.clang:
+	if compiler == "":
+		compiler = 'clang'
+	else:
+		print( "Cannot use more than one compiler!" )
+		sys.exit(1)
 	
 
 
@@ -77,5 +109,5 @@ if (doClean):
 	print("Done")
 
 print("Compiling Glr")
-exitOnError( compileGlr().wait() )
+exitOnError( compileGlr(compiler).wait() )
 print("Done")

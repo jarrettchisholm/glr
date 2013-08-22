@@ -169,15 +169,16 @@ void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 		 *		$('#console').addClass('hidden');
 		 *	}
 		 */
+
 		window_->executeJavascript(Berkelium::WideString::point_to(
-									   L"if( $('#console').hasClass('hidden') ) {"
-									   "	$('#console').removeClass('hidden');"
-									   "	$('#console').addClass('visible');"
-									   "	$('#console').click();"
-									   "} else {"
-									   "	$('#console').addClass('hidden');"
-									   "	$('#console').removeClass('visible');"
-									   "}"
+									   L"if( $('#console').hasClass('hidden') ) {\
+											$('#console').removeClass('hidden');\
+											$('#console').addClass('visible');\
+											$('#console').click();\
+									   } else {\
+											$('#console').addClass('hidden');\
+											$('#console').removeClass('visible');\
+									   }"
 									   ));
 	}
 	else
@@ -199,14 +200,14 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 	if ( vk_code == '`' || vk_code == '~' )
 	{
 		window_->executeJavascript(Berkelium::WideString::point_to(
-									   L"if( $('#console').hasClass('hidden') ) {"
-									   "	$('#console').removeClass('hidden');"
-									   "	$('#console').addClass('visible');"
-									   "	$('#console').click();"
-									   "} else {"
-									   "	$('#console').addClass('hidden');"
-									   "	$('#console').removeClass('visible');"
-									   "}"
+									   L"if( $('#console').hasClass('hidden') ) {\
+											$('#console').removeClass('hidden');\
+											$('#console').addClass('visible');\
+											$('#console').click();\
+										} else {\
+											$('#console').addClass('hidden');\
+											$('#console').removeClass('visible');\
+										}"
 									   ));
 	}
 	else

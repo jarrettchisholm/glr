@@ -10,13 +10,13 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "Camera.h"
-
-#include "common/math/Math.h"
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+#include "Camera.h"
+
+#include "common/math/Math.h"
 
 #include <GL/glew.h>
 

@@ -58,13 +58,13 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		cpp += filename
 		
 		cpp +="""\", std::string(
-	R"<STRING>(
+	"\\
 """
 
-		cpp += data
+		cpp += data.replace("\n", "\\\n") + "\\"
 
 		cpp += """
-)<STRING>"
+"
 )}	
 """
 		current += 1
@@ -112,8 +112,6 @@ source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
 source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
 source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
 
-env = Environment(ENV = os.environ, CCFLAGS=[]) 
-
 
 
 ### Set our required libraries
@@ -156,17 +154,38 @@ cpp_paths = []
 
 
 
+# Set our compiler
+compiler = ARGUMENTS.get('compiler')
+if (compiler is None or compiler == ''):
+	compiler = 'default'
+if (compiler == 'gcc' and os.name == 'nt'):
+	compiler = 'mingw'
+if (compiler == 'msvc' and os.name == 'nt'):
+	compiler = 'default'
+
 ### Set our OS specific compiler variables
 if (os.name != 'nt'):
-	cpp_flags.append('-g')
-	cpp_flags.append('-O0') # optimization level 0
-	cpp_flags.append('-std=c++11')
-	
+	if (compiler == 'gcc'):
+		cpp_flags.append('-g')
+		cpp_flags.append('-O0') # optimization level 0
+		cpp_flags.append('-std=c++11')
+		
 	# Dynamically link to boost log
 	cpp_defines.append('BOOST_LOG_DYN_LINK')
 else:
-	cpp_flags.append('/w') # disables warnings (Windows)
-	cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
+	if os.name == 'nt':
+		if (compiler == 'default'):
+			cpp_flags.append('/w') # disables warnings (Windows)
+			cpp_flags.append('/wd4350') # disables the specific warning C4350
+			cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
+		elif (compiler == 'mingw'):
+			cpp_flags.append('-g')
+			cpp_flags.append('-O0') # optimization level 0
+			cpp_flags.append('-std=c++11')
+		
+	
+	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include')
+	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\include')
 	
 	cpp_paths.append('C:\\Program Files (x86)\\Boost\\include\\boost-1_54')
 	cpp_paths.append('C:\\Program Files\\Assimp\\include')
@@ -177,10 +196,9 @@ else:
 
 
 
-#for key, value in ARGLIST:
-#	if key == 'define':
-#		cppdefines.append(value)
-       
+# Create our environment
+env = Environment(ENV = os.environ, TOOLS = [compiler], CCFLAGS=[]) 
+
 ### Set our environment variables
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
