@@ -58,13 +58,13 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		cpp += filename
 		
 		cpp +="""\", std::string(
-	"\\
+	R"<STRING>(
 """
 
-		cpp += data.replace("\n", "\\\n") + "\\"
+		cpp += data
 
 		cpp += """
-"
+)<STRING>"
 )}	
 """
 		current += 1
@@ -165,7 +165,7 @@ if (compiler == 'msvc' and os.name == 'nt'):
 
 ### Set our OS specific compiler variables
 if (os.name != 'nt'):
-	if (compiler == 'gcc'):
+	if (compiler == 'gcc' or (compiler == 'default' and os.name == 'posix')):
 		cpp_flags.append('-g')
 		cpp_flags.append('-O0') # optimization level 0
 		cpp_flags.append('-std=c++11')
