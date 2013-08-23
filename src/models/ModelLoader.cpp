@@ -104,10 +104,10 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
-		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i] );
+		modelData[i]->animationData = loadAnimation(path, i, scene->mMeshes[i]);
+		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->animationData.boneIndexMap );
 		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[i] );
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[i] );
-		modelData[i]->animationData = loadAnimation(path, i, scene->mMeshes[i]);
 	}
 	
 
@@ -144,11 +144,15 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 /**
  * Load the vertex, normal, texture, and color data for the given mesh.
  * 
+ * Note: We only support models that have faces with 3 points (i.e. triangles)
+ * 
  * @param path The file being loaded
  * @param index The current index of the mesh being loaded
  * @param mesh The AssImp mesh data structure to load data from.  Must not be null.
+ * @param boneIndexMap A map associating an AssImp bone name with a bone index (of type uint32).  Note that this variable is NOT const - this is
+ * only so that we can access elements in the map using the operator[] operator.
  */
-MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const aiMesh* mesh)
+MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap)
 {
 	MeshData data = MeshData();
 	
@@ -163,7 +167,12 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 
 	// Load vertices, normals, texture coordinates, and colors
 	glm::detail::uint32 currentIndex = 0;
-
+	
+	std::vector< glmd::uint32 > vertexIndexMap = std::vector< glmd::uint32 >();
+	vertexIndexMap.resize( mesh->mNumFaces * 3 );
+	
+	std::string msg = std::string();
+	
 	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
 	{
 		const aiFace* face = &mesh->mFaces[t];
@@ -172,11 +181,17 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 		switch ( face->mNumIndices )
 		{
 			case 1: 
-				face_mode = GL_POINTS; 
+				//face_mode = GL_POINTS;
+				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+				BOOST_LOG_TRIVIAL(error) << msg;
+				throw exception::Exception(msg);
 				break;
 	
 			case 2: 
-				face_mode = GL_LINES; 
+				//face_mode = GL_LINES; 
+				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+				BOOST_LOG_TRIVIAL(error) << msg;
+				throw exception::Exception(msg);
 				break;
 	
 			case 3: 
@@ -184,7 +199,10 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 				break;
 	
 			default:
-				face_mode = GL_POLYGON; 
+				//face_mode = GL_POLYGON; 
+				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+				BOOST_LOG_TRIVIAL(error) << msg;
+				throw exception::Exception(msg);
 				break;
 		}
 
@@ -194,12 +212,16 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 		data.normals.resize(currentIndex + numIndices);
 		data.textureCoordinates.resize(currentIndex + numIndices);
 		data.colors.resize(currentIndex + numIndices);
+		
+		
 
 		// go through all vertices in face
 		for ( glmd::uint32 i = 0; i < numIndices; i++ )
 		{
 			// get group index for current index i
 			int vertexIndex = face->mIndices[i];
+
+			vertexIndexMap[ vertexIndex ] = currentIndex + i;
 
 			if ( mesh->mNormals != 0 )
 			{
@@ -228,35 +250,22 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	}
 	
 	
+	
+	data.bones.resize( data.vertices.size() );
+	
 	// Load bone data
-	/*
-	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
-		glmd::uint32 boneIndex = 0;
+	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++)
+	{
+		glmd::uint32 boneIndex = boneIndexMap[ mesh->mBones[i]->mName.C_Str() ];
 		
-		// Set the bone name
-		if (mesh->mName.length > 0)
-			data.name = std::string( mesh->mName.C_Str() );
-		else
-			data.name = std::string( path ) + "_bone_" + std::to_string(index);
-
-		if (animation.bones.find(data.name) == animation.bones.end()) {
-			boneIndex = m_NumBones;
-			m_BoneInfo.push_back(data);
-		}
-		else {
-			boneIndex = m_BoneMapping[BoneName];
-		}
-
-		m_BoneMapping[BoneName] = boneIndex;
-		m_BoneInfo[boneIndex].BoneOffset = mesh->mBones[i]->mOffsetMatrix;
-
-		for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
-			glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
-			float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
-			Bones[VertexID].AddBoneData(boneIndex, Weight);
+		for (glmd::uint32 j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+		{
+			glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
+			glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
+			
+			data.bones[ vertexID ] = glm::vec2( boneIndex, weight );
 		}
 	}
-	*/
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 
@@ -355,7 +364,7 @@ AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 in
 {
 	AnimationData animation = AnimationData();
 	// TODO: implement
-	/*	
+	
 	BOOST_LOG_TRIVIAL(debug) << "loading animation...";
 	
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
@@ -363,104 +372,42 @@ AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 in
 		glmd::uint32 boneIndex = 0;
 		
 		// Set the bone name
-		if (mesh->mName.length > 0)
-			data.name = std::string( mesh->mName.C_Str() );
+		if (mesh->mBones[i]->mName.length > 0)
+			data.name = std::string( mesh->mBones[i]->mName.C_Str() );
 		else
 			data.name = std::string( path ) + "_bone_" + std::to_string(index);
 
-		if (animation.bones.find(data.name) == animation.bones.end()) {
-			boneIndex = m_NumBones;
-			m_BoneInfo.push_back(data);
+		if (animation.boneIndexMap.find(data.name) == animation.boneIndexMap.end()) {
+			boneIndex = animation.boneIndexMap.size();
+			animation.boneTransform.push_back(data);
 		}
 		else {
-			boneIndex = m_BoneMapping[BoneName];
+			boneIndex = animation.boneIndexMap[data.name];
 		}
 
-		m_BoneMapping[BoneName] = boneIndex;
-		m_BoneInfo[boneIndex].BoneOffset = mesh->mBones[i]->mOffsetMatrix;
+		animation.boneIndexMap[data.name] = boneIndex;
+		animation.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( mesh->mBones[i]->mOffsetMatrix );
 
-		for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
-			glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
-			float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
-			Bones[VertexID].AddBoneData(boneIndex, Weight);
-		}
+		//for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
+		//	glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
+		//	float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
+		//	Bones[VertexID].AddBoneData(boneIndex, Weight);
+		//}
 	} 
+
+	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
 	
-	
-	// Set the mesh name
-	if (mesh->mName.length > 0)
-		data.name = std::string( mesh->mName.C_Str() );
-	else
-		data.name = std::string( path ) + "_mesh_" + std::to_string(index);
-
-	glmd::uint32 currentIndex = 0;
-
-	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
-	{
-		const aiFace* face = &mesh->mFaces[t];
-		GLenum face_mode;
-
-		switch ( face->mNumIndices )
-		{
-			case 1: 
-				face_mode = GL_POINTS; 
-				break;
-	
-			case 2: 
-				face_mode = GL_LINES; 
-				break;
-	
-			case 3: 
-				face_mode = GL_TRIANGLES; 
-				break;
-	
-			default:
-				face_mode = GL_POLYGON; 
-				break;
-		}
-
-		glm::detail::uint32 numIndices = face->mNumIndices;
-
-		data.vertices.resize(currentIndex + numIndices);
-		data.normals.resize(currentIndex + numIndices);
-		data.textureCoordinates.resize(currentIndex + numIndices);
-		data.colors.resize(currentIndex + numIndices);
-
-		// go through all vertices in face
-		for ( glmd::uint32 i = 0; i < numIndices; i++ )
-		{
-			// get group index for current index i
-			int vertexIndex = face->mIndices[i];
-
-			if ( mesh->mNormals != 0 )
-			{
-				data.vertices[currentIndex + i] = glm::vec3(mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z);
-				data.normals[currentIndex + i] = glm::vec3(mesh->mNormals[vertexIndex].x, mesh->mNormals[vertexIndex].y, mesh->mNormals[vertexIndex].z);
-			}
-
-			if ( mesh->HasTextureCoords(0))
-			{
-				data.textureCoordinates[currentIndex + i] = glm::vec2(mesh->mTextureCoords[0][vertexIndex].x, mesh->mTextureCoords[0][vertexIndex].y);
-			}
-
-			//utilities::AssImpUtilities::color4_to_vec4(&mesh->mColors[0][vertexIndex], data.colors[data.colors.size() + i]);
-			if ( mesh->mColors[0] != 0 )
-			{
-				data.colors[currentIndex + i] = glm::vec4(
-					(float)mesh->mColors[0][vertexIndex].a,
-					(float)mesh->mColors[0][vertexIndex].b,
-					(float)mesh->mColors[0][vertexIndex].g,
-					(float)mesh->mColors[0][vertexIndex].r
-					);
-			}
-		}
-
-		currentIndex += 3;
-	}
-
-	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
-	*/
 	return animation;
+}
+
+glm::mat4 ModelLoader::convertAssImpMatrix(aiMatrix4x4 m)
+{
+	return glm::mat4 (
+		1.0f, 0.0f, 0.0f, m.a4,
+		0.0f, 1.0f, 0.0f, m.b4,
+		0.0f, 0.0f, 1.0f, m.c4,
+		0.0f, 0.0f, 0.0f, m.d4
+	);
 }
 
 }

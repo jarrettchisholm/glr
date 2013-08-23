@@ -37,9 +37,16 @@ struct TextureData {
 	std::string filename;
 };
 
+struct Bone {
+	std::string name;
+	glm::mat4 boneOffset;
+};
+
 struct AnimationData {
 	std::string name;
 	// TODO: animation data
+	std::map< std::string, glm::detail::uint32 > boneIndexMap;
+	std::vector< Bone > boneTransform;
 };
 
 struct ModelData {
