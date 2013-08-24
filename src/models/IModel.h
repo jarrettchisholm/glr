@@ -42,17 +42,22 @@ struct Bone {
 	glm::mat4 boneOffset;
 };
 
+struct BoneData {
+	std::string name;
+	std::map< std::string, glm::detail::uint32 > boneIndexMap;
+	std::vector< Bone > boneTransform;
+};
+
 struct AnimationData {
 	std::string name;
 	// TODO: animation data
-	std::map< std::string, glm::detail::uint32 > boneIndexMap;
-	std::vector< Bone > boneTransform;
 };
 
 struct ModelData {
 	MeshData meshData;
 	MaterialData materialData;
 	TextureData textureData;
+	BoneData boneData;
 	AnimationData animationData;
 };
 	

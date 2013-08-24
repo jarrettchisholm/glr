@@ -36,7 +36,8 @@ private:
 	MeshData loadMesh(const std::string path, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap);
 	TextureData loadTexture(const std::string path, glmd::uint32 index, const aiMaterial* material);
 	MaterialData loadMaterial(const std::string path, glmd::uint32 index, const aiMaterial* material);
-	AnimationData loadAnimation(const std::string path, glmd::uint32 index, const aiMesh* mesh);
+	BoneData loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh);
+	AnimationData loadAnimation(const std::string path, const aiScene* scene);
 	
 	glm::mat4 convertAssImpMatrix(aiMatrix4x4 m);
 };

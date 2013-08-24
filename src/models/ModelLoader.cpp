@@ -100,14 +100,17 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	modelData.resize( scene->mNumMeshes );
 	
+	AnimationData animationData = loadAnimation(path, scene);
+	
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
-		modelData[i]->animationData = loadAnimation(path, i, scene->mMeshes[i]);
-		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->animationData.boneIndexMap );
+		modelData[i]->boneData = loadBones(path, i, scene->mMeshes[i]);
+		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
 		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[i] );
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[i] );
+		modelData[i]->animationData = animationData;
 	}
 	
 
@@ -360,12 +363,18 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 	return data;
 }
 
-AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 index, const aiMesh* mesh)
+/**
+ * Will load the bone data for the given AssImp mesh.
+ * 
+ * @param path
+ * @param index
+ * @param mesh
+ */
+BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh)
 {
-	AnimationData animation = AnimationData();
-	// TODO: implement
+	BoneData boneData = BoneData();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading animation...";
+	BOOST_LOG_TRIVIAL(debug) << "loading boneData...";
 	
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
 		Bone data = Bone();
@@ -377,16 +386,16 @@ AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 in
 		else
 			data.name = std::string( path ) + "_bone_" + std::to_string(index);
 
-		if (animation.boneIndexMap.find(data.name) == animation.boneIndexMap.end()) {
-			boneIndex = animation.boneIndexMap.size();
-			animation.boneTransform.push_back(data);
+		if (boneData.boneIndexMap.find(data.name) == boneData.boneIndexMap.end()) {
+			boneIndex = boneData.boneIndexMap.size();
+			boneData.boneTransform.push_back(data);
 		}
 		else {
-			boneIndex = animation.boneIndexMap[data.name];
+			boneIndex = boneData.boneIndexMap[data.name];
 		}
 
-		animation.boneIndexMap[data.name] = boneIndex;
-		animation.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( mesh->mBones[i]->mOffsetMatrix );
+		boneData.boneIndexMap[data.name] = boneIndex;
+		boneData.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( mesh->mBones[i]->mOffsetMatrix );
 
 		//for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
 		//	glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
@@ -395,11 +404,26 @@ AnimationData ModelLoader::loadAnimation(const std::string path, glmd::uint32 in
 		//}
 	} 
 
-	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
+	BOOST_LOG_TRIVIAL(debug) << "done loading boneData...";
 	
-	return animation;
+	return boneData;
 }
 
+/**
+ * Loads the animation(s) for the given scene.
+ */
+AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* scene)
+{
+	
+}
+
+/**
+ * Helper method - converts an AssImp 4x4 matrix into a glm 4x4 matrix.
+ * 
+ * @param m A 4x4 AssImp matrix
+ * 
+ * @return A 4x4 glm matrix
+ */
 glm::mat4 ModelLoader::convertAssImpMatrix(aiMatrix4x4 m)
 {
 	return glm::mat4 (
