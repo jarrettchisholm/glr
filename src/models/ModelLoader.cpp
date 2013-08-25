@@ -414,7 +414,25 @@ BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, cons
  */
 AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* scene)
 {
+	AnimationData animation = AnimationData();
 	
+	BOOST_LOG_TRIVIAL(debug) << "loading animations...";
+	
+	// TODO: load BoneNodes
+	
+	for (glmd::uint32 i = 0; i < scene->mNumAnimations; i++)
+	{
+		Animation animation = Animation();
+		animation.name = std::string( scene->mAnimations[i]->mName.C_Str() );
+		animation.duration = scene->mAnimations[i]->mDuration;
+		animation.ticksPerSecond = scene->mAnimations[i]->mTicksPerSecond;
+		
+		// TODO: load AnimatedBoneNodes for this animation
+	} 
+
+	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
+	
+	return animation;
 }
 
 /**
