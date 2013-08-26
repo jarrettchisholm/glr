@@ -26,8 +26,15 @@ class Animation {
 public:
 	Animation(IOpenGlDevice* openGlDevice, const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	virtual ~Animation();
+	
+	void bind();
+	GLuint getBufferId();
+	GLuint getBindPoint();
 
 private:
+	GLuint bufferId_;
+	GLuint bindPoint_;
+
 	std::string name_;
 	glm::detail::float64 duration_;
 	glm::detail::float64 ticksPerSecond_;
@@ -36,6 +43,7 @@ private:
 	
 	IOpenGlDevice* openGlDevice_;
 
+	void loadIntoVideoMemory();
 };
 
 }

@@ -118,7 +118,7 @@ struct AnimationData {
 			}			
 			
 			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
-			animations_.push_back( animation );
+			animation_ = animation;
 		}
 	}
 }
@@ -129,6 +129,13 @@ void Model::destroy()
 
 void Model::render(shaders::IShaderProgram* shader)
 {
+	// TODO: bind animation
+	if (animation_ != nullptr)
+	{
+		animation_->bind();
+		shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_ANIMATION, animation_->getBindPoint() );
+	}
+	
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[i] != nullptr )
@@ -142,7 +149,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		{
 			materials_[i]->bind();
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_MATERIAL, materials_[i]->getBindPoint() );
-		}
+		}		
 		
 		meshes_[i]->render();
 	}

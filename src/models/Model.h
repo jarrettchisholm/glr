@@ -46,7 +46,7 @@ protected:
 	std::vector<glw::Mesh*> meshes_;
 	std::vector<glw::Texture*> textures_;
 	std::vector<glw::Material*> materials_;
-	std::vector<glw::Animation*> animations_;
+	glw::Animation* animation_;
 	
 	/* 	All meshes in this model use this bone node tree for animations.
 		Any animations that manipulate bone nodes will be manipulating bones in this bone node tree. */
