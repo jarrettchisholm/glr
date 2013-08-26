@@ -55,11 +55,54 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		materials_.push_back( material );
 		
 		
-		glw::Animation* animation = animationManager_->getAnimation(d->animationData.name);
-		if (animation == nullptr)
-			animation = animationManager_->addAnimation(d->animationData.name);
-		
-		animations_.push_back( animation );
+/*
+struct BoneNode {
+	std::string name;
+	glm::mat4 transformation;
+	std::vector< BoneNode > children;
+};
+
+struct AnimatedBoneNode {
+	std::string name;
+	std::vector< glm::detail::float64 > positionTimes;
+	std::vector< glm::detail::float64 > rotationTimes;
+	std::vector< glm::detail::float64 > scalingTimes;
+	std::vector< glm::vec3 > positions;
+	std::vector< glm::quat > rotations;
+	std::vector< glm::vec3 > scalings;
+};
+
+struct Animation {
+	std::string name;
+	glm::detail::float64 duration;
+	glm::detail::float64 ticksPerSecond;
+	
+	std::map< std::string, AnimatedBoneNode > animatedBoneNodes;
+};
+
+struct AnimationData {
+	std::string name;
+	
+	BoneNode rootBoneNode;
+	std::map< std::string, Animation > animations;
+};
+*/
+		for ( auto& kv : d->animationData.animations)
+		{
+			glw::Animation* animation = animationManager_->getAnimation( kv.first );
+			
+			if (animation == nullptr)
+			{
+				// TODO: create bone structure (tree structure)
+				
+				// TODO: create animated bone node information
+				
+				// TODO: actually create the animation
+				animation = animationManager_->addAnimation( kv.first );
+			}			
+			
+			animations_.push_back( animation );
+		}
 	}
 }
 

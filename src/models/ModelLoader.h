@@ -39,7 +39,8 @@ private:
 	BoneData loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh);
 	AnimationData loadAnimation(const std::string path, const aiScene* scene);
 	
-	glm::mat4 convertAssImpMatrix(aiMatrix4x4 m);
+	BoneNode loadBoneNode( const aiNode* node );
+	glm::mat4 convertAssImpMatrix(const aiMatrix4x4* m);
 };
 
 }

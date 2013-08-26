@@ -395,7 +395,7 @@ BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, cons
 		}
 
 		boneData.boneIndexMap[data.name] = boneIndex;
-		boneData.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( mesh->mBones[i]->mOffsetMatrix );
+		boneData.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( &(mesh->mBones[i]->mOffsetMatrix) );
 
 		//for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
 		//	glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
@@ -419,20 +419,89 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 	BOOST_LOG_TRIVIAL(debug) << "loading animations...";
 	
 	// TODO: load BoneNodes
+	const aiNode* assImpRootNode = scene->mRootNode;
+	BoneNode bn = BoneNode();
+	bn = loadBoneNode( assImpRootNode );
 	
 	for (glmd::uint32 i = 0; i < scene->mNumAnimations; i++)
 	{
+		// Load some basic animation data
 		Animation animation = Animation();
 		animation.name = std::string( scene->mAnimations[i]->mName.C_Str() );
 		animation.duration = scene->mAnimations[i]->mDuration;
 		animation.ticksPerSecond = scene->mAnimations[i]->mTicksPerSecond;
 		
-		// TODO: load AnimatedBoneNodes for this animation
-	} 
+		// Load AnimatedBoneNodes for this animation
+		for (glmd::uint32 j = 0; j < scene->mAnimations[i]->mNumChannels; j++)
+		{
+			const aiNodeAnim* pNodeAnim = scene->mAnimations[i]->mChannels[i];
+			
+			AnimatedBoneNode abn = AnimatedBoneNode();
+			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
+			
+			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)
+			{
+				abn.positionTimes.push_back( pNodeAnim->mPositionKeys[k].mTime );
+				abn.positions.push_back( glm::vec3( pNodeAnim->mPositionKeys[k].mValue.x, pNodeAnim->mPositionKeys[k].mValue.y, pNodeAnim->mPositionKeys[k].mValue.z ) );
+			}
+			
+			for (glmd::uint32 k = 0; k < pNodeAnim->mNumRotationKeys; k++)
+			{
+				abn.rotationTimes.push_back( pNodeAnim->mRotationKeys[k].mTime );
+				abn.rotations.push_back( 
+					glm::quat( 
+						pNodeAnim->mRotationKeys[k].mValue.w,
+						pNodeAnim->mRotationKeys[k].mValue.x,
+						pNodeAnim->mRotationKeys[k].mValue.y,
+						pNodeAnim->mRotationKeys[k].mValue.z
+					)
+				);
+			}
+			
+			for (glmd::uint32 k = 0; k < pNodeAnim->mNumScalingKeys; k++)
+			{
+				abn.scalingTimes.push_back( pNodeAnim->mScalingKeys[k].mTime );
+				abn.scalings.push_back( glm::vec3( pNodeAnim->mScalingKeys[k].mValue.x, pNodeAnim->mScalingKeys[k].mValue.y, pNodeAnim->mScalingKeys[k].mValue.z ) );
+			}
+			
+			
+			// Add AnimatedBoneNode to the animation
+			if( animation.animatedBoneNodes.find( abn.name ) == animation.animatedBoneNodes.end() )
+			{
+				animation.animatedBoneNodes[ abn.name ] = abn;
+			}
+			else 
+			{
+				// Warning - animated bone node already exists!
+				BOOST_LOG_TRIVIAL(warning) << "Animated bone node with name '" << abn.name << "' already exists!";
+			}
+		}
+	}
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
 	
 	return animation;
+}
+
+/**
+ * Helper method - recursively loads bone node information from the AssImp node.
+ * 
+ * @param node An AssImp Node.
+ * 
+ * @return The BoneNode containing the bone information from the given AssImp node.
+ */
+BoneNode ModelLoader::loadBoneNode( const aiNode* node )
+{
+	BoneNode boneNode = BoneNode();
+	boneNode.name = std::string( node->mName.C_Str() );
+	boneNode.transformation = convertAssImpMatrix( &(node->mTransformation) );
+	
+	for (glmd::uint32 i = 0; i < node->mNumChildren; i++)
+	{
+		boneNode.children.push_back( loadBoneNode( node->mChildren[i] ) );
+	}
+	
+	return boneNode;
 }
 
 /**
@@ -442,13 +511,13 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
  * 
  * @return A 4x4 glm matrix
  */
-glm::mat4 ModelLoader::convertAssImpMatrix(aiMatrix4x4 m)
+glm::mat4 ModelLoader::convertAssImpMatrix(const aiMatrix4x4* m)
 {
-	return glm::mat4 (
-		1.0f, 0.0f, 0.0f, m.a4,
-		0.0f, 1.0f, 0.0f, m.b4,
-		0.0f, 0.0f, 1.0f, m.c4,
-		0.0f, 0.0f, 0.0f, m.d4
+	return glm::mat4(
+		m->a1, m->b1, m->c1, m->d1,
+		m->a2, m->b2, m->c2, m->d2,
+		m->a3, m->b3, m->c3, m->d3,
+		m->a4, m->b4, m->c4, m->d4
 	);
 }
 
