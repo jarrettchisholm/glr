@@ -88,10 +88,10 @@ struct AnimationData {
 };
 */
 
-		// TODO: What do I do with the BoneNode tree?
 		// Create bone structure (tree structure)
-		//glw::BoneNode rootBoneNode = copyBoneNode( d->animationData.rootBoneNode );
+		rootBoneNode_ = d->animationData.rootBoneNode;
 		
+		// Load the animation information
 		for ( auto& kv : d->animationData.animations)
 		{
 			glw::Animation* animation = animationManager_->getAnimation( kv.first );

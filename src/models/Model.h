@@ -47,6 +47,10 @@ protected:
 	std::vector<glw::Texture*> textures_;
 	std::vector<glw::Material*> materials_;
 	std::vector<glw::Animation*> animations_;
+	
+	/* 	All meshes in this model use this bone node tree for animations.
+		Any animations that manipulate bone nodes will be manipulating bones in this bone node tree. */
+	BoneNode rootBoneNode_;
 
 	void loadMeshes(const aiScene* scene);
 	void loadTextures(const aiScene* scene);

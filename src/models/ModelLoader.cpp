@@ -414,14 +414,13 @@ BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, cons
  */
 AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* scene)
 {
-	AnimationData animation = AnimationData();
+	AnimationData animationData = AnimationData();
 	
 	BOOST_LOG_TRIVIAL(debug) << "loading animations...";
 	
-	// TODO: load BoneNodes
+	// Load BoneNodes
 	const aiNode* assImpRootNode = scene->mRootNode;
-	BoneNode bn = BoneNode();
-	bn = loadBoneNode( assImpRootNode );
+	animationData.rootBoneNode = loadBoneNode( assImpRootNode );
 	
 	for (glmd::uint32 i = 0; i < scene->mNumAnimations; i++)
 	{
@@ -475,12 +474,23 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 				// Warning - animated bone node already exists!
 				BOOST_LOG_TRIVIAL(warning) << "Animated bone node with name '" << abn.name << "' already exists!";
 			}
+			
+			// Add animation to animation data
+			if( animationData.animations.find( animation.name ) == animationData.animations.end() )
+			{
+				animationData.animations[ animation.name ] = animation;
+			}
+			else 
+			{
+				// Warning - animated bone node already exists!
+				BOOST_LOG_TRIVIAL(warning) << "Animation with name '" << animation.name << "' already exists!";
+			}
 		}
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
 	
-	return animation;
+	return animationData;
 }
 
 /**
