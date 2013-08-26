@@ -38,9 +38,18 @@ Animation* AnimationManager::getAnimation(const std::string name)
 
 Animation* AnimationManager::addAnimation(const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes)
 {
-	// TODO: implement
-	
-	return nullptr;
+	BOOST_LOG_TRIVIAL(debug) << "Loading animation...";
+
+	if ( animations_.find(name) != animations_.end() && animations_[name].get() != nullptr )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Animation already exists.";
+		return animations_[name].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Creating Animation.";
+	animations_[name] = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, duration, ticksPerSecond, animatedBoneNodes));
+
+	return animations_[name].get();
 }
 
 }

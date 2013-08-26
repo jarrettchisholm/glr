@@ -27,6 +27,7 @@ namespace glr {
 namespace glw {
 
 class IMeshManager;
+class IAnimationManager;
 
 struct GlError
 {

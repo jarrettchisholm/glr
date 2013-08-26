@@ -10,8 +10,13 @@
 namespace glr {
 namespace glw {
 	
-Animation::Animation(const std::string path, 
-			std::vector< glm::vec3 > vertices)
+Animation::Animation(
+		IOpenGlDevice* openGlDevice,
+		const std::string name, 
+		glm::detail::float64 duration, 
+		glm::detail::float64 ticksPerSecond, 
+		std::map< std::string, AnimatedBoneNode > animatedBoneNodes
+	) : openGlDevice_(openGlDevice), name_(name), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(animatedBoneNodes)
 {
 	
 }
