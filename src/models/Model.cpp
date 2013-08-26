@@ -87,20 +87,37 @@ struct AnimationData {
 	std::map< std::string, Animation > animations;
 };
 */
+
+		// TODO: What do I do with the BoneNode tree?
+		// Create bone structure (tree structure)
+		//glw::BoneNode rootBoneNode = copyBoneNode( d->animationData.rootBoneNode );
+		
 		for ( auto& kv : d->animationData.animations)
 		{
 			glw::Animation* animation = animationManager_->getAnimation( kv.first );
 			
 			if (animation == nullptr)
-			{
-				// TODO: create bone structure (tree structure)
+			{	
+				// Create animated bone node information
+				std::map< std::string, glw::AnimatedBoneNode > animatedBoneNodes = std::map< std::string, glw::AnimatedBoneNode >();
+				for ( auto& kvAnimatedBoneNode : kv.second.animatedBoneNodes )
+				{
+					animatedBoneNodes[ kvAnimatedBoneNode.first ] = glw::AnimatedBoneNode( 
+						kvAnimatedBoneNode.second.name, 
+						kvAnimatedBoneNode.second.positionTimes, 
+						kvAnimatedBoneNode.second.rotationTimes, 
+						kvAnimatedBoneNode.second.scalingTimes, 
+						kvAnimatedBoneNode.second.positions, 
+						kvAnimatedBoneNode.second.rotations, 
+						kvAnimatedBoneNode.second.scalings
+					);
+				}
 				
-				// TODO: create animated bone node information
-				
-				// TODO: actually create the animation
-				animation = animationManager_->addAnimation( kv.first );
+				// Actually create the animation
+				animation = animationManager_->addAnimation( kv.second.name, kv.second.duration, kv.second.ticksPerSecond, animatedBoneNodes );
 			}			
 			
+			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
 			animations_.push_back( animation );
 		}
 	}
@@ -130,6 +147,29 @@ void Model::render(shaders::IShaderProgram* shader)
 		meshes_[i]->render();
 	}
 }
+
+/**
+ * Helper method - will take the data in the BoneNode structure and create a glw::BoneNode object with it.
+ * 
+ * NOTE: I'm not sure this is the best place for this...
+ * 
+ * @param n The BoneNode structure to copy.
+ * 
+ * @return The glw::BoneNode object that contains a copy of the data in the BoneNode structure.
+ */
+/*
+glw::BoneNode Model::copyBoneNode( BoneNode& n )
+{
+	glw::BoneNode n = glw::BoneNode( n.rootBoneNode.name, n.rootBoneNode.transformation );
+	
+	for ( auto& child : n.rootBoneNode.children )
+	{
+		n.addChild( copyBoneNode( child ) );
+	}
+	
+	return n;
+}
+*/
 
 }
 }

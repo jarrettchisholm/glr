@@ -23,12 +23,12 @@ AnimationManager::~AnimationManager()
 {
 }
 
-Animation* AnimationManager::getAnimation(const std::string filename)
+Animation* AnimationManager::getAnimation(const std::string name)
 {
-	if ( animations_.find(filename) != animations_.end() )
+	if ( animations_.find(name) != animations_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Animation found.";
-		return animations_[filename].get();
+		return animations_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Animation not found.";
@@ -36,7 +36,7 @@ Animation* AnimationManager::getAnimation(const std::string filename)
 	return nullptr;
 }
 
-Animation* AnimationManager::addAnimation(const std::string filename)
+Animation* AnimationManager::addAnimation(const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes)
 {
 	// TODO: implement
 	
