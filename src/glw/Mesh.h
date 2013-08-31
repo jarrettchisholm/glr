@@ -18,10 +18,10 @@
 
 #include <glm/glm.hpp>
 
+#include "IMesh.h"
+
 #include "shaders/IShaderProgram.h"
 #include "IOpenGlDevice.h"
-
-//#include "../../vmath/Vector3f.h"
 
 
 namespace glr {
@@ -37,10 +37,13 @@ public:
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones);
+		std::vector< glm::vec2 > bones,
+		BoneData boneData);
 	virtual ~Mesh();
 
 	void render();
+	
+	BoneData& getBoneData();
 
 private:
 	IOpenGlDevice* openGlDevice_;
@@ -53,8 +56,11 @@ private:
 	std::vector< glm::vec4 > colors_;
 	std::vector< glm::vec2 > bones_;
 
+	BoneData boneData_;
+
 	std::string textureFileName_;
 };
+
 }
 }
 #endif /* MESH_H_ */

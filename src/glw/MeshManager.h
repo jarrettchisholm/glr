@@ -20,6 +20,7 @@
 
 namespace glr {
 namespace glw {
+	
 class MeshManager : public IMeshManager {
 public:
 	MeshManager(IOpenGlDevice* openGlDevice);
@@ -32,7 +33,8 @@ public:
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones
+		std::vector< glm::vec2 > bones,
+		BoneData boneData
 	);
 	
 private:	
@@ -40,6 +42,7 @@ private:
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
 };
+
 }
 }
 #endif /* MESHMANAGER_H_ */

@@ -19,8 +19,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones)
-	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones)
+		std::vector< glm::vec2 > bones,
+		BoneData boneData)
+	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
 {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh into video memory...";
 
@@ -82,6 +83,11 @@ void Mesh::render()
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 	glBindVertexArray(0);
+}
+
+BoneData& Mesh::getBoneData()
+{
+	return boneData_;
 }
 }
 }

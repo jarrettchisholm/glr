@@ -168,6 +168,7 @@ if (os.name != 'nt'):
 	if (compiler == 'gcc' or (compiler == 'default' and os.name == 'posix')):
 		cpp_flags.append('-g')
 		cpp_flags.append('-O0') # optimization level 0
+		#cpp_flags.append('-pg') # profiler
 		cpp_flags.append('-std=c++11')
 		
 	# Dynamically link to boost log
@@ -181,6 +182,7 @@ else:
 		elif (compiler == 'mingw'):
 			cpp_flags.append('-g')
 			cpp_flags.append('-O0') # optimization level 0
+			#cpp_flags.append('-pg') # profiler
 			cpp_flags.append('-std=c++11')
 		
 	

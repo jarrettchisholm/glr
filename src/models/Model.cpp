@@ -36,7 +36,7 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 	{
 		glw::Mesh* mesh = meshManager_->getMesh(d->meshData.name);
 		if (mesh == nullptr)
-			mesh = meshManager_->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones);
+			mesh = meshManager_->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones, d->boneData);
 		
 		meshes_.push_back( mesh );
 		
@@ -91,6 +91,9 @@ struct AnimationData {
 		// Create bone structure (tree structure)
 		rootBoneNode_ = d->animationData.rootBoneNode;
 		
+		// Set the global inverse transformation
+		globalInverseTransformation_ = d->globalInverseTransformation;
+		
 		// Load the animation information
 		for ( auto& kv : d->animationData.animations)
 		{
@@ -129,13 +132,6 @@ void Model::destroy()
 
 void Model::render(shaders::IShaderProgram* shader)
 {
-	// TODO: bind animation
-	if (animation_ != nullptr)
-	{
-		animation_->bind();
-		shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_ANIMATION, animation_->getBindPoint() );
-	}
-	
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[i] != nullptr )
@@ -150,6 +146,15 @@ void Model::render(shaders::IShaderProgram* shader)
 			materials_[i]->bind();
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_MATERIAL, materials_[i]->getBindPoint() );
 		}		
+		
+		if (animation_ != nullptr)
+		{
+			// TODO: is this the best place for calling the tick() method?
+			//animation_->tick(0.0f);
+			animation_->generateBoneTransforms(0.25f, globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
+			animation_->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_ANIMATION, animation_->getBindPoint() );
+		}
 		
 		meshes_[i]->render();
 	}

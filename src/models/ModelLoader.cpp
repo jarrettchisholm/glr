@@ -9,6 +9,8 @@
 #include <windows.h>
 #endif
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "ModelLoader.h"
 
 #include "../common/utilities/ImageLoader.h"
@@ -18,6 +20,7 @@
 
 namespace glr {
 namespace models {
+	
 ModelLoader::ModelLoader()
 {
 	// get a handle to the predefined STDOUT log stream and attach
@@ -100,6 +103,9 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	modelData.resize( scene->mNumMeshes );
 	
+	glm::mat4 globalInverseTransformation = convertAssImpMatrix( &(scene->mRootNode->mTransformation) );
+	globalInverseTransformation = glm::inverse( globalInverseTransformation );
+	
 	AnimationData animationData = loadAnimation(path, scene);
 	
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
@@ -111,6 +117,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[i] );
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[i] );
 		modelData[i]->animationData = animationData;
+		modelData[i]->globalInverseTransformation = globalInverseTransformation;
 	}
 	
 
@@ -266,6 +273,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 			glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
 			glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
 			
+			// TODO: Need to fix this - need to have up to 4 bones per vertex
 			data.bones[ vertexID ] = glm::vec2( boneIndex, weight );
 		}
 	}
@@ -370,14 +378,14 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
  * @param index
  * @param mesh
  */
-BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh)
+glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh)
 {
-	BoneData boneData = BoneData();
+	glw::BoneData boneData = glw::BoneData();
 	
 	BOOST_LOG_TRIVIAL(debug) << "loading boneData...";
 	
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
-		Bone data = Bone();
+		glw::Bone data = glw::Bone();
 		glmd::uint32 boneIndex = 0;
 		
 		// Set the bone name
@@ -500,9 +508,9 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
  * 
  * @return The BoneNode containing the bone information from the given AssImp node.
  */
-BoneNode ModelLoader::loadBoneNode( const aiNode* node )
+glw::BoneNode ModelLoader::loadBoneNode( const aiNode* node )
 {
-	BoneNode boneNode = BoneNode();
+	glw::BoneNode boneNode = glw::BoneNode();
 	boneNode.name = std::string( node->mName.C_Str() );
 	boneNode.transformation = convertAssImpMatrix( &(node->mTransformation) );
 	

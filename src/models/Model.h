@@ -50,7 +50,7 @@ protected:
 	
 	/* 	All meshes in this model use this bone node tree for animations.
 		Any animations that manipulate bone nodes will be manipulating bones in this bone node tree. */
-	BoneNode rootBoneNode_;
+	glw::BoneNode rootBoneNode_;
 
 	void loadMeshes(const aiScene* scene);
 	void loadTextures(const aiScene* scene);
@@ -62,6 +62,8 @@ private:
 	void destroy();
 
 	glw::IOpenGlDevice* openGlDevice_;
+	
+	glm::mat4 globalInverseTransformation_;
 	
 	glw::IMeshManager* meshManager_;
 	glw::IMaterialManager* materialManager_;

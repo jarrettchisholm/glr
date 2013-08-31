@@ -12,6 +12,9 @@
 
 #include "../glw/shaders/IShaderProgram.h"
 
+#include "../glw/IMesh.h"
+#include "../glw/IAnimation.h"
+
 namespace glr {
 namespace models {
 	
@@ -41,27 +44,11 @@ struct TextureData {
 
 
 
-// Bone information
-struct Bone {
-	std::string name;
-	glm::mat4 boneOffset;
-	glm::mat4 finalTransformation;
-};
-
-struct BoneData {
-	std::string name;
-	std::map< std::string, glm::detail::uint32 > boneIndexMap;
-	std::vector< Bone > boneTransform;
-	//glm::mat4 inverseTransformation;
-};
+// Bone information is kept in IMesh.h
 
 
 // Animation information
-struct BoneNode {
-	std::string name;
-	glm::mat4 transformation;
-	std::vector< BoneNode > children;
-};
+// Note: BoneNode struct is kept in IAnimation.h
 
 struct AnimatedBoneNode {
 	std::string name;
@@ -84,7 +71,7 @@ struct Animation {
 struct AnimationData {
 	std::string name;
 	
-	BoneNode rootBoneNode;
+	glw::BoneNode rootBoneNode;
 	std::map< std::string, Animation > animations;
 };
 
@@ -95,8 +82,9 @@ struct ModelData {
 	MeshData meshData;
 	MaterialData materialData;
 	TextureData textureData;
-	BoneData boneData;
+	glw::BoneData boneData;
 	AnimationData animationData;
+	glm::mat4 globalInverseTransformation;
 };
 	
 class IModel {
