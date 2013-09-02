@@ -16,8 +16,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <glm/glm.hpp>
-
 #include "IMesh.h"
 
 #include "shaders/IShaderProgram.h"
@@ -37,7 +35,7 @@ public:
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones,
+		std::vector< VertexBoneData > bones,
 		BoneData boneData);
 	virtual ~Mesh();
 
@@ -54,7 +52,7 @@ private:
 	std::vector< glm::vec3 > normals_;
 	std::vector< glm::vec2 > textureCoordinates_;
 	std::vector< glm::vec4 > colors_;
-	std::vector< glm::vec2 > bones_;
+	std::vector< VertexBoneData > bones_;
 
 	BoneData boneData_;
 

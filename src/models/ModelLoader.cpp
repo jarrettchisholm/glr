@@ -274,7 +274,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 			glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
 			
 			// TODO: Need to fix this - need to have up to 4 bones per vertex
-			data.bones[ vertexID ] = glm::vec2( boneIndex, weight );
+			data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
 		}
 	}
 

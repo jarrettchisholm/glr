@@ -46,7 +46,7 @@ public:
 		BIND_TYPE_MATERIAL,
 		BIND_TYPE_COLOR,
 		BIND_TYPE_TEXTURE,
-		BIND_TYPE_ANIMATION
+		BIND_TYPE_BONE
 	};
 
 	static BindType parseBindType(std::string type)
@@ -59,8 +59,8 @@ public:
 			return BIND_TYPE_COLOR;
 		else if ( type.compare("Texture") == 0 )
 			return BIND_TYPE_TEXTURE;
-		else if ( type.compare("Animation") == 0 )
-			return BIND_TYPE_ANIMATION;
+		else if ( type.compare("Bone") == 0 )
+			return BIND_TYPE_BONE;
 
 		return BIND_TYPE_NONE;
 	}

@@ -13,6 +13,7 @@
 in vec2 textureCoord;
 in vec3 normalDirection;
 in vec3 lightDirection;
+in float bug;
 
 @bind texture0
 uniform sampler2DArray tex;
@@ -38,6 +39,11 @@ void main() {
 	at = texel.a;
 	
 	gl_FragColor = vec4(ct * cf, at * af);
+	
+	
+	// Show bugs
+	if (bug != 0.0)
+		gl_FragColor.x += bug;
 	
 	/*
 	float bug = 0.0;	

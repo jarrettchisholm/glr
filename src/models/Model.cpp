@@ -153,7 +153,7 @@ void Model::render(shaders::IShaderProgram* shader)
 			//animation_->tick(0.0f);
 			animation_->generateBoneTransforms(0.25f, globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
 			animation_->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_ANIMATION, animation_->getBindPoint() );
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, animation_->getBindPoint() );
 		}
 		
 		meshes_[i]->render();

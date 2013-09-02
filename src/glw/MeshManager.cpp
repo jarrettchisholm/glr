@@ -42,7 +42,7 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones,
+		std::vector< VertexBoneData > bones,
 		BoneData boneData
 	)
 {

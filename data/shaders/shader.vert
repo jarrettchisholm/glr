@@ -16,14 +16,13 @@
 in vec3 in_Position;
 in vec2 in_Texture;
 in vec3 in_Normal;
-in vec2 in_Bone;
-
 in uvec4 in_BoneIds;
 in vec4 in_BoneWeights;
 
 out vec2 textureCoord;
 out vec3 normalDirection;
 out vec3 lightDirection;
+out float bug;
 
 @bind Light
 layout(std140) uniform Lights 
@@ -48,8 +47,11 @@ void main() {
     
     vec4 tempPosition = boneTransform * vec4(in_Position, 1.0);
     
+    // Below position setting doesn't really work - this is for animating the model
 	gl_Position = pvmMatrix * tempPosition;
-	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
+	
+	// Below position setting will work, but give no animation
+	//gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
 	vec4 lightDirTemp = viewMatrix * lights[0].direction;
 	
@@ -58,10 +60,20 @@ void main() {
 	normalDirection = normalize(normalMatrix * in_Normal);
 	lightDirection = normalize(vec3(lightDirTemp));
 	
+	
+	
+	// If we have any bugs, should highlight the vertex red
+	bug = 0.0;
+	if (in_BoneIds[0] > uint(100))
+		bug = 1.0;
+	
 	/*
-	float bug = 0.0;	
-	bvec3 result = equal( diffuseReflection, vec3(0.0, 0.0, 0.0) );
-	if(result[0] && result[1] && result[2]) bug = 1.0;
-	diffuseReflection.x += bug;
+	bvec4 result = equal( in_BoneIds, uvec4(0, 0, 0, 0) );
+	if(result[0] && result[1] && result[2] && result[3])
+		bug = 1.0;
+	result = equal( in_BoneWeights, vec4(0.0, 0.0, 0.0, 0.0) );
+	if(result[0] && result[1] && result[2] && result[3])
+		bug = 2.0;
 	*/
+	
 }

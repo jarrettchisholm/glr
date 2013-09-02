@@ -6,6 +6,7 @@
  */
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "Animation.h"
 
@@ -66,6 +67,9 @@ void Animation::loadIntoVideoMemory()
 	//shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
 }
 
+/**
+ * Will stream the latest transformation matrices into opengl memory, and will then bind the data to a bind point.
+ */
 void Animation::bind()
 {
 	// TODO: implement
@@ -285,6 +289,7 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end()) {
 		glmd::uint32 boneIndex = boneData.boneIndexMap[ rootBoneNode.name ];
 		boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
+		//std::cout << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation ) << std::endl;
 	}
 	
 	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++) {
@@ -292,6 +297,9 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 	}
 }
 
+/**
+ * Will generate the transformation matrices to be used to animate the model with the given bone data.
+ */
 void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData)
 {
 	currentTransforms_ = std::vector< glm::mat4 >();	
@@ -310,6 +318,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
+		//std::cout << "NUM" << i << " " << glm::to_string( currentTransforms_[i] ) << std::endl;
 	}
 }
 

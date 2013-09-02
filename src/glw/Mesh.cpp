@@ -19,7 +19,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector< glm::vec2 > bones,
+		std::vector<VertexBoneData > bones,
 		BoneData boneData)
 	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
 {
@@ -49,9 +49,11 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	
 	// TODO: deal with not having any bones?
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
-	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(glm::vec2), &bones_[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::uvec4)));
 
 
 	// Disable our Vertex Array Object
