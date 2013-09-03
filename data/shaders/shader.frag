@@ -43,7 +43,12 @@ void main() {
 	
 	// Show bugs
 	if (bug != 0.0)
-		gl_FragColor.x += bug;
+	{
+		if (bug == 1.0)	
+			gl_FragColor.x += bug;
+		else if (bug == 2.0)	
+			gl_FragColor.y += bug;
+	}
 	
 	/*
 	float bug = 0.0;	

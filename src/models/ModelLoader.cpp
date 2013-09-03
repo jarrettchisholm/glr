@@ -277,7 +277,13 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 			data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
 		}
 	}
-
+	
+	// Fill in any empty weights
+	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
+	{
+		data.bones[ i ].normalize();
+	}
+	
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 
 	//materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
@@ -424,7 +430,7 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 {
 	AnimationData animationData = AnimationData();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading animations...";
+	BOOST_LOG_TRIVIAL(debug) << "loading " << scene->mNumAnimations << " animation(s)...";
 	
 	// Load BoneNodes
 	const aiNode* assImpRootNode = scene->mRootNode;
@@ -435,16 +441,32 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 		// Load some basic animation data
 		Animation animation = Animation();
 		animation.name = std::string( scene->mAnimations[i]->mName.C_Str() );
+		
+		// Error check - animations with no name are not allowed
+		if (animation.name.compare( std::string("") ) == 0)
+		{
+			std::string msg = std::string("Animations with no name are not allowed.");
+			BOOST_LOG_TRIVIAL(warning) << msg;
+			
+			// TODO: should we throw an exception?
+			//throw exception::Exception(msg);
+			
+			// TODO: Should we skip to the next animation?
+			//continue;
+		}
+		std::string msg = std::string("Loading animation...");
+		
 		animation.duration = scene->mAnimations[i]->mDuration;
 		animation.ticksPerSecond = scene->mAnimations[i]->mTicksPerSecond;
 		
 		// Load AnimatedBoneNodes for this animation
 		for (glmd::uint32 j = 0; j < scene->mAnimations[i]->mNumChannels; j++)
 		{
-			const aiNodeAnim* pNodeAnim = scene->mAnimations[i]->mChannels[i];
+			const aiNodeAnim* pNodeAnim = scene->mAnimations[i]->mChannels[j];
 			
 			AnimatedBoneNode abn = AnimatedBoneNode();
 			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
+			//std::cout << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys << std::endl;
 			
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)
 			{
@@ -482,17 +504,17 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 				// Warning - animated bone node already exists!
 				BOOST_LOG_TRIVIAL(warning) << "Animated bone node with name '" << abn.name << "' already exists!";
 			}
-			
-			// Add animation to animation data
-			if( animationData.animations.find( animation.name ) == animationData.animations.end() )
-			{
-				animationData.animations[ animation.name ] = animation;
-			}
-			else 
-			{
-				// Warning - animated bone node already exists!
-				BOOST_LOG_TRIVIAL(warning) << "Animation with name '" << animation.name << "' already exists!";
-			}
+		}
+		
+		// Add animation to animation data
+		if( animationData.animations.find( animation.name ) == animationData.animations.end() )
+		{
+			animationData.animations[ animation.name ] = animation;
+		}
+		else 
+		{
+			// Warning - animated bone node already exists!
+			BOOST_LOG_TRIVIAL(warning) << "Animation with name '" << animation.name << "' already exists!";
 		}
 	}
 

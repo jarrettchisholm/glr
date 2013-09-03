@@ -38,6 +38,8 @@ public:
 	
 	void tick(glmd::float32 elapsedTime);
 	
+	const std::string getName();
+	
 	// TODO: make rootBoneNode const?
 	// TODO: Should we really be sending in BoneData&?  Shouldn't we send IMesh* or something?
 	void generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData);

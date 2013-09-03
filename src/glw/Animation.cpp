@@ -114,6 +114,11 @@ void Animation::tick(glmd::float32 elapsedTime)
 	*/	
 }
 
+const std::string Animation::getName()
+{
+	return name_;
+}
+
 /*
 struct Bone {
 	std::string name;
@@ -196,11 +201,16 @@ void Animation::calcInterpolatedPosition(glm::vec3& Out, float animationTime, An
     assert(NextPositionIndex < animatedBoneNode->positionTimes_.size());
     float DeltaTime = (float)(animatedBoneNode->positionTimes_[NextPositionIndex] - animatedBoneNode->positionTimes_[PositionIndex]);
     float Factor = (animationTime - (float)animatedBoneNode->positionTimes_[PositionIndex]) / DeltaTime;
+    
+    std::cout << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor << std::endl;
+    
     assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = animatedBoneNode->positions_[PositionIndex];
     const glm::vec3& End = animatedBoneNode->positions_[NextPositionIndex];
     glm::vec3 Delta = End - Start;
     Out = Start + Factor * Delta;
+    
+    
 }
 
 
@@ -252,6 +262,9 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 	
 	AnimatedBoneNode* animatedBoneNode = nullptr;
 	
+	// TODO: Should this really be an assert?  We probably shouldn't have an animation object at all if it has no animated bone nodes...
+	assert( animatedBoneNodes_.size() != 0 );
+	
 	if ( animatedBoneNodes_.find( rootBoneNode.name ) != animatedBoneNodes_.end() )
 	{
 		//BOOST_LOG_TRIVIAL(debug) << "Found animated bone node with name: " << rootBoneNode.name;
@@ -278,6 +291,7 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		// Interpolate translation and generate translation transformation matrix
 		glm::vec3 Translation;
 		calcInterpolatedPosition(Translation, animationTime, animatedBoneNode);
+		//std::cout << "HERE: " << glm::to_string(Translation) << " time: " << animationTime << std::endl;
 		glm::mat4 TranslationM = glm::translate( glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z) );
 		
 		// Combine the above transformations
@@ -308,6 +322,9 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 	
 	runningTime_ += elapsedTime;
 	
+	std::cout << ticksPerSecond_ << " " << duration_ << std::endl;
+	duration_= 2.9f;
+	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
 	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);
 
@@ -318,6 +335,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
+		//currentTransforms_[i] = glm::mat4(1.0);
 		//std::cout << "NUM" << i << " " << glm::to_string( currentTransforms_[i] ) << std::endl;
 	}
 }

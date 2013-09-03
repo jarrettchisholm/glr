@@ -43,6 +43,11 @@ void main() {
     boneTransform     += bones[in_BoneIds[2]] * in_BoneWeights[2];
     boneTransform     += bones[in_BoneIds[3]] * in_BoneWeights[3];
     
+    //boneTransform = bones[in_BoneIds[0]];
+    
+    //mat4 tempM = mat4(1.0);
+    //boneTransform = tempM;
+    
     //boneTransform = bones[int(in_Bone[0])] * in_Bone[1];
     
     vec4 tempPosition = boneTransform * vec4(in_Position, 1.0);
@@ -64,8 +69,13 @@ void main() {
 	
 	// If we have any bugs, should highlight the vertex red
 	bug = 0.0;
-	if (in_BoneIds[0] > uint(100))
+	float sum = in_BoneWeights[0] + in_BoneWeights[1] + in_BoneWeights[2] + in_BoneWeights[3];
+	if (sum > 1.0f)
 		bug = 1.0;
+	else if (sum < 0.95f)
+		bug = 2.0;
+	
+	
 	
 	/*
 	bvec4 result = equal( in_BoneIds, uvec4(0, 0, 0, 0) );

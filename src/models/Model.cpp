@@ -118,9 +118,13 @@ struct AnimationData {
 				
 				// Actually create the animation
 				animation = animationManager_->addAnimation( kv.second.name, kv.second.duration, kv.second.ticksPerSecond, animatedBoneNodes );
-			}			
+			}
+			
+			assert(animation != nullptr);	
 			
 			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
+			std::cout << "anim: " << animation->getName() << std::endl;
+			//if (animation_ == nullptr)
 			animation_ = animation;
 		}
 	}
@@ -151,7 +155,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		{
 			// TODO: is this the best place for calling the tick() method?
 			//animation_->tick(0.0f);
-			animation_->generateBoneTransforms(0.25f, globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
+			animation_->generateBoneTransforms(0.002f, globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
 			animation_->bind();
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, animation_->getBindPoint() );
 		}
