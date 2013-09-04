@@ -9,6 +9,9 @@
 #include <windows.h>
 #endif
 
+#include <iostream>
+#include <fstream>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "ModelLoader.h"
@@ -81,7 +84,11 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
-	const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	//Assimp::Importer* importer = new Assimp::Importer();
+	//const aiScene* scene = importer->ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+	
+	//const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate);
 
 	// Error checking
 	if ( scene == nullptr )
@@ -109,7 +116,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	AnimationData animationData = loadAnimation(path, scene);
 	
 	BOOST_LOG_TRIVIAL(debug) << "Model has " << modelData.size() << " meshes.";
-	
+	int NumVertices = 0;
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
@@ -120,6 +127,9 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->animationData = animationData;
 		modelData[i]->globalInverseTransformation = globalInverseTransformation;
+		
+		std::cout << "NumVertices: " << NumVertices << std::endl;
+		NumVertices += scene->mMeshes[i]->mNumVertices;
 	}
 	
 
@@ -181,9 +191,39 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	glm::detail::uint32 currentIndex = 0;
 	
 	std::vector< glmd::uint32 > vertexIndexMap = std::vector< glmd::uint32 >();
-	vertexIndexMap.resize( mesh->mNumFaces * 3 );
+	vertexIndexMap.resize( mesh->mNumVertices );
 	
 	std::string msg = std::string();
+	
+	/*
+	data.vertices.resize(mesh->mNumVertices);
+	data.normals.resize(mesh->mNumVertices);
+	data.textureCoordinates.resize(mesh->mNumVertices);
+	data.colors.resize(mesh->mNumVertices);
+	
+	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+	const aiColor4D Zero4D(0.0f, 0.0f, 0.0f, 0.0f);
+	
+	for ( glmd::uint32 i = 0; i < mesh->mNumVertices; i++ )
+	{
+		const aiVector3D* pPos      = &(mesh->mVertices[i]);
+        const aiVector3D* pNormal   = &(mesh->mNormals[i]);
+        const aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
+        const aiColor4D*  pColor    = mesh->mColors[0] != 0 ? &(mesh->mColors[0][i]) : &Zero4D;
+        
+        data.vertices.push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
+        data.normals.push_back(glm::vec3(pNormal->x, pNormal->y, pNormal->z));
+        data.textureCoordinates.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));  
+		data.colors.push_back( glm::vec4(
+				pColor->a,
+				pColor->b,
+				pColor->g,
+				pColor->r
+			)
+		);
+	}
+	*/
+	
 	
 	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
 	{
@@ -265,6 +305,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	
 	data.bones.resize( data.vertices.size() );
 	
+	int temp = 0;
 	// Load bone data
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++)
 	{
@@ -274,17 +315,22 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 		{
 			glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
 			glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
+			//std::cout << vertexID << " " << weight << std::endl;
 			
-			// TODO: Need to fix this - need to have up to 4 bones per vertex
+			temp++;
 			data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
 		}
 	}
-	
+	std::cout << "NUM: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 	// Fill in any empty weights
+	std::ofstream file;
+	file.open("temp1.txt");
 	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
 	{
 		data.bones[ i ].normalize();
+		file << i << ": " << data.bones[ i ].toString() << "\n";
 	}
+	file.close();
 	
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 

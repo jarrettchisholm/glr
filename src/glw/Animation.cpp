@@ -202,7 +202,7 @@ void Animation::calcInterpolatedPosition(glm::vec3& Out, float animationTime, An
     float DeltaTime = (float)(animatedBoneNode->positionTimes_[NextPositionIndex] - animatedBoneNode->positionTimes_[PositionIndex]);
     float Factor = (animationTime - (float)animatedBoneNode->positionTimes_[PositionIndex]) / DeltaTime;
     
-    std::cout << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor << std::endl;
+    //std::cout << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor << std::endl;
     
     assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = animatedBoneNode->positions_[PositionIndex];
@@ -322,7 +322,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 	
 	runningTime_ += elapsedTime;
 	
-	std::cout << ticksPerSecond_ << " " << duration_ << std::endl;
+	//std::cout << ticksPerSecond_ << " " << duration_ << std::endl;
 	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;

@@ -45,8 +45,9 @@ void main() {
     
     //boneTransform = bones[in_BoneIds[0]];
     
-    //mat4 tempM = mat4(1.0);
-    //boneTransform = tempM;
+    // Temporary - this will cease all animation (and show just the model) - this works if you want to just show the model
+    mat4 tempM = mat4(1.0);
+    boneTransform = tempM;
     
     //boneTransform = bones[int(in_Bone[0])] * in_Bone[1];
     
@@ -75,8 +76,10 @@ void main() {
 	float sum = in_BoneWeights[0] + in_BoneWeights[1] + in_BoneWeights[2] + in_BoneWeights[3];
 	if (sum > 1.0f)
 		bug = 1.0;
-	else if (sum < 0.95f)
+	else if (sum < 0.45f)
 		bug = 2.0;
+	// disable bug highlighting
+	//bug = 0.0;
 	
 	
 	

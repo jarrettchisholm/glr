@@ -13,6 +13,7 @@
 #include <memory>
 
 #include <assimp/cimport.h>
+#include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 

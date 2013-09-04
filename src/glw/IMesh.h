@@ -3,8 +3,11 @@
 
 #include <map>
 #include <iostream>
+#include <sstream>
 
 #include <glm/glm.hpp>
+
+#include <boost/log/trivial.hpp>
 
 namespace glr {
 namespace glw {
@@ -26,8 +29,11 @@ struct VertexBoneData
 		{
 			if (weights[i] == 0.0f)
 			{
+				if (i > 1)
+					BOOST_LOG_TRIVIAL(debug) << "before: " << i << " " << weights[i];
 				boneIds[i] = id;
 				weights[i] = weight;
+				//BOOST_LOG_TRIVIAL(debug) << "after: " << weights[i] << " " << id;
 				
 				//assert( weights[0] + weights[1] + weights[2] + weights[3] > 0.95f );
 				assert( weights[0] + weights[1] + weights[2] + weights[3] < 1.05f );
@@ -39,6 +45,23 @@ struct VertexBoneData
 		// If we get here, we have too many bones per vertex
 		assert(0);
 	}
+	
+	std::string toString()
+	{
+		std::stringstream ss;
+		
+		ss << "( ";
+		ss << boneIds[0] << " " << weights[0];
+		ss << " | ";
+		ss << boneIds[1] << " " << weights[1];
+		ss << " | ";
+		ss << boneIds[2] << " " << weights[2];
+		ss << " | ";
+		ss << boneIds[3] << " " << weights[3];
+		ss << " )";
+		
+		return ss.str();
+	}
 
 	/**
 	 * The sum of all weights must be 1.0 - calling this method will ensure that this is so.
@@ -47,8 +70,10 @@ struct VertexBoneData
 	 */
 	void normalize()
 	{
+		/*
 		glm::detail::float32 sum = weights[0] + weights[1] + weights[2] + weights[3];
-		//std::cout << "lucky? " << sum << std::endl;
+		//if (sum < 0.5f)
+		//	std::cout << "lucky? " << sum << std::endl;
 		if (sum > 0.95f && sum < 1.05f)
 			return;
 		
@@ -79,6 +104,9 @@ struct VertexBoneData
 		{
 			weights[i] += extra;
 		}
+		*/
+		assert( weights[0] + weights[1] + weights[2] + weights[3] < 1.05f );
+		assert( weights[0] + weights[1] + weights[2] + weights[3] > 0.95f );
 	}
 };
 
