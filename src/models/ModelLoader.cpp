@@ -108,14 +108,16 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	AnimationData animationData = loadAnimation(path, scene);
 	
+	BOOST_LOG_TRIVIAL(debug) << "Model has " << modelData.size() << " meshes.";
+	
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
 		modelData[i]->boneData = loadBones(path, i, scene->mMeshes[i]);
 		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
-		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[i] );
-		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[i] );
+		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
+		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->animationData = animationData;
 		modelData[i]->globalInverseTransformation = globalInverseTransformation;
 	}
@@ -172,8 +174,8 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	if (mesh->mName.length > 0)
 		data.name = std::string( mesh->mName.C_Str() );
 	else
-		data.name = std::string( path ) + "_mesh_" + std::to_string(index);
-
+		data.name = "_mesh_" + std::to_string(index);
+	BOOST_LOG_TRIVIAL(debug) << "mesh name: " << data.name;
 
 	// Load vertices, normals, texture coordinates, and colors
 	glm::detail::uint32 currentIndex = 0;
@@ -307,20 +309,26 @@ TextureData ModelLoader::loadTexture(const std::string path, glmd::uint32 index,
 
 	aiReturn texFound = AI_SUCCESS;
 	aiString texPath;
-
-	texFound = material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
 	
-	// Error check
-	if (texFound != AI_SUCCESS)
+	if ( material->GetTextureCount(aiTextureType_DIFFUSE) > 0 )
 	{
-		BOOST_LOG_TRIVIAL(warning) << "Texture not found for model path: " << path;
-		return data;
+		texFound = material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
+		
+		// Error check
+		if (texFound != AI_SUCCESS)
+		{
+			BOOST_LOG_TRIVIAL(warning) << "Texture not found for model path: " << path;
+			return data;
+		}
+		
+		BOOST_LOG_TRIVIAL(debug) << "Texture has path: " << texPath.data;
+	
+		data.filename = texPath.data;
 	}
-	
-	BOOST_LOG_TRIVIAL(debug) << "Texture has path: " << texPath.data;
-
-	data.filename = texPath.data;
-	
+	else
+	{
+		BOOST_LOG_TRIVIAL(debug) << "No material specified.";
+	}
 	return data;
 }
 
@@ -339,7 +347,9 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 	aiColor4D c;
 	
 	// Set the material name
-	data.name = std::string( path ) + "_material_" + std::to_string(index);
+	data.name = "_material_" + std::to_string(index);
+
+	BOOST_LOG_TRIVIAL(debug) << "material name: " << data.name;
 
 	data.diffuse[0] = 0.8f;
 	data.diffuse[1] = 0.8f;
@@ -399,7 +409,9 @@ glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index,
 			data.name = std::string( mesh->mBones[i]->mName.C_Str() );
 		else
 			data.name = std::string( path ) + "_bone_" + std::to_string(index);
-
+		
+		BOOST_LOG_TRIVIAL(debug) << "bone name: " << data.name;
+		
 		if (boneData.boneIndexMap.find(data.name) == boneData.boneIndexMap.end()) {
 			boneIndex = boneData.boneIndexMap.size();
 			boneData.boneTransform.push_back(data);
@@ -466,7 +478,7 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 			
 			AnimatedBoneNode abn = AnimatedBoneNode();
 			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
-			//std::cout << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys << std::endl;
+			BOOST_LOG_TRIVIAL(debug) << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys;
 			
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)
 			{

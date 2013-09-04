@@ -323,7 +323,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 	runningTime_ += elapsedTime;
 	
 	std::cout << ticksPerSecond_ << " " << duration_ << std::endl;
-	duration_= 2.9f;
+	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
 	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);

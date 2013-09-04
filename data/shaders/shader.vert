@@ -61,8 +61,11 @@ void main() {
 	vec4 lightDirTemp = viewMatrix * lights[0].direction;
 	
 	textureCoord = in_Texture;
-
+	
+	//vec4 normalDirTemp = boneTransform * vec4(in_Normal, 1.0);
+	//normalDirection = normalize(normalMatrix * normalDirTemp.xyz);
 	normalDirection = normalize(normalMatrix * in_Normal);
+	
 	lightDirection = normalize(vec3(lightDirTemp));
 	
 	
