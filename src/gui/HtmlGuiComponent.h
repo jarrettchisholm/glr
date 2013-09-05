@@ -21,6 +21,7 @@
 #include <berkelium/Context.hpp>
 
 #include "../glw/shaders/IShaderProgram.h"
+#include "../glw/IOpenGlDevice.h"
 
 #include "IGUIComponent.h"
 
@@ -33,7 +34,7 @@ namespace gui {
 
 class HtmlGuiComponent : public IGUIComponent,  public Berkelium::WindowDelegate {
 public:
-	HtmlGuiComponent(glmd::uint32 width, glmd::uint32 height);
+	HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~HtmlGuiComponent();
 
 	virtual int load();
@@ -65,6 +66,8 @@ private:
 	bool isVisible_;
 
 	std::string url_;
+	
+	glw::IOpenGlDevice* openGlDevice_;
 
 	// Width and height of our window.
 	glmd::uint32 width_, height_;

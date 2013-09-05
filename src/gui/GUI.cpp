@@ -16,7 +16,7 @@
 
 namespace glr {
 namespace gui {
-GUI::GUI(shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
+GUI::GUI(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
 {
 	initialize();
 }
@@ -130,7 +130,7 @@ void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_
  */
 IGUIComponent* GUI::loadFromFile(std::string filename)
 {
-	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(width_, height_) );
+	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(openGlDevice_, width_, height_) );
 
 	comp->loadContentsFromFile(filename);
 
@@ -149,7 +149,7 @@ IGUIComponent* GUI::loadFromFile(std::string filename)
 
 IGUIComponent* GUI::loadFromData(std::string data)
 {
-	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(width_, height_) );
+	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(openGlDevice_, width_, height_) );
 
 	comp->setContents(data);
 

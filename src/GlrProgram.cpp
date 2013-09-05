@@ -282,7 +282,7 @@ gui::IGUI* GlrProgram::getHtmlGui()
 		return gui_.get();
 	}
 
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(shaderProgramManager_, window_->getWidth(), window_->getHeight()));
+	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(openGlDevice_.get(), shaderProgramManager_, window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
 }

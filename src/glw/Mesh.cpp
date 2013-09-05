@@ -47,13 +47,15 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
+	std::cout << sizeof(glm::ivec4) << " " << bones_.size() << std::endl;
+	
 	// TODO: deal with not having any bones?
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);
 	glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::uvec4)));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
 
 
 	// Disable our Vertex Array Object

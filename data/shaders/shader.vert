@@ -16,7 +16,7 @@
 in vec3 in_Position;
 in vec2 in_Texture;
 in vec3 in_Normal;
-in uvec4 in_BoneIds;
+in ivec4 in_BoneIds;
 in vec4 in_BoneWeights;
 
 out vec2 textureCoord;
@@ -84,7 +84,7 @@ void main() {
 	
 	
 	/*
-	bvec4 result = equal( in_BoneIds, uvec4(0, 0, 0, 0) );
+	bvec4 result = equal( in_BoneIds, ivec4(0, 0, 0, 0) );
 	if(result[0] && result[1] && result[2] && result[3])
 		bug = 1.0;
 	result = equal( in_BoneWeights, vec4(0.0, 0.0, 0.0, 0.0) );

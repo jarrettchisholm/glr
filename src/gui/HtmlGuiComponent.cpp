@@ -21,7 +21,7 @@
 
 namespace glr {
 namespace gui {
-HtmlGuiComponent::HtmlGuiComponent(glmd::uint32 width, glmd::uint32 height) : width_(width), height_(height)
+HtmlGuiComponent::HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), width_(width), height_(height)
 {
 	isVisible_ = false;
 }
@@ -107,6 +107,18 @@ int HtmlGuiComponent::load()
 	testint = 31;
 	webTextureReady_ = false;
 	needs_full_refresh = true;
+	
+	glw::GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// TODO: throw error
+		BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent in opengl";
+		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+	}
+	else
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded HtmlGuiComponent.";
+	}
 
 	return 0;
 }

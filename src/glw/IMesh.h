@@ -14,12 +14,12 @@ namespace glw {
 
 struct VertexBoneData
 {
-	glm::uvec4 boneIds;
+	glm::ivec4 boneIds;
 	glm::vec4 weights;
 	
 	VertexBoneData()
 	{
-		boneIds = glm::uvec4();
+		boneIds = glm::ivec4();
 		weights = glm::vec4();
 	}
 	
@@ -29,8 +29,6 @@ struct VertexBoneData
 		{
 			if (weights[i] == 0.0f)
 			{
-				if (i > 1)
-					BOOST_LOG_TRIVIAL(debug) << "before: " << i << " " << weights[i];
 				boneIds[i] = id;
 				weights[i] = weight;
 				//BOOST_LOG_TRIVIAL(debug) << "after: " << weights[i] << " " << id;

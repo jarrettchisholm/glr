@@ -16,6 +16,7 @@
 #include "IGUI.h"
 
 #include "../glw/shaders/IShaderProgramManager.h"
+#include "../glw/IOpenGlDevice.h"
 
 #include "IGUIComponent.h"
 #include "HtmlGuiComponent.h"
@@ -24,7 +25,7 @@ namespace glr {
 namespace gui {
 class GUI : public IGUI {
 public:
-	GUI(shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
+	GUI(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
 	virtual ~GUI();
 
 	virtual glm::detail::int32 initialize();
@@ -47,6 +48,8 @@ private:
 	std::vector< std::unique_ptr<HtmlGuiComponent> > views_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
+	
+	glw::IOpenGlDevice* openGlDevice_;
 	
 	// Width and height of our window.
 	glmd::uint32 width_, height_;
