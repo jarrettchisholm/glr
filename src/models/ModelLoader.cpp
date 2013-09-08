@@ -323,6 +323,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	}
 	std::cout << "NUM: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 	// Fill in any empty weights
+	/*
 	std::ofstream file;
 	file.open("temp1.txt");
 	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
@@ -331,6 +332,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 		file << i << ": " << data.bones[ i ].toString() << "\n";
 	}
 	file.close();
+	*/
 	
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 

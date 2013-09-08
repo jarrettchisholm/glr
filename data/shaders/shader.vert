@@ -38,18 +38,18 @@ layout(std140) uniform Bones
 
 void main() {
 	// Calculate the transformation on the vertex position based on the bone weightings
-	mat4 boneTransform = bones[in_BoneIds[0]] * in_BoneWeights[0];
-    boneTransform     += bones[in_BoneIds[1]] * in_BoneWeights[1];
-    boneTransform     += bones[in_BoneIds[2]] * in_BoneWeights[2];
-    boneTransform     += bones[in_BoneIds[3]] * in_BoneWeights[3];
+	mat4 boneTransform = bones[ in_BoneIds[0] ] * in_BoneWeights[0];
+    boneTransform     += bones[ in_BoneIds[1] ] * in_BoneWeights[1];
+    boneTransform     += bones[ in_BoneIds[2] ] * in_BoneWeights[2];
+    boneTransform     += bones[ in_BoneIds[3] ] * in_BoneWeights[3];
     
-    //boneTransform = bones[in_BoneIds[0]];
+    //boneTransform = bones[ in_BoneIds[0] ];
     
     // Temporary - this will cease all animation (and show just the model) - this works if you want to just show the model
-    mat4 tempM = mat4(1.0);
-    boneTransform = tempM;
+    //mat4 tempM = mat4(1.0);
+    //boneTransform = tempM;
     
-    //boneTransform = bones[int(in_Bone[0])] * in_Bone[1];
+    //boneTransform = bones[ int(in_Bone[0]) ] * in_Bone[1];
     
     vec4 tempPosition = boneTransform * vec4(in_Position, 1.0);
     
@@ -71,12 +71,12 @@ void main() {
 	
 	
 	
-	// If we have any bugs, should highlight the vertex red
+	// If we have any bugs, should highlight the vertex red or green
 	bug = 0.0;
 	float sum = in_BoneWeights[0] + in_BoneWeights[1] + in_BoneWeights[2] + in_BoneWeights[3];
-	if (sum > 1.0f)
+	if (sum > 1.05f)
 		bug = 1.0;
-	else if (sum < 0.45f)
+	else if (sum < 0.95f)
 		bug = 2.0;
 	// disable bug highlighting
 	//bug = 0.0;

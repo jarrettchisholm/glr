@@ -30,7 +30,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glBindVertexArray(vaoId_);
 
 	// create our vbos
-	glGenBuffers(4, &vboIds_[0]);
+	glGenBuffers(5, &vboIds_[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
@@ -47,16 +47,43 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
-	std::cout << sizeof(glm::ivec4) << " " << bones_.size() << std::endl;
+	std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
 	// TODO: deal with not having any bones?
+	/*
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);
 	glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
-
+	*/
+	
+	std::vector< glm::ivec4 > boneIds = std::vector< glm::ivec4 >();
+	std::vector< glm::vec4 > weights = std::vector< glm::vec4 >();
+	
+	for ( VertexBoneData& d : bones_ )
+	{
+		boneIds.push_back( d.boneIds );
+		weights.push_back( d.weights );
+		//weights.push_back( glm::vec4(0.2, 0.2, 0.2, 0.2) );
+	}
+	
+	for (int i=0; i < weights.size(); i++)
+	{
+		float sum = weights[i].x + weights[i].y + weights[i].z + weights[i].a;
+		if (sum > 1.0f)
+			BOOST_LOG_TRIVIAL(debug) << "TEST: " << i << "(" << sum << "): " << weights[i].x << ", " << weights[i].y << ", " << weights[i].z << ", " << weights[i].a;
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
+	glBufferData(GL_ARRAY_BUFFER, boneIds.size() * sizeof(glm::ivec4), &boneIds[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
+	glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec4), &weights[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 	// Disable our Vertex Array Object
 	//glEnableVertexAttribArray(0);
