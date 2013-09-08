@@ -79,7 +79,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 
 	// VERY weird bug - I can call 'resize' all I want in the Window class - the initial perspective
 	// doesn't seem to get set unless I call it OUTSIDE of the Window class...wtf?
-	window_->resize(width, height);
+	//window_->resize(width, height);
 
 	// Initialize GLEW
 	glewExperimental = true; // Needed in core profile

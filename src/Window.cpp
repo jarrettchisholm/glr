@@ -19,7 +19,7 @@
 #include "Window.h"
 
 namespace glr {
-Window::Window(int width, int height, std::string title)
+Window::Window(int width, int height, std::string title): width_(width), height_(height)
 {
 	sf::ContextSettings settings;
 
@@ -35,7 +35,7 @@ Window::Window(int width, int height, std::string title)
 											  sf::Style::Default,
 											  settings
 											  ));
-
+	
 	initialize();
 	//window_->setVerticalSyncEnabled(true);
 	//window_->setActive();
@@ -75,7 +75,8 @@ void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height)
 
 	width_ = width;
 	height_ = height;
-
+	
+	std::cout << width_ << " " << height_ << std::endl;
 	projectionMatrix_ = glm::perspective(60.0f, (float)width / (float)height, 0.1f, 100.f);
 }
 

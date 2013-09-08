@@ -202,7 +202,7 @@ void Animation::calcInterpolatedPosition(glm::vec3& Out, float animationTime, An
     float DeltaTime = (float)(animatedBoneNode->positionTimes_[NextPositionIndex] - animatedBoneNode->positionTimes_[PositionIndex]);
     float Factor = (animationTime - (float)animatedBoneNode->positionTimes_[PositionIndex]) / DeltaTime;
     
-    ////std::cout << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor << std::endl;
+    //BOOST_LOG_TRIVIAL(debug) << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor;
     
     assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = animatedBoneNode->positions_[PositionIndex];
@@ -220,11 +220,11 @@ void Animation::calcInterpolatedRotation(glm::quat& Out, float animationTime, An
     if (animatedBoneNode->rotationTimes_.size() == 1)
     {
         Out = animatedBoneNode->rotations_[0];
-        //std::cout << "HERE - rotationTimes_.size() == 1" << std::endl;
+        BOOST_LOG_TRIVIAL(debug) << "HERE - rotationTimes_.size() == 1";
         return;
     }
     
-    //std::cout << "HERE - calcInterpolatedRotation" << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "HERE - calcInterpolatedRotation";
     glmd::uint32 RotationIndex = findRotation(animationTime, animatedBoneNode);
     glmd::uint32 NextRotationIndex = (RotationIndex + 1);
     assert(NextRotationIndex < animatedBoneNode->rotationTimes_.size());
@@ -233,8 +233,8 @@ void Animation::calcInterpolatedRotation(glm::quat& Out, float animationTime, An
     assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::quat& StartRotationQ = animatedBoneNode->rotations_[RotationIndex];
     const glm::quat& EndRotationQ   = animatedBoneNode->rotations_[NextRotationIndex];    
-    //std::cout << "HERE - StartRotationQ: " << StartRotationQ.x << ", " << StartRotationQ.y << ", " << StartRotationQ.z << " Factor: " << Factor << std::endl;
-    //std::cout << "HERE - EndRotationQ: " << EndRotationQ.x << ", " << EndRotationQ.y << ", " << EndRotationQ.z << " Factor: " << Factor << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "HERE - StartRotationQ: " << StartRotationQ.x << ", " << StartRotationQ.y << ", " << StartRotationQ.z << " Factor: " << Factor;
+    BOOST_LOG_TRIVIAL(debug) << "HERE - EndRotationQ: " << EndRotationQ.x << ", " << EndRotationQ.y << ", " << EndRotationQ.z << " Factor: " << Factor;
     
     // If StartRotationQ == EndRotationQ we don't need to do any interpolation
     if (
@@ -243,12 +243,16 @@ void Animation::calcInterpolatedRotation(glm::quat& Out, float animationTime, An
 		StartRotationQ.z == EndRotationQ.z
 	)
     {
+		BOOST_LOG_TRIVIAL(debug) << "HERE - Out = glm::quat( StartRotationQ )";
 		Out = glm::quat( StartRotationQ );
 	}
 	else
 	{
+		BOOST_LOG_TRIVIAL(debug) << "HERE - Out = glm::mix(StartRotationQ, EndRotationQ, Factor)";
 		Out = glm::mix(StartRotationQ, EndRotationQ, Factor);
+		BOOST_LOG_TRIVIAL(debug) << "HERE1 - Out: " << Out.x << ", " << Out.y << ", " << Out.z << " Factor: " << Factor;
 		Out = glm::normalize( Out );
+		BOOST_LOG_TRIVIAL(debug) << "HERE2 - Out: " << Out.x << ", " << Out.y << ", " << Out.z << " Factor: " << Factor;
 	}
 }
 
@@ -275,10 +279,10 @@ void Animation::calcInterpolatedScaling(glm::vec3& Out, float animationTime, Ani
 
 void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& globalInverseTransform, BoneNode& rootBoneNode, BoneData& boneData, const glm::mat4& parentTransform)
 {
-	//std::cout << "HERE - parentTransform: " << glm::to_string(parentTransform) << " time: " << animationTime << std::endl;
+	BOOST_LOG_TRIVIAL(debug) << "HERE - parentTransform: " << glm::to_string(parentTransform) << " time: " << animationTime;
 	
 	glm::mat4 nodeTransformation = glm::mat4( rootBoneNode.transformation );
-	//std::cout << "HERE - nodeTransformation1: " << glm::to_string(nodeTransformation) << " time: " << animationTime << std::endl;
+	BOOST_LOG_TRIVIAL(debug) << "HERE - nodeTransformation1: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 	
 	AnimatedBoneNode* animatedBoneNode = nullptr;
 	
@@ -302,33 +306,33 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		glm::vec3 Scaling;
 		calcInterpolatedScaling(Scaling, animationTime, animatedBoneNode);
 		glm::mat4 ScalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
-		//std::cout << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime << std::endl;
+		BOOST_LOG_TRIVIAL(debug) << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime;
 		
 		// Interpolate rotation and generate rotation transformation matrix
 		glm::quat RotationQ;
 		calcInterpolatedRotation(RotationQ, animationTime, animatedBoneNode);
 		glm::mat4 RotationM = glm::mat4_cast(RotationQ);
-		//std::cout << "HERE - RotationQ: " << RotationQ.x << ", " << RotationQ.y << ", " << RotationQ.z << " time: " << animationTime << std::endl;
-		//std::cout << "HERE - RotationM: " << glm::to_string(RotationM) << " time: " << animationTime << std::endl;
+		BOOST_LOG_TRIVIAL(debug) << "HERE - RotationQ: " << RotationQ.x << ", " << RotationQ.y << ", " << RotationQ.z << " time: " << animationTime;
+		BOOST_LOG_TRIVIAL(debug) << "HERE - RotationM: " << glm::to_string(RotationM) << " time: " << animationTime;
 
 		// Interpolate translation and generate translation transformation matrix
 		glm::vec3 Translation;
 		calcInterpolatedPosition(Translation, animationTime, animatedBoneNode);
-		//std::cout << "HERE - Translation: " << glm::to_string(Translation) << " time: " << animationTime << std::endl;
+		BOOST_LOG_TRIVIAL(debug) << "HERE - Translation: " << glm::to_string(Translation) << " time: " << animationTime;
 		glm::mat4 TranslationM = glm::translate( glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z) );
 		
 		// Combine the above transformations
 		nodeTransformation = TranslationM * RotationM * ScalingM;
-		//std::cout << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime << std::endl;
+		BOOST_LOG_TRIVIAL(debug) << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 	}
 	   
 	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
-	//std::cout << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime << std::endl;
+	BOOST_LOG_TRIVIAL(debug) << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime;
 	
 	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end()) {
 		glmd::uint32 boneIndex = boneData.boneIndexMap[ rootBoneNode.name ];
 		boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
-		////std::cout << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation ) << std::endl;
+		//BOOST_LOG_TRIVIAL(debug) << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
 	}
 	
 	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++) {
@@ -347,7 +351,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 	
 	runningTime_ += elapsedTime;
 	
-	////std::cout << ticksPerSecond_ << " " << duration_ << std::endl;
+	BOOST_LOG_TRIVIAL(debug) << ticksPerSecond_ << " " << duration_;
 	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
@@ -361,7 +365,7 @@ void Animation::generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& glo
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
 		//currentTransforms_[i] = glm::mat4(1.0);
-		//std::cout << "NUM" << i << " " << glm::to_string( currentTransforms_[i] ) << std::endl;
+		BOOST_LOG_TRIVIAL(debug) << "NUM" << i << " " << glm::to_string( currentTransforms_[i] );
 	}
 }
 
