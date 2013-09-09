@@ -54,6 +54,9 @@ public:
 	virtual void attach(models::IModel* model);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);
 	virtual void detach(models::IModel* model);
+	virtual models::IModel* getModel();
+	virtual shaders::IShaderProgram* getShaderProgram();
+	
 	virtual void render();
 
 protected:

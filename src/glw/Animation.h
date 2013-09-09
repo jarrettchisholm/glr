@@ -27,7 +27,7 @@ namespace glw {
 
 namespace glmd = glm::detail;
 
-class Animation {
+class Animation : public IAnimation {
 public:
 	Animation(IOpenGlDevice* openGlDevice, const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	virtual ~Animation();
@@ -36,13 +36,13 @@ public:
 	GLuint getBufferId();
 	GLuint getBindPoint();
 	
-	void tick(glmd::float32 elapsedTime);
+	void setAnimationTime(glmd::float32 runningTime);
 	
 	const std::string getName();
 	
 	// TODO: make rootBoneNode const?
 	// TODO: Should we really be sending in BoneData&?  Shouldn't we send IMesh* or something?
-	void generateBoneTransforms(glmd::float32 elapsedTime, glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData);
+	void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData);
 
 private:
 	GLuint bufferId_;
@@ -52,6 +52,7 @@ private:
 	glm::detail::float64 duration_;
 	glm::detail::float64 ticksPerSecond_;
 	
+	// The running time can change multiple times per frame (models share animations)
 	glmd::float32 runningTime_;
 
 	std::map< std::string, AnimatedBoneNode > animatedBoneNodes_;

@@ -120,18 +120,34 @@ struct AnimationData {
 				animation = animationManager_->addAnimation( kv.second.name, kv.second.duration, kv.second.ticksPerSecond, animatedBoneNodes );
 			}
 			
-			assert(animation != nullptr);	
+			assert(animation != nullptr);
+			
+			animations_[ animation->getName() ] = animation;
 			
 			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
 			std::cout << "anim: " << animation->getName() << std::endl;
-			//if (animation_ == nullptr)
-			animation_ = animation;
+			//if (currentAnimation_ == nullptr)
+			currentAnimation_ = animation;
 		}
 	}
 }
 
 void Model::destroy()
 {
+}
+
+glw::IAnimation* Model::getCurrentAnimation()
+{
+	return currentAnimation_;
+}
+glw::IAnimation* Model::getAnimation(const std::string name)
+{	
+	if ( animations_.find(name) != animations_.end() )
+	{
+		return animations_[name];
+	}
+	
+	return nullptr;
 }
 
 void Model::render(shaders::IShaderProgram* shader)
@@ -151,13 +167,13 @@ void Model::render(shaders::IShaderProgram* shader)
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_MATERIAL, materials_[i]->getBindPoint() );
 		}		
 		
-		if (animation_ != nullptr)
+		if (currentAnimation_ != nullptr)
 		{
 			// TODO: is this the best place for calling the tick() method?
-			//animation_->tick(0.0f);
-			animation_->generateBoneTransforms(0.002f, globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
-			animation_->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, animation_->getBindPoint() );
+			//currentAnimation_->tick(0.0f);
+			currentAnimation_->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
+			currentAnimation_->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, currentAnimation_->getBindPoint() );
 		}
 		
 		meshes_[i]->render();

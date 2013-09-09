@@ -12,6 +12,17 @@ struct BoneNode {
 	std::vector< BoneNode > children;
 };
 
+class IAnimation {
+public:
+	virtual ~IAnimation()
+	{
+	}
+	;
+
+	virtual const std::string getName() = 0;
+	virtual void setAnimationTime(glm::detail::float32 runningTime) = 0;
+};
+
 }
 }
 

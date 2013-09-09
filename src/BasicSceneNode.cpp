@@ -179,6 +179,16 @@ void BasicSceneNode::rotate(glm::vec3 degrees)
 	rotation_ += degrees;
 }
 
+models::IModel* BasicSceneNode::getModel()
+{
+	return model_;
+}
+
+shaders::IShaderProgram* BasicSceneNode::getShaderProgram()
+{
+	return shaderProgram_;
+}
+
 void BasicSceneNode::render()
 {
 	if ( model_ != nullptr )

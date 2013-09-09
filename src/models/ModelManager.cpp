@@ -71,6 +71,26 @@ ModelManager::~ModelManager()
  * @returns The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
  * the ModelManager.
  */
+IModel* ModelManager::getModel(const std::string filename)
+{
+	BOOST_LOG_TRIVIAL(debug) << "Retrieving model '" << filename << "'.";
+	
+	if ( models_.find(filename) != models_.end() )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Model found.";
+		return models_[filename].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
+	
+	return nullptr;
+}
+
+/**
+ *
+ * @returns The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
+ * the ModelManager.
+ */
 IModel* ModelManager::loadModel(const std::string filename)
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";

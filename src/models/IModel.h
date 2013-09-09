@@ -94,6 +94,9 @@ public:
 	}
 	;
 
+	virtual glw::IAnimation* getAnimation(const std::string name) = 0;
+	virtual glw::IAnimation* getCurrentAnimation() = 0;
+	
 	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
 }

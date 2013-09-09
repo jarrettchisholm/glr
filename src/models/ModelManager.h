@@ -34,6 +34,7 @@ public:
 	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
 
+	IModel* getModel(const std::string path);
 	IModel* loadModel(const std::string path);
 
 private:	
