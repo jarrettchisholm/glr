@@ -68,7 +68,7 @@ ModelManager::~ModelManager()
 
 /**
  *
- * @returns The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
+ * @return The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
  * the ModelManager.
  */
 IModel* ModelManager::getModel(const std::string filename)
@@ -87,18 +87,16 @@ IModel* ModelManager::getModel(const std::string filename)
 }
 
 /**
- *
- * @returns The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
- * the ModelManager.
+ * Loads the model from the given filename.
  */
-IModel* ModelManager::loadModel(const std::string filename)
+void ModelManager::loadModel(const std::string filename)
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
 
 	if ( models_[filename] != 0 )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Model found.";
-		return models_[filename].get();
+		BOOST_LOG_TRIVIAL(debug) << "Model found...No need to load.";
+		//return models_[filename].get();
 	}
 
 	// Note: We allow the modelData shared pointer to die at the end of this method
@@ -108,7 +106,28 @@ IModel* ModelManager::loadModel(const std::string filename)
 
 	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
 
-	return models_[filename].get();
+	//return models_[filename].get();
+}
+
+/**
+ * @return A unique pointer to a model object.  The model is a copy of the model that was loaded
+ * from the specified file.
+ */
+std::unique_ptr<IModel> ModelManager::createModel(const std::string filename)
+{
+	BOOST_LOG_TRIVIAL(debug) << "Creating model '" << filename << "'.";
+	
+	if ( models_.find(filename) != models_.end() )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Model found.";
+		
+		// Create a COPY of the model, and returns it wrapped in a unique pointer
+		return std::unique_ptr<IModel>( new Model(*models_[filename].get()) );
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
+	
+	return std::unique_ptr<IModel>( nullptr );
 }
 
 /*

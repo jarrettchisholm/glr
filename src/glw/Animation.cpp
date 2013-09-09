@@ -314,7 +314,7 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
  */
 void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData)
 {
-	currentTransforms_ = std::vector< glm::mat4 >();	
+	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	glm::mat4 identity = glm::mat4();
 	

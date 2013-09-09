@@ -184,7 +184,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	if (mesh->mName.length > 0)
 		data.name = std::string( mesh->mName.C_Str() );
 	else
-		data.name = "_mesh_" + std::to_string(index);
+		data.name = path + "_mesh_" + std::to_string(index);
 	BOOST_LOG_TRIVIAL(debug) << "mesh name: " << data.name;
 
 	// Load vertices, normals, texture coordinates, and colors
@@ -370,8 +370,9 @@ TextureData ModelLoader::loadTexture(const std::string path, glmd::uint32 index,
 		}
 		
 		BOOST_LOG_TRIVIAL(debug) << "Texture has path: " << texPath.data;
-	
+		
 		data.filename = texPath.data;
+		
 	}
 	else
 	{
@@ -395,7 +396,7 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 	aiColor4D c;
 	
 	// Set the material name
-	data.name = "_material_" + std::to_string(index);
+	data.name = path + "_material_" + std::to_string(index);
 
 	BOOST_LOG_TRIVIAL(debug) << "material name: " << data.name;
 
@@ -505,9 +506,10 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 		// Error check - animations with no name are not allowed
 		if (animation.name.compare( std::string("") ) == 0)
 		{
-			std::string msg = std::string("Animations with no name are not allowed.");
-			BOOST_LOG_TRIVIAL(warning) << msg;
+			BOOST_LOG_TRIVIAL(warning) << "Animations with no name are not allowed.";
 			
+			animation.name = path + "_animation_" + std::to_string(i);
+			BOOST_LOG_TRIVIAL(warning) << "Setting animation name to: " << animation.name;
 			// TODO: should we throw an exception?
 			//throw exception::Exception(msg);
 			

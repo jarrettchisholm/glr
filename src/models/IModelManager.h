@@ -21,7 +21,9 @@ public:
 	}
 	;
 
-	virtual IModel* loadModel(const std::string path) = 0;
+	virtual IModel* getModel(const std::string filename) = 0;
+	virtual void loadModel(const std::string filename) = 0;
+	virtual std::unique_ptr<IModel> createModel(const std::string filename) = 0;
 };
 }
 }

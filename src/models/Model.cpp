@@ -21,6 +21,31 @@ Model::Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDe
 	initialize(modelData);
 }
 
+/**
+ * Copy constructor.
+ */
+Model::Model(const Model& other)
+{
+	openGlDevice_ = other.openGlDevice_;
+	
+	meshManager_ = other.meshManager_;
+	materialManager_ = other.materialManager_;
+	textureManager_ = other.textureManager_;
+	animationManager_ = other.animationManager_;
+	
+	meshes_ = other.meshes_;
+	textures_ = other.textures_;
+	materials_ = other.materials_;
+	animations_ = other.animations_;
+	
+	// TODO: Do we want to actually do a copy on this each time?
+	rootBoneNode_ = other.rootBoneNode_;
+	
+	globalInverseTransformation_ = other.globalInverseTransformation_;
+	
+	currentAnimation_ = other.currentAnimation_;
+}
+
 Model::~Model()
 {
 }

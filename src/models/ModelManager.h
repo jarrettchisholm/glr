@@ -34,8 +34,9 @@ public:
 	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
 
-	IModel* getModel(const std::string path);
-	IModel* loadModel(const std::string path);
+	virtual IModel* getModel(const std::string filename);
+	virtual void loadModel(const std::string filename);
+	virtual std::unique_ptr<IModel> createModel(const std::string filename);
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
