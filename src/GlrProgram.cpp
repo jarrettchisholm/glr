@@ -71,7 +71,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	{
 		std::stringstream msg;
 		msg << "Cannot create window - Window already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg;
+		BOOST_LOG_TRIVIAL(error) << msg.str();
 		throw exception::Exception(msg.str());
 	}
 

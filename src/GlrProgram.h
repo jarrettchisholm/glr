@@ -34,7 +34,11 @@ namespace glr {
  * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).
  */
 struct ProgramSettings {
-	std::string defaultTextureDir = "";
+	ProgramSettings() : defaultTextureDir("")
+	{
+	}
+	
+	std::string defaultTextureDir;
 };
 
 /**
