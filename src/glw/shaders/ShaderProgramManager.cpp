@@ -92,7 +92,7 @@ void ShaderProgramManager::removeAllDefaultBindListeners()
 
 void ShaderProgramManager::load(const std::string directory)
 {
-	return load(fs::path(directory));
+	return load( fs::path(directory) );
 }
 
 void ShaderProgramManager::load(fs::path directory)
@@ -113,7 +113,7 @@ void ShaderProgramManager::load(fs::path directory)
 		}
 	}
 
-	return load(filenames);
+	return load( filenames );
 }
 
 void ShaderProgramManager::load(std::vector<std::string> filenames)
@@ -128,7 +128,7 @@ void ShaderProgramManager::load(std::vector<std::string> filenames)
 		}
 	}
 
-	return load(filePaths);
+	return load( filePaths );
 }
 
 void ShaderProgramManager::load(std::vector<fs::path> filePaths)
@@ -165,7 +165,7 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 		}
 	}
 
-	load(dataMap);
+	load( dataMap );
 }
 
 void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)

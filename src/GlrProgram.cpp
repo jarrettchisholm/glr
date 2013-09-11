@@ -104,6 +104,8 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 
 	// Set the default shader for the scene manager
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
+	assert( shader != nullptr );
+	
 	sMgr_->setDefaultShaderProgram(shader);
 	
 	// Set our opengl matrices

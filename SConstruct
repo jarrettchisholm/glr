@@ -61,7 +61,7 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	R"<STRING>(
 """
 
-		cpp += data.replace("\n", "\\\n").replace("\"", "\\\"") + "\\"
+		cpp += data
 		cpp += """
 )<STRING>"
 )}	
@@ -199,7 +199,7 @@ else:
 
 # Create our environment
 
-env = Environment(MSVC_USE_SCRIPT = "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\bin\\vcvars32.bat", ENV = os.environ, TOOLS = [compiler], CCFLAGS=[]) 
+env = Environment(ENV = os.environ, TOOLS = [compiler], CCFLAGS=[]) 
 
 ### Set our environment variables
 env.Append( CPPFLAGS = cpp_flags )
