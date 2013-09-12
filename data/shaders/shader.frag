@@ -15,7 +15,7 @@ in vec3 normalDirection;
 in vec3 lightDirection;
 in float bug;
 
-@bind texture0
+@bind Texture
 uniform sampler2DArray tex;
 
 @bind Material

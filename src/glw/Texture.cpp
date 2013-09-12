@@ -60,13 +60,13 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 
 void Texture::bind(GLuint texturePosition)
 {
-	//glActiveTexture(GL_TEXTURE0 + texturePosition);
-	//glBindTexture(GL_TEXTURE_2D, bufferId_);
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, bufferId_);
 	
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 
 	// to unbind, we use the following
-	// glBindTexture(GL_TEXTURE_2D,0);
+	 //glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
 GLuint Texture::getBufferId()

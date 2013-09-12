@@ -7,7 +7,7 @@
 in vec2 textureCoord;
 in vec3 normalDirection;
 
-@bind texture0
+@bind Texture
 uniform sampler2DArray tex;
 
 void main() {

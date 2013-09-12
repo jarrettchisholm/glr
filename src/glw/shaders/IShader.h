@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 
+#include <iostream>
+
 #include <GL/glew.h>
 
 namespace glr {
@@ -51,6 +53,7 @@ public:
 
 	static BindType parseBindType(std::string type)
 	{
+		std::cout << type << std::endl;
 		if ( type.compare("Light") == 0 )
 			return BIND_TYPE_LIGHT;
 		else if ( type.compare("Material") == 0 )
