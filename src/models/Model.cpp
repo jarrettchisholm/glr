@@ -28,15 +28,22 @@ Model::Model(const Model& other)
 {
 	openGlDevice_ = other.openGlDevice_;
 	
-	meshManager_ = other.meshManager_;
-	materialManager_ = other.materialManager_;
-	textureManager_ = other.textureManager_;
-	animationManager_ = other.animationManager_;
+	meshManager_ = openGlDevice_->getMeshManager();
+	materialManager_ = openGlDevice_->getMaterialManager();
+	textureManager_ = openGlDevice_->getTextureManager();
+	animationManager_ = openGlDevice_->getAnimationManager();
 	
 	meshes_ = other.meshes_;
 	textures_ = other.textures_;
 	materials_ = other.materials_;
-	animations_ = other.animations_;
+	//animations_ = other.animations_;
+	
+	animations_ = std::map< std::string, std::unique_ptr<Animation>>();
+	
+	for ( auto& a : other.animations_)
+	{
+		animations_[ a.first ] = std::unique_ptr<Animation>( new Animation(*a.second.get()) );
+	}
 	
 	// TODO: Do we want to actually do a copy on this each time?
 	rootBoneNode_ = other.rootBoneNode_;
@@ -118,13 +125,13 @@ struct AnimationData {
 */
 
 		// Create bone structure (tree structure)
-		rootBoneNode_ = d->animationData.rootBoneNode;
+		rootBoneNode_ = d->animationSet.rootBoneNode;
 		
 		// Set the global inverse transformation
 		globalInverseTransformation_ = d->globalInverseTransformation;
 		
 		// Load the animation information
-		for ( auto& kv : d->animationData.animations)
+		for ( auto& kv : d->animationSet.animations)
 		{
 			glw::Animation* animation = animationManager_->getAnimation( kv.first );
 			
@@ -151,12 +158,12 @@ struct AnimationData {
 			
 			assert(animation != nullptr);
 			
-			animations_[ animation->getName() ] = animation;
+			animations_[ animation->getName() ] = std::unique_ptr<Animation>( new Animation(animation, openGlDevice_) );
 			
 			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
 			std::cout << "anim: " << animation->getName() << std::endl;
 			//if (currentAnimation_ == nullptr)
-			currentAnimation_ = animation;
+			currentAnimation_ = animations_[ animation->getName() ].get();
 		}
 	}
 	
@@ -169,21 +176,21 @@ void Model::destroy()
 {
 }
 
-glw::IAnimation* Model::getCurrentAnimation()
+IAnimation* Model::getCurrentAnimation()
 {
 	return currentAnimation_;
 }
 
-void Model::setCurrentAnimation(glw::IAnimation* animation)
+void Model::setCurrentAnimation(IAnimation* animation)
 {
-	currentAnimation_ = static_cast<glw::Animation*>(animation);
+	currentAnimation_ = static_cast<Animation*>(animation);
 }
 
-glw::IAnimation* Model::getAnimation(const std::string name)
+IAnimation* Model::getAnimation(const std::string name)
 {	
 	if ( animations_.find(name) != animations_.end() )
 	{
-		return animations_[name];
+		return animations_[name].get();
 	}
 	
 	return nullptr;
@@ -208,9 +215,11 @@ void Model::render(shaders::IShaderProgram* shader)
 		
 		if (currentAnimation_ != nullptr)
 		{
-			currentAnimation_->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
-			currentAnimation_->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, currentAnimation_->getBindPoint() );
+			glw::Animation* a = currentAnimation_->getAnimation();
+			a->setAnimationTime( currentAnimation_->getAnimationTime() );
+			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
+			a->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, a->getBindPoint() );
 		}
 		else
 		{

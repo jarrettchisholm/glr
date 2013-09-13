@@ -38,7 +38,7 @@ private:
 	TextureData loadTexture(const std::string path, glmd::uint32 index, const aiMaterial* material);
 	MaterialData loadMaterial(const std::string path, glmd::uint32 index, const aiMaterial* material);
 	glw::BoneData loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh);
-	AnimationData loadAnimation(const std::string path, const aiScene* scene);
+	AnimationSet loadAnimations(const std::string path, const aiScene* scene);
 	
 	glw::BoneNode loadBoneNode( const aiNode* node );
 	glm::mat4 convertAssImpMatrix(const aiMatrix4x4* m);

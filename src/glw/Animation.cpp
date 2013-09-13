@@ -347,7 +347,7 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 	
 	glm::mat4 identity = glm::mat4();
 	
-	//BOOST_LOG_TRIVIAL(debug) << ticksPerSecond_ << " " << duration_;
+	//BOOST_LOG_TRIVIAL(debug) << runningTime_ << " " << duration_ << " " << name_;
 	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
@@ -357,18 +357,21 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 	readNodeHeirarchy(animationTime, globalInverseTransformation, rootBoneNode, boneData, identity);
 	
 	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size() );
+	//currentTransforms_ = std::vector< glm::mat4 >( 100, identity );
 	
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
-		//currentTransforms_[i] = glm::mat4(1.0);
+		
+		//if (name_.compare("Walk") != 0)
+		//	currentTransforms_[i] = glm::mat4(1.0);
 		//BOOST_LOG_TRIVIAL(debug) << "NUM" << i << " " << glm::to_string( currentTransforms_[i] );
-	}
+	}		
 }
 
 // TODO: Testing this for now...I think maybe this isn't a good way to do it???  Not sure
 void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
 {
-	glm::mat4 identity = glm::mat4() * 100.0f;
+	glm::mat4 identity = glm::mat4() * 1.0f;
 	
 	currentTransforms_ = std::vector< glm::mat4 >( numBones, identity );
 	

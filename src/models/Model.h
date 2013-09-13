@@ -17,6 +17,8 @@
 #include <assimp/postprocess.h>
 
 #include "IModel.h"
+#include "Animation.h"
+
 #include "../glw/IOpenGlDevice.h"
 
 #include "../glw/IMaterialManager.h"
@@ -38,9 +40,9 @@ public:
 	Model(const Model& other);
 	virtual ~Model();
 
-	virtual glw::IAnimation* getAnimation(const std::string name);
-	virtual glw::IAnimation* getCurrentAnimation();
-	virtual void setCurrentAnimation(glw::IAnimation* animation);
+	virtual IAnimation* getAnimation(const std::string name);
+	virtual IAnimation* getCurrentAnimation();
+	virtual void setCurrentAnimation(IAnimation* animation);
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
@@ -52,9 +54,9 @@ protected:
 	std::vector<glw::Mesh*> meshes_;
 	std::vector<glw::Texture*> textures_;
 	std::vector<glw::Material*> materials_;
-	std::map< std::string, glw::Animation*> animations_;
+	std::map< std::string, std::unique_ptr<Animation>> animations_;
 	
-	glw::Animation* currentAnimation_;
+	Animation* currentAnimation_;
 	glw::Animation* emptyAnimation_;
 	
 	/* 	All meshes in this model use this bone node tree for animations.

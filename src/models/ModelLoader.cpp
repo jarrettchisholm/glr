@@ -84,7 +84,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	glm::mat4 globalInverseTransformation = convertAssImpMatrix( &(scene->mRootNode->mTransformation) );
 	globalInverseTransformation = glm::inverse( globalInverseTransformation );
 	
-	AnimationData animationData = loadAnimation(path, scene);
+	AnimationSet animationSet = loadAnimations(path, scene);
 	
 	BOOST_LOG_TRIVIAL(debug) << "Model has " << modelData.size() << " meshes.";
 	int NumVertices = 0;
@@ -96,7 +96,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
 		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
-		modelData[i]->animationData = animationData;
+		modelData[i]->animationSet = animationSet;
 		modelData[i]->globalInverseTransformation = globalInverseTransformation;
 		
 		std::cout << "NumVertices: " << NumVertices << std::endl;
@@ -440,20 +440,20 @@ glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index,
 /**
  * Loads the animation(s) for the given scene.
  */
-AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* scene)
+AnimationSet ModelLoader::loadAnimations(const std::string path, const aiScene* scene)
 {
-	AnimationData animationData = AnimationData();
+	AnimationSet animationSet = AnimationSet();
 	
 	BOOST_LOG_TRIVIAL(debug) << "loading " << scene->mNumAnimations << " animation(s)...";
 	
 	// Load BoneNodes
 	const aiNode* assImpRootNode = scene->mRootNode;
-	animationData.rootBoneNode = loadBoneNode( assImpRootNode );
+	animationSet.rootBoneNode = loadBoneNode( assImpRootNode );
 	
 	for (glmd::uint32 i = 0; i < scene->mNumAnimations; i++)
 	{
 		// Load some basic animation data
-		Animation animation = Animation();
+		AnimationData animation = AnimationData();
 		animation.name = std::string( scene->mAnimations[i]->mName.C_Str() );
 		
 		// Error check - animations with no name are not allowed
@@ -522,9 +522,9 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 		}
 		
 		// Add animation to animation data
-		if( animationData.animations.find( animation.name ) == animationData.animations.end() )
+		if( animationSet.animations.find( animation.name ) == animationSet.animations.end() )
 		{
-			animationData.animations[ animation.name ] = animation;
+			animationSet.animations[ animation.name ] = animation;
 		}
 		else 
 		{
@@ -535,7 +535,7 @@ AnimationData ModelLoader::loadAnimation(const std::string path, const aiScene* 
 
 	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
 	
-	return animationData;
+	return animationSet;
 }
 
 /**

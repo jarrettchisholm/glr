@@ -10,10 +10,11 @@
 
 #include "glm/gtc/quaternion.hpp"
 
+#include "IAnimation.h"
+
 #include "../glw/shaders/IShaderProgram.h"
 
 #include "../glw/IMesh.h"
-#include "../glw/IAnimation.h"
 
 namespace glr {
 namespace models {
@@ -60,7 +61,7 @@ struct AnimatedBoneNode {
 	std::vector< glm::vec3 > scalings;
 };
 
-struct Animation {
+struct AnimationData {
 	std::string name;
 	glm::detail::float64 duration;
 	glm::detail::float64 ticksPerSecond;
@@ -68,11 +69,11 @@ struct Animation {
 	std::map< std::string, AnimatedBoneNode > animatedBoneNodes;
 };
 
-struct AnimationData {
+struct AnimationSet {
 	std::string name;
 	
 	glw::BoneNode rootBoneNode;
-	std::map< std::string, Animation > animations;
+	std::map< std::string, AnimationData > animations;
 };
 
 
@@ -83,7 +84,7 @@ struct ModelData {
 	MaterialData materialData;
 	TextureData textureData;
 	glw::BoneData boneData;
-	AnimationData animationData;
+	AnimationSet animationSet;
 	glm::mat4 globalInverseTransformation;
 };
 	
@@ -94,9 +95,9 @@ public:
 	}
 	;
 
-	virtual glw::IAnimation* getAnimation(const std::string name) = 0;
-	virtual glw::IAnimation* getCurrentAnimation() = 0;
-	virtual void setCurrentAnimation(glw::IAnimation* animation) = 0;
+	virtual IAnimation* getAnimation(const std::string name) = 0;
+	virtual IAnimation* getCurrentAnimation() = 0;
+	virtual void setCurrentAnimation(IAnimation* animation) = 0;
 	
 	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
