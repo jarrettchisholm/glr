@@ -78,6 +78,8 @@ void main() {
 		bug = 1.0;
 	else if (sum < 0.95f)
 		bug = 2.0;
+	//else if (in_BoneIds[0] > 32 || in_BoneIds[1] > 32 || in_BoneIds[2] > 32 || in_BoneIds[3] > 32)
+	//	bug = 3.0;
 	// disable bug highlighting
 	//bug = 0.0;
 	

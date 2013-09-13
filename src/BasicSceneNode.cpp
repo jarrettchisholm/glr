@@ -193,7 +193,8 @@ void BasicSceneNode::render()
 {
 	if ( model_ != nullptr )
 	{
-		if (shaderProgram_ != nullptr) {
+		if (shaderProgram_ != nullptr) 
+		{
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
 			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
 			int normalMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "normalMatrix");

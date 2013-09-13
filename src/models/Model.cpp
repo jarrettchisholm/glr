@@ -44,6 +44,10 @@ Model::Model(const Model& other)
 	globalInverseTransformation_ = other.globalInverseTransformation_;
 	
 	currentAnimation_ = other.currentAnimation_;
+	
+	// TODO: make this not crappy
+	emptyAnimation_ = new glw::Animation( openGlDevice_ );
+	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 
 Model::~Model()
@@ -155,6 +159,10 @@ struct AnimationData {
 			currentAnimation_ = animation;
 		}
 	}
+	
+	// TODO: make this not crappy
+	emptyAnimation_ = new glw::Animation( openGlDevice_ );
+	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 
 void Model::destroy()
@@ -165,6 +173,12 @@ glw::IAnimation* Model::getCurrentAnimation()
 {
 	return currentAnimation_;
 }
+
+void Model::setCurrentAnimation(glw::IAnimation* animation)
+{
+	currentAnimation_ = static_cast<glw::Animation*>(animation);
+}
+
 glw::IAnimation* Model::getAnimation(const std::string name)
 {	
 	if ( animations_.find(name) != animations_.end() )
@@ -194,11 +208,17 @@ void Model::render(shaders::IShaderProgram* shader)
 		
 		if (currentAnimation_ != nullptr)
 		{
-			// TODO: is this the best place for calling the tick() method?
-			//currentAnimation_->tick(0.0f);
 			currentAnimation_->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
 			currentAnimation_->bind();
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, currentAnimation_->getBindPoint() );
+		}
+		else
+		{
+			// Zero out the animation data
+			// TODO: Do we need to do this?
+			// TODO: find a better way to load 'empty' bone data in the shader
+			emptyAnimation_->bind();
+			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, emptyAnimation_->getBindPoint() );
 		}
 		
 		meshes_[i]->render();

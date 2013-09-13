@@ -66,15 +66,8 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	{
 		boneIds.push_back( d.boneIds );
 		weights.push_back( d.weights );
-		//weights.push_back( glm::vec4(0.2, 0.2, 0.2, 0.2) );
 	}
 	
-	for (int i=0; i < weights.size(); i++)
-	{
-		float sum = weights[i].x + weights[i].y + weights[i].z + weights[i].a;
-		if (sum > 1.0f)
-			BOOST_LOG_TRIVIAL(debug) << "TEST: " << i << "(" << sum << "): " << weights[i].x << ", " << weights[i].y << ", " << weights[i].z << ", " << weights[i].a;
-	}
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferData(GL_ARRAY_BUFFER, boneIds.size() * sizeof(glm::ivec4), &boneIds[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);

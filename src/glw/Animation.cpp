@@ -14,7 +14,34 @@
 
 namespace glr {
 namespace glw {
+
+Animation::Animation(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+{
+	name_ = std::string("NULL");
+	duration_ = 0.0f;
+	ticksPerSecond_ = 0.0f;
+	animatedBoneNodes_ = std::map< std::string, AnimatedBoneNode >();
+	runningTime_ = 0.0f;
 	
+	bufferId_ = 0;
+	
+	currentTransforms_ = std::vector< glm::mat4 >();
+	
+	setupAnimationUbo();
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// TODO: throw error
+		BOOST_LOG_TRIVIAL(error) << "Error loading animation in opengl";
+		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+	}
+	else
+	{
+		//BOOST_LOG_TRIVIAL(debug) << "Successfully loaded animation.  Buffer id: " << bufferId_;
+	}
+}
+
 Animation::Animation(
 		IOpenGlDevice* openGlDevice,
 		const std::string name, 
@@ -23,8 +50,11 @@ Animation::Animation(
 		std::map< std::string, AnimatedBoneNode > animatedBoneNodes
 	) : openGlDevice_(openGlDevice), name_(name), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(animatedBoneNodes), runningTime_(0.0f)
 {
-	//BOOST_LOG_TRIVIAL(debug) << "loading animation...";
+	// We probably shouldn't have an animation object at all if it has no animated bone nodes...
+	assert( animatedBoneNodes_.size() != 0 );
 	
+	//BOOST_LOG_TRIVIAL(debug) << "loading animation...";
+	bufferId_ = 0;
 	// Error check - default to 25 ticks per second
 	ticksPerSecond_ = ( ticksPerSecond_ != 0.0f ? ticksPerSecond_ : 25.0f );
 	
@@ -58,7 +88,6 @@ void Animation::setupAnimationUbo()
 void Animation::loadIntoVideoMemory()
 {
 	// TODO: implement
-	
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
 	
@@ -255,9 +284,6 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 	
 	AnimatedBoneNode* animatedBoneNode = nullptr;
 	
-	// TODO: Should this really be an assert?  We probably shouldn't have an animation object at all if it has no animated bone nodes...
-	assert( animatedBoneNodes_.size() != 0 );
-	
 	if ( animatedBoneNodes_.find( rootBoneNode.name ) != animatedBoneNodes_.end() )
 	{
 		////BOOST_LOG_TRIVIAL(debug) << "Found animated bone node with name: " << rootBoneNode.name;
@@ -301,7 +327,11 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end()) {
 		glmd::uint32 boneIndex = boneData.boneIndexMap[ rootBoneNode.name ];
 		boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
-		////BOOST_LOG_TRIVIAL(debug) << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
+		//BOOST_LOG_TRIVIAL(debug) << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
+	}
+	else
+	{
+		//BOOST_LOG_TRIVIAL(debug) << name_ << " " << rootBoneNode.name << ": Couldn't find.";
 	}
 	
 	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++) {
@@ -314,7 +344,6 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
  */
 void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData)
 {
-	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	glm::mat4 identity = glm::mat4();
 	
@@ -326,15 +355,24 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 
 	//BOOST_LOG_TRIVIAL(debug) << "animationTime: " << animationTime;
 	readNodeHeirarchy(animationTime, globalInverseTransformation, rootBoneNode, boneData, identity);
-
-	//transforms.resize(m_NumBones);
-	currentTransforms_.resize( boneData.boneTransform.size() );
-
+	
+	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size() );
+	
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
 		//currentTransforms_[i] = glm::mat4(1.0);
 		//BOOST_LOG_TRIVIAL(debug) << "NUM" << i << " " << glm::to_string( currentTransforms_[i] );
 	}
+}
+
+// TODO: Testing this for now...I think maybe this isn't a good way to do it???  Not sure
+void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
+{
+	glm::mat4 identity = glm::mat4() * 100.0f;
+	
+	currentTransforms_ = std::vector< glm::mat4 >( numBones, identity );
+	
+	std::cout << "generateIdentityBoneTransforms: " << currentTransforms_.size() << std::endl;
 }
 
 }

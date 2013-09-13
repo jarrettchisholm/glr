@@ -17,6 +17,8 @@ namespace glw {
 	
 AnimationManager::AnimationManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
+	// Create and add GLR_IDENTITY_BONES animation
+	
 }
 
 AnimationManager::~AnimationManager()

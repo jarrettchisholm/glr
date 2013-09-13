@@ -40,6 +40,7 @@ public:
 
 	virtual glw::IAnimation* getAnimation(const std::string name);
 	virtual glw::IAnimation* getCurrentAnimation();
+	virtual void setCurrentAnimation(glw::IAnimation* animation);
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
@@ -54,6 +55,7 @@ protected:
 	std::map< std::string, glw::Animation*> animations_;
 	
 	glw::Animation* currentAnimation_;
+	glw::Animation* emptyAnimation_;
 	
 	/* 	All meshes in this model use this bone node tree for animations.
 		Any animations that manipulate bone nodes will be manipulating bones in this bone node tree. */
