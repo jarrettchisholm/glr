@@ -32,7 +32,7 @@ BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice) : name_(name), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -44,7 +44,7 @@ BasicSceneNode::BasicSceneNode(const std::string name, glw::IOpenGlDevice* openG
 }
 
 BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
-	 : openGlDevice_(openGlDevice)
+	 : name_(name), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
 	rotate(rotation);
