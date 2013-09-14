@@ -87,13 +87,8 @@ void Animation::setupAnimationUbo()
 
 void Animation::loadIntoVideoMemory()
 {
-	// TODO: implement
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
-	
-	//GLuint bindPoint = openGlDevice_->bindBuffer( ubo );
-	
-	//shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
 }
 
 /**
@@ -101,8 +96,6 @@ void Animation::loadIntoVideoMemory()
  */
 void Animation::bind()
 {
-	// TODO: implement
-	
 	loadIntoVideoMemory();
 
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
@@ -216,13 +209,11 @@ void Animation::calcInterpolatedPosition(glm::vec3& Out, float animationTime, An
     
     ////BOOST_LOG_TRIVIAL(debug) << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor;
     
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+    //assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = animatedBoneNode->positions_[PositionIndex];
     const glm::vec3& End = animatedBoneNode->positions_[NextPositionIndex];
     glm::vec3 Delta = End - Start;
     Out = Start + Factor * Delta;
-    
-    
 }
 
 
@@ -242,7 +233,7 @@ void Animation::calcInterpolatedRotation(glm::quat& Out, float animationTime, An
     assert(NextRotationIndex < animatedBoneNode->rotationTimes_.size());
     float DeltaTime = (float)(animatedBoneNode->rotationTimes_[NextRotationIndex] - animatedBoneNode->rotationTimes_[RotationIndex]);
     float Factor = (animationTime - (float)animatedBoneNode->rotationTimes_[RotationIndex]) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+    //assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::quat& StartRotationQ = animatedBoneNode->rotations_[RotationIndex];
     const glm::quat& EndRotationQ   = animatedBoneNode->rotations_[NextRotationIndex];    
     //BOOST_LOG_TRIVIAL(debug) << "HERE - " << RotationIndex << " StartRotationQ: " << StartRotationQ.x << ", " << StartRotationQ.y << ", " << StartRotationQ.z << " Factor: " << Factor;
@@ -268,7 +259,7 @@ void Animation::calcInterpolatedScaling(glm::vec3& Out, float animationTime, Ani
     assert(NextScalingIndex < animatedBoneNode->scalingTimes_.size());
     float DeltaTime = (float)(animatedBoneNode->scalingTimes_[NextScalingIndex] - animatedBoneNode->scalingTimes_[ScalingIndex]);
     float Factor = (animationTime - (float)animatedBoneNode->scalingTimes_[ScalingIndex]) / DeltaTime;
-    assert(Factor >= 0.0f && Factor <= 1.0f);
+    //assert(Factor >= 0.0f && Factor <= 1.0f);
     const glm::vec3& Start = animatedBoneNode->scalings_[ScalingIndex];
     const glm::vec3& End   = animatedBoneNode->scalings_[NextScalingIndex];
     glm::vec3 Delta = End - Start;
@@ -346,8 +337,6 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 {
 	
 	glm::mat4 identity = glm::mat4();
-	
-	//BOOST_LOG_TRIVIAL(debug) << runningTime_ << " " << duration_ << " " << name_;
 	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
@@ -356,13 +345,15 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 	//BOOST_LOG_TRIVIAL(debug) << "animationTime: " << animationTime;
 	readNodeHeirarchy(animationTime, globalInverseTransformation, rootBoneNode, boneData, identity);
 	
-	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size() );
+	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size(), identity );
 	//currentTransforms_ = std::vector< glm::mat4 >( 100, identity );
+	
+	//BOOST_LOG_TRIVIAL(debug) << boneData.boneTransform.size() << " " << runningTime_ << " " << duration_ << " " << name_;
 	
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
 		
-		//if (name_.compare("Walk") != 0)
+		//if (name_.compare("Walk") == 0)
 		//	currentTransforms_[i] = glm::mat4(1.0);
 		//BOOST_LOG_TRIVIAL(debug) << "NUM" << i << " " << glm::to_string( currentTransforms_[i] );
 	}		

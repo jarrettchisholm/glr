@@ -214,7 +214,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		}		
 		
 		if (currentAnimation_ != nullptr)
-		{
+		{			
 			glw::Animation* a = currentAnimation_->getAnimation();
 			a->setAnimationTime( currentAnimation_->getAnimationTime() );
 			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
