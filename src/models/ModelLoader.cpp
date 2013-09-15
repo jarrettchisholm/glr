@@ -256,24 +256,30 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	
 	
 	
-	data.bones.resize( data.vertices.size() );
-	
 	int temp = 0;
-	// Load bone data
-	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++)
+	
+	// If we have any bones, load them
+	if (mesh->mNumBones > 0)
 	{
-		glmd::uint32 boneIndex = boneIndexMap[ mesh->mBones[i]->mName.C_Str() ];
+		data.bones.resize( data.vertices.size() );
 		
-		for (glmd::uint32 j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+		// Load bone data
+		for (glmd::uint32 i = 0; i < mesh->mNumBones; i++)
 		{
-			glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
-			glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
-			//std::cout << vertexID << " " << weight << std::endl;
+			glmd::uint32 boneIndex = boneIndexMap[ mesh->mBones[i]->mName.C_Str() ];
 			
-			temp++;
-			data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
+			for (glmd::uint32 j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+			{
+				glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
+				glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
+				//std::cout << vertexID << " " << weight << std::endl;
+				
+				temp++;
+				data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
+			}
 		}
 	}
+	
 	std::cout << "NUM: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 	// Fill in any empty weights
 	/*

@@ -41,6 +41,7 @@ void main() {
 	gl_FragColor = vec4(ct * cf, at * af);
 	
 	
+	
 	// Show bugs
 	if (bug != 0.0)
 	{

@@ -19,8 +19,8 @@ struct VertexBoneData
 	
 	VertexBoneData()
 	{
-		boneIds = glm::ivec4();
-		weights = glm::vec4();
+		boneIds = glm::ivec4(0);
+		weights = glm::vec4(0.0f);
 	}
 	
 	void addBoneWeight( glm::detail::uint32 id, glm::detail::float32 weight )
@@ -33,7 +33,6 @@ struct VertexBoneData
 				weights[i] = weight;
 				//BOOST_LOG_TRIVIAL(debug) << "after: " << weights[i] << " " << id;
 				
-				//assert( weights[0] + weights[1] + weights[2] + weights[3] > 0.95f );
 				assert( weights[0] + weights[1] + weights[2] + weights[3] < 1.05f );
 				
 				return;

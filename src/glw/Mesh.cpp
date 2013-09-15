@@ -47,9 +47,18 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
-	std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
+	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
-	// TODO: deal with not having any bones?
+	// TODO: We might want to not load any bone data (if there is none) and use a different shader?  Not sure best way to handle this.....?
+	// Deal with not having any bones
+	if (bones_.size() == 0)
+	{
+		bones_.resize( vertices.size() );
+		for (auto& b : bones_)
+		{
+			b.weights = glm::vec4(0.25f);
+		}
+	}
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);

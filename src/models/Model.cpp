@@ -123,6 +123,8 @@ struct AnimationData {
 	std::map< std::string, Animation > animations;
 };
 */
+		// Default to no animation
+		currentAnimation_ = nullptr;
 
 		// Create bone structure (tree structure)
 		rootBoneNode_ = d->animationSet.rootBoneNode;

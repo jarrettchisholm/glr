@@ -60,6 +60,9 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 
 void Texture::bind(GLuint texturePosition)
 {
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	//glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, bufferId_);
 	
