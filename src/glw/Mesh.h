@@ -1,6 +1,9 @@
 /*
  * Mesh.h
- *
+ * 
+ * A class that contains mesh data, and can load this data into OpenGL, as well as render that data
+ * once it has been transferred.
+ * 
  *  Created on: 2011-05-08
  *      Author: jarrett
  */

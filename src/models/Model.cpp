@@ -11,6 +11,7 @@
 
 namespace glr {
 namespace models {
+
 Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	initialize();
@@ -61,6 +62,12 @@ Model::~Model()
 {
 }
 
+/**
+ * Will initialize this mesh with data given through the modelData object.
+ * 
+ * @param modelData The data to use to initialize this model.  Each element of the modelData vector corresponds to a new
+ * mesh/material/texture/animation set.
+ */
 void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 {
 	meshManager_ = openGlDevice_->getMeshManager();
@@ -178,16 +185,37 @@ void Model::destroy()
 {
 }
 
+/**
+ * Gets the animation that is currently active for this model.  If no animation is active, it will return
+ * nullptr.
+ * 
+ * @return A pointer to the current IAnimation object, or nullptr if there is no current animation
+ */
 IAnimation* Model::getCurrentAnimation()
 {
 	return currentAnimation_;
 }
 
+/**
+ * Sets the current animation.
+ * 
+ * @param animation A pointer to the animation to use.  If nullptr is sent in, the current animation is set to nullptr (i.e. no current
+ * animation)
+ */
 void Model::setCurrentAnimation(IAnimation* animation)
 {
 	currentAnimation_ = static_cast<Animation*>(animation);
 }
 
+/**
+ * Will return the animation associated with this model with the given name.  Returns nullptr if no animation
+ * is associated with this model with the given name.
+ * 
+ * @param name The name of the animation to retrieve.
+ * 
+ * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
+ * is associated with this model with the given name.
+ */
 IAnimation* Model::getAnimation(const std::string name)
 {	
 	if ( animations_.find(name) != animations_.end() )
@@ -198,6 +226,14 @@ IAnimation* Model::getAnimation(const std::string name)
 	return nullptr;
 }
 
+/**
+ * Will render the model through OpenGL.
+ * 
+ * The model will render each mesh individually.  Each mesh may have a corresponding material, texture, and animation, all of which
+ * will be bound to the shader for use when rendering the mesh.
+ * 
+ * @param shader The shader to use to render this model.
+ */
 void Model::render(shaders::IShaderProgram* shader)
 {
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )

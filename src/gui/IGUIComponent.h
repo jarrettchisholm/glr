@@ -24,6 +24,11 @@ public:
 	virtual int load() = 0;
 	virtual void unload() = 0;
 
+	/**
+	 * Execute the code given by script on the current IGUIComponent object.
+	 * 
+	 * @param script The code to execute.
+	 */
 	virtual void executeScript(std::wstring script) = 0;
 
 	virtual bool isVisible() = 0;

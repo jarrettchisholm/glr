@@ -12,6 +12,10 @@
 
 namespace glr {
 namespace gui {
+	
+/**
+ * Class to wrap around parameters that are required for a callback method.
+ */
 class CallbackParameter {
 public:
 	CallbackParameter();

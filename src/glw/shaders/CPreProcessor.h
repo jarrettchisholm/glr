@@ -1,9 +1,9 @@
 /*
  * CPreProccessor.h
- *
- * This class is used to pre-process a c-style file.
  * 
- * It will perform the usual c-like pre-processor acitivies, such as processing #include, #define, #ifdef, #endif, etc., macros.
+ * This class is a generic pre processor for C like code.  It will be used to parse our shader source files.  With it, we will be able to
+ * use pre-processor directives in our shader sources files, such as #IFDEF, #DEFINE, and #include.  We will also be able to define and use
+ * Macros.
  * 
  * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * Date: 2013

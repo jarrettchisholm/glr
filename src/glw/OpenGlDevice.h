@@ -1,5 +1,7 @@
 /*
  * OpenGlDevice.h
+ * 
+ * A wrapper around OpenGL.
  *
  *  Created on: 2013-04-01
  *      Author: jarrett

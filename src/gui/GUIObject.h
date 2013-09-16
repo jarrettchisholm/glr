@@ -25,7 +25,7 @@ class GUIObject : public IGUIObject {
 public:
 	GUIObject(std::wstring name, Berkelium::Window* window);
 	virtual ~GUIObject();
-
+	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
 	virtual void addFunction(std::wstring name, std::function<int()> function);
 	virtual void addFunction(std::wstring name, std::function<float()> function);

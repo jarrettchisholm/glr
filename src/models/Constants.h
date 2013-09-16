@@ -5,6 +5,7 @@
 
 namespace glr {
 namespace models {
+	
 class Constants {
 public:
 	static const std::string MODEL_DIRECTORY;

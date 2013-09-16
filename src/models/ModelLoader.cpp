@@ -43,23 +43,26 @@ ModelLoader::~ModelLoader()
 }
 
 /**
- *
+ * Loads model data from the file specified by filename.
+ * 
+ * @param filename The file we want to load
+ * 
  * @returns A vector of ModelData objects (as shared pointers).  We do this so as not to have to copy the
  * model data when we return from this method.
  */
-std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string path)
+std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string filename)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << path << "'.";
+	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
 
 	std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >();	
 
 	// we are taking one of the postprocessing presets to avoid
 	// spelling out 20+ single postprocessing flags here.
 	//Assimp::Importer* importer = new Assimp::Importer();
-	//const aiScene* scene = importer->ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
+	//const aiScene* scene = importer->ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
 	
-	//const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate);
+	//const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(filename.c_str(), aiProcess_Triangulate);
 
 	// Error checking
 	if ( scene == nullptr )
@@ -84,7 +87,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	glm::mat4 globalInverseTransformation = convertAssImpMatrix( &(scene->mRootNode->mTransformation) );
 	globalInverseTransformation = glm::inverse( globalInverseTransformation );
 	
-	AnimationSet animationSet = loadAnimations(path, scene);
+	AnimationSet animationSet = loadAnimations(filename, scene);
 	
 	BOOST_LOG_TRIVIAL(debug) << "Model has " << modelData.size() << " meshes.";
 	int NumVertices = 0;
@@ -92,10 +95,10 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
-		modelData[i]->boneData = loadBones(path, i, scene->mMeshes[i]);
-		modelData[i]->meshData = loadMesh( path, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
-		modelData[i]->textureData = loadTexture( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
-		modelData[i]->materialData = loadMaterial( path, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
+		modelData[i]->boneData = loadBones(filename, i, scene->mMeshes[i]);
+		modelData[i]->meshData = loadMesh( filename, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
+		modelData[i]->textureData = loadTexture( filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
+		modelData[i]->materialData = loadMaterial( filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->animationSet = animationSet;
 		modelData[i]->globalInverseTransformation = globalInverseTransformation;
 		
@@ -110,7 +113,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
 	aiReleaseImport(scene);
 
-	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << path << "'.";
+	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
 
 	return modelData;
 }
@@ -121,13 +124,13 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
  * 
  * Note: We only support models that have faces with 3 points (i.e. triangles)
  * 
- * @param path The file being loaded
+ * @param filename The file being loaded
  * @param index The current index of the mesh being loaded
  * @param mesh The AssImp mesh data structure to load data from.  Must not be null.
  * @param boneIndexMap A map associating an AssImp bone name with a bone index (of type uint32).  Note that this variable is NOT const - this is
  * only so that we can access elements in the map using the operator[] operator.
  */
-MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap)
+MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap)
 {
 	MeshData data = MeshData();
 	
@@ -137,7 +140,7 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 	if (mesh->mName.length > 0)
 		data.name = std::string( mesh->mName.C_Str() );
 	else
-		data.name = path + "_mesh_" + std::to_string(index);
+		data.name = filename + "_mesh_" + std::to_string(index);
 	BOOST_LOG_TRIVIAL(debug) << "mesh name: " << data.name;
 
 	// Load vertices, normals, texture coordinates, and colors
@@ -304,12 +307,14 @@ MeshData ModelLoader::loadMesh(const std::string path, glmd::uint32 index, const
 /**
  * Load the texture filename for the given material.
  * 
- * @param path The file being loaded
+ * @param filename The file being loaded
  * @param index The current index of the texture being loaded
  * @param mesh The AssImp material data structure to load data from.  Must not be null.
  */
-TextureData ModelLoader::loadTexture(const std::string path, glmd::uint32 index, const aiMaterial* material)
+TextureData ModelLoader::loadTexture(const std::string filename, glmd::uint32 index, const aiMaterial* material)
 {
+	assert( material != nullptr );
+	
 	TextureData data = TextureData();
 
 	BOOST_LOG_TRIVIAL(debug) << "Loading texture.";
@@ -324,11 +329,11 @@ TextureData ModelLoader::loadTexture(const std::string path, glmd::uint32 index,
 		// Error check
 		if (texFound != AI_SUCCESS)
 		{
-			BOOST_LOG_TRIVIAL(warning) << "Texture not found for model path: " << path;
+			BOOST_LOG_TRIVIAL(warning) << "Texture not found for model filename: " << filename;
 			return data;
 		}
 		
-		BOOST_LOG_TRIVIAL(debug) << "Texture has path: " << texPath.data;
+		BOOST_LOG_TRIVIAL(debug) << "Texture has filename: " << texPath.data;
 		
 		data.filename = texPath.data;
 		
@@ -343,19 +348,21 @@ TextureData ModelLoader::loadTexture(const std::string path, glmd::uint32 index,
 /**
  * Load the material data for the given material.
  * 
- * @param path The file being loaded
+ * @param filename The file being loaded
  * @param index The current index of the material being loaded
- * @param mesh The AssImp material data structure to load data from.  Must not be null.
+ * @param material The AssImp material data structure to load data from.  Must not be null.
  */
-MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 index, const aiMaterial* material)
-{		
+MaterialData ModelLoader::loadMaterial(const std::string filename, glmd::uint32 index, const aiMaterial* material)
+{	
+	assert( material != nullptr );
+		
 	MaterialData data = MaterialData();
 
 	BOOST_LOG_TRIVIAL(debug) << "loading material...";
 	aiColor4D c;
 	
 	// Set the material name
-	data.name = path + "_material_" + std::to_string(index);
+	data.name = filename + "_material_" + std::to_string(index);
 
 	BOOST_LOG_TRIVIAL(debug) << "material name: " << data.name;
 
@@ -398,12 +405,14 @@ MaterialData ModelLoader::loadMaterial(const std::string path, glmd::uint32 inde
 /**
  * Will load the bone data for the given AssImp mesh.
  * 
- * @param path
- * @param index
- * @param mesh
+ * @param filename The file being loaded
+ * @param index The current index of the mesh being loaded
+ * @param mesh The AssImp mesh data structure to load data from.  Must not be null.
  */
-glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index, const aiMesh* mesh)
+glw::BoneData ModelLoader::loadBones(const std::string filename, glmd::uint32 index, const aiMesh* mesh)
 {
+	assert( mesh != nullptr );
+	
 	glw::BoneData boneData = glw::BoneData();
 	
 	BOOST_LOG_TRIVIAL(debug) << "loading boneData...";
@@ -416,7 +425,7 @@ glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index,
 		if (mesh->mBones[i]->mName.length > 0)
 			data.name = std::string( mesh->mBones[i]->mName.C_Str() );
 		else
-			data.name = std::string( path ) + "_bone_" + std::to_string(index);
+			data.name = std::string( filename ) + "_bone_" + std::to_string(index);
 		
 		BOOST_LOG_TRIVIAL(debug) << "bone name: " << data.name;
 		
@@ -444,10 +453,15 @@ glw::BoneData ModelLoader::loadBones(const std::string path, glmd::uint32 index,
 }
 
 /**
- * Loads the animation(s) for the given scene.
+ * Will load the animations for the given scene.
+ * 
+ * @param filename The file being loaded
+ * @param scene The AssImp scene data structure to load animation data from.  Must not be null.
  */
-AnimationSet ModelLoader::loadAnimations(const std::string path, const aiScene* scene)
+AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiScene* scene)
 {
+	assert( scene != nullptr );
+	
 	AnimationSet animationSet = AnimationSet();
 	
 	BOOST_LOG_TRIVIAL(debug) << "loading " << scene->mNumAnimations << " animation(s)...";
@@ -467,7 +481,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string path, const aiScene* 
 		{
 			BOOST_LOG_TRIVIAL(warning) << "Animations with no name are not allowed.";
 			
-			animation.name = path + "_animation_" + std::to_string(i);
+			animation.name = filename + "_animation_" + std::to_string(i);
 			BOOST_LOG_TRIVIAL(warning) << "Setting animation name to: " << animation.name;
 			// TODO: should we throw an exception?
 			//throw exception::Exception(msg);
