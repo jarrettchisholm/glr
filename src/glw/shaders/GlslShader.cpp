@@ -93,12 +93,11 @@ void GlslShader::compile()
 
 	glCompileShader(shaderId_);
 
-	GLint compiled;
-
-	glGetProgramiv(shaderId_, GL_COMPILE_STATUS, &compiled);
+	GLint compiled = GL_FALSE;
+	glGetShaderiv(shaderId_, GL_COMPILE_STATUS, &compiled);
 
 	// Handle any errors
-	if ( compiled = GL_FALSE )
+	if ( compiled == GL_FALSE )
 	{
 		std::stringstream msg;
 		msg << "Could not initialize shader.";
