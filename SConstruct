@@ -239,17 +239,6 @@ cpp_flags = []
 library_paths = []
 
 
-glLib = 'GL'
-glewLib = 'GLEW'
-berkeliumLib = 'liblibberkelium_d'
-libPThread = 'pthread'
-
-if (isWindows):
-	glLib = 'opengl32'
-	glewLib = 'glew32'
-	berkeliumLib = 'berkelium'
-	libPThread = ''
-
 ### Set our required libraries
 glLib = 'GL'
 glewLib = 'GLEW'
@@ -294,17 +283,7 @@ boostThreadLib,
 boostWaveLib,
 boostRegexLib,
 boostFilesystemLib,
-boostSystemLib,
-'freeimage',
-'boost_log',
-'boost_log_setup',
-'boost_date_time', 
-'boost_thread',
-'boost_wave',
-'boost_regex',
-'boost_program_options',
-'boost_filesystem',
-'boost_system',
+boostSystemLib
 ]
 
 if (not isWindows):
@@ -318,13 +297,6 @@ library_paths.append('../glr/build')
 if (isWindows):
 	library_paths.append('../../angelscript-sdk/angelscript/lib')
 	library_paths.append('../../sqlite3')
-	library_paths.append('../../berkelium-win32/lib')
-	library_paths.append('../../SFML/lib')
-	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
-	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
-	library_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
-	library_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib')
-if (isWindows):
 	library_paths.append('../../berkelium-win32/lib')
 	library_paths.append('../../SFML/lib')
 	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
@@ -349,14 +321,6 @@ cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm
 
 
 
-# Set our compiler
-compiler = ARGUMENTS.get('compiler')
-if (compiler is None or compiler == ''):
-	compiler = 'default'
-if (compiler == 'gcc' and os.name == 'nt'):
-	compiler = 'mingw'
-if (compiler == 'msvc' and os.name == 'nt'):
-	compiler = 'default'
 
 ### Set our OS specific compiler variables
 if (not isWindows):
