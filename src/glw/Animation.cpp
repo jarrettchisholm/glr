@@ -147,8 +147,10 @@ struct BoneNode {
 
 glmd::uint32 Animation::findPosition(float animationTime, AnimatedBoneNode* animatedBoneNode)
 {    
-    for (glmd::uint32 i = 0; i < animatedBoneNode->positionTimes_.size() - 1; i++) {
-        if (animationTime < (float)animatedBoneNode->positionTimes_[i + 1]) {
+    for (glmd::uint32 i = 0; i < animatedBoneNode->positionTimes_.size() - 1; i++)
+    {
+        if (animationTime < (float)animatedBoneNode->positionTimes_[i + 1])
+        {
             return i;
         }
     }
@@ -193,77 +195,77 @@ glmd::uint32 Animation::findScaling(float animationTime, AnimatedBoneNode* anima
     return 0;
 }
 
-void Animation::calcInterpolatedPosition(glm::vec3& Out, float animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedPosition(glm::vec3& out, float animationTime, AnimatedBoneNode* animatedBoneNode)
 {
     if (animatedBoneNode->positionTimes_.size() == 1)
     {
-        Out = animatedBoneNode->positions_[0];
+        out = animatedBoneNode->positions_[0];
         return;
     }
             
-    glmd::uint32 PositionIndex = findPosition(animationTime, animatedBoneNode);
-    glmd::uint32 NextPositionIndex = (PositionIndex + 1);
-    assert(NextPositionIndex < animatedBoneNode->positionTimes_.size());
-    float DeltaTime = (float)(animatedBoneNode->positionTimes_[NextPositionIndex] - animatedBoneNode->positionTimes_[PositionIndex]);
-    float Factor = (animationTime - (float)animatedBoneNode->positionTimes_[PositionIndex]) / DeltaTime;
+    glmd::uint32 positionIndex = findPosition(animationTime, animatedBoneNode);
+    glmd::uint32 nextPositionIndex = (positionIndex + 1);
+    assert(nextPositionIndex < animatedBoneNode->positionTimes_.size());
+    float deltaTime = (float)(animatedBoneNode->positionTimes_[nextPositionIndex] - animatedBoneNode->positionTimes_[positionIndex]);
+    float factor = (animationTime - (float)animatedBoneNode->positionTimes_[positionIndex]) / deltaTime;
     
-    ////BOOST_LOG_TRIVIAL(debug) << "calc pos: " << PositionIndex << " " << NextPositionIndex << " " << DeltaTime << " " << Factor;
+    ////BOOST_LOG_TRIVIAL(debug) << "calc pos: " << positionIndex << " " << nextPositionIndex << " " << deltaTime << " " << factor;
     
-    //assert(Factor >= 0.0f && Factor <= 1.0f);
-    const glm::vec3& Start = animatedBoneNode->positions_[PositionIndex];
-    const glm::vec3& End = animatedBoneNode->positions_[NextPositionIndex];
-    glm::vec3 Delta = End - Start;
-    Out = Start + Factor * Delta;
+    //assert(factor >= 0.0f && factor <= 1.0f);
+    const glm::vec3& start = animatedBoneNode->positions_[positionIndex];
+    const glm::vec3& end = animatedBoneNode->positions_[nextPositionIndex];
+    glm::vec3 delta = end - start;
+    out = start + factor * delta;
 }
 
 
-void Animation::calcInterpolatedRotation(glm::quat& Out, float animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedRotation(glm::quat& out, float animationTime, AnimatedBoneNode* animatedBoneNode)
 {
 	// we need at least two values to interpolate...
     if (animatedBoneNode->rotationTimes_.size() == 1)
     {
-        Out = animatedBoneNode->rotations_[0];
+        out = animatedBoneNode->rotations_[0];
         //BOOST_LOG_TRIVIAL(debug) << "HERE - rotationTimes_.size() == 1";
         return;
     }
     
     //BOOST_LOG_TRIVIAL(debug) << "HERE - calcInterpolatedRotation";
-    glmd::uint32 RotationIndex = findRotation(animationTime, animatedBoneNode);
-    glmd::uint32 NextRotationIndex = (RotationIndex + 1);
-    assert(NextRotationIndex < animatedBoneNode->rotationTimes_.size());
-    float DeltaTime = (float)(animatedBoneNode->rotationTimes_[NextRotationIndex] - animatedBoneNode->rotationTimes_[RotationIndex]);
-    float Factor = (animationTime - (float)animatedBoneNode->rotationTimes_[RotationIndex]) / DeltaTime;
-    //assert(Factor >= 0.0f && Factor <= 1.0f);
-    const glm::quat& StartRotationQ = animatedBoneNode->rotations_[RotationIndex];
-    const glm::quat& EndRotationQ   = animatedBoneNode->rotations_[NextRotationIndex];    
-    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << RotationIndex << " StartRotationQ: " << StartRotationQ.x << ", " << StartRotationQ.y << ", " << StartRotationQ.z << " Factor: " << Factor;
-    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << NextRotationIndex << " EndRotationQ: " << EndRotationQ.x << ", " << EndRotationQ.y << ", " << EndRotationQ.z;
+    glmd::uint32 rotationIndex = findRotation(animationTime, animatedBoneNode);
+    glmd::uint32 nextRotationIndex = (rotationIndex + 1);
+    assert(nextRotationIndex < animatedBoneNode->rotationTimes_.size());
+    float deltaTime = (float)(animatedBoneNode->rotationTimes_[nextRotationIndex] - animatedBoneNode->rotationTimes_[rotationIndex]);
+    float factor = (animationTime - (float)animatedBoneNode->rotationTimes_[rotationIndex]) / deltaTime;
+    //assert(factor >= 0.0f && factor <= 1.0f);
+    const glm::quat& startrotationQ = animatedBoneNode->rotations_[rotationIndex];
+    const glm::quat& endrotationQ   = animatedBoneNode->rotations_[nextRotationIndex];    
+    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << rotationIndex << " startrotationQ: " << startrotationQ.x << ", " << startrotationQ.y << ", " << startrotationQ.z << " factor: " << factor;
+    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << nextRotationIndex << " endrotationQ: " << endrotationQ.x << ", " << endrotationQ.y << ", " << endrotationQ.z;
     
-    Out = glm::slerp(StartRotationQ, EndRotationQ, Factor);
+    out = glm::slerp(startrotationQ, endrotationQ, factor);
     // TODO: I might not need to normalize the quaternion here...might already have been done in glm::mix??
-	Out = glm::normalize( Out );
-	//BOOST_LOG_TRIVIAL(debug) << "HERE - Out: " << Out.x << ", " << Out.y << ", " << Out.z << " Factor: " << Factor;
+	out = glm::normalize( out );
+	//BOOST_LOG_TRIVIAL(debug) << "HERE - out: " << out.x << ", " << out.y << ", " << out.z << " factor: " << factor;
 }
 
 
-void Animation::calcInterpolatedScaling(glm::vec3& Out, float animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedScaling(glm::vec3& out, float animationTime, AnimatedBoneNode* animatedBoneNode)
 {
     if (animatedBoneNode->scalingTimes_.size() == 1)
     {
-        Out = animatedBoneNode->scalings_[0];
+        out = animatedBoneNode->scalings_[0];
         return;
     }
 
-    glmd::uint32 ScalingIndex = findScaling(animationTime, animatedBoneNode);
-    glmd::uint32 NextScalingIndex = (ScalingIndex + 1);
-    assert(NextScalingIndex < animatedBoneNode->scalingTimes_.size());
-    float DeltaTime = (float)(animatedBoneNode->scalingTimes_[NextScalingIndex] - animatedBoneNode->scalingTimes_[ScalingIndex]);
-    float Factor = (animationTime - (float)animatedBoneNode->scalingTimes_[ScalingIndex]) / DeltaTime;
-    //assert(Factor >= 0.0f && Factor <= 1.0f);
-    const glm::vec3& Start = animatedBoneNode->scalings_[ScalingIndex];
-    const glm::vec3& End   = animatedBoneNode->scalings_[NextScalingIndex];
-    glm::vec3 Delta = End - Start;
-    Out = Start + Factor * Delta;
+    glmd::uint32 scalingIndex = findScaling(animationTime, animatedBoneNode);
+    glmd::uint32 nextScalingIndex = (scalingIndex + 1);
+    assert(nextScalingIndex < animatedBoneNode->scalingTimes_.size());
+    float deltaTime = (float)(animatedBoneNode->scalingTimes_[nextScalingIndex] - animatedBoneNode->scalingTimes_[scalingIndex]);
+    float factor = (animationTime - (float)animatedBoneNode->scalingTimes_[scalingIndex]) / deltaTime;
+    //assert(factor >= 0.0f && factor <= 1.0f);
+    const glm::vec3& start = animatedBoneNode->scalings_[scalingIndex];
+    const glm::vec3& end   = animatedBoneNode->scalings_[nextScalingIndex];
+    glm::vec3 delta = end - start;
+    out = start + factor * delta;
 }
 
 void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& globalInverseTransform, BoneNode& rootBoneNode, BoneData& boneData, const glm::mat4& parentTransform)
@@ -291,31 +293,32 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		// Interpolate scaling and generate scaling transformation matrix
 		glm::vec3 Scaling;
 		calcInterpolatedScaling(Scaling, animationTime, animatedBoneNode);
-		glm::mat4 ScalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
+		glm::mat4 scalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
 		//BOOST_LOG_TRIVIAL(debug) << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime;
 		
 		// Interpolate rotation and generate rotation transformation matrix
-		glm::quat RotationQ;
-		calcInterpolatedRotation(RotationQ, animationTime, animatedBoneNode);
-		glm::mat4 RotationM = glm::mat4_cast(RotationQ);
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - RotationQ: " << RotationQ.x << ", " << RotationQ.y << ", " << RotationQ.z << " time: " << animationTime;
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - RotationM: " << glm::to_string(RotationM) << " time: " << animationTime;
+		glm::quat rotationQ;
+		calcInterpolatedRotation(rotationQ, animationTime, animatedBoneNode);
+		glm::mat4 rotationM = glm::mat4_cast(rotationQ);
+		//BOOST_LOG_TRIVIAL(debug) << "HERE - rotationQ: " << rotationQ.x << ", " << rotationQ.y << ", " << rotationQ.z << " time: " << animationTime;
+		//BOOST_LOG_TRIVIAL(debug) << "HERE - rotationM: " << glm::to_string(rotationM) << " time: " << animationTime;
 
 		// Interpolate translation and generate translation transformation matrix
-		glm::vec3 Translation;
-		calcInterpolatedPosition(Translation, animationTime, animatedBoneNode);
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - Translation: " << glm::to_string(Translation) << " time: " << animationTime;
-		glm::mat4 TranslationM = glm::translate( glm::mat4(1.0f), glm::vec3(Translation.x, Translation.y, Translation.z) );
+		glm::vec3 translation;
+		calcInterpolatedPosition(translation, animationTime, animatedBoneNode);
+		//BOOST_LOG_TRIVIAL(debug) << "HERE - translation: " << glm::to_string(translation) << " time: " << animationTime;
+		glm::mat4 translationM = glm::translate( glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z) );
 		
 		// Combine the above transformations
-		nodeTransformation = TranslationM * RotationM * ScalingM;
+		nodeTransformation = translationM * rotationM * scalingM;
 		//BOOST_LOG_TRIVIAL(debug) << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 	}
 	   
 	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
 	//BOOST_LOG_TRIVIAL(debug) << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime;
 	
-	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end()) {
+	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end())
+	{
 		glmd::uint32 boneIndex = boneData.boneIndexMap[ rootBoneNode.name ];
 		boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
 		//BOOST_LOG_TRIVIAL(debug) << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );

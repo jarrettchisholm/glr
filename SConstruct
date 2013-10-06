@@ -1,12 +1,14 @@
+#! /bin/python
 # Graphics Language Renderer (glr) SConstruct file
-
-import os, sys
+import subprocess, sys, os
+import platform
 import platform
 import glob
 import json
+import shutil
+import argparse
+import multiprocessing
 
-import subprocess
-import shlex
 
 
 
@@ -23,9 +25,17 @@ if (not isLinux and not isWindows and not isMac):
 	print("Sorry, but it appears your platform is not recognized")
 	sys.exit(1)
 
-
-
-
+def beautifyCode():
+	fileList = []
+	
+	for r,d,f in os.walk("."):
+		for files in f:
+			if files.endswith(".h") or files.endswith(".cpp"):
+				fileList.append( os.path.join(r,files) )
+	
+	
+	for f in fileList:
+		subprocess.call( shlex.split("uncrustify --mtime --no-backup -q -c xsupplicant.cfg "+f) )
 
 
 def parseShadersIntoHeader():
@@ -101,6 +111,85 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	
 	print('Done parsing Shaders into header ShaderData.h')
 
+def compileGlr(compiler):
+	os.chdir( '../glr' )
+	return subprocess.Popen( 'scons compiler='+compiler, shell=True )
+
+def clear():
+	if (isWindows):
+		os.system('cls')
+	else:
+		os.system('clear')
+
+def clean():
+	os.chdir( '../glr' )
+	shutil.rmtree( './build', True )
+
+def exitOnError(returnCode):
+	if ( returnCode != 0):
+		print( returnCode )
+		print( "Script halted due to error(s)!" )
+		sys.exit(1)
+
+
+
+
+### Argument flags
+doBeautification = False
+doClean = False
+compiler = ""
+
+### Set our compiler
+compiler = ARGUMENTS.get('compiler')
+if (compiler is None or compiler == ''):
+	compiler = 'default'
+if (compiler == 'gcc' and isWindows):
+	compiler = 'mingw'
+if (compiler == 'msvc' and isWindows):
+	compiler = 'default'
+
+### Error check compiler
+if (compiler == 'msvc' and not isWindows):
+	print( "Cannot use msvc in this environment!" )
+	sys.exit(1)
+
+### Handle arguments
+AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
+#AddOption('--clean', dest='clean', action='store_true', help='will \'beautify\' the source code using uncrustify')
+#AddOption('--beautify', dest='beautify', type='string', nargs=1, action='store_true', help='will \'beautify\' the source code using uncrustify')
+
+
+
+
+
+clear()
+if (not isWindows):
+	os.system( 'echo' )
+	os.system( 'echo' )
+	os.system( 'echo' )
+
+
+
+if GetOption('beautify'):
+	doBeautification = True
+if GetOption('clean'):
+	doClean = True
+
+
+### Prepare code for comilation
+if doBeautification:
+	print("Beautifying Code")
+	beautifyCode()
+	print("Done")
+	print("")
+
+if (doClean):
+	print("Cleaning glr build directory")
+	clean();
+	print("Done")
+
+
+
 
 
 # Parse our shader programs and create .h files out of them
@@ -144,6 +233,22 @@ source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
 source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
 
 
+cpp_paths = []
+cpp_defines = []
+cpp_flags = []
+library_paths = []
+
+
+glLib = 'GL'
+glewLib = 'GLEW'
+berkeliumLib = 'liblibberkelium_d'
+libPThread = 'pthread'
+
+if (isWindows):
+	glLib = 'opengl32'
+	glewLib = 'glew32'
+	berkeliumLib = 'berkelium'
+	libPThread = ''
 
 ### Set our required libraries
 glLib = 'GL'
@@ -190,6 +295,16 @@ boostWaveLib,
 boostRegexLib,
 boostFilesystemLib,
 boostSystemLib,
+'freeimage',
+'boost_log',
+'boost_log_setup',
+'boost_date_time', 
+'boost_thread',
+'boost_wave',
+'boost_regex',
+'boost_program_options',
+'boost_filesystem',
+'boost_system',
 ]
 
 if (not isWindows):
@@ -209,15 +324,18 @@ if (isWindows):
 	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
 	library_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
 	library_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib')
+if (isWindows):
+	library_paths.append('../../berkelium-win32/lib')
+	library_paths.append('../../SFML/lib')
+	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
+	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
+	library_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
+	library_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib')
 
 
 # Set our g++ compiler flags
-cpp_flags = [
-'-Wall',
 #'-D_GLIBCXX_DEBUG'
-]
 
-cpp_defines = []
 #debug = ARGUMENTS.get('debug', 0)
 #if int(debug):
 #	cpp_flags.append('-g')
@@ -226,7 +344,8 @@ cpp_defines = []
 #	cpp_defines.append('NDEBUG')
 cpp_defines.append('DEBUG')	
 
-cpp_paths = []
+cpp_defines.append( ('PACKAGE_VERSION', '\\"0.0.1\\"' ) )
+cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
 
 
 
@@ -240,17 +359,24 @@ if (compiler == 'msvc' and os.name == 'nt'):
 	compiler = 'default'
 
 ### Set our OS specific compiler variables
-if (os.name != 'nt'):
-	if (compiler == 'gcc' or (compiler == 'default' and os.name == 'posix')):
+if (not isWindows):
+	if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
 		cpp_flags.append('-g')
 		cpp_flags.append('-O0') # optimization level 0
 		#cpp_flags.append('-pg') # profiler
 		cpp_flags.append('-std=c++11')
+		cpp_flags.append('-pedantic-errors')
+		#cpp_flags.append('-Wall')
+		#cpp_flags.append('-Wextra')
+		#cpp_flags.append('-Werror')
 		
 	# Dynamically link to boost log
 	cpp_defines.append('BOOST_LOG_DYN_LINK')
+	
+	# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
+	cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
 else:
-	if os.name == 'nt':
+	if isWindows:
 		if (compiler == 'default'):
 			cpp_flags.append('/w') # disables warnings (Windows)
 			cpp_flags.append('/wd4350') # disables the specific warning C4350
@@ -261,7 +387,11 @@ else:
 			cpp_flags.append('-O0') # optimization level 0
 			#cpp_flags.append('-pg') # profiler
 			cpp_flags.append('-std=c++11')
+			cpp_flags.append('-pedantic-errors')
 		
+		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
+		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
+	
 	
 	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include')
 	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\include')
@@ -275,8 +405,7 @@ else:
 
 
 
-# Create our environment
-
+### Create our environment
 env = Environment(ENV = os.environ, TOOLS = [compiler], CCFLAGS=[]) 
 
 ### Set our environment variables
@@ -284,10 +413,9 @@ env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
 env.Append( CPPPATH = cpp_paths )
 
-env.SetOption('num_jobs', 4)
+env.SetOption('num_jobs', multiprocessing.cpu_count())
 
 
 
 # Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
-#env.Library('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
