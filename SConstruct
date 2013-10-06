@@ -1,11 +1,31 @@
 # Graphics Language Renderer (glr) SConstruct file
 
 import os, sys
+import platform
 import glob
 import json
 
 import subprocess
 import shlex
+
+
+
+
+
+
+### Establish our system
+isLinux = platform.system() == 'Linux'
+isWindows = os.name == 'nt'
+isMac = platform.system() == 'Darwin'
+
+### Error check our platform type
+if (not isLinux and not isWindows and not isMac):
+	print("Sorry, but it appears your platform is not recognized")
+	sys.exit(1)
+
+
+
+
 
 
 def parseShadersIntoHeader():
@@ -88,10 +108,22 @@ parseShadersIntoHeader()
 
 
 
+
+
+
+cpp_paths = []
+cpp_defines = []
+cpp_flags = []
+library_paths = []
+
+
+
+
+
+
+
 # Tell SCons to create our build files in the 'build' directory
 VariantDir('build', 'src', duplicate=0)
-
-
 
 ### Set our source files
 source_files = Glob('build/*.cpp', 'build/*.h')
@@ -114,25 +146,70 @@ source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders
 
 
 ### Set our required libraries
+glLib = 'GL'
+glewLib = 'GLEW'
+berkeliumLib = 'liblibberkelium_d'
+libPThread = 'pthread'
+boostLogLib = 'boost_log'
+boostLogSetupLib = 'boost_log_setup'
+boostDateTimeLib = 'boost_date_time'
+boostThreadLib = 'boost_thread'
+boostWaveLib = 'boost_wave'
+boostRegexLib = 'boost_regex'
+boostFilesystemLib = 'boost_filesystem'
+boostSystemLib = 'boost_system'
+
+if (isWindows):
+	glLib = 'opengl32'
+	glewLib = 'glew32'
+	berkeliumLib = 'berkelium'
+	libPThread = ''
+	boostLogLib = 'libboost_log-vc120-mt-1_55'
+	boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
+	boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
+	boostThreadLib = 'libboost_thread-vc120-mt-1_55'
+	boostWaveLib = 'libboost_wave-vc120-mt-1_55'
+	boostRegexLib = 'libboost_regex-vc120-mt-1_55'
+	boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
+	boostSystemLib = 'libboost_system-vc120-mt-1_55'
+
 libraries = [
-'GL',
-'GLU',
-'liblibberkelium_d',
-'Xi',
+glLib,
+glewLib,
+berkeliumLib,
+libPThread,
+'sfml-system',
 'sfml-window',
 'assimp',
-'boost_log', 
-'boost_date_time', 
-'boost_thread',
-'boost_wave',
-'boost_regex'
+'freeimage',
+boostLogLib,
+boostLogSetupLib,
+boostDateTimeLib, 
+boostThreadLib,
+boostWaveLib,
+boostRegexLib,
+boostFilesystemLib,
+boostSystemLib,
 ]
 
+if (not isWindows):
+	# XInput for linux
+	libraries.append( 'Xi' )
 
 
 ### Set our general compiler variables
-library_paths = [
-]
+### Set our library paths
+library_paths.append('../glr/build')
+if (isWindows):
+	library_paths.append('../../angelscript-sdk/angelscript/lib')
+	library_paths.append('../../sqlite3')
+	library_paths.append('../../berkelium-win32/lib')
+	library_paths.append('../../SFML/lib')
+	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
+	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
+	library_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
+	library_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib')
+
 
 # Set our g++ compiler flags
 cpp_flags = [
@@ -178,6 +255,7 @@ else:
 			cpp_flags.append('/w') # disables warnings (Windows)
 			cpp_flags.append('/wd4350') # disables the specific warning C4350
 			cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
+			cpp_flags.append('/MD')
 		elif (compiler == 'mingw'):
 			cpp_flags.append('-g')
 			cpp_flags.append('-O0') # optimization level 0
@@ -188,7 +266,7 @@ else:
 	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include')
 	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\include')
 	
-	cpp_paths.append('C:\\Program Files (x86)\\Boost\\include\\boost-1_54')
+	cpp_paths.append('C:\\Program Files (x86)\\Boost\\include\\boost-1_55')
 	cpp_paths.append('C:\\Program Files\\Assimp\\include')
 	cpp_paths.append('C:\\Users\\Jarrett\\projects\\glm')
 	cpp_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
