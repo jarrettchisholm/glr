@@ -39,25 +39,25 @@ int HtmlGuiComponent::load()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+	char* argv[1];
 	CefMainArgs args(0, nullptr);
-	BOOST_LOG_TRIVIAL(info) << "here 3";
+	std::cout << "here 3" << std::endl;
 
     
         int result1 = CefExecuteProcess(args, nullptr);
-        // checkout CefApp, derive it and set it as second parameter, for more control on
-        // command args and resources.
+        // checkout CefApp, derive it and set it as second parameter, for more control on command args and resources.
         if (result1 >= 0) // child proccess has endend, so exit.
         {
-			BOOST_LOG_TRIVIAL(info) << "RESULT 1";
+			std::cout << "RESULT 1" << std::endl;
             return result1;
         }
         if (result1 == -1)
         {
-			BOOST_LOG_TRIVIAL(info) << "RESULT 2 ";
+			std::cout << "RESULT 2 " << std::endl;
             // we are here in the father proccess.
         }
     
-BOOST_LOG_TRIVIAL(info) << "here 4";
+std::cout << "here 4" << std::endl;
 	
         CefSettings settings;
 
@@ -71,36 +71,36 @@ BOOST_LOG_TRIVIAL(info) << "here 4";
         // CefString(&settings.resources_dir_path).FromASCII("");
         // CefString(&settings.locales_dir_path).FromASCII("");
 
-        bool result = CefInitialize(args, settings, nullptr);
+        //bool result = CefInitialize(args, settings, nullptr);
         // CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
         // if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
-        if (!result)
+        //if (!result)
         {
             // handle error
-            BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
-            return -1;
+            //BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
+            //return -1;
         }
     
-    BOOST_LOG_TRIVIAL(info) << "here 5";
+    std::cout << "here 5" << std::endl;
     // create browser-window
     CefRefPtr<CefBrowser> browser;
     CefRefPtr<BrowserClient> browserClient;
-    BOOST_LOG_TRIVIAL(info) << "here 6";
+    std::cout << "here 6" << std::endl;
     {
         CefWindowInfo window_info;
         CefBrowserSettings browserSettings;
-BOOST_LOG_TRIVIAL(info) << "here 7";
+std::cout << "here 7" << std::endl;
         // in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
         window_info.SetAsOffScreen(nullptr);
-		BOOST_LOG_TRIVIAL(info) << "here 8";
+		std::cout << "here 8" << std::endl;
 		
 		RenderHandler* rh = new RenderHandler();
-		BOOST_LOG_TRIVIAL(info) << "here 9";
+		std::cout << "here 9" << std::endl;
         browserClient = new BrowserClient(rh);
-        BOOST_LOG_TRIVIAL(info) << "here 10";
+        std::cout << "here 10" << std::endl;
 
         browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), "http://deanm.github.io/pre3d/monster.html", browserSettings);
-        BOOST_LOG_TRIVIAL(info) << "here 11";
+        std::cout << "here 11" << std::endl;
 
         // inject user-input by calling
         // browser->GetHost()->SendKeyEvent(...);
