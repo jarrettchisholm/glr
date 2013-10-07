@@ -25,6 +25,9 @@ Animation::Animation(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 	
 	bufferId_ = 0;
 	
+	startFrame_ = 0;
+	endFrame_ = 0;
+	
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	setupAnimationUbo();
@@ -55,6 +58,10 @@ Animation::Animation(
 	
 	//BOOST_LOG_TRIVIAL(debug) << "loading animation...";
 	bufferId_ = 0;
+	
+	startFrame_ = 0;
+	endFrame_ = 0;
+	
 	// Error check - default to 25 ticks per second
 	ticksPerSecond_ = ( ticksPerSecond_ != 0.0f ? ticksPerSecond_ : 25.0f );
 	
@@ -117,6 +124,11 @@ GLuint Animation::getBindPoint()
 void Animation::setAnimationTime(glmd::float32 runningTime)
 {
 	runningTime_ = runningTime;
+}
+
+void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame)
+{
+	
 }
 
 const std::string Animation::getName()

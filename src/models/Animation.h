@@ -47,6 +47,8 @@ public:
 	// From glw::IAnimation
 	virtual const std::string getName();
 	virtual void setAnimationTime(glm::detail::float32 runningTime);
+	
+	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame); 
 
 protected:
 	glw::IOpenGlDevice* openGlDevice_;

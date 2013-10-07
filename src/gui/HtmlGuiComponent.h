@@ -13,12 +13,9 @@
 
 #include <GL/glew.h>
 
-#include <berkelium/Window.hpp>
-#include <berkelium/WindowDelegate.hpp>
-#include <berkelium/Rect.hpp>
-#include <berkelium/ScriptUtil.hpp>
-#include <berkelium/Berkelium.hpp>
-#include <berkelium/Context.hpp>
+#include <cef_app.h>
+#include <cef_client.h>
+#include <cef_render_handler.h>
 
 #include "../glw/shaders/IShaderProgram.h"
 #include "../glw/IOpenGlDevice.h"
@@ -32,7 +29,43 @@ namespace glmd = glm::detail;
 namespace glr {
 namespace gui {
 
-class HtmlGuiComponent : public IGUIComponent,  public Berkelium::WindowDelegate {
+class RenderHandler : public CefRenderHandler
+{
+public:
+	// CefRenderHandler interface
+	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
+	{
+		rect = CefRect(0, 0, 800, 600);
+		return true;
+	};
+	
+    void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
+    {
+		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
+	};
+    
+    // CefBase interface
+	// NOTE: Must be at bottom
+    IMPLEMENT_REFCOUNTING(RenderHandler)
+};
+
+// for manual render handler
+class BrowserClient : public CefClient
+{
+public:
+    BrowserClient(RenderHandler* renderHandler) : m_renderHandler(renderHandler)
+    {};
+
+    virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
+        return m_renderHandler;
+    };
+
+    CefRefPtr<CefRenderHandler> m_renderHandler;
+
+    IMPLEMENT_REFCOUNTING(BrowserClient)
+};
+
+class HtmlGuiComponent : public IGUIComponent {
 public:
 	HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~HtmlGuiComponent();
@@ -76,7 +109,8 @@ private:
 	// Buffer used to store data for scrolling
 	char* scroll_buffer;
 
-	Berkelium::Window* window_;
+	CefRefPtr<CefBrowser> browser_;
+    CefRefPtr<BrowserClient> browserClient_;
 
 	std::map< std::wstring, std::unique_ptr<GUIObject> > guiObjects_;
 
@@ -113,6 +147,7 @@ private:
 	bool needs_full_refresh;
 	bool webTextureReady_;
 };
+
 }
 }
 #endif /* HTMLGUICOMPONENT_H_ */

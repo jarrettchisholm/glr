@@ -60,6 +60,11 @@ void Animation::setAnimationTime(glm::detail::float32 runningTime)
 	animation_->setAnimationTime( runningTime );
 }
 
+void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame)
+{
+	
+}
+
 }
 }
 

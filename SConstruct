@@ -268,6 +268,8 @@ if (isWindows):
 	boostSystemLib = 'libboost_system-vc120-mt-1_55'
 
 libraries = [
+'cef',
+'cef_dll_wrapper',
 glLib,
 glewLib,
 berkeliumLib,
@@ -339,6 +341,23 @@ if (not isWindows):
 	
 	# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 	cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
+	
+	# pkg-config --cflags gtk+-2.0
+	#cpp_paths.append('/home/jarrett/projects/berkelium2/cef3')
+	#cpp_paths.append('/home/jarrett/projects/berkelium2/cef3/include')
+	
+	# Need to install cef3 to '/usr/local/include/cef3' for this to work
+	cpp_paths.append('/usr/local/include/cef3')
+	
+	cpp_paths.append('/home/jarrett/projects/ogre')
+	cpp_paths.append('/usr/include/gtk-2.0')
+	cpp_paths.append('/usr/lib/x86_64-linux-gnu/gtk-2.0/include')
+	cpp_paths.append('/usr/include/atk-1.0')
+	cpp_paths.append('/usr/include/cairo')
+	cpp_paths.append('/usr/include/gdk-pixbuf-2.0')
+	cpp_paths.append('/usr/include/pango-1.0')
+	cpp_paths.append('/usr/include/glib-2.0')
+	cpp_paths.append('/usr/lib/x86_64-linux-gnu/glib-2.0/include')
 else:
 	if isWindows:
 		if (compiler == 'default'):
@@ -376,6 +395,10 @@ env = Environment(ENV = os.environ, TOOLS = [compiler], CCFLAGS=[])
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
 env.Append( CPPPATH = cpp_paths )
+
+### Set our runtime library locations
+if isLinux:
+	env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', os.pardir, 'lib')))
 
 env.SetOption('num_jobs', multiprocessing.cpu_count())
 

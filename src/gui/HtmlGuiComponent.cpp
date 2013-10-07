@@ -39,70 +39,68 @@ int HtmlGuiComponent::load()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	Berkelium::Context* context = Berkelium::Context::create();
-	window_ = Berkelium::Window::create(context);
-	delete context;
+	CefMainArgs args(0, nullptr);
 
-	scroll_buffer = new char[width_ * (width_ + 1) * 4];
+    {
+        int result = CefExecuteProcess(args, nullptr);
+        // checkout CefApp, derive it and set it as second parameter, for more control on
+        // command args and resources.
+        if (result >= 0) // child proccess has endend, so exit.
+        {
+            return result;
+        }
+        if (result == -1)
+        {
+            // we are here in the father proccess.
+        }
+    }
 
-	//MyDelegate* delegate = new MyDelegate();
-	window_->setDelegate(this);
-	window_->resize(width_, height_);
-	window_->setTransparent(true);
-	//std::string url = "file:///home/jarrett/projects/chisholmsoft/dark_horizon/data/test.html";
-	window_->navigateTo(Berkelium::URLString::point_to(url_.data(), url_.length()));
+	{
+        CefSettings settings;
 
-	// TESTING CALLBACKS START
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutCallback"),
-		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), false));
+        // checkout detailed settings options http://magpcss.org/ceforum/apidocs/projects/%28default%29/_cef_settings_t.html
+        // nearly all the settings can be set via args too.
+        // settings.multi_threaded_message_loop = true; // not supported, except windows
+        // CefString(&settings.browser_subprocess_path).FromASCII("sub_proccess path, by default uses and starts this executeable as child");
+        // CefString(&settings.cache_path).FromASCII("");
+        // CefString(&settings.log_file).FromASCII("");
+        // settings.log_severity = LOGSEVERITY_DEFAULT;
+        // CefString(&settings.resources_dir_path).FromASCII("");
+        // CefString(&settings.locales_dir_path).FromASCII("");
 
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutCallbackSync"),
-		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"glutCB"), true));
+        bool result = CefInitialize(args, settings, nullptr);
+        // CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
+        // if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
+        if (!result)
+        {
+            // handle error
+            BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
+            return -1;
+        }
+    }
+    
+    // create browser-window
+    CefRefPtr<CefBrowser> browser;
+    CefRefPtr<BrowserClient> browserClient;
+    {
+        CefWindowInfo window_info;
+        CefBrowserSettings browserSettings;
 
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest"),
-		Berkelium::Script::Variant::emptyObject());
+        // in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
+        window_info.SetAsOffScreen(nullptr);
+		
+		
+		RenderHandler* rh = new RenderHandler();
+        browserClient = new BrowserClient(rh);
 
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest.someArray"),
-		Berkelium::Script::Variant::emptyArray());
+        browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), "http://deanm.github.io/pre3d/monster.html", browserSettings);
 
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest.someArray[0]"),
-		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), false));
-
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest.someArray[1]"),
-		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"arrayFunc"), true));
-
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest.nullValue"),
-		Berkelium::Script::Variant());
-
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(L"glutObjectTest.stringValue"),
-		Berkelium::Script::Variant("Hello, World!"));
-	// TESTING CALLBACKS END
-
-	/*
-	   window_->addBindOnStartLoading(
-	   Berkelium::WideString::point_to(L"camera"),
-	   Berkelium::Script::Variant::emptyObject());
-
-	   window_->addBindOnStartLoading(
-	   Berkelium::WideString::point_to(L"camera.getX"),
-	   Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getX"), true));
-
-	   window_->addBindOnStartLoading(
-	   Berkelium::WideString::point_to(L"camera.getY"),
-	   Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getY"), true));
-
-	   window_->addBindOnStartLoading(
-	   Berkelium::WideString::point_to(L"camera.getZ"),
-	   Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(L"camera.getZ"), true));
-	 */
+        // inject user-input by calling
+        // browser->GetHost()->SendKeyEvent(...);
+        // browser->GetHost()->SendMouseMoveEvent(...);
+        // browser->GetHost()->SendMouseClickEvent(...);
+        // browser->GetHost()->SendMouseWheelEvent(...);
+    }
 
 	testint = 31;
 	webTextureReady_ = false;
@@ -125,8 +123,12 @@ int HtmlGuiComponent::load()
 
 void HtmlGuiComponent::unload()
 {
+	browser_ = nullptr;
+    browserClient_ = nullptr;
+	CefShutdown();
+        
 	this->setVisible(false);
-	window_ = 0;
+	//window_ = 0;
 }
 
 /** Maps an input coordinate to a texture coordinate for injection into
@@ -149,18 +151,18 @@ void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yP
 	unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
     unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
     //std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
-	window_->mouseMoved(tex_coord_x, tex_coord_y);
+	//window_->mouseMoved(tex_coord_x, tex_coord_y);
 }
 
 void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount)
 {
 	//std::cout << "MOUSE BUTTON EVENT: " << buttonID << " " << down << std::endl;
-	window_->mouseButton(buttonID, down, clickCount);
+	//window_->mouseButton(buttonID, down, clickCount);
 }
 
 void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonID)
 {
-	window_->mouseButton(buttonID, true, 1);
+	//window_->mouseButton(buttonID, true, 1);
 }
 
 void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
@@ -182,6 +184,7 @@ void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 		 *	}
 		 */
 
+		/*
 		window_->executeJavascript(Berkelium::WideString::point_to(
 									   L"if( $('#console').hasClass('hidden') ) {\
 											$('#console').removeClass('hidden');\
@@ -192,16 +195,17 @@ void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 											$('#console').removeClass('visible');\
 									   }"
 									   ));
+									   */
 	}
 	else
 	{
 		std::cout << "HERE 1 " << (char*)evt << std::endl;
-		window_->focus();
+		//window_->focus();
 		wchar_t outchars[2];
 		outchars[0] = evt[0];
 		outchars[1] = 0;
 		std::cout << "HERE 2 " << outchars[0] << std::endl;
-		window_->textEvent(outchars, 1);
+		//window_->textEvent(outchars, 1);
 	}
 }
 
@@ -211,6 +215,7 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 
 	if ( vk_code == '`' || vk_code == '~' )
 	{
+		/*
 		window_->executeJavascript(Berkelium::WideString::point_to(
 									   L"if( $('#console').hasClass('hidden') ) {\
 											$('#console').removeClass('hidden');\
@@ -221,6 +226,7 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 											$('#console').removeClass('visible');\
 										}"
 									   ));
+									   */
 	}
 	else
 	{
@@ -229,7 +235,7 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 		outchars[0] = vk_code;
 		outchars[1] = 0;
 		std::cout << "HERE 2 " << outchars[0] << std::endl;
-		window_->textEvent(outchars, 1);
+		//window_->textEvent(outchars, 1);
 		//window_->keyEvent(pressed, mods, vk_code, scancode);
 	}
 }
@@ -253,7 +259,7 @@ int HtmlGuiComponent::loadContentsFromFile(std::string filename)
 
 void HtmlGuiComponent::update()
 {
-	window_->executeJavascript(Berkelium::WideString::point_to(L"update();"));
+	//window_->executeJavascript(Berkelium::WideString::point_to(L"update();"));
 }
 
 
@@ -261,6 +267,7 @@ void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
 {
 	//texture_->bind();
 	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
+	CefDoMessageLoopWork();
 	
 	if ( webTextureReady_ )
 	{
@@ -414,6 +421,21 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMs
 			win->synchronousScriptReturn(replyMsg, r);
 	}
 }
+
+/*
+bool HtmlGuiComponent::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
+{
+	rect = CefRect(0, 0, 800, 600);
+	return true;
+}
+
+void HtmlGuiComponent::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
+{
+
+	memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
+
+}
+*/
 
 void HtmlGuiComponent::onPaint(
 		Berkelium::Window* wini,
@@ -636,7 +658,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
 
 void HtmlGuiComponent::executeScript(std::wstring script)
 {
-	window_->executeJavascript(Berkelium::WideString::point_to(script));
+	//window_->executeJavascript(Berkelium::WideString::point_to(script));
 }
 
 bool HtmlGuiComponent::isVisible()
@@ -655,10 +677,13 @@ IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name)
 	{
 		return nullptr;
 	}
+	
+	// re-implement using CEF3
+	//guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, window_));
 
-	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, window_));
-
-	return guiObjects_[name].get();
+	//return guiObjects_[name].get();
+	
+	return nullptr;
 }
 
 IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name)

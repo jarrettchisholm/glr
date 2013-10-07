@@ -38,6 +38,7 @@ public:
 	GLuint getBindPoint();
 	
 	void setAnimationTime(glmd::float32 runningTime);
+	void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame);
 	
 	const std::string getName();
 	
@@ -57,6 +58,10 @@ private:
 	
 	// The running time can change multiple times per frame (models share animations)
 	glmd::float32 runningTime_;
+	
+	// Only play frames within this range
+	glmd::uint32 startFrame_;
+	glmd::uint32 endFrame_;
 
 	std::map< std::string, AnimatedBoneNode > animatedBoneNodes_;
 	
