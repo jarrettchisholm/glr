@@ -11,8 +11,6 @@
 #include <string>
 #include <vector>
 
-#include <berkelium/Berkelium.hpp>
-
 #include "IGUI.h"
 
 #include "../glw/shaders/IShaderProgramManager.h"

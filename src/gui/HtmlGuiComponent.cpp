@@ -40,22 +40,25 @@ int HtmlGuiComponent::load()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	CefMainArgs args(0, nullptr);
+	BOOST_LOG_TRIVIAL(info) << "here 3";
 
-    {
-        int result = CefExecuteProcess(args, nullptr);
+    
+        int result1 = CefExecuteProcess(args, nullptr);
         // checkout CefApp, derive it and set it as second parameter, for more control on
         // command args and resources.
-        if (result >= 0) // child proccess has endend, so exit.
+        if (result1 >= 0) // child proccess has endend, so exit.
         {
-            return result;
+			BOOST_LOG_TRIVIAL(info) << "RESULT 1";
+            return result1;
         }
-        if (result == -1)
+        if (result1 == -1)
         {
+			BOOST_LOG_TRIVIAL(info) << "RESULT 2 ";
             // we are here in the father proccess.
         }
-    }
-
-	{
+    
+BOOST_LOG_TRIVIAL(info) << "here 4";
+	
         CefSettings settings;
 
         // checkout detailed settings options http://magpcss.org/ceforum/apidocs/projects/%28default%29/_cef_settings_t.html
@@ -77,23 +80,27 @@ int HtmlGuiComponent::load()
             BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
             return -1;
         }
-    }
     
+    BOOST_LOG_TRIVIAL(info) << "here 5";
     // create browser-window
     CefRefPtr<CefBrowser> browser;
     CefRefPtr<BrowserClient> browserClient;
+    BOOST_LOG_TRIVIAL(info) << "here 6";
     {
         CefWindowInfo window_info;
         CefBrowserSettings browserSettings;
-
+BOOST_LOG_TRIVIAL(info) << "here 7";
         // in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
         window_info.SetAsOffScreen(nullptr);
-		
+		BOOST_LOG_TRIVIAL(info) << "here 8";
 		
 		RenderHandler* rh = new RenderHandler();
+		BOOST_LOG_TRIVIAL(info) << "here 9";
         browserClient = new BrowserClient(rh);
+        BOOST_LOG_TRIVIAL(info) << "here 10";
 
         browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), "http://deanm.github.io/pre3d/monster.html", browserSettings);
+        BOOST_LOG_TRIVIAL(info) << "here 11";
 
         // inject user-input by calling
         // browser->GetHost()->SendKeyEvent(...);
@@ -299,13 +306,14 @@ void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
 
 	// wait a bit before calling Berkelium::update() again
 	//if (testint > 3) {
-	Berkelium::update();
+	//Berkelium::update();
 	testint = -1;
 	//}
 
 	testint++;
 }
 
+/*
 void HtmlGuiComponent::onCrashed(Berkelium::Window*win)
 {
 	std::cout << "*** onCrashed " << std::endl;
@@ -320,7 +328,7 @@ void HtmlGuiComponent::onScriptAlert(Berkelium::Window*win, Berkelium::WideStrin
 {
 	std::wcout << L"*** onScriptAlert " << message << std::endl;
 }
-
+*/
 
 std::wstring HtmlGuiComponent::getObjectName(std::wstring name)
 {
@@ -348,10 +356,9 @@ std::wstring HtmlGuiComponent::getFunctionName(std::wstring name)
 	return L"";
 }
 
-
+/*
 void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs)
 {
-	/*
 	   std::cout << "*** onJavascriptCallback at URL " << url << ", "
 	                  << (replyMsg?"synchronous":"async") << std::endl;
 	   std::wcout << L"    Function name: " << funcName << std::endl;
@@ -366,7 +373,6 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMs
 	        }
 	        Berkelium::Script::toJSON_free(jsonStr);
 	   }
-	 */
 
 	// parse object and function names
 	const std::wstring berkeliumFuncName = std::wstring(funcName.data(), funcName.length());
@@ -421,6 +427,7 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMs
 			win->synchronousScriptReturn(replyMsg, r);
 	}
 }
+*/
 
 /*
 bool HtmlGuiComponent::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
@@ -437,6 +444,7 @@ void HtmlGuiComponent::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType t
 }
 */
 
+/*
 void HtmlGuiComponent::onPaint(
 		Berkelium::Window* wini,
 		const unsigned char*bitmap_in, 
@@ -471,6 +479,7 @@ void HtmlGuiComponent::onPaint(
 		webTextureReady_ = true;
 	}
 }
+*/
 
 /** Handles an onPaint call by mapping the results into an OpenGL texture. The
  *  first parameters are the same as Berkelium::WindowDelegate::onPaint.  The
@@ -486,6 +495,7 @@ void HtmlGuiComponent::onPaint(
  *         at least dest_texture_width * dest_texture_height * 4 bytes large.
  *  \returns true if the texture was updated, false otherwiase
  */
+/*
 bool HtmlGuiComponent::mapOnPaintToTexture(
 		Berkelium::Window*wini,
 		const unsigned char* bitmap_in, 
@@ -655,6 +665,7 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
 
 	return true;
 }
+*/
 
 void HtmlGuiComponent::executeScript(std::wstring script)
 {
@@ -678,10 +689,10 @@ IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name)
 		return nullptr;
 	}
 	
-	// re-implement using CEF3
-	//guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, window_));
+	// TODO: Re-implement using CEF3
+	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name));
 
-	//return guiObjects_[name].get();
+	return guiObjects_[name].get();
 	
 	return nullptr;
 }

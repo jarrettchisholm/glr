@@ -242,7 +242,6 @@ library_paths = []
 ### Set our required libraries
 glLib = 'GL'
 glewLib = 'GLEW'
-berkeliumLib = 'liblibberkelium_d'
 libPThread = 'pthread'
 boostLogLib = 'boost_log'
 boostLogSetupLib = 'boost_log_setup'
@@ -256,7 +255,6 @@ boostSystemLib = 'boost_system'
 if (isWindows):
 	glLib = 'opengl32'
 	glewLib = 'glew32'
-	berkeliumLib = 'berkelium'
 	libPThread = ''
 	boostLogLib = 'libboost_log-vc120-mt-1_55'
 	boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
@@ -272,7 +270,6 @@ libraries = [
 'cef_dll_wrapper',
 glLib,
 glewLib,
-berkeliumLib,
 libPThread,
 'sfml-system',
 'sfml-window',
@@ -299,7 +296,6 @@ library_paths.append('../glr/build')
 if (isWindows):
 	library_paths.append('../../angelscript-sdk/angelscript/lib')
 	library_paths.append('../../sqlite3')
-	library_paths.append('../../berkelium-win32/lib')
 	library_paths.append('../../SFML/lib')
 	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
 	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
@@ -383,7 +379,6 @@ else:
 	cpp_paths.append('C:\\Program Files\\Assimp\\include')
 	cpp_paths.append('C:\\Users\\Jarrett\\projects\\glm')
 	cpp_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
-	cpp_paths.append('C:\\Users\\Jarrett\\projects\\berkelium\\include')
 	cpp_paths.append('C:\\Users\\Jarrett\\projects\\SFML\\include')
 
 

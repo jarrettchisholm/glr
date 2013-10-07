@@ -27,11 +27,13 @@ GUI::~GUI()
 
 int GUI::initialize()
 {
+	/*
 	if ( !Berkelium::init(Berkelium::FileString::empty()) )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Failed to initialize berkelium!";
 		return -1;
 	}
+	*/
 	
 	return 0;
 }
@@ -40,7 +42,7 @@ void GUI::destroy()
 {
 	views_.clear();
 	
-	Berkelium::destroy();
+	//Berkelium::destroy();
 }
 
 

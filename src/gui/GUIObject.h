@@ -10,20 +10,13 @@
 
 #include <map>
 
-#include <berkelium/Window.hpp>
-#include <berkelium/WindowDelegate.hpp>
-#include <berkelium/Rect.hpp>
-#include <berkelium/ScriptUtil.hpp>
-#include <berkelium/Berkelium.hpp>
-#include <berkelium/Context.hpp>
-
 #include "IGUIObject.h"
 
 namespace glr {
 namespace gui {
 class GUIObject : public IGUIObject {
 public:
-	GUIObject(std::wstring name, Berkelium::Window* window);
+	GUIObject(std::wstring name);
 	virtual ~GUIObject();
 	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
@@ -41,7 +34,7 @@ public:
 	virtual void addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function);
 	virtual void addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function);
 
-	Berkelium::Script::Variant processCallback(std::wstring name, std::vector< CallbackParameter > params);
+	//Berkelium::Script::Variant processCallback(std::wstring name, std::vector< CallbackParameter > params);
 
 private:
 	enum FunctionTypes {
@@ -60,7 +53,7 @@ private:
 		TYPE_WITH_PARAMETERS_BOOL
 	};
 
-	Berkelium::Window* window_;
+	//Berkelium::Window* window_;
 	std::wstring name_;
 
 	std::map< std::wstring, int > functionTypeMap_;

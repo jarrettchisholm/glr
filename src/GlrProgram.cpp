@@ -74,13 +74,10 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		BOOST_LOG_TRIVIAL(error) << msg.str();
 		throw exception::Exception(msg.str());
 	}
-
+	BOOST_LOG_TRIVIAL(debug) << "Creating window.";
 	window_ = std::unique_ptr<IWindow>(new Window(width, height, title));
-
-	// VERY weird bug - I can call 'resize' all I want in the Window class - the initial perspective
-	// doesn't seem to get set unless I call it OUTSIDE of the Window class...wtf?
-	//window_->resize(width, height);
-
+	
+	BOOST_LOG_TRIVIAL(debug) << "Initializing GLEW.";
 	// Initialize GLEW
 	glewExperimental = true; // Needed in core profile
 	if ( glewInit() != GLEW_OK )
@@ -90,16 +87,19 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		throw exception::GlException(msg);
 	}
 	
+	BOOST_LOG_TRIVIAL(debug) << "OpenGL setup.";
 	// Setup settings for open gl device
 	glr::glw::OpenGlDeviceSettings settings = glr::glw::OpenGlDeviceSettings();
 	if ( !settings_.defaultTextureDir.empty() )
 		settings.defaultTextureDir = settings_.defaultTextureDir;
 	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice(settings) );
 
+	BOOST_LOG_TRIVIAL(debug) << "Initialize shader programs.";
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = openGlDevice_->getShaderProgramManager();
 	shaderProgramManager_->addDefaultBindListener( this );
 	
+	BOOST_LOG_TRIVIAL(debug) << "Create scene manager.";
 	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
 
 	// Set the default shader for the scene manager
@@ -108,6 +108,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	
 	sMgr_->setDefaultShaderProgram(shader);
 	
+	BOOST_LOG_TRIVIAL(debug) << "Set OpenGL matrices.";
 	// Set our opengl matrices
 	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
 	ICamera* camera = sMgr_->getActiveCamera();

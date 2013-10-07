@@ -11,12 +11,14 @@
 
 namespace glr {
 namespace gui {
-GUIObject::GUIObject(std::wstring name, Berkelium::Window* window) :
-	name_(name), window_(window)
+GUIObject::GUIObject(std::wstring name) :
+	name_(name)
 {
+	/*
 	window_->addBindOnStartLoading(
 		Berkelium::WideString::point_to(name_),
 		Berkelium::Script::Variant::emptyObject());
+		*/
 }
 
 GUIObject::~GUIObject()
@@ -26,10 +28,12 @@ GUIObject::~GUIObject()
 void GUIObject::addFunction(std::wstring funcName)
 {
 	std::wstring pointTo = name_ + L"." + funcName;
-
+	
+	/*
 	window_->addBindOnStartLoading(
 		Berkelium::WideString::point_to(pointTo),
 		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(pointTo), true));
+		*/
 }
 
 void GUIObject::addFunction(std::wstring name, std::function<void()> function)
@@ -117,6 +121,7 @@ void GUIObject::addFunction(std::wstring name, std::function<bool(std::vector<Ca
 	addFunction(name);
 }
 
+/*
 Berkelium::Script::Variant GUIObject::processCallback(std::wstring name, std::vector< CallbackParameter > params)
 {
 	int type = functionTypeMap_[name];
@@ -200,5 +205,7 @@ Berkelium::Script::Variant GUIObject::processCallback(std::wstring name, std::ve
 
 	return variant;
 }
+*/
+
 }
 }

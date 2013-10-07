@@ -46,6 +46,7 @@ public:
     
     // CefBase interface
 	// NOTE: Must be at bottom
+public:
     IMPLEMENT_REFCOUNTING(RenderHandler)
 };
 
@@ -54,7 +55,9 @@ class BrowserClient : public CefClient
 {
 public:
     BrowserClient(RenderHandler* renderHandler) : m_renderHandler(renderHandler)
-    {};
+    {
+		BOOST_LOG_TRIVIAL(info) << "here 1b";
+	};
 
     virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
         return m_renderHandler;
@@ -62,6 +65,8 @@ public:
 
     CefRefPtr<CefRenderHandler> m_renderHandler;
 
+	// NOTE: Must be at bottom
+public:
     IMPLEMENT_REFCOUNTING(BrowserClient)
 };
 
@@ -119,6 +124,7 @@ private:
 
 	unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 
+	/*
 	bool mapOnPaintToTexture(
 		Berkelium::Window*wini,
 		const unsigned char* bitmap_in, const Berkelium::Rect& bitmap_rect,
@@ -140,7 +146,7 @@ private:
 	virtual void onUnresponsive(Berkelium::Window*win);
 	virtual void onScriptAlert(Berkelium::Window*win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool&success, Berkelium::WideString&value);
 	virtual void onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs);
-
+	*/
 	void testLoadTexture();
 	void testDrawTest1();
 	glm::detail::int32 testint;
