@@ -17,7 +17,7 @@
 
 #include "../common/utilities/ImageLoader.h"
 
-#define DEBUG_PAINT true
+//#define DEBUG_PAINT true
 
 namespace glr {
 namespace gui {
@@ -39,11 +39,9 @@ int HtmlGuiComponent::load()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	char* argv[1];
-	CefMainArgs args(0, nullptr);
-	std::cout << "here 3" << std::endl;
+	CefMainArgs args;
 
-    
+    /*
         int result1 = CefExecuteProcess(args, nullptr);
         // checkout CefApp, derive it and set it as second parameter, for more control on command args and resources.
         if (result1 >= 0) // child proccess has endend, so exit.
@@ -56,52 +54,53 @@ int HtmlGuiComponent::load()
 			std::cout << "RESULT 2 " << std::endl;
             // we are here in the father proccess.
         }
-    
-std::cout << "here 4" << std::endl;
+    */
 	
-        CefSettings settings;
+	CefSettings settings;
+	//settings.command_line_args_disabled = true;
 
-        // checkout detailed settings options http://magpcss.org/ceforum/apidocs/projects/%28default%29/_cef_settings_t.html
-        // nearly all the settings can be set via args too.
-        // settings.multi_threaded_message_loop = true; // not supported, except windows
-        // CefString(&settings.browser_subprocess_path).FromASCII("sub_proccess path, by default uses and starts this executeable as child");
-        // CefString(&settings.cache_path).FromASCII("");
-        // CefString(&settings.log_file).FromASCII("");
-        // settings.log_severity = LOGSEVERITY_DEFAULT;
-        // CefString(&settings.resources_dir_path).FromASCII("");
-        // CefString(&settings.locales_dir_path).FromASCII("");
+	// checkout detailed settings options http://magpcss.org/ceforum/apidocs/projects/%28default%29/_cef_settings_t.html
+	// nearly all the settings can be set via args too.
+	// settings.multi_threaded_message_loop = true; // not supported, except windows
+	// CefString(&settings.browser_subprocess_path).FromASCII("sub_proccess path, by default uses and starts this executeable as child");
+	// CefString(&settings.cache_path).FromASCII("");
+	// CefString(&settings.log_file).FromASCII("");
+	// settings.log_severity = LOGSEVERITY_DEFAULT;
+	// CefString(&settings.resources_dir_path).FromASCII("");
+	// CefString(&settings.locales_dir_path).FromASCII("");
 
-        //bool result = CefInitialize(args, settings, nullptr);
-        // CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
-        // if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
-        //if (!result)
-        {
-            // handle error
-            //BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
-            //return -1;
-        }
+	// TODO: make this not hardcoded
+	CefString(&settings.browser_subprocess_path).FromASCII("/home/jarrett/projects/chisholmsoft/cef3_client/build/cef3_client");
+	
+	bool result = CefInitialize(args, settings, nullptr);
+	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
+	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
+	if (!result)
+	{
+		// handle error
+		BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
+		return -1;
+	}
     
-    std::cout << "here 5" << std::endl;
     // create browser-window
     CefRefPtr<CefBrowser> browser;
     CefRefPtr<BrowserClient> browserClient;
-    std::cout << "here 6" << std::endl;
+
     {
         CefWindowInfo window_info;
         CefBrowserSettings browserSettings;
-std::cout << "here 7" << std::endl;
+
         // in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
         window_info.SetAsOffScreen(nullptr);
-		std::cout << "here 8" << std::endl;
+		window_info.SetTransparentPainting(true);
 		
-		RenderHandler* rh = new RenderHandler();
-		std::cout << "here 9" << std::endl;
+		RenderHandler* rh = new RenderHandler(web_texture);
         browserClient = new BrowserClient(rh);
-        std::cout << "here 10" << std::endl;
-
-        browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), "http://deanm.github.io/pre3d/monster.html", browserSettings);
-        std::cout << "here 11" << std::endl;
-
+		
+        browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), url_, browserSettings);
+		
+		//browser->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
+		
         // inject user-input by calling
         // browser->GetHost()->SendKeyEvent(...);
         // browser->GetHost()->SendMouseMoveEvent(...);
@@ -276,8 +275,8 @@ void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
 	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
 	CefDoMessageLoopWork();
 	
-	if ( webTextureReady_ )
-	{
+	//if ( webTextureReady_ )
+	//{
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
@@ -302,7 +301,7 @@ void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
 
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
-	}
+	//}
 
 	// wait a bit before calling Berkelium::update() again
 	//if (testint > 3) {

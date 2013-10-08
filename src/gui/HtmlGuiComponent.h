@@ -32,6 +32,11 @@ namespace gui {
 class RenderHandler : public CefRenderHandler
 {
 public:
+	RenderHandler(glm::detail::uint32 web_texture) : web_texture(web_texture)
+	{
+		// TODO: error check web_texture value
+	}
+
 	// CefRenderHandler interface
 	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
 	{
@@ -41,8 +46,29 @@ public:
 	
     void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
     {
+		std::cout << "painting!: " << width << " " << height << std::endl;
 		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
+		
+		glBindTexture(GL_TEXTURE_2D, web_texture);
+		
+		// Finally, we perform the main update, just copying the rect that is
+		// marked as dirty but not from scrolled data.
+		/*
+		glTexSubImage2D(GL_TEXTURE_2D, 0,
+						0, 0,
+						width, height,
+						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 
+						buffer
+						);
+						*/
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 	};
+	
+	glm::detail::uint32 web_texture;
     
     // CefBase interface
 	// NOTE: Must be at bottom
