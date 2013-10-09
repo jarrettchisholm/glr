@@ -82,13 +82,13 @@ void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 	}
 }
 
-void GUI::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount)
+void GUI::mouseButton(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
-			views_.at(i).get()->mouseButton(buttonID, down, clickCount);
+			views_.at(i).get()->mouseButton(buttonID, xPos, yPos, down, clickCount);
 		}
 	}
 }

@@ -83,8 +83,8 @@ int HtmlGuiComponent::load()
 	}
     
     // create browser-window
-    CefRefPtr<CefBrowser> browser;
-    CefRefPtr<BrowserClient> browserClient;
+    //CefRefPtr<CefBrowser> browser;
+    //CefRefPtr<BrowserClient> browserClient;
 
     {
         CefWindowInfo window_info;
@@ -95,17 +95,17 @@ int HtmlGuiComponent::load()
 		window_info.SetTransparentPainting(true);
 		
 		RenderHandler* rh = new RenderHandler(web_texture);
-        browserClient = new BrowserClient(rh);
+        browserClient_ = new BrowserClient(rh);
 		
-        browser = CefBrowserHost::CreateBrowserSync(window_info, browserClient.get(), url_, browserSettings);
+        browser_ = CefBrowserHost::CreateBrowserSync(window_info, browserClient_.get(), url_, browserSettings);
 		
 		//browser->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
 		
         // inject user-input by calling
-        // browser->GetHost()->SendKeyEvent(...);
-        // browser->GetHost()->SendMouseMoveEvent(...);
-        // browser->GetHost()->SendMouseClickEvent(...);
-        // browser->GetHost()->SendMouseWheelEvent(...);
+        // browser_->GetHost()->SendKeyEvent(...);
+        // browser_->GetHost()->SendMouseMoveEvent(...);
+        // browser_->GetHost()->SendMouseClickEvent(...);
+        // browser_->GetHost()->SendMouseWheelEvent(...);
     }
 
 	testint = 31;
@@ -152,23 +152,72 @@ unsigned int HtmlGuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, u
 
 void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	//std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
+	std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
 	
-	unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
-    unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
+	//unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
+    //unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
     //std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
 	//window_->mouseMoved(tex_coord_x, tex_coord_y);
+	
+	CefMouseEvent mouseEvent;
+	mouseEvent.x = xPos;
+	mouseEvent.y = yPos;
+	//window->ApplyPopupOffset(mouseEvent.x, mouseEvent.y);
+	//mouseEvent.modifiers = getCefStateModifiers(state);
+	
+	bool mouseLeave = false; //(event->type == GDK_LEAVE_NOTIFY);
+	
+	browser_->GetHost()->SendMouseMoveEvent(mouseEvent, mouseLeave);
 }
 
-void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, bool down, glm::detail::int32 clickCount)
+void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
-	//std::cout << "MOUSE BUTTON EVENT: " << buttonID << " " << down << std::endl;
+	std::cout << "MOUSE BUTTON EVENT: " << buttonID << " " << xPos << " " << yPos << " " << down << std::endl;
 	//window_->mouseButton(buttonID, down, clickCount);
+	CefBrowserHost::MouseButtonType buttonType = MBT_LEFT;
+	switch (buttonID) {
+	case 1:
+	  break;
+	case 2:
+	  buttonType = MBT_MIDDLE;
+	  break;
+	case 3:
+	  buttonType = MBT_RIGHT;
+	  break;
+	default:
+	  // Other mouse buttons are not handled here.
+	  return;
+	}
+	
+	CefMouseEvent mouseEvent;
+	mouseEvent.x = xPos;
+	mouseEvent.y = yPos;
+	//window->ApplyPopupOffset(mouseEvent.x, mouseEvent.y);
+	//mouseEvent.modifiers = getCefStateModifiers(event->state);
+	
+	bool mouseUp = !down; //(event->type == GDK_BUTTON_RELEASE);
+	//if (!mouseUp)
+	//gtk_widget_grab_focus(widget);
+	
+	int clickCount = 1;
+	/*
+	switch (event->type) {
+	case GDK_2BUTTON_PRESS:
+	  clickCount = 2;
+	  break;
+	case GDK_3BUTTON_PRESS:
+	  clickCount = 3;
+	  break;
+	default:
+	  break;
+	}
+	*/
+	browser_->GetHost()->SendMouseClickEvent(mouseEvent, buttonType, mouseUp, clickCount);
 }
 
-void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonID)
+void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	//window_->mouseButton(buttonID, true, 1);
+	this->mouseButton(buttonID, xPos, yPos, true, 1);	
 }
 
 void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
@@ -215,13 +264,54 @@ void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 	}
 }
 
+glm::detail::int32 HtmlGuiComponent::getCefStateModifiers(glm::detail::int32 state) {
+  glm::detail::int32 modifiers = 0;
+  /*
+  if (state & GDK_SHIFT_MASK)
+    modifiers |= EVENTFLAG_SHIFT_DOWN;
+  if (state & GDK_LOCK_MASK)
+    modifiers |= EVENTFLAG_CAPS_LOCK_ON;
+  if (state & GDK_CONTROL_MASK)
+    modifiers |= EVENTFLAG_CONTROL_DOWN;
+  if (state & GDK_MOD1_MASK)
+    modifiers |= EVENTFLAG_ALT_DOWN;
+  if (state & GDK_BUTTON1_MASK)
+    modifiers |= EVENTFLAG_LEFT_MOUSE_BUTTON;
+  if (state & GDK_BUTTON2_MASK)
+    modifiers |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
+  if (state & GDK_BUTTON3_MASK)
+    modifiers |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
+  */
+  return modifiers;
+}
+
 void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
 {
 	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
 
+	CefKeyEvent keyEvent;
+	keyEvent.native_key_code = vk_code;
+	keyEvent.modifiers = getCefStateModifiers(mods);
+
+	/*
+	if (event->type == GDK_KEY_PRESS) {
+		keyEvent.type = KEYEVENT_RAWKEYDOWN;
+		host->SendKeyEvent(keyEvent);
+	} else */
+	{
+		// Need to send both KEYUP and CHAR events.
+	/*
+		keyEvent.type = KEYEVENT_KEYUP;
+		host->SendKeyEvent(keyEvent);
+	*/
+		std::cout << "HERE 2 " << vk_code << std::endl;
+		keyEvent.type = KEYEVENT_CHAR;
+		browser_->GetHost()->SendKeyEvent(keyEvent);
+	}
+	
+	/*
 	if ( vk_code == '`' || vk_code == '~' )
 	{
-		/*
 		window_->executeJavascript(Berkelium::WideString::point_to(
 									   L"if( $('#console').hasClass('hidden') ) {\
 											$('#console').removeClass('hidden');\
@@ -232,18 +322,18 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 											$('#console').removeClass('visible');\
 										}"
 									   ));
-									   */
 	}
 	else
-	{
+	*/
+	//{
 		//window_->focus();
-		wchar_t outchars[2];
-		outchars[0] = vk_code;
-		outchars[1] = 0;
-		std::cout << "HERE 2 " << outchars[0] << std::endl;
+		//wchar_t outchars[2];
+		//outchars[0] = vk_code;
+		//outchars[1] = 0;
+		//std::cout << "HERE 2 " << outchars[0] << std::endl;
 		//window_->textEvent(outchars, 1);
 		//window_->keyEvent(pressed, mods, vk_code, scancode);
-	}
+	//}
 }
 
 /**
