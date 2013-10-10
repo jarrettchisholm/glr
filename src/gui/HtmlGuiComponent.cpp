@@ -152,7 +152,7 @@ unsigned int HtmlGuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, u
 
 void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
+	//std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
 	
 	//unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
     //unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
@@ -163,37 +163,39 @@ void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yP
 	mouseEvent.x = xPos;
 	mouseEvent.y = yPos;
 	//window->ApplyPopupOffset(mouseEvent.x, mouseEvent.y);
-	//mouseEvent.modifiers = getCefStateModifiers(state);
+	mouseEvent.modifiers = getCefStateModifiers(0);
 	
 	bool mouseLeave = false; //(event->type == GDK_LEAVE_NOTIFY);
 	
 	browser_->GetHost()->SendMouseMoveEvent(mouseEvent, mouseLeave);
 }
 
-void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
+void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
-	std::cout << "MOUSE BUTTON EVENT: " << buttonID << " " << xPos << " " << yPos << " " << down << std::endl;
-	//window_->mouseButton(buttonID, down, clickCount);
+	std::cout << "MOUSE BUTTON EVENT: " << buttonId << " " << xPos << " " << yPos << " " << down << std::endl;
+	//window_->mouseButton(buttonId, down, clickCount);
 	CefBrowserHost::MouseButtonType buttonType = MBT_LEFT;
-	switch (buttonID) {
-	case 1:
-	  break;
-	case 2:
-	  buttonType = MBT_MIDDLE;
-	  break;
-	case 3:
-	  buttonType = MBT_RIGHT;
-	  break;
-	default:
-	  // Other mouse buttons are not handled here.
-	  return;
+	switch (buttonId)
+	{
+		case 0:
+			break;
+		case 1:
+			buttonType = MBT_MIDDLE;
+			break;
+		case 2:
+			buttonType = MBT_RIGHT;
+			break;
+		default:
+			// Other mouse buttons are not handled here.
+			BOOST_LOG_TRIVIAL(warning) << "Unable to determine mouse button: " << buttonId;
+			return;
 	}
 	
 	CefMouseEvent mouseEvent;
 	mouseEvent.x = xPos;
 	mouseEvent.y = yPos;
 	//window->ApplyPopupOffset(mouseEvent.x, mouseEvent.y);
-	//mouseEvent.modifiers = getCefStateModifiers(event->state);
+	mouseEvent.modifiers = getCefStateModifiers(0);
 	
 	bool mouseUp = !down; //(event->type == GDK_BUTTON_RELEASE);
 	//if (!mouseUp)
@@ -212,12 +214,14 @@ void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonID, glm::detail::in
 	  break;
 	}
 	*/
+	//browser_->GetHost()->SendFocusEvent(true);
 	browser_->GetHost()->SendMouseClickEvent(mouseEvent, buttonType, mouseUp, clickCount);
 }
 
-void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos)
+void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	this->mouseButton(buttonID, xPos, yPos, true, 1);	
+	this->mouseButton(buttonId, xPos, yPos, true, 1);
+	this->mouseButton(buttonId, xPos, yPos, false, 1);
 }
 
 void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
@@ -309,22 +313,33 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 		browser_->GetHost()->SendKeyEvent(keyEvent);
 	}
 	
-	/*
+	
+	// TODO: make this not hardcoded
 	if ( vk_code == '`' || vk_code == '~' )
 	{
-		window_->executeJavascript(Berkelium::WideString::point_to(
-									   L"if( $('#console').hasClass('hidden') ) {\
+		browser_->GetMainFrame()->ExecuteJavaScript(
+										"if( $('#console').hasClass('hidden') ) {\
 											$('#console').removeClass('hidden');\
 											$('#console').addClass('visible');\
 											$('#console').click();\
 										} else {\
 											$('#console').addClass('hidden');\
 											$('#console').removeClass('visible');\
-										}"
-									   ));
+										}",
+										"about:blank", 
+										0
+									);
+									
+		/*
+		browser_->GetMainFrame()->ExecuteJavaScript(
+										"$('#version').text('hidden');",
+										"about:blank", 
+										0
+									);
+									*/
 	}
-	else
-	*/
+	//else
+	
 	//{
 		//window_->focus();
 		//wchar_t outchars[2];
@@ -337,10 +352,11 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 }
 
 /**
- * Need to implement!
+ * 
  */
 int HtmlGuiComponent::setContents(std::string contents)
 {
+	// TODO: implement
 	url_ = contents;
 
 	return 0;

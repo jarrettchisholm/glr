@@ -105,8 +105,8 @@ public:
 	virtual void unload();
 
 	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
-	virtual void mouseButton(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount = 1);
-	virtual void mouseClick(glm::detail::uint32 buttonID, glm::detail::int32 xPos, glm::detail::int32 yPos);
+	virtual void mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount = 1);
+	virtual void mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos);
 	virtual void mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll);
 
 	virtual void textEvent(const wchar_t*evt, size_t evtLength);
