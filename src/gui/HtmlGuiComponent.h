@@ -96,6 +96,9 @@ public:
     IMPLEMENT_REFCOUNTING(BrowserClient)
 };
 
+
+class ClientApp;
+
 class HtmlGuiComponent : public IGUIComponent {
 public:
 	HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
@@ -125,6 +128,8 @@ public:
 
 	virtual IGUIObject* createGUIObject(std::wstring name);
 	virtual IGUIObject* getGUIObject(std::wstring name);
+	
+	void setContextObject( CefRefPtr<CefV8Value> contextObject );
 
 private:
 	bool isVisible_;
@@ -140,8 +145,12 @@ private:
 	// Buffer used to store data for scrolling
 	char* scroll_buffer;
 
+	// CEF3 variables
 	CefRefPtr<CefBrowser> browser_;
     CefRefPtr<BrowserClient> browserClient_;
+    CefRefPtr<CefV8Value> contextObject_;
+    CefRefPtr<ClientApp> app_;
+    
 
 	std::map< std::wstring, std::unique_ptr<GUIObject> > guiObjects_;
 
@@ -179,6 +188,33 @@ private:
 	glm::detail::int32 testint;
 	bool needs_full_refresh;
 	bool webTextureReady_;
+};
+
+
+
+class ClientApp : public CefApp
+{
+public:
+    ClientApp(HtmlGuiComponent* test) : test_(test)
+    {
+		BOOST_LOG_TRIVIAL(info) << "here woo";
+	};
+	
+	/**
+	 * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
+	 */
+	void OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context)
+	{
+		BOOST_LOG_TRIVIAL(debug) << "OnContextCreated has been called!";
+		
+		test_->setContextObject( context->GetGlobal() );
+	};
+
+    HtmlGuiComponent* test_;
+
+	// NOTE: Must be at bottom
+public:
+    IMPLEMENT_REFCOUNTING(ClientApp)
 };
 
 }

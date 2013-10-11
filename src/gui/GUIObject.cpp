@@ -11,8 +11,8 @@
 
 namespace glr {
 namespace gui {
-GUIObject::GUIObject(std::wstring name) :
-	name_(name)
+GUIObject::GUIObject(std::wstring name, CefRefPtr<CefV8Value> contextObject) :
+	name_(name), contextObject_(contextObject)
 {
 	/*
 	window_->addBindOnStartLoading(
@@ -28,6 +28,28 @@ GUIObject::~GUIObject()
 void GUIObject::addFunction(std::wstring funcName)
 {
 	std::wstring pointTo = name_ + L"." + funcName;
+	
+	//contextObject_ = CefV8Context::GetCurrentContext()->GetGlobal();
+	
+	if (contextObject_ != nullptr)
+	{
+		// Create an instance of my CefV8Handler object.
+		//CefRefPtr<CefV8Handler> handler = new MyV8Handler();
+		
+		CefRefPtr<CefV8Handler> handler = this;
+		
+		// Create the 'funcName' function.
+		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(pointTo, handler);
+		
+		// Add the 'funcName' function to the "window" object.
+		contextObject_->SetValue(pointTo, func, V8_PROPERTY_ATTRIBUTE_NONE);
+		
+		BOOST_LOG_TRIVIAL(warning) << "Added function '" << pointTo << "' to GUIObject.";
+	}
+	else
+	{
+		BOOST_LOG_TRIVIAL(warning) << "Unable to add function '" << pointTo << "' - no contextObject currently exists.";
+	}
 	
 	/*
 	window_->addBindOnStartLoading(
@@ -119,6 +141,37 @@ void GUIObject::addFunction(std::wstring name, std::function<bool(std::vector<Ca
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_BOOL;
 	functionMapWithParamatersBool_[name] = function;
 	addFunction(name);
+}
+
+void GUIObject::setContextObject(CefRefPtr<CefV8Value> contextObject)
+{
+	contextObject_ = contextObject;
+	
+	// Re-bind all of our functions
+	rebindFunctions();
+}
+
+bool GUIObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
+{
+	int type = functionTypeMap_[name];
+	
+	//if (name == "myfunc")
+	{
+		// Return my string value.
+		retval = CefV8Value::CreateString("My Value!");
+		return true;
+	}
+	
+	// Function does not exist.
+	return false;	
+}
+
+void GUIObject::rebindFunctions()
+{
+	for ( auto &it : functionTypeMap_ )
+	{
+		addFunction( it.first );
+	}
 }
 
 /*

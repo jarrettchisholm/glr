@@ -40,39 +40,16 @@ int HtmlGuiComponent::load()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	CefMainArgs args;
-
-    /*
-        int result1 = CefExecuteProcess(args, nullptr);
-        // checkout CefApp, derive it and set it as second parameter, for more control on command args and resources.
-        if (result1 >= 0) // child proccess has endend, so exit.
-        {
-			std::cout << "RESULT 1" << std::endl;
-            return result1;
-        }
-        if (result1 == -1)
-        {
-			std::cout << "RESULT 2 " << std::endl;
-            // we are here in the father proccess.
-        }
-    */
 	
 	CefSettings settings;
-	//settings.command_line_args_disabled = true;
-
-	// checkout detailed settings options http://magpcss.org/ceforum/apidocs/projects/%28default%29/_cef_settings_t.html
-	// nearly all the settings can be set via args too.
-	// settings.multi_threaded_message_loop = true; // not supported, except windows
-	// CefString(&settings.browser_subprocess_path).FromASCII("sub_proccess path, by default uses and starts this executeable as child");
-	// CefString(&settings.cache_path).FromASCII("");
-	// CefString(&settings.log_file).FromASCII("");
-	// settings.log_severity = LOGSEVERITY_DEFAULT;
-	// CefString(&settings.resources_dir_path).FromASCII("");
-	// CefString(&settings.locales_dir_path).FromASCII("");
 
 	// TODO: make this not hardcoded
 	CefString(&settings.browser_subprocess_path).FromASCII("/home/jarrett/projects/chisholmsoft/cef3_client/build/cef3_client");
 	
-	bool result = CefInitialize(args, settings, nullptr);
+	app_ = new ClientApp( this );
+	
+	bool result = CefInitialize(args, settings, app_.get());
+	
 	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
 	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
 	if (!result)
@@ -81,10 +58,6 @@ int HtmlGuiComponent::load()
 		BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
 		return -1;
 	}
-    
-    // create browser-window
-    //CefRefPtr<CefBrowser> browser;
-    //CefRefPtr<BrowserClient> browserClient;
 
     {
         CefWindowInfo window_info;
@@ -107,6 +80,8 @@ int HtmlGuiComponent::load()
         // browser_->GetHost()->SendMouseClickEvent(...);
         // browser_->GetHost()->SendMouseWheelEvent(...);
     }
+    
+    //setContextObject( nullptr );
 
 	testint = 31;
 	webTextureReady_ = false;
@@ -287,6 +262,20 @@ glm::detail::int32 HtmlGuiComponent::getCefStateModifiers(glm::detail::int32 sta
     modifiers |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
   */
   return modifiers;
+}
+
+/**
+ * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
+ */
+void HtmlGuiComponent::setContextObject( CefRefPtr<CefV8Value> contextObject )
+{
+	contextObject_ = contextObject;
+	
+	// Set all of our GUIObject contexts
+	for ( auto &it : guiObjects_ )
+	{
+		it.second->setContextObject( contextObject_ );
+	}
 }
 
 void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
@@ -794,12 +783,9 @@ IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name)
 		return nullptr;
 	}
 	
-	// TODO: Re-implement using CEF3
-	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name));
+	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, contextObject_));
 
 	return guiObjects_[name].get();
-	
-	return nullptr;
 }
 
 IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name)
