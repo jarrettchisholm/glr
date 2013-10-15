@@ -13,11 +13,11 @@
 
 #include "IGUI.h"
 
-#include "../glw/shaders/IShaderProgramManager.h"
-#include "../glw/IOpenGlDevice.h"
-
 #include "IGUIComponent.h"
 #include "HtmlGuiComponent.h"
+
+#include "../glw/shaders/IShaderProgramManager.h"
+#include "../glw/IOpenGlDevice.h"
 
 namespace glr {
 namespace gui {

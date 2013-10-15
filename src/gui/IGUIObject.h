@@ -9,6 +9,7 @@
 #define IGUIOBJECT_H_
 
 #include <functional>
+#include <vector>
 
 #include "CallbackParameter.h"
 

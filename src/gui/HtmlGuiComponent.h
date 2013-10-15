@@ -13,6 +13,11 @@
 
 #include <GL/glew.h>
 
+#ifdef _WINDOWS_
+#undef _WINDOWS_
+#endif
+#include <windows.h>
+
 #include <cef_app.h>
 #include <cef_client.h>
 #include <cef_render_handler.h>

@@ -176,7 +176,7 @@ void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::in
 	//if (!mouseUp)
 	//gtk_widget_grab_focus(widget);
 	
-	int clickCount = 1;
+	//int clickCount = 1;
 	/*
 	switch (event->type) {
 	case GDK_2BUTTON_PRESS:

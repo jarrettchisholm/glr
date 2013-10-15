@@ -239,10 +239,13 @@ cpp_flags = []
 library_paths = []
 
 
+
 ### Set our required libraries
 glLib = 'GL'
 glewLib = 'GLEW'
 libPThread = 'pthread'
+cefLib = 'cef'
+cefDllWrapperLib = 'cef_dll_wrapper'
 boostLogLib = 'boost_log'
 boostLogSetupLib = 'boost_log_setup'
 boostDateTimeLib = 'boost_date_time'
@@ -256,6 +259,8 @@ if (isWindows):
 	glLib = 'opengl32'
 	glewLib = 'glew32'
 	libPThread = ''
+	cefLib = 'libcef'
+	cefDllWrapperLib = 'libcef_dll_wrapper'
 	boostLogLib = 'libboost_log-vc120-mt-1_55'
 	boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
 	boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
@@ -266,11 +271,11 @@ if (isWindows):
 	boostSystemLib = 'libboost_system-vc120-mt-1_55'
 
 libraries = [
-'cef',
-'cef_dll_wrapper',
 glLib,
 glewLib,
 libPThread,
+cefLib,
+cefDllWrapperLib,
 'sfml-system',
 'sfml-window',
 'assimp',
@@ -293,6 +298,9 @@ if (not isWindows):
 ### Set our general compiler variables
 ### Set our library paths
 library_paths.append('../glr/build')
+library_paths.append('./lib')
+#library_paths.append('./lib_d')
+
 if (isWindows):
 	library_paths.append('../../angelscript-sdk/angelscript/lib')
 	library_paths.append('../../sqlite3')
@@ -361,6 +369,7 @@ else:
 			cpp_flags.append('/wd4350') # disables the specific warning C4350
 			cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
 			cpp_flags.append('/MD')
+			#cpp_flags.append('/showIncludes')
 		elif (compiler == 'mingw'):
 			cpp_flags.append('-g')
 			cpp_flags.append('-O0') # optimization level 0
@@ -370,17 +379,8 @@ else:
 		
 		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
-	
-	
-	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v7.1A\\Include')
-	#cpp_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\VC\\include')
-	
-	cpp_paths.append('C:\\Program Files (x86)\\Boost\\include\\boost-1_55')
-	cpp_paths.append('C:\\Program Files\\Assimp\\include')
-	cpp_paths.append('C:\\Users\\Jarrett\\projects\\glm')
-	cpp_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
-	cpp_paths.append('C:\\Users\\Jarrett\\projects\\SFML\\include')
 
+	cpp_paths.append('')
 
 
 ### Create our environment
