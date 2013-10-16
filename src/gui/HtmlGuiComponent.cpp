@@ -46,9 +46,7 @@ int HtmlGuiComponent::load()
 	// TODO: make this not hardcoded
 	CefString(&settings.browser_subprocess_path).FromASCII("/home/jarrett/projects/chisholmsoft/cef3_client/build/cef3_client");
 	
-	app_ = new ClientApp( this );
-	
-	bool result = CefInitialize(args, settings, app_.get());
+	bool result = CefInitialize(args, settings, nullptr);
 	
 	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
 	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
@@ -267,14 +265,17 @@ glm::detail::int32 HtmlGuiComponent::getCefStateModifiers(glm::detail::int32 sta
 /**
  * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
  */
-void HtmlGuiComponent::setContextObject( CefRefPtr<CefV8Value> contextObject )
+void HtmlGuiComponent::sendBoundFunctionsToRenderProcess()
 {
-	contextObject_ = contextObject;
+	CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddFunction");
 	
 	// Set all of our GUIObject contexts
 	for ( auto &it : guiObjects_ )
 	{
-		it.second->setContextObject( contextObject_ );
+		std::wstring definitions = it.second->getFunctionDefinitions();
+		
+		message->GetArgumentList()->SetString( 0, definitions );
+		browser_->SendProcessMessage(PID_RENDERER, message);
 	}
 }
 
@@ -783,7 +784,7 @@ IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name)
 		return nullptr;
 	}
 	
-	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, contextObject_));
+	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, this));
 
 	return guiObjects_[name].get();
 }
@@ -797,5 +798,12 @@ IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name)
 
 	return guiObjects_[name].get();
 }
+
+void HtmlGuiComponent::addedFunction(std::wstring func)
+{
+	// testing
+	sendBoundFunctionsToRenderProcess();
+}
+
 }
 }

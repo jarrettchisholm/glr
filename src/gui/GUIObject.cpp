@@ -5,14 +5,16 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include <boost/log/trivial.hpp>
 
 #include "GUIObject.h"
 
 namespace glr {
 namespace gui {
-GUIObject::GUIObject(std::wstring name, CefRefPtr<CefV8Value> contextObject) :
-	name_(name), contextObject_(contextObject)
+GUIObject::GUIObject(std::wstring name, IAddFunctionListener* addFunctionListener) :
+	name_(name), addFunctionListener_(addFunctionListener)
 {
 	/*
 	window_->addBindOnStartLoading(
@@ -29,27 +31,8 @@ void GUIObject::addFunction(std::wstring funcName)
 {
 	std::wstring pointTo = name_ + L"." + funcName;
 	
-	//contextObject_ = CefV8Context::GetCurrentContext()->GetGlobal();
-	
-	if (contextObject_ != nullptr)
-	{
-		// Create an instance of my CefV8Handler object.
-		//CefRefPtr<CefV8Handler> handler = new MyV8Handler();
-		
-		CefRefPtr<CefV8Handler> handler = this;
-		
-		// Create the 'funcName' function.
-		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(pointTo, handler);
-		
-		// Add the 'funcName' function to the "window" object.
-		contextObject_->SetValue(pointTo, func, V8_PROPERTY_ATTRIBUTE_NONE);
-		
-		BOOST_LOG_TRIVIAL(warning) << "Added function '" << pointTo << "' to GUIObject.";
-	}
-	else
-	{
-		BOOST_LOG_TRIVIAL(warning) << "Unable to add function '" << pointTo << "' - no contextObject currently exists.";
-	}
+	// Testing...
+	addFunctionListener_->addedFunction(funcName);
 	
 	/*
 	window_->addBindOnStartLoading(
@@ -143,14 +126,57 @@ void GUIObject::addFunction(std::wstring name, std::function<bool(std::vector<Ca
 	addFunction(name);
 }
 
-void GUIObject::setContextObject(CefRefPtr<CefV8Value> contextObject)
+std::wstring GUIObject::getFunctionDefinitions()
 {
-	contextObject_ = contextObject;
+	std::wstringstream definitions;
 	
-	// Re-bind all of our functions
-	rebindFunctions();
+	// Number of functions
+	definitions << functionTypeMap_.size();
+	
+	for ( auto &it : functionTypeMap_ )
+	{
+		std::wstring name = it.first;
+		int type = it.second;
+		
+		definitions << ",";
+		
+		if (type == FunctionTypes::TYPE_VOID || type == FunctionTypes::TYPE_WITH_PARAMETERS_VOID)
+		{
+			definitions << " " << FunctionTypes::TYPE_VOID << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_INT || type == FunctionTypes::TYPE_WITH_PARAMETERS_INT)
+		{
+			definitions << " " << FunctionTypes::TYPE_INT << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_FLOAT || type == FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT)
+		{
+			definitions << " " << FunctionTypes::TYPE_FLOAT << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_STRING || type == FunctionTypes::TYPE_WITH_PARAMETERS_STRING)
+		{
+			definitions << " " << FunctionTypes::TYPE_STRING << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_CHAR || type == FunctionTypes::TYPE_WITH_PARAMETERS_CHAR)
+		{
+			definitions << " " << FunctionTypes::TYPE_CHAR << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_BOOL || type == FunctionTypes::TYPE_WITH_PARAMETERS_BOOL)
+		{
+			definitions << " " << FunctionTypes::TYPE_BOOL << " " << name << " 0";
+		}
+		else if (type == FunctionTypes::TYPE_INT || type == FunctionTypes::TYPE_WITH_PARAMETERS_INT)
+		{
+			definitions << " " << FunctionTypes::TYPE_INT << " " << name << " 0";
+		}
+	}
+	
+	// TODO: implement
+	//std::string json = std::string("getVersion");
+	
+	return definitions.str();
 }
 
+/*
 bool GUIObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
 	int type = functionTypeMap_[name];
@@ -165,14 +191,7 @@ bool GUIObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	// Function does not exist.
 	return false;	
 }
-
-void GUIObject::rebindFunctions()
-{
-	for ( auto &it : functionTypeMap_ )
-	{
-		addFunction( it.first );
-	}
-}
+*/
 
 /*
 Berkelium::Script::Variant GUIObject::processCallback(std::wstring name, std::vector< CallbackParameter > params)

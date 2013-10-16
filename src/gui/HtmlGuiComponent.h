@@ -13,11 +13,6 @@
 
 #include <GL/glew.h>
 
-#ifdef _WINDOWS_
-#undef _WINDOWS_
-#endif
-#include <windows.h>
-
 #include <cef_app.h>
 #include <cef_client.h>
 #include <cef_render_handler.h>
@@ -93,6 +88,69 @@ public:
     virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
         return m_renderHandler;
     };
+    
+    bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
+	{
+		std::string s = message->GetName();
+		std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
+		
+		if( s == "OnContextCreated"/* && browser == m_Browser*/ )
+		{ 
+			std::cout << "testing " << message->GetArgumentList()->GetInt(1) << " " << browser->GetFrame(message->GetArgumentList()->GetInt(1)) << std::endl;
+		}
+		else if( s == "ExecuteFunction" )
+		{
+			std::string funcName = message->GetArgumentList()->GetString(0);
+			glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
+			
+			// Wrap paremeters
+			for (glmd::int32 i = 0; i < numArguments; i++)
+			{
+				CefValueType type = message->GetArgumentList()->GetType( i );
+				switch (type) {
+					case VTYPE_LIST:
+						// TODO: error
+						BOOST_LOG_TRIVIAL(error) << "Error - VTYPE_LIST not implemented as CEF3 argument type.";
+						break;
+						
+					case VTYPE_BOOL: {
+						bool arg = message->GetArgumentList()->GetBool(i+2);
+						BOOST_LOG_TRIVIAL(debug) << "VTYPE_BOOL - " << arg;
+						}
+						break;
+					
+					case VTYPE_DOUBLE: {
+						glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
+						BOOST_LOG_TRIVIAL(debug) << "VTYPE_DOUBLE - " << arg;
+						}
+						break;
+					
+					case VTYPE_INT: {
+						glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
+						BOOST_LOG_TRIVIAL(debug) << "VTYPE_INT - " << arg;
+						}
+						break;
+					
+					case VTYPE_STRING: {
+						std::string arg = message->GetArgumentList()->GetString(i+2);
+						BOOST_LOG_TRIVIAL(debug) << "VTYPE_STRING - " << arg;
+						}
+						break;
+					
+					default:
+						BOOST_LOG_TRIVIAL(error) << "Error - Unknown CEF3 argument type: " << type;
+						break;
+				}
+			}
+			
+			std::cout << "ExecuteFunction " << funcName << " " << numArguments << std::endl;
+		}
+		
+		
+		//CefRefPtr<CefProcessMessage> message2 = CefProcessMessage::Create("TESTING");
+		//message2->GetArgumentList()->SetInt(0, 9191 );
+		//browser->SendProcessMessage(PID_RENDERER, message2);
+	};
 
     CefRefPtr<CefRenderHandler> m_renderHandler;
 
@@ -102,9 +160,8 @@ public:
 };
 
 
-class ClientApp;
 
-class HtmlGuiComponent : public IGUIComponent {
+class HtmlGuiComponent : public IGUIComponent, public IAddFunctionListener {
 public:
 	HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~HtmlGuiComponent();
@@ -134,7 +191,7 @@ public:
 	virtual IGUIObject* createGUIObject(std::wstring name);
 	virtual IGUIObject* getGUIObject(std::wstring name);
 	
-	void setContextObject( CefRefPtr<CefV8Value> contextObject );
+	virtual void addedFunction(std::wstring func);
 
 private:
 	bool isVisible_;
@@ -153,8 +210,6 @@ private:
 	// CEF3 variables
 	CefRefPtr<CefBrowser> browser_;
     CefRefPtr<BrowserClient> browserClient_;
-    CefRefPtr<CefV8Value> contextObject_;
-    CefRefPtr<ClientApp> app_;
     
 
 	std::map< std::wstring, std::unique_ptr<GUIObject> > guiObjects_;
@@ -164,6 +219,7 @@ private:
 
 	unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 	glm::detail::int32 getCefStateModifiers(glm::detail::int32 state);
+	void sendBoundFunctionsToRenderProcess();
 
 	/*
 	bool mapOnPaintToTexture(
@@ -193,33 +249,6 @@ private:
 	glm::detail::int32 testint;
 	bool needs_full_refresh;
 	bool webTextureReady_;
-};
-
-
-
-class ClientApp : public CefApp
-{
-public:
-    ClientApp(HtmlGuiComponent* test) : test_(test)
-    {
-		BOOST_LOG_TRIVIAL(info) << "here woo";
-	};
-	
-	/**
-	 * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
-	 */
-	void OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context)
-	{
-		BOOST_LOG_TRIVIAL(debug) << "OnContextCreated has been called!";
-		
-		test_->setContextObject( context->GetGlobal() );
-	};
-
-    HtmlGuiComponent* test_;
-
-	// NOTE: Must be at bottom
-public:
-    IMPLEMENT_REFCOUNTING(ClientApp)
 };
 
 }
