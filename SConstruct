@@ -43,15 +43,18 @@ def parseShadersIntoHeader():
 	print('Parsing Shaders into header ShaderData.h')
 	
 	shaderDataOutputFilename = "ShaderData.h"
-	shaderListLocation = "data/shaders/"
-	#shaderListExtension = ".json"
+	
+	# Will ultimately give something like 'data/shaders/' or 'data\shaders\'
+	# Note that the last '\' or '/' is important, as we use this to strip the filename of directory information
+	shaderListLocation = os.path.join("data", "shaders", "")
+	
 	
 	fileList = glob.glob( os.path.join(shaderListLocation, '*') )
 	
 	file = open(fileList[0], 'r')
 	data = file.read()
 	
-	# Save json as a std::string in a .h file
+	# Save shader data as a map of std::string objects in the file ShaderData.h
 	shaderDataFile = open( os.path.join('src/glw/shaders', shaderDataOutputFilename), 'w' )
 	
 	cpp = """
@@ -82,7 +85,8 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		
 		cpp += """
 {\""""
-
+		print( filename )
+		
 		filename = filename.replace(shaderListLocation, "")
 		filename = filename.replace(".glsl", "")
 		cpp += filename

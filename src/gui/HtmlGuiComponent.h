@@ -146,7 +146,7 @@ public:
 			std::cout << "ExecuteFunction " << funcName << " " << numArguments << std::endl;
 		}
 		
-		
+		return true;
 		//CefRefPtr<CefProcessMessage> message2 = CefProcessMessage::Create("TESTING");
 		//message2->GetArgumentList()->SetInt(0, 9191 );
 		//browser->SendProcessMessage(PID_RENDERER, message2);
