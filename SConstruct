@@ -121,10 +121,6 @@ def clear():
 	else:
 		os.system('clear')
 
-def clean():
-	os.chdir( '../glr' )
-	shutil.rmtree( './build', True )
-
 def exitOnError(returnCode):
 	if ( returnCode != 0):
 		print( returnCode )
@@ -136,7 +132,6 @@ def exitOnError(returnCode):
 
 ### Argument flags
 doBeautification = False
-doClean = False
 compiler = ""
 
 ### Set our compiler
@@ -155,7 +150,6 @@ if (compiler == 'msvc' and not isWindows):
 
 ### Handle arguments
 AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
-#AddOption('--clean', dest='clean', action='store_true', help='will \'beautify\' the source code using uncrustify')
 #AddOption('--beautify', dest='beautify', type='string', nargs=1, action='store_true', help='will \'beautify\' the source code using uncrustify')
 
 
@@ -172,8 +166,6 @@ if (not isWindows):
 
 if GetOption('beautify'):
 	doBeautification = True
-if GetOption('clean'):
-	doClean = True
 
 
 ### Prepare code for comilation
@@ -182,11 +174,6 @@ if doBeautification:
 	beautifyCode()
 	print("Done")
 	print("")
-
-if (doClean):
-	print("Cleaning glr build directory")
-	clean();
-	print("Done")
 
 
 
@@ -300,15 +287,6 @@ if (not isWindows):
 library_paths.append('../glr/build')
 library_paths.append('./lib')
 #library_paths.append('./lib_d')
-
-if (isWindows):
-	library_paths.append('../../angelscript-sdk/angelscript/lib')
-	library_paths.append('../../sqlite3')
-	library_paths.append('../../SFML/lib')
-	library_paths.append('C:\\Program Files\\Assimp\\lib\\x86')
-	library_paths.append('C:\\Program Files (x86)\\Boost\\lib')
-	library_paths.append('C:\\Users\\Jarrett\\projects\\FreeImage\\Dist')
-	library_paths.append('C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\lib')
 
 
 # Set our g++ compiler flags
