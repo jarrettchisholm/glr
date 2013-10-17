@@ -11,15 +11,14 @@
 #include <map>
 
 #include "IGUIObject.h"
-
-#include <cef_app.h>
-#include <cef_client.h>
+#include "IAddFunctionListener.h"
 
 namespace glr {
 namespace gui {
-class GUIObject : public IGUIObject,  public CefV8Handler {
+	
+class GUIObject : public IGUIObject {
 public:
-	GUIObject(std::wstring name, CefRefPtr<CefV8Value> contextObject);
+	GUIObject(std::wstring name, IAddFunctionListener* addFunctionListener);
 	virtual ~GUIObject();
 	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
@@ -36,12 +35,13 @@ public:
 	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<CallbackParameter>)> function);
 	virtual void addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function);
 	virtual void addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function);
+	
+	std::wstring getFunctionDefinitions();
 
 	//Berkelium::Script::Variant processCallback(std::wstring name, std::vector< CallbackParameter > params);
 	
-	void setContextObject(CefRefPtr<CefV8Value> contextObject);
 	// Callback method for CEF3 javascript to native method binding
-	virtual bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception);
+	//virtual bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception);
 
 private:
 	enum FunctionTypes {
@@ -62,11 +62,9 @@ private:
 
 	//Berkelium::Window* window_;
 	std::wstring name_;
+	IAddFunctionListener* addFunctionListener_;
 
 	std::map< std::wstring, int > functionTypeMap_;
-	
-	// CEF3 context (using it to bind native functions to javascript)
-	CefRefPtr<CefV8Value> contextObject_;
 
 	std::map< std::wstring, std::function<void()> >                 functionMapVoid_;
 	std::map< std::wstring, std::function<int()> >                  functionMapInt_;
@@ -84,10 +82,6 @@ private:
 
 
 	void addFunction(std::wstring funcName);
-	void rebindFunctions();
-	
-public:
-	IMPLEMENT_REFCOUNTING(GUIObject)
 };
 
 }
