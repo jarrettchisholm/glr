@@ -353,7 +353,6 @@ if (not isWindows):
 	# Need to install cef3 to '/usr/local/include/cef3' for this to work
 	cpp_paths.append('/usr/local/include/cef3')
 	
-	cpp_paths.append('/home/jarrett/projects/ogre')
 	cpp_paths.append('/usr/include/gtk-2.0')
 	cpp_paths.append('/usr/lib/x86_64-linux-gnu/gtk-2.0/include')
 	cpp_paths.append('/usr/include/atk-1.0')

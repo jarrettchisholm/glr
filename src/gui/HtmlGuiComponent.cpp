@@ -44,7 +44,7 @@ int HtmlGuiComponent::load()
 	CefSettings settings;
 
 	// TODO: make this not hardcoded
-	CefString(&settings.browser_subprocess_path).FromASCII("/home/jarrett/projects/chisholmsoft/cef3_client/build/cef3_client");
+	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
 	
 	bool result = CefInitialize(args, settings, nullptr);
 	

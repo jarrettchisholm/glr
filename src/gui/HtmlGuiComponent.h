@@ -106,7 +106,7 @@ public:
 			// Wrap paremeters
 			for (glmd::int32 i = 0; i < numArguments; i++)
 			{
-				CefValueType type = message->GetArgumentList()->GetType( i );
+				CefValueType type = message->GetArgumentList()->GetType( i+2 );
 				switch (type) {
 					case VTYPE_LIST:
 						// TODO: error

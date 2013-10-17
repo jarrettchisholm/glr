@@ -11,6 +11,8 @@
 
 #include "GlslShaderProgram.h"
 
+#include "../../exceptions/GlException.h"
+
 namespace glr {
 namespace shaders {
 GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders) : name_(name), shaders_(shaders)
@@ -67,16 +69,15 @@ void GlslShaderProgram::compile()
 		GLchar errorLog[1024] = { 0 };
 		glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
 
-		BOOST_LOG_TRIVIAL(error) << errorLog;
-
-		return;
+		std::string msg( errorLog );
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::GlException(msg);
 	}
 	
 	
 	generateBindings();
 
 	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
-	return;
 }
 
 GLuint GlslShaderProgram::getGLShaderProgramId()
