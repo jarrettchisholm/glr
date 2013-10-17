@@ -85,8 +85,6 @@ static std::map<std::string, std::string> SHADER_DATA = {
 		
 		cpp += """
 {\""""
-		print( filename )
-		
 		filename = filename.replace(shaderListLocation, "")
 		filename = filename.replace(".glsl", "")
 		cpp += filename
