@@ -82,10 +82,10 @@ class BrowserClient : public CefClient
 public:
     BrowserClient(RenderHandler* renderHandler) : m_renderHandler(renderHandler)
     {
-		BOOST_LOG_TRIVIAL(info) << "here 1b";
 	};
 
-    virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
+    virtual CefRefPtr<CefRenderHandler> GetRenderHandler()
+    {
         return m_renderHandler;
     };
     
