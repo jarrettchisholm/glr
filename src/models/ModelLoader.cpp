@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "ModelLoader.h"
 
@@ -285,7 +286,7 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 	
 	std::cout << "NUM: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 	// Fill in any empty weights
-	/*
+	
 	std::ofstream file;
 	file.open("temp1.txt");
 	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
@@ -294,7 +295,13 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 		file << i << ": " << data.bones[ i ].toString() << "\n";
 	}
 	file.close();
-	*/
+	
+	file.open("temp2.txt");
+	for (glmd::uint32 i = 0; i < data.vertices.size(); i++)
+	{
+		file << i << ": " << glm::to_string(data.vertices[ i ]) << "\n";
+	}
+	file.close();
 	
 	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
 
