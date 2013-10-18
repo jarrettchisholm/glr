@@ -1,7 +1,5 @@
 /*
  * GlslShader.h
- *
- * Class representing a 'glsl' shader.  This is a shader that contains the final, processed shader source.
  * 
  *  Created on: 2013-01-04
  *      Author: jarrett
@@ -18,6 +16,10 @@
 
 namespace glr {
 namespace shaders {
+
+/**
+ * Class representing a 'glsl' shader.  This is a shader that contains the final, processed shader source.
+ */
 class GlslShader : public IShader {
 public:
 	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
@@ -44,6 +46,7 @@ private:
 
 	BindingsMap bindings_;
 };
+
 }
 }
 #endif /* GLSLSHADER_H_ */

@@ -14,6 +14,7 @@
 
 namespace glr {
 namespace shaders {
+
 GlrShader::GlrShader(std::string source) : source_(source)
 {
 }

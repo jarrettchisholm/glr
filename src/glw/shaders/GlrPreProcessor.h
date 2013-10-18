@@ -1,8 +1,5 @@
 /*
  * GlrPreProcessor.h
- *
- * Class that will extend the functionality of the CPreProcessor class for anything specific to processing
- * 'glr' shader source data.
  * 
  * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  * Date: 2013
@@ -18,12 +15,18 @@
 
 namespace glr {
 namespace shaders {
+
+/**
+ * Class that will extend the functionality of the CPreProcessor class for anything specific to processing
+ * 'glr' shader source data.
+ */
 class GlrPreProcessor : public CPreProcessor {
 public:
 	GlrPreProcessor(std::string source);
 
 private:
 };
+
 }
 }
 #endif /* GLRPREPROCESSOR_H */

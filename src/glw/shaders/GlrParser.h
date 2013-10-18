@@ -22,6 +22,7 @@ namespace qi = boost::spirit::qi;
 
 namespace glr {
 namespace shaders {
+
 class GlrParser {
 	typedef std::vector< std::pair<std::string, std::string> > Map;
 
@@ -156,6 +157,7 @@ private:
 		qi::rule<It, Map(), qi::blank_type> start;
 	};
 };
+
 }
 }
 #endif /* GLRPARSER_H */
