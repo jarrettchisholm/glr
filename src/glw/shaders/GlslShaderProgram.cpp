@@ -49,13 +49,13 @@ void GlslShaderProgram::compile()
 	}
 
 	// TODO: make these not hard coded?
-	/*
+	// NOTE: I need these in windows for some reason...?
 	glBindAttribLocation(programId_, 0, "in_Position");
 	glBindAttribLocation(programId_, 1, "in_Texture");
 	glBindAttribLocation(programId_, 2, "in_Color");
 	glBindAttribLocation(programId_, 3, "in_BoneIds");
 	glBindAttribLocation(programId_, 4, "in_BoneWeights");
-	*/
+	
 	
 	glLinkProgram(programId_);
 
