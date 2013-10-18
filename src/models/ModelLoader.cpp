@@ -289,7 +289,7 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 	
 	// DEBUGGING
 	std::ofstream file;
-	file.open("temp1.txt");
+	file.open("bones.txt");
 	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
 	{
 		//data.bones[ i ].normalize();
@@ -297,10 +297,24 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 	}
 	file.close();
 	
-	file.open("temp2.txt");
+	file.open("vertices.txt");
 	for (glmd::uint32 i = 0; i < data.vertices.size(); i++)
 	{
 		file << i << ": " << glm::to_string(data.vertices[ i ]) << "\n";
+	}
+	file.close();
+	
+	file.open("normals.txt");
+	for (glmd::uint32 i = 0; i < data.normals.size(); i++)
+	{
+		file << i << ": " << glm::to_string(data.normals[ i ]) << "\n";
+	}
+	file.close();
+	
+	file.open("textureCoordinates.txt");
+	for (glmd::uint32 i = 0; i < data.textureCoordinates.size(); i++)
+	{
+		file << i << ": " << glm::to_string(data.textureCoordinates[ i ]) << "\n";
 	}
 	file.close();
 	
