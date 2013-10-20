@@ -11,4 +11,5 @@
 #include "FormatException.h"
 #include "IoException.h"
 #include "GlException.h"
+
 #endif /* EXCEPTIONINCLUDE_H_ */

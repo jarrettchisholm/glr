@@ -21,8 +21,7 @@
 #include "BasicSceneManager.h"
 #include "Light.h"
 
-//#include "gui/IGUI.h"
-#include "gui/GUI.h"
+#include "gui/cef/Gui.h"
 
 #include "glw/shaders/IShaderProgramManager.h"
 #include "glw/shaders/IShaderProgramBindListener.h"
@@ -58,7 +57,7 @@ public:
 
 	IWindow* getWindow();
 	ISceneManager* getSceneManager();
-	gui::IGUI* getHtmlGui();
+	gui::IGui* getHtmlGui();
 	glw::IOpenGlDevice* getOpenGlDevice();
 	
 	void reloadShaders();
@@ -74,7 +73,7 @@ private:
 	std::unique_ptr< glw::OpenGlDevice > openGlDevice_;
 	std::unique_ptr< BasicSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
-	std::unique_ptr< gui::GUI > gui_;
+	std::unique_ptr< gui::cef::Gui > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	

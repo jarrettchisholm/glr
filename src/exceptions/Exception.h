@@ -13,6 +13,7 @@
 
 namespace glr {
 namespace exception {
+
 class Exception : public std::exception {
 public:
 	Exception(const std::string message = "Glr Exception");
@@ -23,6 +24,7 @@ public:
 protected:
 	std::string message_;
 };
+
 }
 }
 #endif /* EXCEPTION_H_ */

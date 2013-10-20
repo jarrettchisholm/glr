@@ -1,5 +1,5 @@
 /*
- * IGUIObject.h
+ * IGuiObject.h
  *
  *  Created on: 2012-12-30
  *      Author: jarrett
@@ -15,15 +15,15 @@
 
 namespace glr {
 namespace gui {
-class IGUIObject {
+class IGuiObject {
 public:
-	virtual ~IGUIObject()
+	virtual ~IGuiObject()
 	{
 	}
 	;
 
 	/**
-	 * Adds a lambda callback function to this IGUIObject.  The function has the specified name, and it's signature
+	 * Adds a lambda callback function to this IGuiObject.  The function has the specified name, and it's signature
 	 * is specified by the passed in std::function object.
 	 * 
 	 * @param function The actual function to be called.
@@ -36,7 +36,7 @@ public:
 	virtual void addFunction(std::wstring name, std::function<bool()> function) = 0;
 
 	/**
-	 * Adds a lambda callback function to this IGUIObject.  The function has the specified name, and it's signature
+	 * Adds a lambda callback function to this IGuiObject.  The function has the specified name, and it's signature
 	 * is specified by the passed in std::function object.  The signature can also have an unspecified number of
 	 * parameters, implemented as CallbackParameter objects.
 	 * 

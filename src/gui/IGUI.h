@@ -1,5 +1,5 @@
 /*
- * IGUI.h
+ * IGui.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -10,18 +10,17 @@
 
 #include <string>
 
-#include "IGUIComponent.h"
+#include "IGuiComponent.h"
 
 namespace glr {
 namespace gui {
-class IGUI {
+class IGui {
 public:
-	virtual ~IGUI()
+	virtual ~IGui()
 	{
 	}
 	;
 
-	virtual glm::detail::int32 initialize() = 0;
 	virtual void destroy() = 0;
 
 	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos) = 0;
@@ -33,9 +32,9 @@ public:
 
 	virtual void update() = 0;
 	virtual void render() = 0;
-	virtual IGUIComponent* loadFromFile(std::string filename) = 0;
-	virtual IGUIComponent* loadFromData(std::string data) = 0;
-	virtual glm::detail::int32 release(IGUIComponent*) = 0;
+	virtual IGuiComponent* loadFromFile(std::string filename) = 0;
+	virtual IGuiComponent* loadFromData(std::string data) = 0;
+	virtual glm::detail::int32 release(IGuiComponent*) = 0;
 };
 }
 }

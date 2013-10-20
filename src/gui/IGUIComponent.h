@@ -1,5 +1,5 @@
 /*
- * IGUIComponent.h
+ * IGuiComponent.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -10,22 +10,40 @@
 
 #include "glm/glm.hpp"
 
-#include "IGUIObject.h"
+#include "IGuiObject.h"
 
 namespace glr {
 namespace gui {
-class IGUIComponent {
+
+/**
+ * 
+ */
+class IGuiComponent {
 public:
-	virtual ~IGUIComponent()
+	virtual ~IGuiComponent()
 	{
 	}
 	;
 
+	/**
+	 * Load the resources necessary for this IGuiComponent object, and also binds
+	 * GUIObject objects and methods.
+	 * 
+	 * Note that any GUIObjects created AFTER load() has been called will not have their
+	 * objects / methods bound.
+	 */
 	virtual int load() = 0;
+	
+	/**
+	 * Frees the resources used by this IGuiComponent object.  Any bindings are also removed.
+	 * 
+	 * Note that any GUIObjects still existing are not destroyed - you may call load() again after
+	 * unload(), and your GUIObjects will be rebound.
+	 */
 	virtual void unload() = 0;
 
 	/**
-	 * Execute the code given by script on the current IGUIComponent object.
+	 * Execute the code given by script on the current IGuiComponent object.
 	 * 
 	 * @param script The code to execute.
 	 */
@@ -35,17 +53,18 @@ public:
 	virtual void setVisible(bool isVisible) = 0;
 
 	/**
-	 * Method createGUIObject
-	 *
 	 * Create a GUIObject that your gui can use to talk to your application.
+	 * 
+	 * This is essentially how you 'bind' objects and methods from your gui to your application.
 	 *
 	 * @param name The name associated with this GUIObject
-	 * @return A pointer to an IGUIObject, or nullptr if the GUIObject could not be created successfully.
+	 * @return A pointer to an IGuiObject, or nullptr if the GUIObject could not be created successfully.
 	 */
-	virtual IGUIObject* createGUIObject(std::wstring name) = 0;
+	virtual IGuiObject* createGuiObject(std::wstring name) = 0;
 
-	virtual IGUIObject* getGUIObject(std::wstring name) = 0;
+	virtual IGuiObject* getGuiObject(std::wstring name) = 0;
 };
+
 }
 }
 #endif /* IGUICOMPONENT_H_ */

@@ -1,5 +1,5 @@
 /*
- * GUI.h
+ * Gui.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -11,22 +11,22 @@
 #include <string>
 #include <vector>
 
-#include "IGUI.h"
+#include "../IGui.h"
 
-#include "IGUIComponent.h"
-#include "HtmlGuiComponent.h"
+#include "GuiComponent.h"
 
-#include "../glw/shaders/IShaderProgramManager.h"
-#include "../glw/IOpenGlDevice.h"
+#include "../../glw/shaders/IShaderProgramManager.h"
+#include "../../glw/IOpenGlDevice.h"
 
 namespace glr {
 namespace gui {
-class GUI : public IGUI {
-public:
-	GUI(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
-	virtual ~GUI();
+namespace cef {
 
-	virtual glm::detail::int32 initialize();
+class Gui : public IGui {
+public:
+	Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
+	virtual ~Gui();
+
 	virtual void destroy();
 
 	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
@@ -38,12 +38,12 @@ public:
 
 	virtual void update();
 	virtual void render();
-	virtual IGUIComponent* loadFromFile(std::string filename);
-	virtual IGUIComponent* loadFromData(std::string data);
-	virtual glm::detail::int32 release(IGUIComponent*);
+	virtual IGuiComponent* loadFromFile(std::string filename);
+	virtual IGuiComponent* loadFromData(std::string data);
+	virtual glm::detail::int32 release(IGuiComponent*);
 
 private:
-	std::vector< std::unique_ptr<HtmlGuiComponent> > views_;
+	std::vector< std::unique_ptr<GuiComponent> > views_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	
@@ -52,6 +52,8 @@ private:
 	// Width and height of our window.
 	glmd::uint32 width_, height_;
 };
+
+}
 }
 }
 #endif /* GUI_H_ */

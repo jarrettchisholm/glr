@@ -215,6 +215,7 @@ source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h
 source_files = source_files + Glob('build/*.cpp', 'build/*.h')
 source_files = source_files + Glob('build/exceptions/*.cpp', 'build/exceptions/*.h')
 source_files = source_files + Glob('build/gui/*.cpp', 'build/gui/*.h')
+source_files = source_files + Glob('build/gui/cef/*.cpp', 'build/gui/cef/*.h')
 source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
 
 # OpenGL Wrapper stuff

@@ -1,5 +1,5 @@
 /*
- * GUIObject.h
+ * GuiObject.h
  *
  *  Created on: 2012-12-30
  *      Author: jarrett
@@ -10,16 +10,17 @@
 
 #include <map>
 
-#include "IGUIObject.h"
-#include "IAddFunctionListener.h"
+#include "../IGuiObject.h"
+#include "../IAddFunctionListener.h"
 
 namespace glr {
 namespace gui {
+namespace cef {
 	
-class GUIObject : public IGUIObject {
+class GuiObject : public IGuiObject {
 public:
-	GUIObject(std::wstring name, IAddFunctionListener* addFunctionListener);
-	virtual ~GUIObject();
+	GuiObject(std::wstring name, IAddFunctionListener* addFunctionListener);
+	virtual ~GuiObject();
 	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
 	virtual void addFunction(std::wstring name, std::function<int()> function);
@@ -37,6 +38,7 @@ public:
 	virtual void addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function);
 	
 	std::wstring getFunctionDefinitions();
+	std::vector< std::wstring > getFunctionNames();
 
 	//Berkelium::Script::Variant processCallback(std::wstring name, std::vector< CallbackParameter > params);
 	
@@ -84,6 +86,7 @@ private:
 	void addFunction(std::wstring funcName);
 };
 
+}
 }
 }
 #endif /* GUIOBJECT_H_ */

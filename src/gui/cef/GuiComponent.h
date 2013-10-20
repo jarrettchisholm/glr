@@ -1,12 +1,12 @@
 /*
- * HtmlGuiComponent.h
+ * GuiComponent.h
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
  */
 
-#ifndef HTMLGUICOMPONENT_H_
-#define HTMLGUICOMPONENT_H_
+#ifndef GUICOMPONENT_H_
+#define GUICOMPONENT_H_
 
 #include <string>
 #include <map>
@@ -17,17 +17,18 @@
 #include <cef_client.h>
 #include <cef_render_handler.h>
 
-#include "../glw/shaders/IShaderProgram.h"
-#include "../glw/IOpenGlDevice.h"
+#include "../../glw/shaders/IShaderProgram.h"
+#include "../../glw/IOpenGlDevice.h"
 
-#include "IGUIComponent.h"
+#include "../IGuiComponent.h"
 
-#include "GUIObject.h"
+#include "GuiObject.h"
 
 namespace glmd = glm::detail;
 
 namespace glr {
 namespace gui {
+namespace cef {
 
 class RenderHandler : public CefRenderHandler
 {
@@ -103,42 +104,42 @@ public:
 			std::string funcName = message->GetArgumentList()->GetString(0);
 			glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
 			
-			// Wrap paremeters
+			// Wrap parameters
 			for (glmd::int32 i = 0; i < numArguments; i++)
 			{
 				CefValueType type = message->GetArgumentList()->GetType( i+2 );
 				switch (type) {
 					case VTYPE_LIST:
 						// TODO: error
-						BOOST_LOG_TRIVIAL(error) << "Error - VTYPE_LIST not implemented as CEF3 argument type.";
+						std::cout << "Error - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
 						break;
 						
 					case VTYPE_BOOL: {
 						bool arg = message->GetArgumentList()->GetBool(i+2);
-						BOOST_LOG_TRIVIAL(debug) << "VTYPE_BOOL - " << arg;
+						std::cout << "VTYPE_BOOL - " << arg << std::endl;
 						}
 						break;
 					
 					case VTYPE_DOUBLE: {
 						glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
-						BOOST_LOG_TRIVIAL(debug) << "VTYPE_DOUBLE - " << arg;
+						std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
 						}
 						break;
 					
 					case VTYPE_INT: {
 						glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
-						BOOST_LOG_TRIVIAL(debug) << "VTYPE_INT - " << arg;
+						std::cout << "VTYPE_INT - " << arg << std::endl;
 						}
 						break;
 					
 					case VTYPE_STRING: {
 						std::string arg = message->GetArgumentList()->GetString(i+2);
-						BOOST_LOG_TRIVIAL(debug) << "VTYPE_STRING - " << arg;
+						std::cout << "VTYPE_STRING - " << arg << std::endl;
 						}
 						break;
 					
 					default:
-						BOOST_LOG_TRIVIAL(error) << "Error - Unknown CEF3 argument type: " << type;
+						std::cout << "Error - Unknown CEF3 argument type: " << type << std::endl;
 						break;
 				}
 			}
@@ -161,10 +162,10 @@ public:
 
 
 
-class HtmlGuiComponent : public IGUIComponent, public IAddFunctionListener {
+class GuiComponent : public IGuiComponent, public IAddFunctionListener {
 public:
-	HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
-	virtual ~HtmlGuiComponent();
+	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
+	virtual ~GuiComponent();
 
 	virtual int load();
 	virtual void unload();
@@ -178,7 +179,7 @@ public:
 	virtual void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode);
 
 	int setContents(std::string contents);
-	int loadContentsFromFile(std::string filename);
+	int setContentsUrl(std::string url);
 
 	virtual void update();
 	virtual void render(shaders::IShaderProgram* shader);
@@ -188,8 +189,8 @@ public:
 	virtual bool isVisible();
 	virtual void setVisible(bool isVisible);
 
-	virtual IGUIObject* createGUIObject(std::wstring name);
-	virtual IGUIObject* getGUIObject(std::wstring name);
+	virtual IGuiObject* createGuiObject(std::wstring name);
+	virtual IGuiObject* getGuiObject(std::wstring name);
 	
 	virtual void addedFunction(std::wstring func);
 
@@ -212,7 +213,7 @@ private:
     CefRefPtr<BrowserClient> browserClient_;
     
 
-	std::map< std::wstring, std::unique_ptr<GUIObject> > guiObjects_;
+	std::map< std::wstring, std::unique_ptr<GuiObject> > guiObjects_;
 
 	std::wstring getFunctionName(std::wstring name);
 	std::wstring getObjectName(std::wstring name);
@@ -246,11 +247,9 @@ private:
 	*/
 	void testLoadTexture();
 	void testDrawTest1();
-	glm::detail::int32 testint;
-	bool needs_full_refresh;
-	bool webTextureReady_;
 };
 
 }
 }
-#endif /* HTMLGUICOMPONENT_H_ */
+}
+#endif /* GUICOMPONENT_H_ */

@@ -1,5 +1,5 @@
 /*
- * GUIObject.cpp
+ * GuiObject.cpp
  *
  *  Created on: 2012-12-30
  *      Author: jarrett
@@ -9,11 +9,13 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "GUIObject.h"
+#include "GuiObject.h"
 
 namespace glr {
 namespace gui {
-GUIObject::GUIObject(std::wstring name, IAddFunctionListener* addFunctionListener) :
+namespace cef {
+
+GuiObject::GuiObject(std::wstring name, IAddFunctionListener* addFunctionListener) :
 	name_(name), addFunctionListener_(addFunctionListener)
 {
 	/*
@@ -23,11 +25,11 @@ GUIObject::GUIObject(std::wstring name, IAddFunctionListener* addFunctionListene
 		*/
 }
 
-GUIObject::~GUIObject()
+GuiObject::~GuiObject()
 {
 }
 
-void GUIObject::addFunction(std::wstring funcName)
+void GuiObject::addFunction(std::wstring funcName)
 {
 	std::wstring pointTo = name_ + L"." + funcName;
 	
@@ -41,42 +43,42 @@ void GUIObject::addFunction(std::wstring funcName)
 		*/
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<void()> function)
+void GuiObject::addFunction(std::wstring name, std::function<void()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_VOID;
 	functionMapVoid_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<int()> function)
+void GuiObject::addFunction(std::wstring name, std::function<int()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_INT;
 	functionMapInt_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<float()> function)
+void GuiObject::addFunction(std::wstring name, std::function<float()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_FLOAT;
 	functionMapFloat_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<std::wstring()> function)
+void GuiObject::addFunction(std::wstring name, std::function<std::wstring()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_STRING;
 	functionMapString_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<char()> function)
+void GuiObject::addFunction(std::wstring name, std::function<char()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_CHAR;
 	functionMapChar_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<bool()> function)
+void GuiObject::addFunction(std::wstring name, std::function<bool()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_BOOL;
 	functionMapBool_[name] = function;
@@ -84,49 +86,61 @@ void GUIObject::addFunction(std::wstring name, std::function<bool()> function)
 }
 
 
-void GUIObject::addFunction(std::wstring name, std::function<void(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<void(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_VOID;
 	functionMapWithParamatersVoid_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<int(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<int(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_INT;
 	functionMapWithParamatersInt_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<float(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<float(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT;
 	functionMapWithParamatersFloat_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<std::wstring(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<std::wstring(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_STRING;
 	functionMapWithParamatersString_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_CHAR;
 	functionMapWithParamatersChar_[name] = function;
 	addFunction(name);
 }
 
-void GUIObject::addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_BOOL;
 	functionMapWithParamatersBool_[name] = function;
 	addFunction(name);
 }
 
-std::wstring GUIObject::getFunctionDefinitions()
+std::vector< std::wstring > GuiObject::getFunctionNames()
+{
+	std::vector< std::wstring > names = std::vector< std::wstring >();
+	
+	for ( auto& it : functionTypeMap_ )
+	{
+		names.push_back( it.first );
+	}
+	
+	return names;
+}
+
+std::wstring GuiObject::getFunctionDefinitions()
 {
 	std::wstringstream definitions;
 	
@@ -177,7 +191,7 @@ std::wstring GUIObject::getFunctionDefinitions()
 }
 
 /*
-bool GUIObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
+bool GuiObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
 	int type = functionTypeMap_[name];
 	
@@ -194,7 +208,7 @@ bool GUIObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 */
 
 /*
-Berkelium::Script::Variant GUIObject::processCallback(std::wstring name, std::vector< CallbackParameter > params)
+Berkelium::Script::Variant GuiObject::processCallback(std::wstring name, std::vector< CallbackParameter > params)
 {
 	int type = functionTypeMap_[name];
 
@@ -279,5 +293,6 @@ Berkelium::Script::Variant GUIObject::processCallback(std::wstring name, std::ve
 }
 */
 
+}
 }
 }

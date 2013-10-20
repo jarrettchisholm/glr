@@ -1,5 +1,5 @@
 /*
- * HtmlGuiComponent.cpp
+ * GuiComponent.cpp
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -11,39 +11,53 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "HtmlGuiComponent.h"
+#include "GuiComponent.h"
 
-#include "GUIObject.h"
+#include "GuiObject.h"
 
-#include "../common/utilities/ImageLoader.h"
+#include "../../common/utilities/ImageLoader.h"
 
 //#define DEBUG_PAINT true
 
 namespace glr {
 namespace gui {
-HtmlGuiComponent::HtmlGuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), width_(width), height_(height)
+namespace cef {
+
+GuiComponent::GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), width_(width), height_(height)
 {
 	isVisible_ = false;
 }
 
-HtmlGuiComponent::~HtmlGuiComponent()
+GuiComponent::~GuiComponent()
 {
 	unload();
 }
 
-int HtmlGuiComponent::load()
+int GuiComponent::load()
 {
 	// Create texture to hold rendered view
 	glGenTextures(1, &web_texture);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	
+	glw::GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// TODO: throw error
+		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent in opengl";
+		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+	}
+	else
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded GuiComponent.";
+	}
 
+	// Create Cef processes
 	CefMainArgs args;
 	
 	CefSettings settings;
 
-	// TODO: make this not hardcoded
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
 	
 	bool result = CefInitialize(args, settings, nullptr);
@@ -53,7 +67,8 @@ int HtmlGuiComponent::load()
 	if (!result)
 	{
 		// handle error
-		BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent - could not initialize CEF";
+		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not initialize CEF";
+		// TODO: throw error
 		return -1;
 	}
 
@@ -79,35 +94,18 @@ int HtmlGuiComponent::load()
         // browser_->GetHost()->SendMouseWheelEvent(...);
     }
     
-    //setContextObject( nullptr );
-
-	testint = 31;
-	webTextureReady_ = false;
-	needs_full_refresh = true;
-	
-	glw::GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading HtmlGuiComponent in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
-	}
-	else
-	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded HtmlGuiComponent.";
-	}
+    sendBoundFunctionsToRenderProcess();
 
 	return 0;
 }
 
-void HtmlGuiComponent::unload()
+void GuiComponent::unload()
 {
 	browser_ = nullptr;
     browserClient_ = nullptr;
 	CefShutdown();
         
 	this->setVisible(false);
-	//window_ = 0;
 }
 
 /** Maps an input coordinate to a texture coordinate for injection into
@@ -118,12 +116,12 @@ void HtmlGuiComponent::unload()
  *  \returns the coordinate transformed to the correct value for the texture /
  *           Berkelium window
  */
-unsigned int HtmlGuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size)
+unsigned int GuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size)
 {
     return (glut_coord * tex_size) / glut_size;
 }
 
-void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
+void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
 	//std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
 	
@@ -143,7 +141,7 @@ void HtmlGuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yP
 	browser_->GetHost()->SendMouseMoveEvent(mouseEvent, mouseLeave);
 }
 
-void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
+void GuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
 	std::cout << "MOUSE BUTTON EVENT: " << buttonId << " " << xPos << " " << yPos << " " << down << std::endl;
 	//window_->mouseButton(buttonId, down, clickCount);
@@ -191,18 +189,18 @@ void HtmlGuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::in
 	browser_->GetHost()->SendMouseClickEvent(mouseEvent, buttonType, mouseUp, clickCount);
 }
 
-void HtmlGuiComponent::mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos)
+void GuiComponent::mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
 	this->mouseButton(buttonId, xPos, yPos, true, 1);
 	this->mouseButton(buttonId, xPos, yPos, false, 1);
 }
 
-void HtmlGuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
+void GuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
 	
 }
 
-void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
+void GuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 {
 	std::cout << "TEXT EVENT: " << evt << std::endl;
 
@@ -241,7 +239,7 @@ void HtmlGuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 	}
 }
 
-glm::detail::int32 HtmlGuiComponent::getCefStateModifiers(glm::detail::int32 state) {
+glm::detail::int32 GuiComponent::getCefStateModifiers(glm::detail::int32 state) {
   glm::detail::int32 modifiers = 0;
   /*
   if (state & GDK_SHIFT_MASK)
@@ -263,23 +261,26 @@ glm::detail::int32 HtmlGuiComponent::getCefStateModifiers(glm::detail::int32 sta
 }
 
 /**
- * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
+ * 
  */
-void HtmlGuiComponent::sendBoundFunctionsToRenderProcess()
+void GuiComponent::sendBoundFunctionsToRenderProcess()
 {
 	CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddFunction");
 	
-	// Set all of our GUIObject contexts
-	for ( auto &it : guiObjects_ )
+	// Set all of our GuiObject contexts
+	for ( auto& it : guiObjects_ )
 	{
-		std::wstring definitions = it.second->getFunctionDefinitions();
+		std::vector< std::wstring > names = it.second->getFunctionNames();
 		
-		message->GetArgumentList()->SetString( 0, definitions );
-		browser_->SendProcessMessage(PID_RENDERER, message);
+		for ( auto& name : names )
+		{
+			message->GetArgumentList()->SetString( 0, name );
+			browser_->SendProcessMessage(PID_RENDERER, message);
+		}
 	}
 }
 
-void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
+void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
 {
 	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
 
@@ -344,7 +345,7 @@ void HtmlGuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::deta
 /**
  * 
  */
-int HtmlGuiComponent::setContents(std::string contents)
+int GuiComponent::setContents(std::string contents)
 {
 	// TODO: implement
 	url_ = contents;
@@ -352,80 +353,69 @@ int HtmlGuiComponent::setContents(std::string contents)
 	return 0;
 }
 
-int HtmlGuiComponent::loadContentsFromFile(std::string filename)
+int GuiComponent::setContentsUrl(std::string url)
 {
-	url_ = filename;
+	url_ = url;
 
 	return 0;
 }
 
-void HtmlGuiComponent::update()
+void GuiComponent::update()
 {
 	//window_->executeJavascript(Berkelium::WideString::point_to(L"update();"));
 }
 
 
-void HtmlGuiComponent::render(shaders::IShaderProgram* shader)
+void GuiComponent::render(shaders::IShaderProgram* shader)
 {
 	//texture_->bind();
 	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
 	CefDoMessageLoopWork();
 	
-	//if ( webTextureReady_ )
-	//{
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
 
-		glColor4f(1.0, 1.0, 1.0, 1.0);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, web_texture);
+	glColor4f(1.0, 1.0, 1.0, 1.0);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, web_texture);
 
-		// display
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.f, 1.f); glVertex3f(-1.f, -1.f, 0.f);
-		glTexCoord2f(0.f, 0.f); glVertex3f(-1.f,  1.f, 0.f);
-		glTexCoord2f(1.f, 0.f); glVertex3f(1.f,  1.f, 0.f);
-		glTexCoord2f(1.f, 1.f); glVertex3f(1.f, -1.f, 0.f);
-		glEnd();
+	// display
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.f, 1.f); glVertex3f(-1.f, -1.f, 0.f);
+	glTexCoord2f(0.f, 0.f); glVertex3f(-1.f,  1.f, 0.f);
+	glTexCoord2f(1.f, 0.f); glVertex3f(1.f,  1.f, 0.f);
+	glTexCoord2f(1.f, 1.f); glVertex3f(1.f, -1.f, 0.f);
+	glEnd();
 
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 
-		glMatrixMode(GL_MODELVIEW);
-		glPopMatrix();
-	//}
-
-	// wait a bit before calling Berkelium::update() again
-	//if (testint > 3) {
-	//Berkelium::update();
-	testint = -1;
-	//}
-
-	testint++;
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
 }
 
 /*
-void HtmlGuiComponent::onCrashed(Berkelium::Window*win)
+void GuiComponent::onCrashed(Berkelium::Window*win)
 {
 	std::cout << "*** onCrashed " << std::endl;
 }
 
-void HtmlGuiComponent::onUnresponsive(Berkelium::Window*win)
+void GuiComponent::onUnresponsive(Berkelium::Window*win)
 {
 	std::cout << "*** onUnresponsive " << std::endl;
 }
 
-void HtmlGuiComponent::onScriptAlert(Berkelium::Window*win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool&success, Berkelium::WideString&value)
+void GuiComponent::onScriptAlert(Berkelium::Window*win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool&success, Berkelium::WideString&value)
 {
 	std::wcout << L"*** onScriptAlert " << message << std::endl;
 }
 */
 
-std::wstring HtmlGuiComponent::getObjectName(std::wstring name)
+std::wstring GuiComponent::getObjectName(std::wstring name)
 {
 	//return L"testObj";
 	std::string::size_type loc = name.find(L".", 0);
@@ -438,7 +428,7 @@ std::wstring HtmlGuiComponent::getObjectName(std::wstring name)
 	return L"";
 }
 
-std::wstring HtmlGuiComponent::getFunctionName(std::wstring name)
+std::wstring GuiComponent::getFunctionName(std::wstring name)
 {
 	//return L"testFunc";
 	std::string::size_type loc = name.find(L".", 0);
@@ -452,7 +442,7 @@ std::wstring HtmlGuiComponent::getFunctionName(std::wstring name)
 }
 
 /*
-void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs)
+void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs)
 {
 	   std::cout << "*** onJavascriptCallback at URL " << url << ", "
 	                  << (replyMsg?"synchronous":"async") << std::endl;
@@ -525,13 +515,13 @@ void HtmlGuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMs
 */
 
 /*
-bool HtmlGuiComponent::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
+bool GuiComponent::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
 {
 	rect = CefRect(0, 0, 800, 600);
 	return true;
 }
 
-void HtmlGuiComponent::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
+void GuiComponent::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
 {
 
 	memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
@@ -540,7 +530,7 @@ void HtmlGuiComponent::OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType t
 */
 
 /*
-void HtmlGuiComponent::onPaint(
+void GuiComponent::onPaint(
 		Berkelium::Window* wini,
 		const unsigned char*bitmap_in, 
 		const Berkelium::Rect&bitmap_rect,
@@ -591,7 +581,7 @@ void HtmlGuiComponent::onPaint(
  *  \returns true if the texture was updated, false otherwiase
  */
 /*
-bool HtmlGuiComponent::mapOnPaintToTexture(
+bool GuiComponent::mapOnPaintToTexture(
 		Berkelium::Window*wini,
 		const unsigned char* bitmap_in, 
 		const Berkelium::Rect& bitmap_rect,
@@ -762,34 +752,34 @@ bool HtmlGuiComponent::mapOnPaintToTexture(
 }
 */
 
-void HtmlGuiComponent::executeScript(std::wstring script)
+void GuiComponent::executeScript(std::wstring script)
 {
 	//window_->executeJavascript(Berkelium::WideString::point_to(script));
 }
 
-bool HtmlGuiComponent::isVisible()
+bool GuiComponent::isVisible()
 {
 	return isVisible_;
 }
 
-void HtmlGuiComponent::setVisible(bool isVisible)
+void GuiComponent::setVisible(bool isVisible)
 {
 	isVisible_ = isVisible;
 }
 
-IGUIObject* HtmlGuiComponent::createGUIObject(std::wstring name)
+IGuiObject* GuiComponent::createGuiObject(std::wstring name)
 {
 	if ( guiObjects_[name] != nullptr )
 	{
 		return nullptr;
 	}
 	
-	guiObjects_[name] = std::unique_ptr<GUIObject>(new GUIObject(name, this));
+	guiObjects_[name] = std::unique_ptr<GuiObject>(new GuiObject(name, this));
 
 	return guiObjects_[name].get();
 }
 
-IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name)
+IGuiObject* GuiComponent::getGuiObject(std::wstring name)
 {
 	if ( guiObjects_[name] == nullptr )
 	{
@@ -799,11 +789,14 @@ IGUIObject* HtmlGuiComponent::getGUIObject(std::wstring name)
 	return guiObjects_[name].get();
 }
 
-void HtmlGuiComponent::addedFunction(std::wstring func)
+void GuiComponent::addedFunction(std::wstring func)
 {
 	// testing
-	sendBoundFunctionsToRenderProcess();
+	//sendBoundFunctionsToRenderProcess();
+	
+	// TODO: do we need this anymore?
 }
 
+}
 }
 }

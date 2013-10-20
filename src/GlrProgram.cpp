@@ -278,14 +278,14 @@ ISceneManager* GlrProgram::getSceneManager()
 	return sMgr_.get();
 }
 
-gui::IGUI* GlrProgram::getHtmlGui()
+gui::IGui* GlrProgram::getHtmlGui()
 {
 	if ( gui_.get() != nullptr )
 	{
 		return gui_.get();
 	}
 
-	gui_ = std::unique_ptr<gui::GUI>(new gui::GUI(openGlDevice_.get(), shaderProgramManager_, window_->getWidth(), window_->getHeight()));
+	gui_ = std::unique_ptr<gui::cef::Gui>(new gui::cef::Gui(openGlDevice_.get(), shaderProgramManager_, window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
 }

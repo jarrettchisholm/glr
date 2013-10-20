@@ -1,5 +1,5 @@
 /*
- * GUI.cpp
+ * Gui.cpp
  *
  *  Created on: 2011-05-08
  *      Author: jarrett
@@ -10,35 +10,23 @@
 
 #include <boost/log/trivial.hpp>
 
-#include "GUI.h"
+#include "Gui.h"
 
-#include "../glw/shaders/GlslShaderProgram.h"
+#include "../../glw/shaders/GlslShaderProgram.h"
 
 namespace glr {
 namespace gui {
-GUI::GUI(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
-{
-	initialize();
-}
+namespace cef {
 
-GUI::~GUI()
+Gui::Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
 {
 }
 
-int GUI::initialize()
+Gui::~Gui()
 {
-	/*
-	if ( !Berkelium::init(Berkelium::FileString::empty()) )
-	{
-		BOOST_LOG_TRIVIAL(debug) << "Failed to initialize berkelium!";
-		return -1;
-	}
-	*/
-	
-	return 0;
 }
 
-void GUI::destroy()
+void Gui::destroy()
 {
 	views_.clear();
 	
@@ -47,7 +35,7 @@ void GUI::destroy()
 
 
 
-void GUI::update()
+void Gui::update()
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -56,7 +44,7 @@ void GUI::update()
 	}
 }
 
-void GUI::render()
+void Gui::render()
 {
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
 
@@ -71,7 +59,7 @@ void GUI::render()
 	shaders::GlslShaderProgram::unbindAll();
 }
 
-void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
+void Gui::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -82,7 +70,7 @@ void GUI::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 	}
 }
 
-void GUI::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
+void Gui::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -93,7 +81,7 @@ void GUI::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm
 	}
 }
 
-void GUI::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
+void Gui::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -104,7 +92,7 @@ void GUI::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 	}
 }
 
-void GUI::textEvent(const wchar_t* evt, size_t evtLength)
+void Gui::textEvent(const wchar_t* evt, size_t evtLength)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -115,7 +103,7 @@ void GUI::textEvent(const wchar_t* evt, size_t evtLength)
 	}
 }
 
-void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
+void Gui::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -128,14 +116,15 @@ void GUI::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_
 
 
 /**
- * TESTING - Need to actually implement this properly (i.e. own the pointer, etc)
+ * TESTING
  */
-IGUIComponent* GUI::loadFromFile(std::string filename)
+IGuiComponent* Gui::loadFromFile(std::string filename)
 {
-	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(openGlDevice_, width_, height_) );
+	std::unique_ptr<GuiComponent> comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
 
-	comp->loadContentsFromFile(filename);
+	comp->setContentsUrl(filename);
 
+	/*
 	if ( comp->load() < 0 )
 	{
 		// TODO: throw error instead of returning a 'return status' from load() method
@@ -143,15 +132,15 @@ IGUIComponent* GUI::loadFromFile(std::string filename)
 		comp->unload();
 		return nullptr;
 	}
-
+	*/
 	views_.push_back( std::move(comp) );
 
 	return views_.back().get();
 }
 
-IGUIComponent* GUI::loadFromData(std::string data)
+IGuiComponent* Gui::loadFromData(std::string data)
 {
-	std::unique_ptr<HtmlGuiComponent> comp = std::unique_ptr<HtmlGuiComponent>( new HtmlGuiComponent(openGlDevice_, width_, height_) );
+	std::unique_ptr<GuiComponent> comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
 
 	comp->setContents(data);
 
@@ -168,7 +157,7 @@ IGUIComponent* GUI::loadFromData(std::string data)
 	return views_.back().get();
 }
 
-int GUI::release(IGUIComponent* comp)
+int Gui::release(IGuiComponent* comp)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -179,6 +168,8 @@ int GUI::release(IGUIComponent* comp)
 	}
 
 	return 0;
+}
+
 }
 }
 }
