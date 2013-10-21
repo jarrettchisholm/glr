@@ -6,6 +6,11 @@ src/glw/shaders/ShaderData.h
 ###################
 build/
 *.o
+cef_client/build/
+
+# CEF lib directory #
+#####################
+cef_client/lib
 
 # Documentation #
 #################
