@@ -1,0 +1,184 @@
+#! /bin/python
+# cef_client SConstruct file
+import subprocess, sys, os
+import glob
+import multiprocessing
+import platform
+import shutil
+
+
+### Establish our system
+isLinux = platform.system() == 'Linux'
+isWindows = os.name == 'nt'
+isMac = platform.system() == 'Darwin'
+
+### Error check our platform type
+if (not isLinux and not isWindows and not isMac):
+	print("Sorry, but it appears your platform is not recognized")
+	sys.exit(1)
+
+
+
+def copyResources():
+	"""Copies over resources to the build directory.
+	"""
+	
+	if (not os.path.exists('build')):
+		os.makedirs('build')
+	
+	try:
+		files = glob.iglob(os.path.join('lib', "libcef.*"))
+		for file in files:
+		    if os.path.isfile(file) and not os.path.exists('./build/' + file):
+		        shutil.copy2(file, './build/')
+	except:
+		print("Couldn't copy cef library")
+
+def clear():
+	if (isWindows):
+		os.system('cls')
+	else:
+		os.system('clear')
+
+def clean():
+	shutil.rmtree( './build', True )
+
+def exitOnError(returnCode):
+	if ( returnCode != 0):
+		print( "Script halted due to error(s)!" )
+		sys.exit(1)
+
+
+
+### Argument flags
+doBeautification = False
+doClean = False
+compiler = ""
+
+### Set our compiler
+compiler = ARGUMENTS.get('compiler')
+if (compiler is None or compiler == ''):
+	compiler = 'default'
+if (compiler == 'gcc' and isWindows):
+	compiler = 'mingw'
+if (compiler == 'msvc' and isWindows):
+	compiler = 'default'
+
+### Error check compiler
+if (compiler == 'msvc' and isWindows):
+	print( "Cannot use msvc in this environment!" )
+	sys.exit(1)
+
+### Handle arguments
+AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
+
+
+
+if GetOption('beautify'):
+	doBeautification = True
+if GetOption('clean'):
+	doClean = True
+
+
+
+if doBeautification:
+	print("Beautifying Code")
+	beautifyCode()
+	print("Done")
+	print("")
+
+
+if (doClean):
+	print("Cleaning cef_client build directory")
+	clean();
+	print("Done")
+	
+print("Compiling cef_client")
+
+
+
+
+
+# Tell SCons to create our build files in the 'build' directory
+VariantDir('build', 'src', duplicate=0)
+
+
+
+### Set our source files
+source_files = Glob('build/*.cpp', 'build/*.h')
+
+
+cpp_paths = []
+cpp_defines = []
+cpp_flags = []
+library_paths = []
+
+
+#library_paths.append('/home/jarrett/projects/berkelium2/cef3/Release')
+library_paths.append('./lib')
+#library_paths.append('./lib_d')
+
+### Set our required libraries
+cefLib = 'cef'
+cefDllWrapperLib = 'cef_dll_wrapper'
+
+if (isWindows):
+	cefLib = 'libcef'
+	cefDllWrapperLib = 'libcef_dll_wrapper'
+	
+libraries = [
+cefLib,
+cefDllWrapperLib
+]
+
+
+
+### Set our OS specific compiler variables
+if (not isWindows):
+	if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
+		cpp_flags.append('-std=c++11')
+		cpp_flags.append('-pedantic-errors')
+	
+	# pkg-config --cflags gtk+-2.0
+	cpp_paths.append('/usr/local/include/cef3')
+	cpp_paths.append('/usr/include/gtk-2.0')
+	cpp_paths.append('/usr/lib/x86_64-linux-gnu/gtk-2.0/include')
+	cpp_paths.append('/usr/include/atk-1.0')
+	cpp_paths.append('/usr/include/cairo')
+	cpp_paths.append('/usr/include/gdk-pixbuf-2.0')
+	cpp_paths.append('/usr/include/pango-1.0')
+	cpp_paths.append('/usr/include/glib-2.0')
+	cpp_paths.append('/usr/lib/x86_64-linux-gnu/glib-2.0/include')
+else:
+	if isWindows:
+		if (compiler == 'default'):
+			cpp_flags.append('/w') # disables warnings (Windows)
+			cpp_flags.append('/wd4350') # disables the specific warning C4350
+			cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
+			cpp_flags.append('/MD')
+		elif (compiler == 'mingw'):
+			cpp_flags.append('-std=c++11')
+			cpp_flags.append('-pedantic-errors')
+
+
+
+### Create our environment
+env = Environment(ENV = os.environ, CCFLAGS=[]) 
+
+### Set our environment variables
+env.Append( CPPFLAGS = cpp_flags )
+env.Append( CPPDEFINES = cpp_defines )
+env.Append( CPPPATH = cpp_paths )
+
+env.SetOption('num_jobs', multiprocessing.cpu_count())
+
+### Set our runtime library locations
+env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
+
+
+
+# Tell SCons to build
+env.Program('build/cef3_client', source_files, LIBS = libraries, LIBPATH = library_paths)
+
+### Copy all of our required resources to the build directory
+copyResources()
