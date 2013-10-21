@@ -71,7 +71,8 @@ void GlslShaderProgram::compile()
 
 		std::string msg( errorLog );
 		BOOST_LOG_TRIVIAL(error) << msg;
-		throw exception::GlException(msg);
+		//throw exception::GlException(msg);
+		return;
 	}
 	
 	

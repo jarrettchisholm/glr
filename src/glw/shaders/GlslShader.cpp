@@ -114,7 +114,7 @@ void GlslShader::compile()
 
 		BOOST_LOG_TRIVIAL(error) << msg.str();
 
-		throw exception::GlException(msg.str());
+		//throw exception::GlException(msg.str());
 	}
 
 

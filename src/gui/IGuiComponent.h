@@ -32,7 +32,7 @@ public:
 	 * Note that any GUIObjects created AFTER load() has been called will not have their
 	 * objects / methods bound.
 	 */
-	virtual int load() = 0;
+	virtual void load() = 0;
 	
 	/**
 	 * Frees the resources used by this IGuiComponent object.  Any bindings are also removed.

@@ -33,8 +33,9 @@ GuiComponent::~GuiComponent()
 	unload();
 }
 
-int GuiComponent::load()
+void GuiComponent::load()
 {
+	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent texture.";
 	// Create texture to hold rendered view
 	glGenTextures(1, &web_texture);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
@@ -50,16 +51,25 @@ int GuiComponent::load()
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded GuiComponent.";
+		BOOST_LOG_TRIVIAL(debug) << "Successfully created GuiComponent texture.";
 	}
 
+	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent CEF components.";
 	// Create Cef processes
+	
+	/*
+	argc = 1;
+	//char* argv[1];
+	argv[0] = "--blah=himom";
+	CefMainArgs args( argc, argv );
+	*/
 	CefMainArgs args;
+	
 	
 	CefSettings settings;
 
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
-	
+	BOOST_LOG_TRIVIAL(debug) << "Initializing CEF.";
 	bool result = CefInitialize(args, settings, nullptr);
 	
 	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
@@ -67,36 +77,43 @@ int GuiComponent::load()
 	if (!result)
 	{
 		// handle error
-		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not initialize CEF";
+		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not initialize CEF.";
 		// TODO: throw error
-		return -1;
+		return;
 	}
 
-    {
-        CefWindowInfo window_info;
-        CefBrowserSettings browserSettings;
+	CefWindowInfo window_info;
+	CefBrowserSettings browserSettings;
 
-        // in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
-        window_info.SetAsOffScreen(nullptr);
-		window_info.SetTransparentPainting(true);
-		
-		RenderHandler* rh = new RenderHandler(web_texture);
-        browserClient_ = new BrowserClient(rh);
-		
-        browser_ = CefBrowserHost::CreateBrowserSync(window_info, browserClient_.get(), url_, browserSettings);
-		
-		//browser->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
-		
-        // inject user-input by calling
-        // browser_->GetHost()->SendKeyEvent(...);
-        // browser_->GetHost()->SendMouseMoveEvent(...);
-        // browser_->GetHost()->SendMouseClickEvent(...);
-        // browser_->GetHost()->SendMouseWheelEvent(...);
-    }
+	// in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
+	window_info.SetAsOffScreen(nullptr);
+	window_info.SetTransparentPainting(true);
+	
+	RenderHandler* rh = new RenderHandler(web_texture);
+	browserClient_ = new BrowserClient(rh);
+	
+	BOOST_LOG_TRIVIAL(debug) << "Creating CEF Browser object.";
+	browser_ = CefBrowserHost::CreateBrowserSync(window_info, browserClient_.get(), url_, browserSettings);
+	
+	if (browser_.get() == nullptr)
+	{
+		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not create CEF browser.";
+		// TODO: throw error
+		return;
+	}
+	
+	//browser->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
+	
+	// inject user-input by calling
+	// browser_->GetHost()->SendKeyEvent(...);
+	// browser_->GetHost()->SendMouseMoveEvent(...);
+	// browser_->GetHost()->SendMouseClickEvent(...);
+	// browser_->GetHost()->SendMouseWheelEvent(...);
+    
     
     sendBoundFunctionsToRenderProcess();
-
-	return 0;
+    
+    BOOST_LOG_TRIVIAL(debug) << "Successfully created GuiComponent CEF components.";
 }
 
 void GuiComponent::unload()

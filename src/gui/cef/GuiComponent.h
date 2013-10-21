@@ -167,7 +167,7 @@ public:
 	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~GuiComponent();
 
-	virtual int load();
+	virtual void load();
 	virtual void unload();
 
 	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
@@ -247,6 +247,9 @@ private:
 	*/
 	void testLoadTexture();
 	void testDrawTest1();
+	
+	int argc;
+	char* argv[1];
 };
 
 }

@@ -13,7 +13,7 @@
 #include "ISceneManager.h"
 #include "Configure.h"
 
-#include "gui/IGUI.h"
+#include "gui/IGui.h"
 
 namespace glr {
 class IWindow {

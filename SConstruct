@@ -6,6 +6,7 @@ import platform
 import glob
 import json
 import shutil
+import shlex
 import argparse
 import multiprocessing
 
@@ -113,9 +114,16 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	
 	print('Done parsing Shaders into header ShaderData.h')
 
-def compileGlr(compiler):
-	os.chdir( '../glr' )
-	return subprocess.Popen( 'scons compiler='+compiler, shell=True )
+def compileCefClient(compiler, doClean):
+	os.chdir( 'cef_client' )
+	buildCommand = 'scons'
+	if (compiler):
+		buildCommand = buildCommand + " compiler="+compiler
+	if (doClean):
+		buildCommand = buildCommand + " --clean"
+	result = subprocess.call( shlex.split(buildCommand), shell=True )
+	os.chdir( '..' )
+	return result
 
 def clear():
 	if (isWindows):
@@ -134,6 +142,7 @@ def exitOnError(returnCode):
 
 ### Argument flags
 doBeautification = False
+doClean = False
 compiler = ""
 
 ### Set our compiler
@@ -168,6 +177,9 @@ if (not isWindows):
 
 if GetOption('beautify'):
 	doBeautification = True
+if GetOption('clean'):
+	doClean = True
+
 
 
 ### Prepare code for comilation
@@ -178,6 +190,11 @@ if doBeautification:
 	print("")
 
 
+
+### Compile our client for CEF
+print("Compiling CEF Client")
+exitOnError( compileCefClient(compiler, doClean) )
+print("")
 
 
 
@@ -377,7 +394,5 @@ if isLinux:
 
 env.SetOption('num_jobs', multiprocessing.cpu_count())
 
-
-
-# Tell SCons the library to build
+### Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)

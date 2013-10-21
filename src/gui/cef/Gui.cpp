@@ -143,7 +143,7 @@ IGuiComponent* Gui::loadFromData(std::string data)
 	std::unique_ptr<GuiComponent> comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
 
 	comp->setContents(data);
-
+	/*
 	if ( comp->load() < 0 )
 	{
 		// TODO: throw error instead of returning a 'return status' from load() method
@@ -151,7 +151,7 @@ IGuiComponent* Gui::loadFromData(std::string data)
 		comp->unload();
 		return 0;
 	}
-
+	*/
 	views_.push_back( std::move(comp) );
 
 	return views_.back().get();

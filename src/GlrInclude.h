@@ -1,5 +1,5 @@
 /*
- * GLRInclude.h
+ * GlrInclude.h
  *
  *  Created on: 2011-05-07
  *      Author: jarrett
@@ -21,8 +21,8 @@
 #include "ICamera.h"
 #include "models/IModelManager.h"
 
-#include "gui/IGUI.h"
-#include "gui/IGUIComponent.h"
+#include "gui/IGui.h"
+#include "gui/IGuiComponent.h"
 
 #include "glw/IOpenGlDevice.h"
 
