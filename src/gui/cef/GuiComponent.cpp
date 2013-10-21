@@ -26,11 +26,91 @@ namespace cef {
 GuiComponent::GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), width_(width), height_(height)
 {
 	isVisible_ = false;
+	bindDataSent_ = false;
 }
 
 GuiComponent::~GuiComponent()
 {
 	unload();
+}
+
+bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
+{
+	std::string s = message->GetName();
+	std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
+		
+	if( s == "ExecuteFunction" )
+	{
+		std::string funcName = message->GetArgumentList()->GetString(0);
+		glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
+		
+		// Wrap parameters
+		for (glmd::int32 i = 0; i < numArguments; i++)
+		{
+			CefValueType type = message->GetArgumentList()->GetType( i+2 );
+			switch (type) {
+				case VTYPE_LIST:
+					// TODO: error
+					std::cout << "Error - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
+					break;
+					
+				case VTYPE_BOOL: {
+					bool arg = message->GetArgumentList()->GetBool(i+2);
+					std::cout << "VTYPE_BOOL - " << arg << std::endl;
+					}
+					break;
+				
+				case VTYPE_DOUBLE: {
+					glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
+					std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
+					}
+					break;
+				
+				case VTYPE_INT: {
+					glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
+					std::cout << "VTYPE_INT - " << arg << std::endl;
+					}
+					break;
+				
+				case VTYPE_STRING: {
+					std::string arg = message->GetArgumentList()->GetString(i+2);
+					std::cout << "VTYPE_STRING - " << arg << std::endl;
+					}
+					break;
+				
+				default:
+					std::cout << "Error - Unknown CEF3 argument type: " << type << std::endl;
+					break;
+			}
+		}
+		
+		std::cout << "ExecuteFunction " << funcName << " " << numArguments << std::endl;
+	}
+	else if( s == "ReadyForBindings" && !bindDataSent_/* && browser == m_Browser*/ )
+	{ 
+		//std::cout << "testing " << message->GetArgumentList()->GetInt(1) << " " << browser->GetFrame(message->GetArgumentList()->GetInt(1)) << std::endl;
+		glmd::uint32 numSent = sendBoundFunctionsToRenderProcess();
+		
+		CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("AllBindingsSent");
+		m->GetArgumentList()->SetInt( 0, numSent );
+		browser->SendProcessMessage(PID_RENDERER, m);
+		std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
+		bindDataSent_ = true;
+	}
+	else if( s == "AllBindingsReceived" && bindDataSent_/* && browser == m_Browser*/ )
+	{ 
+		browser_->GetMainFrame()->LoadURL(url_);
+	}
+	else if( s == "AllBindingsReceived" && !bindDataSent_/* && browser == m_Browser*/ )
+	{ 
+		// TODO: error
+		BOOST_LOG_TRIVIAL(error) << "AllBindingsReceived message processed, but no binding data was sent.";
+	}
+	
+	return true;
+	//CefRefPtr<CefProcessMessage> message2 = CefProcessMessage::Create("TESTING");
+	//message2->GetArgumentList()->SetInt(0, 9191 );
+	//browser->SendProcessMessage(PID_RENDERER, message2);
 }
 
 void GuiComponent::load()
@@ -89,11 +169,13 @@ void GuiComponent::load()
 	window_info.SetAsOffScreen(nullptr);
 	window_info.SetTransparentPainting(true);
 	
-	RenderHandler* rh = new RenderHandler(web_texture);
-	browserClient_ = new BrowserClient(rh);
+	//RenderHandler* rh = new RenderHandler(web_texture);
+	//browserClient_ = new BrowserClient(rh);
+	this->renderHandler_ = new RenderHandler(web_texture);
+	//CefRefPtr<BrowserClient> browserClient_ = this;
 	
 	BOOST_LOG_TRIVIAL(debug) << "Creating CEF Browser object.";
-	browser_ = CefBrowserHost::CreateBrowserSync(window_info, browserClient_.get(), url_, browserSettings);
+	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings);
 	
 	if (browser_.get() == nullptr)
 	{
@@ -102,7 +184,7 @@ void GuiComponent::load()
 		return;
 	}
 	
-	//browser->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
+	//browser_->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
 	
 	// inject user-input by calling
 	// browser_->GetHost()->SendKeyEvent(...);
@@ -111,7 +193,7 @@ void GuiComponent::load()
 	// browser_->GetHost()->SendMouseWheelEvent(...);
     
     
-    sendBoundFunctionsToRenderProcess();
+    //sendBoundFunctionsToRenderProcess();
     
     BOOST_LOG_TRIVIAL(debug) << "Successfully created GuiComponent CEF components.";
 }
@@ -119,7 +201,7 @@ void GuiComponent::load()
 void GuiComponent::unload()
 {
 	browser_ = nullptr;
-    browserClient_ = nullptr;
+    //browserClient_ = nullptr;
 	CefShutdown();
         
 	this->setVisible(false);
@@ -277,11 +359,9 @@ glm::detail::int32 GuiComponent::getCefStateModifiers(glm::detail::int32 state) 
   return modifiers;
 }
 
-/**
- * 
- */
-void GuiComponent::sendBoundFunctionsToRenderProcess()
+int GuiComponent::sendBoundFunctionsToRenderProcess()
 {
+	glmd::uint32 numSent = 0;
 	CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddFunction");
 	
 	// Set all of our GuiObject contexts
@@ -293,8 +373,11 @@ void GuiComponent::sendBoundFunctionsToRenderProcess()
 		{
 			message->GetArgumentList()->SetString( 0, name );
 			browser_->SendProcessMessage(PID_RENDERER, message);
+			numSent++;
 		}
 	}
+	
+	return numSent;
 }
 
 void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
@@ -456,6 +539,11 @@ std::wstring GuiComponent::getFunctionName(std::wstring name)
 	}
 
 	return L"";
+}
+
+CefRefPtr<CefRenderHandler> GuiComponent::GetRenderHandler()
+{
+	return renderHandler_;
 }
 
 /*

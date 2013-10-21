@@ -77,92 +77,10 @@ public:
     IMPLEMENT_REFCOUNTING(RenderHandler)
 };
 
-// for manual render handler
-class BrowserClient : public CefClient
-{
-public:
-    BrowserClient(RenderHandler* renderHandler) : m_renderHandler(renderHandler)
-    {
-	};
-
-    virtual CefRefPtr<CefRenderHandler> GetRenderHandler()
-    {
-        return m_renderHandler;
-    };
-    
-    bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
-	{
-		std::string s = message->GetName();
-		std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
-		
-		if( s == "OnContextCreated"/* && browser == m_Browser*/ )
-		{ 
-			std::cout << "testing " << message->GetArgumentList()->GetInt(1) << " " << browser->GetFrame(message->GetArgumentList()->GetInt(1)) << std::endl;
-		}
-		else if( s == "ExecuteFunction" )
-		{
-			std::string funcName = message->GetArgumentList()->GetString(0);
-			glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
-			
-			// Wrap parameters
-			for (glmd::int32 i = 0; i < numArguments; i++)
-			{
-				CefValueType type = message->GetArgumentList()->GetType( i+2 );
-				switch (type) {
-					case VTYPE_LIST:
-						// TODO: error
-						std::cout << "Error - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
-						break;
-						
-					case VTYPE_BOOL: {
-						bool arg = message->GetArgumentList()->GetBool(i+2);
-						std::cout << "VTYPE_BOOL - " << arg << std::endl;
-						}
-						break;
-					
-					case VTYPE_DOUBLE: {
-						glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
-						std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
-						}
-						break;
-					
-					case VTYPE_INT: {
-						glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
-						std::cout << "VTYPE_INT - " << arg << std::endl;
-						}
-						break;
-					
-					case VTYPE_STRING: {
-						std::string arg = message->GetArgumentList()->GetString(i+2);
-						std::cout << "VTYPE_STRING - " << arg << std::endl;
-						}
-						break;
-					
-					default:
-						std::cout << "Error - Unknown CEF3 argument type: " << type << std::endl;
-						break;
-				}
-			}
-			
-			std::cout << "ExecuteFunction " << funcName << " " << numArguments << std::endl;
-		}
-		
-		return true;
-		//CefRefPtr<CefProcessMessage> message2 = CefProcessMessage::Create("TESTING");
-		//message2->GetArgumentList()->SetInt(0, 9191 );
-		//browser->SendProcessMessage(PID_RENDERER, message2);
-	};
-
-    CefRefPtr<CefRenderHandler> m_renderHandler;
-
-	// NOTE: Must be at bottom
-public:
-    IMPLEMENT_REFCOUNTING(BrowserClient)
-};
 
 
 
-class GuiComponent : public IGuiComponent, public IAddFunctionListener {
+class GuiComponent : public IGuiComponent, public IAddFunctionListener, public CefClient {
 public:
 	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~GuiComponent();
@@ -193,6 +111,10 @@ public:
 	virtual IGuiObject* getGuiObject(std::wstring name);
 	
 	virtual void addedFunction(std::wstring func);
+	
+	// Implement functions for CefClient
+	virtual bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
+	virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
 
 private:
 	bool isVisible_;
@@ -210,8 +132,10 @@ private:
 
 	// CEF3 variables
 	CefRefPtr<CefBrowser> browser_;
-    CefRefPtr<BrowserClient> browserClient_;
+    //CefRefPtr<BrowserClient> browserClient_;
+    CefRefPtr<CefRenderHandler> renderHandler_;
     
+    bool bindDataSent_;
 
 	std::map< std::wstring, std::unique_ptr<GuiObject> > guiObjects_;
 
@@ -220,7 +144,12 @@ private:
 
 	unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 	glm::detail::int32 getCefStateModifiers(glm::detail::int32 state);
-	void sendBoundFunctionsToRenderProcess();
+	
+	/**
+	 * 
+	 * @return The number of functions sent via IPC to the render process.
+	 */
+	int sendBoundFunctionsToRenderProcess();
 
 	/*
 	bool mapOnPaintToTexture(
@@ -248,8 +177,9 @@ private:
 	void testLoadTexture();
 	void testDrawTest1();
 	
-	int argc;
-	char* argv[1];
+	// NOTE: Must be at bottom
+public:
+    IMPLEMENT_REFCOUNTING(GuiComponent)
 };
 
 }
