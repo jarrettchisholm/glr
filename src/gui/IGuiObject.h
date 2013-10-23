@@ -11,7 +11,7 @@
 #include <functional>
 #include <vector>
 
-#include "CallbackParameter.h"
+#include <boost/any.hpp>
 
 namespace glr {
 namespace gui {
@@ -38,16 +38,16 @@ public:
 	/**
 	 * Adds a lambda callback function to this IGuiObject.  The function has the specified name, and it's signature
 	 * is specified by the passed in std::function object.  The signature can also have an unspecified number of
-	 * parameters, implemented as CallbackParameter objects.
+	 * parameters, implemented as boost::any objects.
 	 * 
 	 * @param function The actual function to be called.
 	 */
-	virtual void addFunction(std::wstring name, std::function<void(std::vector<CallbackParameter>)> function) = 0;
-	virtual void addFunction(std::wstring name, std::function<int(std::vector<CallbackParameter>)> function) = 0;
-	virtual void addFunction(std::wstring name, std::function<float(std::vector<CallbackParameter>)> function) = 0;
-	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<CallbackParameter>)> function) = 0;
-	virtual void addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function) = 0;
-	virtual void addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function) = 0;
 };
 }
 }

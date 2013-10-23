@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include "../common/utilities/Macros.h"
+
 namespace glr {
 namespace gui {
 	
@@ -22,6 +24,7 @@ public:
 	CallbackParameter(int i);
 	CallbackParameter(float f);
 	CallbackParameter(double d);
+	CallbackParameter(std::string s);
 	CallbackParameter(std::wstring s);
 	CallbackParameter(char c);
 	CallbackParameter(bool b);
@@ -33,18 +36,21 @@ public:
 		TYPE_FLOAT,
 		TYPE_DOUBLE,
 		TYPE_STRING,
+		TYPE_WSTRING,
 		TYPE_CHAR,
 		TYPE_BOOL
 	};
 
 	ParamType getType();
+	ParamType setType(ParamType type);
 
-	int getInt();
-	float getFloat();
-	double getDouble();
-	std::wstring getString();
-	char getChar();
-	bool getBool();
+	GETSET(int, intValue_, Int)
+	GETSET(float, floatValue_, Float)
+	GETSET(double, doubleValue_, Double)
+	GETSET(std::string, stringValue_, String)
+	GETSET(std::wstring, wstringValue_, Wstring)
+	GETSET(char, charValue_, Char)
+	GETSET(bool, boolValue_, Bool)
 
 private:
 	ParamType type_;
@@ -52,10 +58,12 @@ private:
 	int intValue_;
 	float floatValue_;
 	double doubleValue_;
-	std::wstring stringValue_;
+	std::string stringValue_;
+	std::wstring wstringValue_;
 	char charValue_;
 	bool boolValue_;
 };
+
 }
 }
 #endif /* CALLBACKPARAMETER_H_ */

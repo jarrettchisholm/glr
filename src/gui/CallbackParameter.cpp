@@ -9,6 +9,7 @@
 
 namespace glr {
 namespace gui {
+
 CallbackParameter::CallbackParameter()
 {
 }
@@ -28,9 +29,14 @@ CallbackParameter::CallbackParameter(double d)
 	doubleValue_ = d;
 }
 
-CallbackParameter::CallbackParameter(std::wstring s)
+CallbackParameter::CallbackParameter(std::string s)
 {
 	stringValue_ = s;
+}
+
+CallbackParameter::CallbackParameter(std::wstring s)
+{
+	wstringValue_ = s;
 }
 
 CallbackParameter::CallbackParameter(char c)
@@ -52,34 +58,10 @@ CallbackParameter::ParamType CallbackParameter::getType()
 	return type_;
 }
 
-int CallbackParameter::getInt()
+CallbackParameter::ParamType CallbackParameter::setType(ParamType type)
 {
-	return intValue_;
+	type_ = type;
 }
 
-float CallbackParameter::getFloat()
-{
-	return floatValue_;
-}
-
-double CallbackParameter::getDouble()
-{
-	return doubleValue_;
-}
-
-std::wstring CallbackParameter::getString()
-{
-	return stringValue_;
-}
-
-char CallbackParameter::getChar()
-{
-	return charValue_;
-}
-
-bool CallbackParameter::getBool()
-{
-	return boolValue_;
-}
 }
 }

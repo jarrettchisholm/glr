@@ -40,9 +40,12 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
 		
 	if( s == "ExecuteFunction" )
-	{
-		std::string funcName = message->GetArgumentList()->GetString(0);
+	{		
+		std::wstring functionName = message->GetArgumentList()->GetString(0);
+		std::wstring objName = L"game"; // TESTING
 		glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
+		
+		std::vector< boost::any > params = std::vector< boost::any >();
 		
 		// Wrap parameters
 		for (glmd::int32 i = 0; i < numArguments; i++)
@@ -56,24 +59,28 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 					
 				case VTYPE_BOOL: {
 					bool arg = message->GetArgumentList()->GetBool(i+2);
+					params.push_back(boost::any(arg));
 					std::cout << "VTYPE_BOOL - " << arg << std::endl;
 					}
 					break;
 				
 				case VTYPE_DOUBLE: {
 					glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
+					params.push_back(boost::any(arg));
 					std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
 					}
 					break;
 				
 				case VTYPE_INT: {
 					glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
+					params.push_back(boost::any(arg));
 					std::cout << "VTYPE_INT - " << arg << std::endl;
 					}
 					break;
 				
 				case VTYPE_STRING: {
 					std::string arg = message->GetArgumentList()->GetString(i+2);
+					params.push_back(boost::any(arg));
 					std::cout << "VTYPE_STRING - " << arg << std::endl;
 					}
 					break;
@@ -84,7 +91,25 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 		}
 		
-		std::cout << "ExecuteFunction " << funcName << " " << numArguments << std::endl;
+		if ( guiObjects_.find(objName) != guiObjects_.end() )
+		{
+			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
+			
+			// TODO: reply with result
+			//if (boost::any_cast<std::string>(r))
+			std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
+			
+			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("FunctionResult");
+			m->GetArgumentList()->SetString( 0, functionName );
+			m->GetArgumentList()->SetInt( 1, 1 );
+			m->GetArgumentList()->SetString( 2, boost::any_cast<std::wstring>(r) );
+			browser->SendProcessMessage(PID_RENDERER, m);
+			
+			//if ( replyMsg )
+			//	win->synchronousScriptReturn(replyMsg, r);
+		}
+		
+		std::wcout << L"ExecuteFunction " << functionName << " " << numArguments << std::endl;
 	}
 	else if( s == "ReadyForBindings" && !bindDataSent_/* && browser == m_Browser*/ )
 	{ 
@@ -547,7 +572,7 @@ CefRefPtr<CefRenderHandler> GuiComponent::GetRenderHandler()
 }
 
 /*
-void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs)
+void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, boost::any*args, size_t numArgs)
 {
 	   std::cout << "*** onJavascriptCallback at URL " << url << ", "
 	                  << (replyMsg?"synchronous":"async") << std::endl;
@@ -556,7 +581,7 @@ void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, B
 	   for (size_t i = 0; i < numArgs; i++) {
 	        Berkelium::WideString jsonStr = toJSON(args[i]);
 	        std::wcout << L"    Argument " << i << ": ";
-	        if (args[i].type() == Berkelium::Script::Variant::JSSTRING) {
+	        if (args[i].type() == boost::any::JSSTRING) {
 	                std::wcout << L"(string) " << args[i].toString() << std::endl;
 	        } else {
 	                std::wcout << jsonStr << std::endl;
@@ -580,25 +605,25 @@ void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, B
 	{
 		switch ( args[i].type())
 		{
-		case Berkelium::Script::Variant::JSSTRING: {
+		case boost::any::JSSTRING: {
 			std::wstring p = std::wstring(args[i].toString().data(), args[i].toString().length());
 			params.push_back(CallbackParameter(p));
 		}
 		break;
 
-		case Berkelium::Script::Variant::JSDOUBLE: {
+		case boost::any::JSDOUBLE: {
 			double p = args[i].toDouble();
 			params.push_back(CallbackParameter(p));
 		}
 		break;
 
-		case Berkelium::Script::Variant::JSBOOLEAN: {
+		case boost::any::JSBOOLEAN: {
 			bool p = args[i].toBoolean();
 			params.push_back(CallbackParameter(p));
 		}
 		break;
 
-		case Berkelium::Script::Variant::JSNULL:
+		case boost::any::JSNULL:
 
 			break;
 
@@ -611,7 +636,7 @@ void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, B
 
 	if ( guiObjects_[objName] != nullptr )
 	{
-		Berkelium::Script::Variant r = guiObjects_[objName]->processCallback(functionName, params);
+		boost::any r = guiObjects_[objName]->processCallback(functionName, params);
 
 		if ( replyMsg )
 			win->synchronousScriptReturn(replyMsg, r);

@@ -21,7 +21,7 @@ GuiObject::GuiObject(std::wstring name, IAddFunctionListener* addFunctionListene
 	/*
 	window_->addBindOnStartLoading(
 		Berkelium::WideString::point_to(name_),
-		Berkelium::Script::Variant::emptyObject());
+		boost::any::emptyObject());
 		*/
 }
 
@@ -39,7 +39,7 @@ void GuiObject::addFunction(std::wstring funcName)
 	/*
 	window_->addBindOnStartLoading(
 		Berkelium::WideString::point_to(pointTo),
-		Berkelium::Script::Variant::bindFunction(Berkelium::WideString::point_to(pointTo), true));
+		boost::any::bindFunction(Berkelium::WideString::point_to(pointTo), true));
 		*/
 }
 
@@ -66,6 +66,13 @@ void GuiObject::addFunction(std::wstring name, std::function<float()> function)
 
 void GuiObject::addFunction(std::wstring name, std::function<std::wstring()> function)
 {
+	functionTypeMap_[name] = FunctionTypes::TYPE_WSTRING;
+	functionMapWstring_[name] = function;
+	addFunction(name);
+}
+
+void GuiObject::addFunction(std::wstring name, std::function<std::string()> function)
+{
 	functionTypeMap_[name] = FunctionTypes::TYPE_STRING;
 	functionMapString_[name] = function;
 	addFunction(name);
@@ -86,42 +93,49 @@ void GuiObject::addFunction(std::wstring name, std::function<bool()> function)
 }
 
 
-void GuiObject::addFunction(std::wstring name, std::function<void(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_VOID;
 	functionMapWithParamatersVoid_[name] = function;
 	addFunction(name);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<int(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_INT;
 	functionMapWithParamatersInt_[name] = function;
 	addFunction(name);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<float(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT;
 	functionMapWithParamatersFloat_[name] = function;
 	addFunction(name);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<std::wstring(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<std::string(std::vector<boost::any>)> function)
 {
-	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_STRING;
+	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING;
 	functionMapWithParamatersString_[name] = function;
 	addFunction(name);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<char(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function)
+{
+	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_STRING;
+	functionMapWithParamatersWstring_[name] = function;
+	addFunction(name);
+}
+
+void GuiObject::addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_CHAR;
 	functionMapWithParamatersChar_[name] = function;
 	addFunction(name);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<bool(std::vector<CallbackParameter>)> function)
+void GuiObject::addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_BOOL;
 	functionMapWithParamatersBool_[name] = function;
@@ -207,12 +221,12 @@ bool GuiObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 }
 */
 
-/*
-Berkelium::Script::Variant GuiObject::processCallback(std::wstring name, std::vector< CallbackParameter > params)
+
+boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any > params)
 {
 	int type = functionTypeMap_[name];
 
-	Berkelium::Script::Variant variant;
+	boost::any variant;
 
 	switch ( type )
 	{
@@ -223,31 +237,37 @@ Berkelium::Script::Variant GuiObject::processCallback(std::wstring name, std::ve
 
 	case FunctionTypes::TYPE_INT: {
 		int r = functionMapInt_[name]();
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_FLOAT: {
 		float r = functionMapFloat_[name]();
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_STRING: {
-		std::wstring r = functionMapString_[name]();
-		variant = Berkelium::Script::Variant(r.c_str());
+		std::string r = functionMapString_[name]();
+		variant = boost::any(r);
+	}
+	break;
+	
+	case FunctionTypes::TYPE_WSTRING: {
+		std::wstring r = functionMapWstring_[name]();
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_CHAR: {
 		char r = functionMapChar_[name]();
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_BOOL: {
 		bool r = functionMapBool_[name]();
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
@@ -260,38 +280,44 @@ Berkelium::Script::Variant GuiObject::processCallback(std::wstring name, std::ve
 
 	case FunctionTypes::TYPE_WITH_PARAMETERS_INT: {
 		int r = functionMapWithParamatersInt_[name](params);
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT: {
 		float r = functionMapWithParamatersFloat_[name](params);
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_WITH_PARAMETERS_STRING: {
-		std::wstring r = functionMapWithParamatersString_[name](params);
-		variant = Berkelium::Script::Variant(r.c_str());
+		std::string r = functionMapWithParamatersString_[name](params);
+		variant = boost::any(r);
+	}
+	break;
+	
+	case FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING: {
+		std::wstring r = functionMapWithParamatersWstring_[name](params);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_WITH_PARAMETERS_CHAR: {
 		char r = functionMapWithParamatersChar_[name](params);
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 
 	case FunctionTypes::TYPE_WITH_PARAMETERS_BOOL: {
 		bool r = functionMapWithParamatersBool_[name](params);
-		variant = Berkelium::Script::Variant(r);
+		variant = boost::any(r);
 	}
 	break;
 	}
 
 	return variant;
 }
-*/
+
 
 }
 }
