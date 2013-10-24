@@ -461,24 +461,11 @@ public:
 			{
 				CefValueType type = message->GetArgumentList()->GetType( i+2 );
 				switch (type) {
-					case VTYPE_LIST:
-						// TODO: should I implement this?
-						std::cout << "Error - FunctionResult - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
-						break;
-						
-					case VTYPE_BOOL:
+					case VTYPE_STRING:
 					{
-						bool arg = message->GetArgumentList()->GetBool(i+2);
-						std::cout << "VTYPE_BOOL - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateBool( arg );
-					}
-						break;
-					
-					case VTYPE_DOUBLE:
-					{
-						double arg = message->GetArgumentList()->GetDouble(i+2);
-						std::cout << "VTYPE_DOUBLE - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateDouble( arg );
+						std::string arg = message->GetArgumentList()->GetString(i+2);
+						std::cout << "VTYPE_STRING - FunctionResult -  " << arg << std::endl;
+						temp = CefV8Value::CreateString( arg );
 					}
 						break;
 					
@@ -490,16 +477,49 @@ public:
 					}
 						break;
 					
-					case VTYPE_STRING:
+					case VTYPE_DOUBLE:
 					{
-						std::string arg = message->GetArgumentList()->GetString(i+2);
-						std::cout << "VTYPE_STRING - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateString( arg );
+						double arg = message->GetArgumentList()->GetDouble(i+2);
+						std::cout << "VTYPE_DOUBLE - FunctionResult -  " << arg << std::endl;
+						temp = CefV8Value::CreateDouble( arg );
 					}
 						break;
 					
+					case VTYPE_BOOL:
+					{
+						bool arg = message->GetArgumentList()->GetBool(i+2);
+						std::cout << "VTYPE_BOOL - FunctionResult -  " << arg << std::endl;
+						temp = CefV8Value::CreateBool( arg );
+					}
+						break;
+				
+					case VTYPE_BINARY:
+						// TODO: error
+						std::cout << "Error - FunctionResult - VTYPE_BINARY not implemented as CEF3 function result type." << std::endl;
+						break;
+						
+					case VTYPE_DICTIONARY:
+						// TODO: error
+						std::cout << "Error - FunctionResult - VTYPE_DICTIONARY not implemented as CEF3 function result type." << std::endl;
+						break;
+					
+					case VTYPE_LIST:
+						// TODO: error
+						std::cout << "Error - FunctionResult - VTYPE_LIST not implemented as CEF3 function result type." << std::endl;
+						break;
+					
+					case VTYPE_INVALID:
+						// TODO: error
+						std::cout << "Error - FunctionResult - VTYPE_INVALID CEF3 function result type." << std::endl;
+						break;
+						
+					case VTYPE_NULL:
+						// TODO: error
+						std::cout << "Error - FunctionResult - VTYPE_NULL not implemented as CEF3 function result type." << std::endl;
+						break;
+					
 					default:
-						std::cout << "Error - FunctionResult -  Unknown CEF3 argument type: " << type << std::endl;
+						std::cout << "Error - FunctionResult - Unknown CEF3 function result type: " << type << std::endl;
 						break;
 				}
 				

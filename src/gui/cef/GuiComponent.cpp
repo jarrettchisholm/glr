@@ -18,6 +18,8 @@
 #include "../../common/utilities/ImageLoader.h"
 #include "../../common/utilities/BoostAnyUtilities.h"
 
+#include "../../exceptions/ExceptionInclude.h"
+
 //#define DEBUG_PAINT true
 
 namespace glr {
@@ -35,7 +37,18 @@ GuiComponent::~GuiComponent()
 	unload();
 }
 
-bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
+/**
+ * Processes a message received from the render process.
+ * 
+ * List of available functions:
+ * 
+ * ExecuteFunction
+ * 		funcName [<argument> [, ...]]
+ * ReadyForBindings
+ *
+ * AllBindingsReceived
+ */
+bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message )
 {
 	std::string s = message->GetName();
 	std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
@@ -89,37 +102,59 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 					break;
 				
 				case VTYPE_BINARY:
-					// TODO: error
-					std::cout << "Error - VTYPE_BINARY not implemented as CEF3 argument type." << std::endl;
+				{
+					std::string msg = "Error - VTYPE_BINARY not implemented as CEF3 argument type.";					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 					
 				case VTYPE_DICTIONARY:
-					// TODO: error
-					std::cout << "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type." << std::endl;
+				{
+					std::string msg = "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type.";					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 				
 				case VTYPE_LIST:
-					// TODO: error
-					std::cout << "Error - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
+				{
+					std::string msg = "Error - VTYPE_LIST not implemented as CEF3 argument type.";					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 				
 				case VTYPE_INVALID:
-					std::cout << "Error - VTYPE_INVALID CEF3 argument type." << std::endl;
+				{
+					std::string msg = "Error - VTYPE_INVALID not implemented as CEF3 argument type.";					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 					
 				case VTYPE_NULL:
-					std::cout << "Error - VTYPE_NULL not implemented as CEF3 argument type." << std::endl;
+				{
+					std::string msg = "Error - VTYPE_NULL not implemented as CEF3 argument type.";					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 				
+				// Should the default case throw an exception?
 				default:
-					std::cout << "Error - Unknown CEF3 argument type: " << type << std::endl;
+				{
+					std::string msg = "Error - Unknown CEF3 argument type:" + type;					
+					std::cout << msg << std::endl;
+					throw exception::Exception( msg );
+				}
 					break;
 			}
 		}
 		
 		if ( guiObjects_.find(objName) != guiObjects_.end() )
 		{
-			boost::any r = guiObjects_[objName]->processCallback(functionName, params);			
+			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
 			
 			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("FunctionResult");
 			m->GetArgumentList()->SetString( 0, functionName );
@@ -185,9 +220,6 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	}
 	
 	return true;
-	//CefRefPtr<CefProcessMessage> message2 = CefProcessMessage::Create("TESTING");
-	//message2->GetArgumentList()->SetInt(0, 9191 );
-	//browser->SendProcessMessage(PID_RENDERER, message2);
 }
 
 void GuiComponent::load()
