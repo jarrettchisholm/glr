@@ -514,7 +514,6 @@ public:
 			// Execute the registered JavaScript callback if any.
 			if (!callbackMap_.empty())
 			{
-				std::cout << "callbackMap_ not empty" << std::endl;
 				CallbackMap::const_iterator it = callbackMap_.find( std::make_pair(funcName, browser->GetIdentifier()));
 				
 				if (it != callbackMap_.end())

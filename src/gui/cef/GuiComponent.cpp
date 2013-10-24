@@ -16,6 +16,7 @@
 #include "GuiObject.h"
 
 #include "../../common/utilities/ImageLoader.h"
+#include "../../common/utilities/BoostAnyUtilities.h"
 
 //#define DEBUG_PAINT true
 
@@ -40,10 +41,12 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
 		
 	if( s == "ExecuteFunction" )
-	{		
+	{	
 		std::wstring functionName = message->GetArgumentList()->GetString(0);
 		std::wstring objName = L"game"; // TESTING
 		glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
+		
+		std::wcout << L"ExecuteFunction " << functionName << " " << numArguments << std::endl;
 		
 		std::vector< boost::any > params = std::vector< boost::any >();
 		
@@ -51,38 +54,61 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		for (glmd::int32 i = 0; i < numArguments; i++)
 		{
 			CefValueType type = message->GetArgumentList()->GetType( i+2 );
-			switch (type) {
+			switch (type)
+			{
+				case VTYPE_INT:
+				{
+					glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
+					params.push_back(boost::any(arg));
+					std::cout << "VTYPE_INT - " << arg << std::endl;
+				}
+					break;
+				
+				case VTYPE_STRING:
+				{
+					std::string arg = message->GetArgumentList()->GetString(i+2);
+					params.push_back(boost::any(arg));
+					std::cout << "VTYPE_STRING - " << arg << std::endl;
+				}
+					break;
+
+				case VTYPE_BOOL:
+				{
+					bool arg = message->GetArgumentList()->GetBool(i+2);
+					params.push_back(boost::any(arg));
+					std::cout << "VTYPE_BOOL - " << arg << std::endl;
+				}
+					break;
+				
+				case VTYPE_DOUBLE:
+				{
+					glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
+					params.push_back(boost::any(arg));
+					std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
+				}
+					break;
+				
+				case VTYPE_BINARY:
+					// TODO: error
+					std::cout << "Error - VTYPE_BINARY not implemented as CEF3 argument type." << std::endl;
+					break;
+					
+				case VTYPE_DICTIONARY:
+					// TODO: error
+					std::cout << "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type." << std::endl;
+					break;
+				
 				case VTYPE_LIST:
 					// TODO: error
 					std::cout << "Error - VTYPE_LIST not implemented as CEF3 argument type." << std::endl;
 					break;
+				
+				case VTYPE_INVALID:
+					std::cout << "Error - VTYPE_INVALID CEF3 argument type." << std::endl;
+					break;
 					
-				case VTYPE_BOOL: {
-					bool arg = message->GetArgumentList()->GetBool(i+2);
-					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_BOOL - " << arg << std::endl;
-					}
-					break;
-				
-				case VTYPE_DOUBLE: {
-					glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
-					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
-					}
-					break;
-				
-				case VTYPE_INT: {
-					glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
-					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_INT - " << arg << std::endl;
-					}
-					break;
-				
-				case VTYPE_STRING: {
-					std::string arg = message->GetArgumentList()->GetString(i+2);
-					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_STRING - " << arg << std::endl;
-					}
+				case VTYPE_NULL:
+					std::cout << "Error - VTYPE_NULL not implemented as CEF3 argument type." << std::endl;
 					break;
 				
 				default:
@@ -93,23 +119,49 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		
 		if ( guiObjects_.find(objName) != guiObjects_.end() )
 		{
-			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
-			
-			// TODO: reply with result
-			//if (boost::any_cast<std::string>(r))
-			std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
+			boost::any r = guiObjects_[objName]->processCallback(functionName, params);			
 			
 			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("FunctionResult");
 			m->GetArgumentList()->SetString( 0, functionName );
 			m->GetArgumentList()->SetInt( 1, 1 );
-			m->GetArgumentList()->SetString( 2, boost::any_cast<std::wstring>(r) );
-			browser->SendProcessMessage(PID_RENDERER, m);
 			
-			//if ( replyMsg )
-			//	win->synchronousScriptReturn(replyMsg, r);
+			if ( utilities::isString(r) )
+			{
+				m->GetArgumentList()->SetString( 2, boost::any_cast<std::string>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<std::string>(r) << std::endl;
+			}
+			else if ( utilities::isWstring(r) )
+			{
+				m->GetArgumentList()->SetString( 2, boost::any_cast<std::wstring>(r) );
+				std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
+			}
+			else if ( utilities::isInt(r) )
+			{
+				m->GetArgumentList()->SetInt( 2, boost::any_cast<int>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<int>(r) << std::endl;
+			}
+			else if ( utilities::isUint(r) )
+			{
+				m->GetArgumentList()->SetInt( 2, boost::any_cast<uint>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<uint>(r) << std::endl;
+			}
+			else if ( utilities::isFloat(r) )
+			{
+				m->GetArgumentList()->SetDouble( 2, boost::any_cast<float>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<float>(r) << std::endl;
+			}
+			else if ( utilities::isDouble(r) )
+			{
+				m->GetArgumentList()->SetDouble( 2, boost::any_cast<double>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<double>(r) << std::endl;
+			}
+			else
+			{
+				std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
+			}
+			
+			browser->SendProcessMessage(PID_RENDERER, m);
 		}
-		
-		std::wcout << L"ExecuteFunction " << functionName << " " << numArguments << std::endl;
 	}
 	else if( s == "ReadyForBindings" && !bindDataSent_/* && browser == m_Browser*/ )
 	{ 

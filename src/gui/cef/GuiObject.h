@@ -2,7 +2,7 @@
  * GuiObject.h
  *
  *  Created on: 2012-12-30
- *      Author: jarrett
+ *	  Author: jarrett
  */
 
 #ifndef GUIOBJECT_H_
@@ -72,21 +72,21 @@ private:
 
 	std::map< std::wstring, int > functionTypeMap_;
 
-	std::map< std::wstring, std::function<void()> >                 functionMapVoid_;
-	std::map< std::wstring, std::function<int()> >                  functionMapInt_;
-	std::map< std::wstring, std::function<float()> >                functionMapFloat_;
-	std::map< std::wstring, std::function<std::string()> > 			functionMapString_;
-	std::map< std::wstring, std::function<std::wstring()> > 		functionMapWstring_;
-	std::map< std::wstring, std::function<char()> >                 functionMapChar_;
-	std::map< std::wstring, std::function<bool()> >                 functionMapBool_;
+	std::map< std::wstring, std::function<void()> >				functionMapVoid_;
+	std::map< std::wstring, std::function<int()> >				functionMapInt_;
+	std::map< std::wstring, std::function<float()> >			functionMapFloat_;
+	std::map< std::wstring, std::function<std::string()> > 		functionMapString_;
+	std::map< std::wstring, std::function<std::wstring()> > 	functionMapWstring_;
+	std::map< std::wstring, std::function<char()> >				functionMapChar_;
+	std::map< std::wstring, std::function<bool()> >				functionMapBool_;
 
-	std::map< std::wstring, std::function<void( std::vector<boost::any> )> >                 functionMapWithParamatersVoid_;
-	std::map< std::wstring, std::function<int( std::vector<boost::any> )> >                  functionMapWithParamatersInt_;
-	std::map< std::wstring, std::function<float( std::vector<boost::any> )> >                functionMapWithParamatersFloat_;
+	std::map< std::wstring, std::function<void( std::vector<boost::any> )> >				functionMapWithParamatersVoid_;
+	std::map< std::wstring, std::function<int( std::vector<boost::any> )> >				 	functionMapWithParamatersInt_;
+	std::map< std::wstring, std::function<float( std::vector<boost::any> )> >			   	functionMapWithParamatersFloat_;
 	std::map< std::wstring, std::function<std::string(std::vector<boost::any> )> > 			functionMapWithParamatersString_;
 	std::map< std::wstring, std::function<std::wstring(std::vector<boost::any> )> > 		functionMapWithParamatersWstring_;
-	std::map< std::wstring, std::function<char( std::vector<boost::any> )> >                 functionMapWithParamatersChar_;
-	std::map< std::wstring, std::function<bool( std::vector<boost::any> )> >                 functionMapWithParamatersBool_;
+	std::map< std::wstring, std::function<char( std::vector<boost::any> )> >				functionMapWithParamatersChar_;
+	std::map< std::wstring, std::function<bool( std::vector<boost::any> )> >				functionMapWithParamatersBool_;
 
 
 	void addFunction(std::wstring funcName);
