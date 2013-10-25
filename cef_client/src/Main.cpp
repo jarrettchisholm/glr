@@ -704,19 +704,14 @@ public:
 	/*
 	 * When your javascript calls a method that has been defined as a native api call, it will call this method.
 	 * 
-	 * This method will encode the function call, and send it to the browser process over IPC.
-	 * 
-	 * The format that is sent via IPC looks like this:
-	 * <function_name> <number_of_arguments> [<argument>, ..]
-	 * 
-	 * The browser process will process the function call, execute the requested function (if it exists), and send the result via IPC to this
-	 * process.
+	 * This method only binds one function - namely, the setMessageCallback method.  It is the method that we call
+	 * once we have a return result from a native function call.
 	 */
 	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 	{		
 		std::string s = name.ToString();
 		
-		// Implementation for “setMessageCallback”
+		// Implementation for setMessageCallback
 		if (s == "setMessageCallback" && arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsFunction())
 		{
 			std::cout << "cef3_client Execute --- setMessageCallback" << std::endl;
