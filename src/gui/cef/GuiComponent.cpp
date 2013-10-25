@@ -55,11 +55,11 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		
 	if( s == "ExecuteFunction" )
 	{	
-		std::wstring functionName = message->GetArgumentList()->GetString(0);
-		std::wstring objName = L"game"; // TESTING
-		glmd::int32 numArguments = message->GetArgumentList()->GetInt(1);
+		std::wstring objName = message->GetArgumentList()->GetString(0);
+		std::wstring functionName = message->GetArgumentList()->GetString(1);
+		glmd::int32 numArguments = message->GetArgumentList()->GetInt(2);
 		
-		std::wcout << L"ExecuteFunction " << functionName << " " << numArguments << std::endl;
+		std::wcout << L"GuiComponent ExecuteFunction " << objName << "." << functionName << " " << numArguments << std::endl;
 		
 		std::vector< boost::any > params = std::vector< boost::any >();
 		
@@ -192,7 +192,10 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 			else
 			{
-				std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
+				// TODO: actually check for void explicitly
+				std::cout << "ExecuteFunction Unable to determine result type - assuming void." << std::endl;
+				// No result
+				m->GetArgumentList()->SetInt( 1, 0 );
 			}
 			
 			browser->SendProcessMessage(PID_RENDERER, m);
@@ -411,40 +414,13 @@ void GuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 ySc
 void GuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 {
 	std::cout << "TEXT EVENT: " << evt << std::endl;
-
-	if ( wcsncmp(evt, L"`", evtLength) == 0 || wcsncmp(evt, L"~", evtLength) == 0 )
-	{
-		/*
-		 *	if( $('#console').hasClass('hidden') ) {
-		 *		$('#console').removeClass('hidden');
-		 *	} else {
-		 *		$('#console').addClass('hidden');
-		 *	}
-		 */
-
-		/*
-		window_->executeJavascript(Berkelium::WideString::point_to(
-									   L"if( $('#console').hasClass('hidden') ) {\
-											$('#console').removeClass('hidden');\
-											$('#console').addClass('visible');\
-											$('#console').click();\
-									   } else {\
-											$('#console').addClass('hidden');\
-											$('#console').removeClass('visible');\
-									   }"
-									   ));
-									   */
-	}
-	else
-	{
-		std::cout << "HERE 1 " << (char*)evt << std::endl;
-		//window_->focus();
-		wchar_t outchars[2];
-		outchars[0] = evt[0];
-		outchars[1] = 0;
-		std::cout << "HERE 2 " << outchars[0] << std::endl;
-		//window_->textEvent(outchars, 1);
-	}
+	std::cout << "HERE 1 " << (char*)evt << std::endl;
+	//window_->focus();
+	wchar_t outchars[2];
+	outchars[0] = evt[0];
+	outchars[1] = 0;
+	std::cout << "HERE 2 " << outchars[0] << std::endl;
+	//window_->textEvent(outchars, 1);
 }
 
 glm::detail::int32 GuiComponent::getCefStateModifiers(glm::detail::int32 state) {
@@ -471,19 +447,33 @@ glm::detail::int32 GuiComponent::getCefStateModifiers(glm::detail::int32 state) 
 int GuiComponent::sendBoundFunctionsToRenderProcess()
 {
 	glmd::uint32 numSent = 0;
-	CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddFunction");
 	
 	// Set all of our GuiObject contexts
 	for ( auto& it : guiObjects_ )
 	{
+		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddObject");
+		message->GetArgumentList()->SetString( 0, it.second->getName() );
+		browser_->SendProcessMessage(PID_RENDERER, message);
+		numSent++;
+		
 		std::vector< std::wstring > names = it.second->getFunctionNames();
 		
+		message = CefProcessMessage::Create("AddMethodToObject");
 		for ( auto& name : names )
 		{
-			message->GetArgumentList()->SetString( 0, name );
+			message->GetArgumentList()->SetString( 0, it.second->getName() );
+			message->GetArgumentList()->SetString( 1, name );
 			browser_->SendProcessMessage(PID_RENDERER, message);
 			numSent++;
 		}
+		
+		// Binding wrapper
+		browser_->GetMainFrame()->ExecuteJavaScript(
+										L"if (!game)\
+											var game = (window.game);",
+										"about:blank", 
+										0
+									);
 	}
 	
 	return numSent;
@@ -518,7 +508,7 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 	if ( vk_code == '`' || vk_code == '~' )
 	{
 		browser_->GetMainFrame()->ExecuteJavaScript(
-										"if( $('#console').hasClass('hidden') ) {\
+										L"if( $('#console').hasClass('hidden') ) {\
 											$('#console').removeClass('hidden');\
 											$('#console').addClass('visible');\
 											$('#console').click();\
@@ -571,7 +561,7 @@ int GuiComponent::setContentsUrl(std::string url)
 
 void GuiComponent::update()
 {
-	//window_->executeJavascript(Berkelium::WideString::point_to(L"update();"));
+	//browser_->GetMainFrame()->ExecuteJavaScript("update();", "about:blank", 0);
 }
 
 
@@ -968,7 +958,7 @@ bool GuiComponent::mapOnPaintToTexture(
 
 void GuiComponent::executeScript(std::wstring script)
 {
-	//window_->executeJavascript(Berkelium::WideString::point_to(script));
+	browser_->GetMainFrame()->ExecuteJavaScript(script, "about:blank", 0);
 }
 
 bool GuiComponent::isVisible()

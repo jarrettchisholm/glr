@@ -204,6 +204,11 @@ std::wstring GuiObject::getFunctionDefinitions()
 	return definitions.str();
 }
 
+std::wstring GuiObject::getName()
+{
+	return name_;
+}
+
 /*
 bool GuiObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
@@ -223,96 +228,118 @@ bool GuiObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 
 
 boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any > params)
-{
-	int type = functionTypeMap_[name];
+{	
+	auto it = functionTypeMap_.find( name );
+	if (it == functionTypeMap_.end())
+	{
+		// TODO: error???
+		assert(0);
+	}
+	
+	int type = it->second;
+	
+	std::wcout << "calling: " << name << " | " << type << std::endl;
 
 	boost::any variant;
 
 	switch ( type )
 	{
-	case FunctionTypes::TYPE_VOID: {
-		functionMapVoid_[name]();
-	}
-	break;
-
-	case FunctionTypes::TYPE_INT: {
-		int r = functionMapInt_[name]();
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_FLOAT: {
-		float r = functionMapFloat_[name]();
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_STRING: {
-		std::string r = functionMapString_[name]();
-		variant = boost::any(r);
-	}
-	break;
+		case FunctionTypes::TYPE_VOID:
+		{
+			functionMapVoid_[name]();
+		}
+		break;
 	
-	case FunctionTypes::TYPE_WSTRING: {
-		std::wstring r = functionMapWstring_[name]();
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_CHAR: {
-		char r = functionMapChar_[name]();
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_BOOL: {
-		bool r = functionMapBool_[name]();
-		variant = boost::any(r);
-	}
-	break;
-
-
-	// Lambda functions with parameters
-	case FunctionTypes::TYPE_WITH_PARAMETERS_VOID:   {
-		functionMapWithParamatersVoid_[name](params);
-	}
-	break;
-
-	case FunctionTypes::TYPE_WITH_PARAMETERS_INT: {
-		int r = functionMapWithParamatersInt_[name](params);
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT: {
-		float r = functionMapWithParamatersFloat_[name](params);
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_WITH_PARAMETERS_STRING: {
-		std::string r = functionMapWithParamatersString_[name](params);
-		variant = boost::any(r);
-	}
-	break;
+		case FunctionTypes::TYPE_INT:
+		{
+			int r = functionMapInt_[name]();
+			variant = boost::any(r);
+		}
+		break;
 	
-	case FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING: {
-		std::wstring r = functionMapWithParamatersWstring_[name](params);
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_WITH_PARAMETERS_CHAR: {
-		char r = functionMapWithParamatersChar_[name](params);
-		variant = boost::any(r);
-	}
-	break;
-
-	case FunctionTypes::TYPE_WITH_PARAMETERS_BOOL: {
-		bool r = functionMapWithParamatersBool_[name](params);
-		variant = boost::any(r);
-	}
-	break;
+		case FunctionTypes::TYPE_FLOAT:
+		{
+			float r = functionMapFloat_[name]();
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_STRING:
+		{
+			std::string r = functionMapString_[name]();
+			variant = boost::any(r);
+		}
+		break;
+		
+		case FunctionTypes::TYPE_WSTRING:
+		{
+			std::wstring r = functionMapWstring_[name]();
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_CHAR:
+		{
+			char r = functionMapChar_[name]();
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_BOOL:
+		{
+			bool r = functionMapBool_[name]();
+			variant = boost::any(r);
+		}
+		break;
+	
+	
+		// Lambda functions with parameters
+		case FunctionTypes::TYPE_WITH_PARAMETERS_VOID:   {
+			functionMapWithParamatersVoid_[name](params);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_WITH_PARAMETERS_INT:
+		{
+			int r = functionMapWithParamatersInt_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT:
+		{
+			float r = functionMapWithParamatersFloat_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_WITH_PARAMETERS_STRING:
+		{
+			std::string r = functionMapWithParamatersString_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+		
+		case FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING:
+		{
+			std::wstring r = functionMapWithParamatersWstring_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_WITH_PARAMETERS_CHAR:
+		{
+			char r = functionMapWithParamatersChar_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+	
+		case FunctionTypes::TYPE_WITH_PARAMETERS_BOOL:
+		{
+			bool r = functionMapWithParamatersBool_[name](params);
+			variant = boost::any(r);
+		}
+		break;
 	}
 
 	return variant;

@@ -115,10 +115,9 @@ private:
 	bool isFloat_;
 	bool isDouble_;
 	bool isObject_;
-	
 };
 
-class ObjectBinding
+class ObjectBinding : public CefV8Handler
 {
 public:
 	ObjectBinding()
@@ -127,6 +126,63 @@ public:
 
 	ObjectBinding(std::wstring name) : name_(name)
 	{
+	}
+	
+	/*
+	 * When your javascript calls a method that has been defined as a native api call, it will call this method.
+	 * 
+	 * This method will encode the function call, and send it to the browser process over IPC.
+	 * 
+	 * The format that is sent via IPC looks like this:
+	 * <function_name> <number_of_arguments> [<argument>, ..]
+	 * 
+	 * The browser process will process the function call, execute the requested function (if it exists), and send the result via IPC to this
+	 * process.
+	 */
+	bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
+	{		
+		std::wstring s = name.ToWString();
+		
+		// Implementation for “setMessageCallback”
+		if ( hasFunction(s) )
+		{
+			std::wcout << "cef3_client Execute " << name_ << "." << s << std::endl;
+			
+			// Send function call to browser process
+			CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("ExecuteFunction");
+			
+			message->GetArgumentList()->SetString( 0, name_ );
+			message->GetArgumentList()->SetString( 1, s );
+			message->GetArgumentList()->SetInt( 2, arguments.size() );
+			
+			// Encode function parameters
+			for ( int i = 0; i < arguments.size(); i++ )
+			{
+				if ( arguments[i]->IsString() )
+					message->GetArgumentList()->SetString( i+2, arguments[i]->GetStringValue() );
+				else if ( arguments[i]->IsInt() )
+					message->GetArgumentList()->SetInt( i+2, arguments[i]->GetIntValue() );
+				else if ( arguments[i]->IsUInt() )
+					message->GetArgumentList()->SetInt( i+2, arguments[i]->GetUIntValue() );
+				else if ( arguments[i]->IsBool() )
+					message->GetArgumentList()->SetBool( i+2, arguments[i]->GetBoolValue() );
+				else if ( arguments[i]->IsDouble() )
+					message->GetArgumentList()->SetDouble( i+2, arguments[i]->GetDoubleValue() );
+			}
+			
+			CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
+			context->GetBrowser()->SendProcessMessage(PID_BROWSER, message);
+			
+			return true;
+		}
+		else
+		{
+			// TODO: error
+			std::wcout << "CEF Object " << name_ << " has no method '" << s << "'" << std::endl;
+		}
+		
+		// Function does not exist.
+		return false;
 	}
 
 	bool hasFunction(std::wstring funcName)
@@ -183,6 +239,10 @@ private:
 	std::wstring name_;
 	std::vector< FunctionBinding > functions_;
 	std::vector< AttributeBinding > attributes_;
+
+	// NOTE: Must be at bottom
+public:
+    IMPLEMENT_REFCOUNTING( ObjectBinding )
 };
 
 class ClientApp : public CefApp, public CefRenderProcessHandler, public CefV8Handler
@@ -197,6 +257,9 @@ public:
 		readyForBindingsMessageSent_ = false;
 	};
 	
+	
+	
+	/** HELPER FUNCTIONS **/
 	void copyToList(CefRefPtr<CefV8Value> value, int i, CefRefPtr<CefListValue> list)
 	{
 		SetListValue(list, i, value);
@@ -294,6 +357,8 @@ public:
 			SetListValue(target, i, source);
 	}
 	
+	
+	
 	/**
 	 * Implement CEF3's OnContextCreated method in order to add callable native functions to javascript.
 	 */
@@ -302,17 +367,19 @@ public:
 		std::cout << "cef3_client OnContextCreated has been called!" << std::endl;
 		
 		if ( allBindingsSentMessageReceived_ )
-		{
-			CefRefPtr<CefV8Handler> handler = this;
-			
+		{			
 			// Register our objects, functions and attributes
 			objectBindingMapMutex_.lock();
-			std::cout << "Binding objects " << objectBindingMap_.size() << std::endl;
+			std::cout << "Binding " << objectBindingMap_.size() << " object(s)." << std::endl;
 			for ( auto& it : objectBindingMap_ )
 			{
 				// TODO: Add object
-				const std::wstring& name = it.first;
-				std::wcout << "Binding object " << name << std::endl;
+				const std::wstring& objName = it.first;
+				std::wcout << "Binding object " << objName << std::endl;
+				CefRefPtr<CefV8Value> obj = CefRefPtr<CefV8Value>();
+				if (objName.length() != 0)
+					obj = CefV8Value::CreateObject(nullptr);
+				
 				
 				// TODO: Add attributes
 				const std::vector< AttributeBinding >& attributes = it.second.getAttributes();
@@ -324,17 +391,29 @@ public:
 				
 				// TODO: Add functions
 				const std::vector< FunctionBinding >& functions = it.second.getFunctions();
+				CefRefPtr<CefV8Handler> handler = &it.second;
 				std::cout << "Binding functions " << functions.size() << std::endl;
 				for ( auto& f : functions )
 				{
 					std::wcout << L"Binding function " << f.getName() << std::endl;
+					
 					CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(f.getName(), handler);
-					context->GetGlobal()->SetValue(f.getName(), func, V8_PROPERTY_ATTRIBUTE_NONE);
+					
+					if (obj.get() != nullptr)
+					{
+						obj->SetValue(f.getName(), func, V8_PROPERTY_ATTRIBUTE_NONE);
+						context->GetGlobal()->SetValue(objName, obj, V8_PROPERTY_ATTRIBUTE_NONE);
+					}
+					else
+					{
+						context->GetGlobal()->SetValue(f.getName(), func, V8_PROPERTY_ATTRIBUTE_NONE);
+					}
 				}
 			}
 			objectBindingMapMutex_.unlock();
 			
 			// Register the standard callback function
+			CefRefPtr<CefV8Handler> handler = this;
 			std::string callbackFunction = "setMessageCallback";
 			CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(callbackFunction, handler);
 			context->GetGlobal()->SetValue(callbackFunction, func, V8_PROPERTY_ATTRIBUTE_NONE);
@@ -412,7 +491,48 @@ public:
 		std::string messageName = message->GetName();
 		std::cout << "cef3_client OnProcessMessageReceived " << messageName.c_str() << std::endl;
 		
-		if( messageName == "AddFunction"/* && browser == m_Browser*/ )
+		
+		if( messageName == "AddObject"/* && browser == m_Browser*/ )
+		{
+			std::wstring objName = message->GetArgumentList()->GetString(0);
+			std::wcout << "cef3_client AddObject: " << objName << std::endl;
+			
+			objectBindingMapMutex_.lock();
+			ObjectBinding& obj = objectBindingMap_[ objName ];
+			obj.setName( objName );
+			
+			totalBindingsReceived_++;
+			
+			if (allBindingsSentMessageReceived_ && totalBindingsSent_ == totalBindingsReceived_)
+			{
+				sendMessageAllBindingsReceived( browser );
+			}
+			objectBindingMapMutex_.unlock();
+		}
+		else if( messageName == "AddMethodToObject"/* && browser == m_Browser*/ )
+		{
+			std::wstring objName = message->GetArgumentList()->GetString(0);
+			std::wstring funcName = message->GetArgumentList()->GetString(1);
+			std::wcout << "cef3_client AddMethodToObject: " << objName << " | " << funcName << std::endl;
+			
+			objectBindingMapMutex_.lock();
+			ObjectBinding& obj = objectBindingMap_[ objName ];
+			
+			if ( !obj.hasFunction( funcName ) )
+			{
+				FunctionBinding func = FunctionBinding(funcName);
+				obj.addFunction( func );
+			}
+			
+			totalBindingsReceived_++;
+			
+			if (allBindingsSentMessageReceived_ && totalBindingsSent_ == totalBindingsReceived_)
+			{
+				sendMessageAllBindingsReceived( browser );
+			}
+			objectBindingMapMutex_.unlock();
+		}
+		else if( messageName == "AddFunction"/* && browser == m_Browser*/ )
 		{
 			std::wstring s = message->GetArgumentList()->GetString(0);
 			std::wcout << "cef3_client AddFunction: " << s << std::endl;
@@ -604,34 +724,12 @@ public:
 			CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
 			int browserId = context->GetBrowser()->GetIdentifier();
 			callbackMap_.insert( std::make_pair(std::make_pair(messageName, browserId), std::make_pair(context, arguments[1])) );
+			return true;
 		}
 		else
 		{
-			std::cout << "cef3_client Execute " << s << std::endl;
-			
-			// Send function call to browser process
-			CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("ExecuteFunction");
-			
-			message->GetArgumentList()->SetString( 0, s );
-			message->GetArgumentList()->SetInt( 1, arguments.size() );
-			
-			// Encode function parameters
-			for ( int i = 0; i < arguments.size(); i++ )
-			{
-				if ( arguments[i]->IsString() )
-					message->GetArgumentList()->SetString( i+2, arguments[i]->GetStringValue() );
-				else if ( arguments[i]->IsInt() )
-					message->GetArgumentList()->SetInt( i+2, arguments[i]->GetIntValue() );
-				else if ( arguments[i]->IsUInt() )
-					message->GetArgumentList()->SetInt( i+2, arguments[i]->GetUIntValue() );
-				else if ( arguments[i]->IsBool() )
-					message->GetArgumentList()->SetBool( i+2, arguments[i]->GetBoolValue() );
-				else if ( arguments[i]->IsDouble() )
-					message->GetArgumentList()->SetDouble( i+2, arguments[i]->GetDoubleValue() );
-			}
-			
-			CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
-			context->GetBrowser()->SendProcessMessage(PID_BROWSER, message);
+			// TODO: error
+			std::cout << "cef3_client cannot execute function '" << s << "'" << std::endl;
 		}
 		
 		// Function does not exist.

@@ -29,8 +29,6 @@ Gui::~Gui()
 void Gui::destroy()
 {
 	views_.clear();
-	
-	//Berkelium::destroy();
 }
 
 

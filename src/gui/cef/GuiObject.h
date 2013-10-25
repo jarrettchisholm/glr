@@ -39,6 +39,8 @@ public:
 	virtual void addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function);
 	virtual void addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function);
 	
+	std::wstring getName();
+	
 	std::wstring getFunctionDefinitions();
 	std::vector< std::wstring > getFunctionNames();
 
