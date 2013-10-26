@@ -17,7 +17,7 @@ Furthermore, the goals for the code are for it to be:
 - Clean
 
 Compile
-=======
+-------
 To compile, run 'scons' from the command line.
 
 **Note**: You must have a 'lib' directory with the files:
