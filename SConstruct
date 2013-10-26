@@ -10,34 +10,87 @@ import shlex
 import argparse
 import multiprocessing
 
+from BuildHelper import *
+
+setup(ARGUMENTS)
 
 
 
-
-
-
-### Establish our system
-isLinux = platform.system() == 'Linux'
-isWindows = os.name == 'nt'
-isMac = platform.system() == 'Darwin'
-
-### Error check our platform type
-if (not isLinux and not isWindows and not isMac):
-	print("Sorry, but it appears your platform is not recognized")
-	sys.exit(1)
-
-def beautifyCode():
-	fileList = []
+def setupDependencies():
+	### Set our libraries
+	glLib = 'GL'
+	glewLib = 'GLEW'
+	libPThread = 'pthread'
+	cefLib = 'cef'
+	cefDllWrapperLib = 'cef_dll_wrapper'
+	boostLogLib = 'boost_log'
+	boostLogSetupLib = 'boost_log_setup'
+	boostDateTimeLib = 'boost_date_time'
+	boostThreadLib = 'boost_thread'
+	boostWaveLib = 'boost_wave'
+	boostRegexLib = 'boost_regex'
+	boostFilesystemLib = 'boost_filesystem'
+	boostSystemLib = 'boost_system'
 	
-	for r,d,f in os.walk("."):
-		for files in f:
-			if files.endswith(".h") or files.endswith(".cpp"):
-				fileList.append( os.path.join(r,files) )
-	
-	
-	for f in fileList:
-		subprocess.call( shlex.split("uncrustify --mtime --no-backup -q -c xsupplicant.cfg "+f) )
+	if (isWindows):
+		glLib = 'opengl32'
+		glewLib = 'glew32'
+		libPThread = ''
+		cefLib = 'libcef'
+		cefDllWrapperLib = 'libcef_dll_wrapper'
+		boostLogLib = 'libboost_log-vc120-mt-1_55'
+		boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
+		boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
+		boostThreadLib = 'libboost_thread-vc120-mt-1_55'
+		boostWaveLib = 'libboost_wave-vc120-mt-1_55'
+		boostRegexLib = 'libboost_regex-vc120-mt-1_55'
+		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
+		boostSystemLib = 'libboost_system-vc120-mt-1_55'
 
+
+	# Set our required libraries
+	libraries.append(glLib)
+	libraries.append(glewLib)
+	libraries.append(libPThread)
+	libraries.append(cefLib)
+	libraries.append(cefDllWrapperLib)
+	libraries.append('assimp')
+	libraries.append('freeimage')
+	libraries.append(boostLogLib)
+	libraries.append(boostLogSetupLib)
+	libraries.append(boostDateTimeLib)
+	libraries.append(boostThreadLib)
+	libraries.append(boostWaveLib)
+	libraries.append(boostRegexLib)
+	libraries.append(boostFilesystemLib)
+	libraries.append(boostSystemLib)
+	
+	if (not isWindows):
+		# XInput for linux
+		libraries.append( 'Xi' )
+	
+	### Set our library paths
+	library_paths.append('../glr/build')
+	library_paths.append('./lib')
+	#library_paths.append('./lib_d')
+
+	cpp_defines.append( ('PACKAGE_VERSION', '\\"0.0.1\\"' ) )
+	cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
+
+def setupEnvironment(env):
+	### Set our environment variables
+	env.Append( CPPFLAGS = cpp_flags )
+	env.Append( CPPDEFINES = cpp_defines )
+	env.Append( CPPPATH = cpp_paths )
+	env.Append( LINKFLAGS = link_flags )
+	
+	env.SetOption('num_jobs', multiprocessing.cpu_count())
+	if isLinux:
+		# Set our runtime library locations
+		env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
+		
+		# include cflags and libs for gtk+-2.0
+		env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
 def parseShadersIntoHeader():
 	"""Parse the OpenGL Shader files into a single C++ Header file."""
@@ -125,47 +178,10 @@ def compileCefClient(compiler, doClean):
 	os.chdir( '..' )
 	return result
 
-def clear():
-	if (isWindows):
-		os.system('cls')
-	else:
-		os.system('clear')
 
-def exitOnError(returnCode):
-	if ( returnCode != 0):
-		print( returnCode )
-		print( "Script halted due to error(s)!" )
-		sys.exit(1)
-
-
-
-
-### Argument flags
-doBeautification = False
-doClean = False
-compiler = ""
-
-### Set our compiler
-compiler = ARGUMENTS.get('compiler')
-if (compiler is None or compiler == ''):
-	compiler = 'default'
-if (compiler == 'gcc' and isWindows):
-	compiler = 'mingw'
-if (compiler == 'msvc' and isWindows):
-	compiler = 'default'
-
-### Error check compiler
-if (compiler == 'msvc' and not isWindows):
-	print( "Cannot use msvc in this environment!" )
-	sys.exit(1)
 
 ### Handle arguments
 AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
-#AddOption('--beautify', dest='beautify', type='string', nargs=1, action='store_true', help='will \'beautify\' the source code using uncrustify')
-
-
-
-
 
 clear()
 if (not isWindows):
@@ -174,13 +190,14 @@ if (not isWindows):
 	os.system( 'echo' )
 
 
+### Argument flags
+doBeautification = False
+doClean = False
 
 if GetOption('beautify'):
 	doBeautification = True
 if GetOption('clean'):
 	doClean = True
-
-
 
 ### Prepare code for comilation
 if doBeautification:
@@ -200,19 +217,6 @@ print("")
 
 # Parse our shader programs and create .h files out of them
 parseShadersIntoHeader()
-
-
-
-
-cpp_paths = []
-cpp_defines = []
-cpp_flags = []
-link_flags = []
-library_paths = []
-
-
-
-
 
 
 
@@ -238,145 +242,11 @@ source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
 source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
 source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
 
-
-
-### Set our required libraries
-glLib = 'GL'
-glewLib = 'GLEW'
-libPThread = 'pthread'
-cefLib = 'cef'
-cefDllWrapperLib = 'cef_dll_wrapper'
-boostLogLib = 'boost_log'
-boostLogSetupLib = 'boost_log_setup'
-boostDateTimeLib = 'boost_date_time'
-boostThreadLib = 'boost_thread'
-boostWaveLib = 'boost_wave'
-boostRegexLib = 'boost_regex'
-boostFilesystemLib = 'boost_filesystem'
-boostSystemLib = 'boost_system'
-
-if (isWindows):
-	glLib = 'opengl32'
-	glewLib = 'glew32'
-	libPThread = ''
-	cefLib = 'libcef'
-	cefDllWrapperLib = 'libcef_dll_wrapper'
-	boostLogLib = 'libboost_log-vc120-mt-1_55'
-	boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
-	boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
-	boostThreadLib = 'libboost_thread-vc120-mt-1_55'
-	boostWaveLib = 'libboost_wave-vc120-mt-1_55'
-	boostRegexLib = 'libboost_regex-vc120-mt-1_55'
-	boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
-	boostSystemLib = 'libboost_system-vc120-mt-1_55'
-
-libraries = [
-glLib,
-glewLib,
-libPThread,
-cefLib,
-cefDllWrapperLib,
-'sfml-system',
-'sfml-window',
-'assimp',
-'freeimage',
-boostLogLib,
-boostLogSetupLib,
-boostDateTimeLib, 
-boostThreadLib,
-boostWaveLib,
-boostRegexLib,
-boostFilesystemLib,
-boostSystemLib
-]
-
-if (not isWindows):
-	# XInput for linux
-	libraries.append( 'Xi' )
-
-
-### Set our general compiler variables
-### Set our library paths
-library_paths.append('../glr/build')
-library_paths.append('./lib')
-#library_paths.append('./lib_d')
-
-
-# Set our g++ compiler flags
-#'-D_GLIBCXX_DEBUG'
-
-#debug = ARGUMENTS.get('debug', 0)
-#if int(debug):
-#	cpp_flags.append('-g')
-#	cpp_defines.append('DEBUG')
-#else:
-#	cpp_defines.append('NDEBUG')
-cpp_defines.append('DEBUG')	
-
-cpp_defines.append( ('PACKAGE_VERSION', '\\"0.0.1\\"' ) )
-cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
-
-
-
-### Set our OS specific compiler variables
-if (not isWindows):
-	if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
-		cpp_flags.append('-g')
-		cpp_flags.append('-O0') # optimization level 0
-		cpp_flags.append('-std=c++11')
-		cpp_flags.append('-pedantic-errors')
-		#cpp_flags.append('-Wall')
-		#cpp_flags.append('-Wextra')
-		#cpp_flags.append('-Werror')
-		#cpp_flags.append('-pg') # profiler
-		
-	# Dynamically link to boost log
-	cpp_defines.append('BOOST_LOG_DYN_LINK')
-	
-	# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
-	cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
-	
-	# Need to install cef3 to '/usr/local/include/cef3' for this to work
-	cpp_paths.append('/usr/local/include/cef3')
-else:
-	if isWindows:
-		if (compiler == 'default'):
-			cpp_flags.append('/w') # disables warnings (Windows)
-			cpp_flags.append('/wd4350') # disables the specific warning C4350
-			cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
-			cpp_flags.append('/MD')
-			#cpp_flags.append('/showIncludes')
-		elif (compiler == 'mingw'):
-			cpp_flags.append('-g')
-			cpp_flags.append('-O0') # optimization level 0
-			cpp_flags.append('-std=c++11')
-			cpp_flags.append('-pedantic-errors')
-			#cpp_flags.append('-pg') # profiler
-		
-		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
-		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
-
-	#cpp_paths.append('')
-
-
+setupDependencies()
 
 ### Create our environment
 env = Environment(ENV = os.environ, TOOLS = [compiler])
-
-### Set our environment variables
-env.Append( CPPFLAGS = cpp_flags )
-env.Append( CPPDEFINES = cpp_defines )
-env.Append( CPPPATH = cpp_paths )
-env.Append( LINKFLAGS = link_flags )
-
-if isLinux:
-	# Set our runtime library locations
-	env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
-	
-	# include cflags and libs for gtk+-2.0
-	env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
-
-env.SetOption('num_jobs', multiprocessing.cpu_count())
+setupEnvironment(env)
 
 ### Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)

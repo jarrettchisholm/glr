@@ -1,3 +1,4 @@
+#! /bin/python
 import os, sys
 import shutil
 import platform
@@ -92,8 +93,6 @@ def setupEnvironment(env):
 		
 		# include cflags and libs for gtk+-2.0
 		env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
-	
-	return env
 
 
 

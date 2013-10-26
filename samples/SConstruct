@@ -1,0 +1,11 @@
+#! /bin/python
+import subprocess, os
+import shlex
+
+
+# TODO: Make this SConstruct file more robust (i.e. allow setting the compiler, etc)
+os.chdir( 'simple' )
+result = subprocess.call( shlex.split('scons'), shell=True )
+
+os.chdir( '../lights' )
+result = subprocess.call( shlex.split('scons'), shell=True )
