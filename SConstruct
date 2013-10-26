@@ -204,11 +204,10 @@ parseShadersIntoHeader()
 
 
 
-
-
 cpp_paths = []
 cpp_defines = []
 cpp_flags = []
+link_flags = []
 library_paths = []
 
 
@@ -238,12 +237,6 @@ source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
 # OpenGL Wrapper stuff
 source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
 source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
-
-
-cpp_paths = []
-cpp_defines = []
-cpp_flags = []
-library_paths = []
 
 
 
@@ -325,18 +318,17 @@ cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm
 
 
 
-
 ### Set our OS specific compiler variables
 if (not isWindows):
 	if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
 		cpp_flags.append('-g')
 		cpp_flags.append('-O0') # optimization level 0
-		#cpp_flags.append('-pg') # profiler
 		cpp_flags.append('-std=c++11')
 		cpp_flags.append('-pedantic-errors')
 		#cpp_flags.append('-Wall')
 		#cpp_flags.append('-Wextra')
 		#cpp_flags.append('-Werror')
+		#cpp_flags.append('-pg') # profiler
 		
 	# Dynamically link to boost log
 	cpp_defines.append('BOOST_LOG_DYN_LINK')
@@ -344,21 +336,8 @@ if (not isWindows):
 	# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 	cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
 	
-	# pkg-config --cflags gtk+-2.0
-	#cpp_paths.append('/home/jarrett/projects/berkelium2/cef3')
-	#cpp_paths.append('/home/jarrett/projects/berkelium2/cef3/include')
-	
 	# Need to install cef3 to '/usr/local/include/cef3' for this to work
 	cpp_paths.append('/usr/local/include/cef3')
-	
-	cpp_paths.append('/usr/include/gtk-2.0')
-	cpp_paths.append('/usr/lib/x86_64-linux-gnu/gtk-2.0/include')
-	cpp_paths.append('/usr/include/atk-1.0')
-	cpp_paths.append('/usr/include/cairo')
-	cpp_paths.append('/usr/include/gdk-pixbuf-2.0')
-	cpp_paths.append('/usr/include/pango-1.0')
-	cpp_paths.append('/usr/include/glib-2.0')
-	cpp_paths.append('/usr/lib/x86_64-linux-gnu/glib-2.0/include')
 else:
 	if isWindows:
 		if (compiler == 'default'):
@@ -370,27 +349,32 @@ else:
 		elif (compiler == 'mingw'):
 			cpp_flags.append('-g')
 			cpp_flags.append('-O0') # optimization level 0
-			#cpp_flags.append('-pg') # profiler
 			cpp_flags.append('-std=c++11')
 			cpp_flags.append('-pedantic-errors')
+			#cpp_flags.append('-pg') # profiler
 		
 		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
 
-	cpp_paths.append('')
+	#cpp_paths.append('')
+
 
 
 ### Create our environment
-env = Environment(ENV = os.environ, TOOLS = [compiler], CCFLAGS=[]) 
+env = Environment(ENV = os.environ, TOOLS = [compiler])
 
 ### Set our environment variables
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
 env.Append( CPPPATH = cpp_paths )
+env.Append( LINKFLAGS = link_flags )
 
-### Set our runtime library locations
 if isLinux:
-	env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', os.pardir, 'lib')))
+	# Set our runtime library locations
+	env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
+	
+	# include cflags and libs for gtk+-2.0
+	env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
 env.SetOption('num_jobs', multiprocessing.cpu_count())
 

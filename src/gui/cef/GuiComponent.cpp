@@ -160,7 +160,13 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			m->GetArgumentList()->SetString( 0, functionName );
 			m->GetArgumentList()->SetInt( 1, 1 );
 			
-			if ( utilities::isString(r) )
+			if( r.empty() )
+			{
+				// There is no return value (i.e. void), so set num return results 0
+				m->GetArgumentList()->SetInt( 1, 0 );
+				std::cout << "ExecuteFunction RESULT: void" << std::endl;
+			}
+			else if ( utilities::isString(r) )
 			{
 				m->GetArgumentList()->SetString( 2, boost::any_cast<std::string>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<std::string>(r) << std::endl;
@@ -192,10 +198,12 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 			else
 			{
-				// TODO: actually check for void explicitly
-				std::cout << "ExecuteFunction Unable to determine result type - assuming void." << std::endl;
+				std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
+				std::string msg = "Error - ExecuteFunction unable to determine result type.";					
+				std::cout << msg << std::endl;
+				throw exception::Exception( msg );
 				// No result
-				m->GetArgumentList()->SetInt( 1, 0 );
+				//m->GetArgumentList()->SetInt( 1, 0 );
 			}
 			
 			browser->SendProcessMessage(PID_RENDERER, m);

@@ -69,17 +69,13 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	if ( scene == nullptr )
 	{		
 		std::string msg = std::string("Unable to load model...");
-
 		BOOST_LOG_TRIVIAL(error) << msg;
-		
 		throw exception::Exception(msg);
 	}
 	else if ( scene->HasTextures() )
 	{		
 		std::string msg = std::string("Support for meshes with embedded textures is not implemented.");
-
 		BOOST_LOG_TRIVIAL(error) << msg;
-		
 		throw exception::Exception(msg);
 	}
 	

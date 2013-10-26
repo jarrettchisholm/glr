@@ -9,7 +9,8 @@
 #include "glm/glm.hpp"
 #include <SFML/Window.hpp>
 
-#include "GLRInclude.h"
+#include "GlrInclude.h"
+#include "extras/FpsCamera.cpp"
 
 #ifndef MAIN_H
 #define MAIN_H
@@ -25,14 +26,9 @@ private:
 	std::unique_ptr< glr::GlrProgram > glrProgram_;
 	glr::IWindow* window_;
 	sf::Window* sfmlWindow_;
-	glr::gui::IGUI* igui_;
+	glr::gui::IGui* igui_;
 	glr::ISceneManager* smgr_;
-	glr::ICamera* camera_;
-
-	glm::detail::float32 rotationX_;
-	glm::detail::float32 rotationY_;
-	glm::detail::int32 mousePosX_;
-	glm::detail::int32 mousePosY_;
+	std::shared_ptr< glr::extras::FpsCamera > camera_;
 
 	void tick();
 	void destroy();

@@ -108,15 +108,17 @@ VariantDir('build', 'src', duplicate=0)
 source_files = Glob('build/*.cpp', 'build/*.h')
 
 
+
 cpp_paths = []
 cpp_defines = []
 cpp_flags = []
+link_flags = []
 library_paths = []
 
 
 #library_paths.append('/home/jarrett/projects/berkelium2/cef3/Release')
-library_paths.append('./lib')
-#library_paths.append('./lib_d')
+library_paths.append('../lib')
+#library_paths.append('../lib_d')
 
 ### Set our required libraries
 cefLib = 'cef'
@@ -139,16 +141,8 @@ if (not isWindows):
 		cpp_flags.append('-std=c++11')
 		cpp_flags.append('-pedantic-errors')
 	
-	# pkg-config --cflags gtk+-2.0
+	# Need to install cef3 to '/usr/local/include/cef3' for this to work
 	cpp_paths.append('/usr/local/include/cef3')
-	cpp_paths.append('/usr/include/gtk-2.0')
-	cpp_paths.append('/usr/lib/x86_64-linux-gnu/gtk-2.0/include')
-	cpp_paths.append('/usr/include/atk-1.0')
-	cpp_paths.append('/usr/include/cairo')
-	cpp_paths.append('/usr/include/gdk-pixbuf-2.0')
-	cpp_paths.append('/usr/include/pango-1.0')
-	cpp_paths.append('/usr/include/glib-2.0')
-	cpp_paths.append('/usr/lib/x86_64-linux-gnu/glib-2.0/include')
 else:
 	if isWindows:
 		if (compiler == 'default'):
@@ -163,19 +157,22 @@ else:
 
 
 ### Create our environment
-env = Environment(ENV = os.environ, CCFLAGS=[]) 
+env = Environment(ENV = os.environ, TOOLS = [compiler])
 
 ### Set our environment variables
 env.Append( CPPFLAGS = cpp_flags )
 env.Append( CPPDEFINES = cpp_defines )
 env.Append( CPPPATH = cpp_paths )
+env.Append( LINKFLAGS = link_flags )
 
 env.SetOption('num_jobs', multiprocessing.cpu_count())
 
-### Set our runtime library locations
-env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
-
-
+if isLinux:
+	# Set our runtime library locations
+	env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
+	
+	# include cflags and libs for gtk+-2.0
+	env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
 # Tell SCons to build
 env.Program('build/cef3_client', source_files, LIBS = libraries, LIBPATH = library_paths)

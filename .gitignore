@@ -7,10 +7,11 @@ src/glw/shaders/ShaderData.h
 build/
 *.o
 cef_client/build/
+*.pyc
 
 # CEF lib directory #
 #####################
-cef_client/lib
+lib
 
 # Documentation #
 #################

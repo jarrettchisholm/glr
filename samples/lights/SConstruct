@@ -110,4 +110,4 @@ env = Environment(ENV = os.environ, TOOLS = [compiler])
 setupEnvironment(env)
 
 # Tell SCons the program to build
-env.Program('build/simple', source_files, LIBS = libraries, LIBPATH = library_paths)
+env.Program('build/lights', source_files, LIBS = libraries, LIBPATH = library_paths)
