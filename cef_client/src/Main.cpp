@@ -74,6 +74,10 @@ public:
 	AttributeBinding(std::wstring name, ObjectBinding* valueObject) : name_(name), valueObject_(valueObject), isObject_(true)
 	{
 	}
+	
+	AttributeBinding(std::wstring name, CefRefPtr<CefV8Value> valueV8) : name_(name), valueV8_(valueV8), isV8_(true)
+	{
+	}
 
 	GETSET(std::wstring, name_, Name)
 	
@@ -85,6 +89,7 @@ public:
 	GETSET(float, valueFloat_, ValueFloat)
 	GETSET(double, valueDouble_, ValueDouble)
 	GETSET(ObjectBinding*, valueObject_, ValueObject)
+	GETSET(CefRefPtr<CefV8Value>, valueV8_, ValueV8)
 	
 	GETSET(bool, isWstring_, IsWstring)
 	GETSET(bool, isString_, IsString)
@@ -94,6 +99,7 @@ public:
 	GETSET(bool, isFloat_, IsFloat)
 	GETSET(bool, isDouble_, IsDouble)
 	GETSET(bool, isObject_, IsObject)
+	GETSET(bool, isV8_, IsV8)
 
 private:
 	std::wstring name_;
@@ -106,6 +112,7 @@ private:
 	float valueFloat_;
 	double valueDouble_;
 	ObjectBinding* valueObject_;
+	CefRefPtr<CefV8Value> valueV8_;
 	
 	bool isWstring_;
 	bool isString_;
@@ -115,6 +122,7 @@ private:
 	bool isFloat_;
 	bool isDouble_;
 	bool isObject_;
+	bool isV8_;
 };
 
 class ObjectBinding : public CefV8Handler
@@ -357,6 +365,74 @@ public:
 			SetListValue(target, i, source);
 	}
 	
+	CefRefPtr<CefV8Value> getValue(CefRefPtr<CefProcessMessage> message, uint index)
+	{
+		CefValueType type = message->GetArgumentList()->GetType( index );
+		switch (type) {
+			case VTYPE_STRING:
+			{
+				std::string arg = message->GetArgumentList()->GetString(index);
+				std::cout << "VTYPE_STRING - FunctionResult -  " << arg << std::endl;
+				return CefV8Value::CreateString( arg );
+			}
+				break;
+			
+			case VTYPE_INT:
+			{
+				int arg = message->GetArgumentList()->GetInt(index);
+				std::cout << "VTYPE_INT - FunctionResult -  " << arg << std::endl;
+				return CefV8Value::CreateInt( arg );
+			}
+				break;
+			
+			case VTYPE_DOUBLE:
+			{
+				double arg = message->GetArgumentList()->GetDouble(index);
+				std::cout << "VTYPE_DOUBLE - FunctionResult -  " << arg << std::endl;
+				return CefV8Value::CreateDouble( arg );
+			}
+				break;
+			
+			case VTYPE_BOOL:
+			{
+				bool arg = message->GetArgumentList()->GetBool(index);
+				std::cout << "VTYPE_BOOL - FunctionResult -  " << arg << std::endl;
+				return CefV8Value::CreateBool( arg );
+			}
+				break;
+		
+			case VTYPE_BINARY:
+				// TODO: error
+				std::cout << "Error - FunctionResult - VTYPE_BINARY not implemented as CEF3 function result type." << std::endl;
+				break;
+				
+			case VTYPE_DICTIONARY:
+				// TODO: error
+				std::cout << "Error - FunctionResult - VTYPE_DICTIONARY not implemented as CEF3 function result type." << std::endl;
+				break;
+			
+			case VTYPE_LIST:
+				// TODO: error
+				std::cout << "Error - FunctionResult - VTYPE_LIST not implemented as CEF3 function result type." << std::endl;
+				break;
+			
+			case VTYPE_INVALID:
+				// TODO: error
+				std::cout << "Error - FunctionResult - VTYPE_INVALID CEF3 function result type." << std::endl;
+				break;
+				
+			case VTYPE_NULL:
+				// TODO: error
+				std::cout << "Error - FunctionResult - VTYPE_NULL not implemented as CEF3 function result type." << std::endl;
+				break;
+			
+			default:
+				std::cout << "Error - FunctionResult - Unknown CEF3 function result type: " << type << std::endl;
+				break;
+		}
+		
+		return nullptr;
+	}
 	
 	
 	/**
@@ -373,25 +449,47 @@ public:
 			std::cout << "Binding " << objectBindingMap_.size() << " object(s)." << std::endl;
 			for ( auto& it : objectBindingMap_ )
 			{
-				// TODO: Add object
+				// Add object
 				const std::wstring& objName = it.first;
 				std::wcout << "Binding object " << objName << std::endl;
 				CefRefPtr<CefV8Value> obj = CefRefPtr<CefV8Value>();
 				if (objName.length() != 0)
 					obj = CefV8Value::CreateObject(nullptr);
 				
+				CefRefPtr<CefV8Handler> handler = &it.second;
 				
-				// TODO: Add attributes
+				// Add attributes
 				const std::vector< AttributeBinding >& attributes = it.second.getAttributes();
 				std::cout << "Binding attributes " << attributes.size() << std::endl;
 				for ( auto& a : attributes )
 				{
 					std::wcout << L"Binding attribute " << a.getName() << std::endl;
+					CefRefPtr<CefV8Value> attrValue;
+					
+					if ( a.getValueV8()->IsString() )
+						attrValue = CefV8Value::CreateString( a.getValueV8()->GetStringValue() );
+					else if ( a.getValueV8()->IsInt() )
+						attrValue = CefV8Value::CreateInt( a.getValueV8()->GetIntValue() );
+					else if ( a.getValueV8()->IsUInt() )
+						attrValue  = CefV8Value::CreateUInt( a.getValueV8()->GetUIntValue() );
+					else if ( a.getValueV8()->IsBool() )
+						attrValue = CefV8Value::CreateBool( a.getValueV8()->GetBoolValue() );
+					else if ( a.getValueV8()->IsDouble() )
+						attrValue = CefV8Value::CreateDouble( a.getValueV8()->GetDoubleValue() );
+					
+					if (obj.get() != nullptr)
+					{
+						obj->SetValue(a.getName(), attrValue, V8_PROPERTY_ATTRIBUTE_NONE);
+						context->GetGlobal()->SetValue(objName, obj, V8_PROPERTY_ATTRIBUTE_NONE);
+					}
+					else
+					{
+						context->GetGlobal()->SetValue(a.getName(), attrValue, V8_PROPERTY_ATTRIBUTE_NONE);
+					}
 				}
 				
-				// TODO: Add functions
-				const std::vector< FunctionBinding >& functions = it.second.getFunctions();
-				CefRefPtr<CefV8Handler> handler = &it.second;
+				// Add functions
+				const std::vector< FunctionBinding >& functions = it.second.getFunctions();				
 				std::cout << "Binding functions " << functions.size() << std::endl;
 				for ( auto& f : functions )
 				{
@@ -532,6 +630,30 @@ public:
 			}
 			objectBindingMapMutex_.unlock();
 		}
+		else if( messageName == "AddAttributeToObject"/* && browser == m_Browser*/ )
+		{
+			std::wstring objName = message->GetArgumentList()->GetString(0);
+			std::wstring attrName = message->GetArgumentList()->GetString(1);
+			CefRefPtr<CefV8Value> attrValue = getValue(message, 2);
+			std::wcout << "cef3_client AddAttributeToObject: " << objName << " | " << attrName << " | " << attrValue << std::endl;
+			
+			objectBindingMapMutex_.lock();
+			ObjectBinding& obj = objectBindingMap_[ objName ];
+			
+			if ( !obj.hasAttribute( attrName ) )
+			{
+				AttributeBinding attr = AttributeBinding(attrName, attrValue);
+				obj.addAttribute( attr );
+			}
+			
+			totalBindingsReceived_++;
+			
+			if (allBindingsSentMessageReceived_ && totalBindingsSent_ == totalBindingsReceived_)
+			{
+				sendMessageAllBindingsReceived( browser );
+			}
+			objectBindingMapMutex_.unlock();
+		}
 		else if( messageName == "AddFunction"/* && browser == m_Browser*/ )
 		{
 			std::wstring s = message->GetArgumentList()->GetString(0);
@@ -553,6 +675,30 @@ public:
 				sendMessageAllBindingsReceived( browser );
 			}
 			objectBindingMapMutex_.unlock();
+		}
+		else if( messageName == "AddAttribute"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client AddAttribute message not yet implemented." << std::endl;
+		}
+		else if( messageName == "RemoveFunction"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client RemoveFunction message not yet implemented." << std::endl;
+		}
+		else if( messageName == "RemoveAttribute"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client RemoveAttribute message not yet implemented." << std::endl;
+		}
+		else if( messageName == "RemoveObject"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client RemoveObject message not yet implemented." << std::endl;
+		}
+		else if( messageName == "RemoveAttributeFromObject"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client RemoveAttributeFromObject message not yet implemented." << std::endl;
+		}
+		else if( messageName == "RemoveMethodFromObject"/* && browser == m_Browser*/ )
+		{
+			std::cout << "cef_client RemoveMethodFromObject message not yet implemented." << std::endl;
 		}
 		else if ( messageName == "AllBindingsSent")
 		{
@@ -579,69 +725,7 @@ public:
 			
 			for (int i = 0; i < numArguments; i++)
 			{
-				CefValueType type = message->GetArgumentList()->GetType( i+2 );
-				switch (type) {
-					case VTYPE_STRING:
-					{
-						std::string arg = message->GetArgumentList()->GetString(i+2);
-						std::cout << "VTYPE_STRING - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateString( arg );
-					}
-						break;
-					
-					case VTYPE_INT:
-					{
-						int arg = message->GetArgumentList()->GetInt(i+2);
-						std::cout << "VTYPE_INT - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateInt( arg );
-					}
-						break;
-					
-					case VTYPE_DOUBLE:
-					{
-						double arg = message->GetArgumentList()->GetDouble(i+2);
-						std::cout << "VTYPE_DOUBLE - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateDouble( arg );
-					}
-						break;
-					
-					case VTYPE_BOOL:
-					{
-						bool arg = message->GetArgumentList()->GetBool(i+2);
-						std::cout << "VTYPE_BOOL - FunctionResult -  " << arg << std::endl;
-						temp = CefV8Value::CreateBool( arg );
-					}
-						break;
-				
-					case VTYPE_BINARY:
-						// TODO: error
-						std::cout << "Error - FunctionResult - VTYPE_BINARY not implemented as CEF3 function result type." << std::endl;
-						break;
-						
-					case VTYPE_DICTIONARY:
-						// TODO: error
-						std::cout << "Error - FunctionResult - VTYPE_DICTIONARY not implemented as CEF3 function result type." << std::endl;
-						break;
-					
-					case VTYPE_LIST:
-						// TODO: error
-						std::cout << "Error - FunctionResult - VTYPE_LIST not implemented as CEF3 function result type." << std::endl;
-						break;
-					
-					case VTYPE_INVALID:
-						// TODO: error
-						std::cout << "Error - FunctionResult - VTYPE_INVALID CEF3 function result type." << std::endl;
-						break;
-						
-					case VTYPE_NULL:
-						// TODO: error
-						std::cout << "Error - FunctionResult - VTYPE_NULL not implemented as CEF3 function result type." << std::endl;
-						break;
-					
-					default:
-						std::cout << "Error - FunctionResult - Unknown CEF3 function result type: " << type << std::endl;
-						break;
-				}
+				temp = getValue(message, i+2);
 				
 				if (temp != nullptr)
 				{

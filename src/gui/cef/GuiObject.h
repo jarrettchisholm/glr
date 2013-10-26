@@ -19,7 +19,7 @@ namespace cef {
 	
 class GuiObject : public IGuiObject {
 public:
-	GuiObject(std::wstring name, IAddFunctionListener* addFunctionListener);
+	GuiObject(std::wstring name);
 	virtual ~GuiObject();
 	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
@@ -45,9 +45,6 @@ public:
 	std::vector< std::wstring > getFunctionNames();
 
 	boost::any processCallback(std::wstring name, std::vector< boost::any > params);
-	
-	// Callback method for CEF3 javascript to native method binding
-	//virtual bool Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception);
 
 private:
 	enum FunctionTypes {
@@ -68,7 +65,6 @@ private:
 		TYPE_WITH_PARAMETERS_BOOL
 	};
 
-	//Berkelium::Window* window_;
 	std::wstring name_;
 	IAddFunctionListener* addFunctionListener_;
 

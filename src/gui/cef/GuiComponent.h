@@ -80,7 +80,7 @@ public:
 
 
 
-class GuiComponent : public IGuiComponent, public IAddFunctionListener, public CefClient {
+class GuiComponent : public IGuiComponent, public CefClient {
 public:
 	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~GuiComponent();
@@ -110,9 +110,18 @@ public:
 	virtual IGuiObject* createGuiObject(std::wstring name);
 	virtual IGuiObject* getGuiObject(std::wstring name);
 	
-	virtual void addedFunction(std::wstring func);
-	
 	// Implement functions for CefClient
+	/**
+	 * Processes a message received from the render process.
+	 * 
+	 * List of available functions:
+	 * 
+	 * ExecuteFunction
+	 * 		funcName [<argument> [, ...]]
+	 * ReadyForBindings
+	 *
+	 * AllBindingsReceived
+	 */
 	virtual bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
 
@@ -132,7 +141,6 @@ private:
 
 	// CEF3 variables
 	CefRefPtr<CefBrowser> browser_;
-    //CefRefPtr<BrowserClient> browserClient_;
     CefRefPtr<CefRenderHandler> renderHandler_;
     
     bool bindDataSent_;
@@ -142,7 +150,7 @@ private:
 	std::wstring getFunctionName(std::wstring name);
 	std::wstring getObjectName(std::wstring name);
 
-	unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
+	//unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 	glm::detail::int32 getCefStateModifiers(glm::detail::int32 state);
 	
 	/**

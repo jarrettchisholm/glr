@@ -15,14 +15,8 @@ namespace glr {
 namespace gui {
 namespace cef {
 
-GuiObject::GuiObject(std::wstring name, IAddFunctionListener* addFunctionListener) :
-	name_(name), addFunctionListener_(addFunctionListener)
+GuiObject::GuiObject(std::wstring name) : name_(name)
 {
-	/*
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(name_),
-		boost::any::emptyObject());
-		*/
 }
 
 GuiObject::~GuiObject()
@@ -32,15 +26,6 @@ GuiObject::~GuiObject()
 void GuiObject::addFunction(std::wstring funcName)
 {
 	std::wstring pointTo = name_ + L"." + funcName;
-	
-	// Testing...
-	addFunctionListener_->addedFunction(funcName);
-	
-	/*
-	window_->addBindOnStartLoading(
-		Berkelium::WideString::point_to(pointTo),
-		boost::any::bindFunction(Berkelium::WideString::point_to(pointTo), true));
-		*/
 }
 
 void GuiObject::addFunction(std::wstring name, std::function<void()> function)
@@ -198,9 +183,6 @@ std::wstring GuiObject::getFunctionDefinitions()
 		}
 	}
 	
-	// TODO: implement
-	//std::string json = std::string("getVersion");
-	
 	return definitions.str();
 }
 
@@ -208,24 +190,6 @@ std::wstring GuiObject::getName()
 {
 	return name_;
 }
-
-/*
-bool GuiObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
-{
-	int type = functionTypeMap_[name];
-	
-	//if (name == "myfunc")
-	{
-		// Return my string value.
-		retval = CefV8Value::CreateString("My Value!");
-		return true;
-	}
-	
-	// Function does not exist.
-	return false;	
-}
-*/
-
 
 boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any > params)
 {	

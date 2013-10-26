@@ -37,17 +37,6 @@ GuiComponent::~GuiComponent()
 	unload();
 }
 
-/**
- * Processes a message received from the render process.
- * 
- * List of available functions:
- * 
- * ExecuteFunction
- * 		funcName [<argument> [, ...]]
- * ReadyForBindings
- *
- * AllBindingsReceived
- */
 bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message )
 {
 	std::string s = message->GetName();
@@ -255,17 +244,9 @@ void GuiComponent::load()
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent CEF components.";
+	
 	// Create Cef processes
-	
-	/*
-	argc = 1;
-	//char* argv[1];
-	argv[0] = "--blah=himom";
-	CefMainArgs args( argc, argv );
-	*/
 	CefMainArgs args;
-	
-	
 	CefSettings settings;
 
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
@@ -289,12 +270,11 @@ void GuiComponent::load()
 	window_info.SetAsOffScreen(nullptr);
 	window_info.SetTransparentPainting(true);
 	
-	//RenderHandler* rh = new RenderHandler(web_texture);
-	//browserClient_ = new BrowserClient(rh);
 	this->renderHandler_ = new RenderHandler(web_texture);
-	//CefRefPtr<BrowserClient> browserClient_ = this;
 	
 	BOOST_LOG_TRIVIAL(debug) << "Creating CEF Browser object.";
+	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
+	// We just want the render process created at this point so that we can do our bindings.
 	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings);
 	
 	if (browser_.get() == nullptr)
@@ -321,7 +301,6 @@ void GuiComponent::load()
 void GuiComponent::unload()
 {
 	browser_ = nullptr;
-    //browserClient_ = nullptr;
 	CefShutdown();
         
 	this->setVisible(false);
@@ -335,10 +314,12 @@ void GuiComponent::unload()
  *  \returns the coordinate transformed to the correct value for the texture /
  *           Berkelium window
  */
+/*
 unsigned int GuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size)
 {
     return (glut_coord * tex_size) / glut_size;
 }
+*/
 
 void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
@@ -363,7 +344,6 @@ void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 void GuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
 	std::cout << "MOUSE BUTTON EVENT: " << buttonId << " " << xPos << " " << yPos << " " << down << std::endl;
-	//window_->mouseButton(buttonId, down, clickCount);
 	CefBrowserHost::MouseButtonType buttonType = MBT_LEFT;
 	switch (buttonId)
 	{
@@ -527,14 +507,6 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 										"about:blank", 
 										0
 									);
-									
-		/*
-		browser_->GetMainFrame()->ExecuteJavaScript(
-										"$('#version').text('hidden');",
-										"about:blank", 
-										0
-									);
-									*/
 	}
 	//else
 	
@@ -986,7 +958,7 @@ IGuiObject* GuiComponent::createGuiObject(std::wstring name)
 		return nullptr;
 	}
 	
-	guiObjects_[name] = std::unique_ptr<GuiObject>(new GuiObject(name, this));
+	guiObjects_[name] = std::unique_ptr<GuiObject>(new GuiObject(name));
 
 	return guiObjects_[name].get();
 }
@@ -999,14 +971,6 @@ IGuiObject* GuiComponent::getGuiObject(std::wstring name)
 	}
 
 	return guiObjects_[name].get();
-}
-
-void GuiComponent::addedFunction(std::wstring func)
-{
-	// testing
-	//sendBoundFunctionsToRenderProcess();
-	
-	// TODO: do we need this anymore?
 }
 
 }
