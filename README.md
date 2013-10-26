@@ -38,4 +38,4 @@ To compile, run 'scons' from the command line.
 
 The libcef_dll_wrapper is the directory that contains all of the cef_dll object files (within their folder heirarchy).
 
-For more details about compiling, check out the [[wiki|https://github.com/jarrettchisholm/glr/wiki]].
+For more details about compiling, check out the [wiki](https://github.com/jarrettchisholm/glr/wiki).
