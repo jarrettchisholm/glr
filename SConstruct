@@ -10,6 +10,7 @@ import shlex
 import argparse
 import multiprocessing
 
+from colorizer import colorizer
 from BuildHelper import *
 
 setup(ARGUMENTS)
@@ -78,11 +79,17 @@ def setupDependencies():
 	cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
 
 def setupEnvironment(env):
+	col = colorizer()
+	col.colorize(env)
+	
 	### Set our environment variables
 	env.Append( CPPFLAGS = cpp_flags )
 	env.Append( CPPDEFINES = cpp_defines )
 	env.Append( CPPPATH = cpp_paths )
 	env.Append( LINKFLAGS = link_flags )
+	
+	env['CCCOMSTR'] = "Compiling $TARGET"
+	env['LINKCOMSTR'] = "Linking $TARGET"
 	
 	env.SetOption('num_jobs', multiprocessing.cpu_count())
 	if isLinux:
@@ -174,7 +181,7 @@ def compileCefClient(compiler, doClean):
 		buildCommand = buildCommand + " compiler="+compiler
 	if (doClean):
 		buildCommand = buildCommand + " --clean"
-	result = subprocess.call( shlex.split(buildCommand), shell=True )
+	result = subprocess.call( buildCommand, shell=True )
 	os.chdir( '..' )
 	return result
 
