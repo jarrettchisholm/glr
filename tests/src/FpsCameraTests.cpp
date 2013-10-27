@@ -9,7 +9,7 @@
 
 #include "glm/glm.hpp"
 
-#include "GLRInclude.h"
+#include "GlrInclude.h"
 
 #include "../extras/FpsCamera.cpp"
 

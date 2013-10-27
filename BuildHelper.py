@@ -64,7 +64,9 @@ def setup(ARGUMENTS):
 		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
 		
+		# TODO: Properly include glr header files
 		cpp_paths.append('../../src')
+		cpp_paths.append('../src')
 		
 		# Need to install cef3 to '/usr/local/include/cef3' for this to work
 		cpp_paths.append('/usr/local/include/cef3')

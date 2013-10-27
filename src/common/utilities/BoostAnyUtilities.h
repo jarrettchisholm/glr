@@ -8,7 +8,6 @@
 #ifndef BOOSTANYUTILITIES_H_
 #define BOOSTANYUTILITIES_H_
 
-//#include <boost/log/trivial.hpp>
 #include <boost/any.hpp>
 
 namespace utilities {
@@ -38,6 +37,12 @@ bool isDouble(const boost::any& operand)
     return operand.type() == typeid(double);
 }
 
+bool isBool(const boost::any& operand)
+{
+    return operand.type() == typeid(bool);
+}
+
+/*
 bool is_char_ptr(const boost::any & operand)
 {
     try
@@ -50,6 +55,7 @@ bool is_char_ptr(const boost::any & operand)
         return false;
     }
 }
+*/
 
 bool isString(const boost::any& operand)
 {

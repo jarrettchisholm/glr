@@ -9,7 +9,7 @@
 
 #include "glm/glm.hpp"
 
-#include "GLRInclude.h"
+#include "GlrInclude.h"
 
 
 BOOST_AUTO_TEST_SUITE(sceneNode)

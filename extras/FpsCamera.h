@@ -11,7 +11,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-#include "GLRInclude.h"
+#include "GlrInclude.h"
 
 namespace glr {
 namespace extras {
