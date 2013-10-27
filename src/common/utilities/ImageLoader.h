@@ -13,10 +13,18 @@
 #include "FreeImage.h"
 
 namespace utilities {
+
+enum Format
+{
+	FORMAT_RGB = 0,
+	FORMAT_RGBA
+};
+
 struct Image {
 	char* data;
 	int width;
 	int height;
+	Format format;
 };
 
 class ImageLoader {
@@ -28,42 +36,42 @@ public:
 	{
 	}
 
-	Image* loadImageData(const std::string filename, bool hasAlpha = false)
+	std::unique_ptr<Image> loadImageData(const std::string filename, bool hasAlpha = true)
 	{
 		return loadImageData(filename.c_str());
 	}
 
-	Image* loadImageData(const char* filename, bool hasAlpha = false)
+	std::unique_ptr<Image> loadImageData(const char* filename, bool hasAlpha = true)
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Loading image.";
-		FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(filename, 0);
-		FIBITMAP* imagen = FreeImage_Load(formato, filename);
+		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
+		FIBITMAP* imageBitmap = FreeImage_Load(format, filename);
 
 		BOOST_LOG_TRIVIAL(debug) << "image loaded.";
 
-		FIBITMAP* temp = imagen;
+		FIBITMAP* temp = imageBitmap;
 		if ( hasAlpha )
-			imagen = FreeImage_ConvertTo32Bits(imagen);
+			imageBitmap = FreeImage_ConvertTo32Bits(imageBitmap);
 		else
-			imagen = FreeImage_ConvertTo24Bits(imagen);
+			imageBitmap = FreeImage_ConvertTo24Bits(imageBitmap);
 		FreeImage_Unload(temp);
 
-		int w = FreeImage_GetWidth(imagen);
-		int h = FreeImage_GetHeight(imagen);
-		BOOST_LOG_TRIVIAL(debug) << "The size of the image is: " << filename << " is " << w << "*" << h;
+		int w = FreeImage_GetWidth(imageBitmap);
+		int h = FreeImage_GetHeight(imageBitmap);
+		BOOST_LOG_TRIVIAL(debug) << "The size of the image '" << filename << "' is: " << w << "*" << h;
 
-		GLubyte* textura;
+		GLubyte* imageBytes;
 		if ( hasAlpha )
-			textura = new GLubyte[4 * w * h];
+			imageBytes = new GLubyte[4 * w * h];
 		else
-			textura = new GLubyte[3 * w * h];
+			imageBytes = new GLubyte[3 * w * h];
 
-		char* pixeles = (char*)FreeImage_GetBits(imagen);
-		//FreeImage loads in BGR format, so you need to swap some bytes(Or use GL_BGR).
+		char* pixels = (char*) FreeImage_GetBits(imageBitmap);
 
-		Image* retImage = 0;
-
-		if ( pixeles != NULL )
+		std::unique_ptr<Image> retImage = std::unique_ptr<Image>();
+		
+		// FreeImage loads in BGR format, so you need to swap some bytes (Or use GL_BGR)
+		if ( pixels != NULL )
 		{
 			int pixelSize = 3;
 			if ( hasAlpha )
@@ -71,18 +79,22 @@ public:
 
 			for ( int j = 0; j < w * h; j++ )
 			{
-				textura[j * pixelSize + 0] = pixeles[j * pixelSize + 2];
-				textura[j * pixelSize + 1] = pixeles[j * pixelSize + 1];
-				textura[j * pixelSize + 2] = pixeles[j * pixelSize + 0];
+				imageBytes[j * pixelSize + 0] = pixels[j * pixelSize + 2];
+				imageBytes[j * pixelSize + 1] = pixels[j * pixelSize + 1];
+				imageBytes[j * pixelSize + 2] = pixels[j * pixelSize + 0];
 				if ( hasAlpha )
-					textura[j * pixelSize + 3] = pixeles[j * pixelSize + 3];
-				//cout<<j<<": "<<textura[j*4+0]<<"**"<<textura[j*4+1]<<"**"<<textura[j*4+2]<<"**"<<textura[j*4+3]<<endl;
+					imageBytes[j * pixelSize + 3] = pixels[j * pixelSize + 3];
+				//cout<<j<<": "<<imageBytes[j*4+0]<<"**"<<imageBytes[j*4+1]<<"**"<<imageBytes[j*4+2]<<"**"<<imageBytes[j*4+3]<<endl;
 			}
 
-			retImage = new Image();
-			retImage->data = pixeles;
+			retImage = std::unique_ptr<Image>(new Image());
+			retImage->data = pixels;
 			retImage->width = w;
 			retImage->height = h;
+			if (hasAlpha)
+				retImage->format = FORMAT_RGBA;
+			else
+				retImage->format = FORMAT_RGB;
 		}
 
 		return retImage;

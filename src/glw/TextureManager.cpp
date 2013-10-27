@@ -51,9 +51,9 @@ Texture* TextureManager::addTexture(const std::string filename)
 
 	BOOST_LOG_TRIVIAL(debug) << "Loading texture image.";
 	utilities::ImageLoader il = utilities::ImageLoader();
-	utilities::Image* image = il.loadImageData(basepath + filename);
+	std::unique_ptr<utilities::Image> image = il.loadImageData(basepath + filename);
 
-	if ( image == nullptr )
+	if ( image.get() == nullptr )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Unable to load texture: " << filename;
 		return nullptr;
@@ -62,9 +62,7 @@ Texture* TextureManager::addTexture(const std::string filename)
 	BOOST_LOG_TRIVIAL(debug) << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating texture.";
-	textures_[filename] = std::unique_ptr<Texture>(new Texture(image, openGlDevice_));
-
-	delete image;
+	textures_[filename] = std::unique_ptr<Texture>(new Texture(image.get(), openGlDevice_));
 
 	return textures_[filename].get();
 }

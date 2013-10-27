@@ -77,7 +77,7 @@ void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height)
 	height_ = height;
 	
 	std::cout << width_ << " " << height_ << std::endl;
-	projectionMatrix_ = glm::perspective(60.0f, (float)width / (float)height, 0.1f, 100.f);
+	projectionMatrix_ = glm::perspective(60.0f, (glmd::float32)width / (glmd::float32)height, 0.1f, 100.f);
 }
 
 void Window::initialize()
@@ -87,6 +87,9 @@ void Window::initialize()
 	//glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 	// we use resize once to set up our initial perspective

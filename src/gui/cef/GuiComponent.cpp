@@ -556,8 +556,6 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 	glLoadIdentity();
 
 	glColor4f(1.0, 1.0, 1.0, 1.0);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
 
@@ -571,7 +569,6 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();

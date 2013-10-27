@@ -19,6 +19,9 @@
 #include "IWindow.h"
 
 namespace glr {
+
+namespace glmd = glm::detail;
+
 class Window : public IWindow {
 public:
 	Window(int width, int height, std::string title);
@@ -39,9 +42,9 @@ public:
 	virtual const glm::mat4& getProjectionMatrix();
 
 private:
-	glm::detail::int32 x_, y_;
-	glm::detail::uint32 width_, height_;
-	glm::detail::uint32 depth_;
+	glmd::int32 x_, y_;
+	glmd::uint32 width_, height_;
+	glmd::uint32 depth_;
 
 	std::unique_ptr<sf::Window> window_;
 
@@ -49,5 +52,6 @@ private:
 
 	void initialize();
 };
+
 }
 #endif /* GLWINDOW_H_ */
