@@ -561,7 +561,7 @@ public:
 	 * 
 	 * BIND_EXCEPTION		- when something bad happens during binding
 	 * EXECUTE_EXCEPTION	- when something bad happens during execution of a bound function
-	 * MESSAGE_EXCEPTION	- when something bad happens during processing of a message
+	 * MESSAGE_EXCEPTION	
 	 */
 	void sendMessageException(CefRefPtr<CefBrowser> browser, Exception exception, std::wstring message)
 	{

@@ -183,6 +183,8 @@ public:
 	Client()
 	{
 		renderHandler_ = new RenderHandler();
+		numSent_ = 0;
+		allBindingsReceived_ = false;
 	}
 	
 	CefRefPtr<CefRenderHandler> GetRenderHandler()
@@ -358,7 +360,7 @@ public:
 			numSent_ = sendTestBindings(browser);
 			
 			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("AllBindingsSent");
-			message->GetArgumentList()->SetInt( 0, numSent_ );
+			m->GetArgumentList()->SetInt( 0, numSent_ );
 			browser->SendProcessMessage(PID_RENDERER, m);
 			
 			std::cout << "ReadyForBindings finished with " << numSent_ << " messages(s) sent to the render process." << std::endl;
@@ -366,6 +368,7 @@ public:
 		else if( s == "AllBindingsReceived" )
 		{ 
 			//browser_->GetMainFrame()->LoadURL(url_);
+			allBindingsReceived_ = true;
 		}
 		else if( s == "Exception" )
 		{ 
@@ -375,10 +378,17 @@ public:
 		
 		return true;
 	}
+	
+	bool isAllBindingsReceived()
+	{
+		return allBindingsReceived_;
+	}
 
 private:
 	CefRefPtr<CefRenderHandler> renderHandler_;
 	uint numSent_;
+	
+	bool allBindingsReceived_;
 
 	// NOTE: Must be at bottom
 public:
@@ -396,7 +406,8 @@ bool createCefClientTest()
 
 struct data
 {
-	std::shared_ptr<Client> client;
+	// We don't have to worry about deleting client, as CEF does that for us
+	Client* client;
 	CefRefPtr<CefBrowser> browser;
 };
 
@@ -410,9 +421,9 @@ data createCefBrowserTest()
 	windowInfo.SetAsOffScreen(nullptr);
 	windowInfo.SetTransparentPainting(true);
 	
-	d.client = std::shared_ptr<Client>(new Client());
+	d.client = new Client();
 	
-	d.browser = CefBrowserHost::CreateBrowserSync(windowInfo, d.client.get(), std::string("http://www.google.com"), browserSettings);
+	d.browser = CefBrowserHost::CreateBrowserSync(windowInfo, d.client, std::string("http://www.google.com"), browserSettings);
 	
 	return d;
 }
@@ -441,6 +452,11 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 		auto end = std::chrono::system_clock::now();
 		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5;
 	}
+	
+	if ( !d.client->isAllBindingsReceived() )
+		BOOST_FAIL( "Not all bindings were received by the cef_client." );
+	
+	CefShutdown();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
