@@ -20,7 +20,8 @@
 
 #include "../../exceptions/ExceptionInclude.h"
 
-//#define DEBUG_PAINT true
+#include "../../../cef_client/src/FunctionList.h"
+#include "../../../cef_client/src/ExceptionList.h"
 
 namespace glr {
 namespace gui {
@@ -39,10 +40,10 @@ GuiComponent::~GuiComponent()
 
 bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message )
 {
-	std::string s = message->GetName();
-	std::cout << "YESSS! OnProcessMessageReceived " << s << std::endl;
+	std::wstring s = message->GetName().ToWString();
+	std::wcout << L"GuiComponent OnProcessMessageReceived " << s << std::endl;
 		
-	if( s == "ExecuteFunction" )
+	if( s == cef_client::EXECUTE_FUNCTION )
 	{	
 		std::wstring objName = message->GetArgumentList()->GetString(0);
 		std::wstring functionName = message->GetArgumentList()->GetString(1);
@@ -144,45 +145,47 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		if ( guiObjects_.find(objName) != guiObjects_.end() )
 		{
 			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
+			std::string messageId = "TESTING";
 			
-			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("FunctionResult");
-			m->GetArgumentList()->SetString( 0, functionName );
-			m->GetArgumentList()->SetInt( 1, 1 );
+			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::FUNCTION_RESULT );
+			m->GetArgumentList()->SetString( 0, messageId );
+			m->GetArgumentList()->SetString( 1, functionName );
+			m->GetArgumentList()->SetInt( 2, 1 );
 			
 			if( r.empty() )
 			{
 				// There is no return value (i.e. void), so set num return results 0
-				m->GetArgumentList()->SetInt( 1, 0 );
+				m->GetArgumentList()->SetInt( 2, 0 );
 				std::cout << "ExecuteFunction RESULT: void" << std::endl;
 			}
 			else if ( utilities::isString(r) )
 			{
-				m->GetArgumentList()->SetString( 2, boost::any_cast<std::string>(r) );
+				m->GetArgumentList()->SetString( 3, boost::any_cast<std::string>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<std::string>(r) << std::endl;
 			}
 			else if ( utilities::isWstring(r) )
 			{
-				m->GetArgumentList()->SetString( 2, boost::any_cast<std::wstring>(r) );
+				m->GetArgumentList()->SetString( 3, boost::any_cast<std::wstring>(r) );
 				std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
 			}
 			else if ( utilities::isInt(r) )
 			{
-				m->GetArgumentList()->SetInt( 2, boost::any_cast<int>(r) );
+				m->GetArgumentList()->SetInt( 3, boost::any_cast<int>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<int>(r) << std::endl;
 			}
 			else if ( utilities::isUint(r) )
 			{
-				m->GetArgumentList()->SetInt( 2, boost::any_cast<uint>(r) );
+				m->GetArgumentList()->SetInt( 3, boost::any_cast<uint>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<uint>(r) << std::endl;
 			}
 			else if ( utilities::isFloat(r) )
 			{
-				m->GetArgumentList()->SetDouble( 2, boost::any_cast<float>(r) );
+				m->GetArgumentList()->SetDouble( 3, boost::any_cast<float>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<float>(r) << std::endl;
 			}
 			else if ( utilities::isDouble(r) )
 			{
-				m->GetArgumentList()->SetDouble( 2, boost::any_cast<double>(r) );
+				m->GetArgumentList()->SetDouble( 3, boost::any_cast<double>(r) );
 				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<double>(r) << std::endl;
 			}
 			else
@@ -191,32 +194,58 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				std::string msg = "Error - ExecuteFunction unable to determine result type.";					
 				std::cout << msg << std::endl;
 				throw exception::Exception( msg );
-				// No result
-				//m->GetArgumentList()->SetInt( 1, 0 );
 			}
 			
 			browser->SendProcessMessage(PID_RENDERER, m);
 		}
 	}
-	else if( s == "ReadyForBindings" && !bindDataSent_/* && browser == m_Browser*/ )
+	else if( s == cef_client::READY_FOR_BINDINGS && !bindDataSent_/* && browser == m_Browser*/ )
 	{ 
 		//std::cout << "testing " << message->GetArgumentList()->GetInt(1) << " " << browser->GetFrame(message->GetArgumentList()->GetInt(1)) << std::endl;
 		glmd::uint32 numSent = sendBoundFunctionsToRenderProcess();
+		std::string messageId = "TESTING";
 		
-		CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("AllBindingsSent");
-		m->GetArgumentList()->SetInt( 0, numSent );
+		CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::ALL_BINDINGS_SENT );
+		m->GetArgumentList()->SetString( 0, messageId );
+		m->GetArgumentList()->SetInt( 1, numSent );
 		browser->SendProcessMessage(PID_RENDERER, m);
 		std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
 		bindDataSent_ = true;
 	}
-	else if( s == "AllBindingsReceived" && bindDataSent_/* && browser == m_Browser*/ )
+	else if( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_/* && browser == m_Browser*/ )
 	{ 
 		browser_->GetMainFrame()->LoadURL(url_);
 	}
-	else if( s == "AllBindingsReceived" && !bindDataSent_/* && browser == m_Browser*/ )
+	else if( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_/* && browser == m_Browser*/ )
 	{ 
 		// TODO: error
 		BOOST_LOG_TRIVIAL(error) << "AllBindingsReceived message processed, but no binding data was sent.";
+	}
+	else if( s == cef_client::SUCCESS/* && browser == m_Browser*/ )
+	{ 
+		// TODO: deal with success
+		std::string messageId = message->GetArgumentList()->GetString( 0 );
+		BOOST_LOG_TRIVIAL(warning) << "Success message not yet implemented.";
+		std::cout << "GuiComponent Success: " << messageId << std::endl;
+	}
+	else if( s == cef_client::EXCEPTION/* && browser == m_Browser*/ )
+	{ 
+		// TODO: error
+		std::string messageId = message->GetArgumentList()->GetString( 0 );
+		cef_client::Exception e = (cef_client::Exception) message->GetArgumentList()->GetInt( 1 );
+		std::string errorMessage = message->GetArgumentList()->GetString( 2 );
+		// c++ exception doesn't seem to support wchar...
+		//std::wstring message = message->GetArgumentList()->GetWString( 2 );
+		
+		
+		std::stringstream msgStream;
+		msgStream << errorMessage << " - Exception type: " << e;
+		
+		std::string msg = msgStream.str();
+		
+		BOOST_LOG_TRIVIAL(error) << "Exception message received: " << msg;
+		std::cout << "Exception message received." << msg << std::endl;
+		throw exception::Exception( msg );
 	}
 	
 	return true;
@@ -439,26 +468,29 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 	// Set all of our GuiObject contexts
 	for ( auto& it : guiObjects_ )
 	{
-		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddObject");
-		message->GetArgumentList()->SetString( 0, it.second->getName() );
+		std::string messageId = "TESTING";
+		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create( cef_client::ADD_OBJECT );
+		message->GetArgumentList()->SetString( 0, messageId );
+		message->GetArgumentList()->SetString( 1, it.second->getName() );
 		browser_->SendProcessMessage(PID_RENDERER, message);
 		numSent++;
 		
 		std::vector< std::wstring > names = it.second->getFunctionNames();
 		
-		message = CefProcessMessage::Create("AddMethodToObject");
+		message = CefProcessMessage::Create( cef_client::ADD_METHOD_TO_OBJECT );
 		for ( auto& name : names )
 		{
-			message->GetArgumentList()->SetString( 0, it.second->getName() );
-			message->GetArgumentList()->SetString( 1, name );
+			message->GetArgumentList()->SetString( 0, messageId );
+			message->GetArgumentList()->SetString( 1, it.second->getName() );
+			message->GetArgumentList()->SetString( 2, name );
 			browser_->SendProcessMessage(PID_RENDERER, message);
 			numSent++;
 		}
 		
 		// Binding wrapper
 		browser_->GetMainFrame()->ExecuteJavaScript(
-										L"if (!game)\
-											var game = (window.game);",
+										L"if (!" + it.second->getName() + L")\
+											var " + it.second->getName() + L" = (window." + it.second->getName() + L");",
 										"about:blank", 
 										0
 									);
@@ -556,6 +588,8 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 	glLoadIdentity();
 
 	glColor4f(1.0, 1.0, 1.0, 1.0);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
 
@@ -569,6 +603,7 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();

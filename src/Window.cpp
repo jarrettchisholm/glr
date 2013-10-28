@@ -87,8 +87,6 @@ void Window::initialize()
 	//glClearDepth(1.0f);
 	glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 

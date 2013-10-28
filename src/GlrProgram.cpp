@@ -124,10 +124,14 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 void GlrProgram::beginRender()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GlrProgram::endRender()
 {
+	glDisable(GL_BLEND);
+	
 	// Display any changes we've made
 	window_->render();
 }
