@@ -24,11 +24,14 @@ Gui::Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shade
 
 Gui::~Gui()
 {
+	destroy();
 }
 
 void Gui::destroy()
 {
 	views_.clear();
+	
+	CefShutdown();
 }
 
 
@@ -44,6 +47,8 @@ void Gui::update()
 
 void Gui::render()
 {
+	CefDoMessageLoopWork();
+	
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
 
 	//shader->bind();

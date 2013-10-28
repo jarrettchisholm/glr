@@ -31,6 +31,7 @@ GuiComponent::GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width,
 {
 	isVisible_ = false;
 	bindDataSent_ = false;
+	numMessagesSent_ = 0;
 }
 
 GuiComponent::~GuiComponent()
@@ -42,7 +43,10 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 {
 	std::wstring s = message->GetName().ToWString();
 	std::wcout << L"GuiComponent OnProcessMessageReceived " << s << std::endl;
-		
+	
+	// Do we need this?
+	// browser == m_Browser
+	
 	if( s == cef_client::EXECUTE_FUNCTION )
 	{	
 		std::wstring objName = message->GetArgumentList()->GetString(0);
@@ -145,7 +149,9 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		if ( guiObjects_.find(objName) != guiObjects_.end() )
 		{
 			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
-			std::string messageId = "TESTING";
+			std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+			messageIdMap_[messageId] = numMessagesSent_;
+			numMessagesSent_++;
 			
 			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::FUNCTION_RESULT );
 			m->GetArgumentList()->SetString( 0, messageId );
@@ -199,11 +205,12 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			browser->SendProcessMessage(PID_RENDERER, m);
 		}
 	}
-	else if( s == cef_client::READY_FOR_BINDINGS && !bindDataSent_/* && browser == m_Browser*/ )
+	else if( s == cef_client::READY_FOR_BINDINGS && !bindDataSent_ )
 	{ 
-		//std::cout << "testing " << message->GetArgumentList()->GetInt(1) << " " << browser->GetFrame(message->GetArgumentList()->GetInt(1)) << std::endl;
 		glmd::uint32 numSent = sendBoundFunctionsToRenderProcess();
-		std::string messageId = "TESTING";
+		std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+		messageIdMap_[messageId] = numMessagesSent_;
+		numMessagesSent_++;
 		
 		CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::ALL_BINDINGS_SENT );
 		m->GetArgumentList()->SetString( 0, messageId );
@@ -212,31 +219,40 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
 		bindDataSent_ = true;
 	}
-	else if( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_/* && browser == m_Browser*/ )
-	{ 
+	else if( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_ )
+	{
+		// Now that bindings are set, we can load the url
 		browser_->GetMainFrame()->LoadURL(url_);
 	}
-	else if( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_/* && browser == m_Browser*/ )
+	else if( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_ )
 	{ 
-		// TODO: error
-		BOOST_LOG_TRIVIAL(error) << "AllBindingsReceived message processed, but no binding data was sent.";
+		std::string msg = "AllBindingsReceived message processed, but no binding data was sent.";
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception( msg );
 	}
-	else if( s == cef_client::SUCCESS/* && browser == m_Browser*/ )
+	else if( s == cef_client::SUCCESS )
 	{ 
 		// TODO: deal with success
 		std::string messageId = message->GetArgumentList()->GetString( 0 );
-		BOOST_LOG_TRIVIAL(warning) << "Success message not yet implemented.";
+		auto it = messageIdMap_.find(messageId);
+		if (it == messageIdMap_.end())
+		{
+			std::string msg = "Success message id '" + messageId + "' does not match any ids of sent messages.";
+			BOOST_LOG_TRIVIAL(error) << msg;
+			throw exception::Exception( msg );
+		}
+		
+		messageIdMap_.erase(it);
+		//BOOST_LOG_TRIVIAL(warning) << "Success message not yet implemented.";
 		std::cout << "GuiComponent Success: " << messageId << std::endl;
 	}
-	else if( s == cef_client::EXCEPTION/* && browser == m_Browser*/ )
+	else if( s == cef_client::EXCEPTION )
 	{ 
-		// TODO: error
-		std::string messageId = message->GetArgumentList()->GetString( 0 );
+		//std::string messageId = message->GetArgumentList()->GetString( 0 );
 		cef_client::Exception e = (cef_client::Exception) message->GetArgumentList()->GetInt( 1 );
 		std::string errorMessage = message->GetArgumentList()->GetString( 2 );
 		// c++ exception doesn't seem to support wchar...
-		//std::wstring message = message->GetArgumentList()->GetWString( 2 );
-		
+		//std::wstring message = message->GetArgumentList()->GetWString( 2 );		
 		
 		std::stringstream msgStream;
 		msgStream << errorMessage << " - Exception type: " << e;
@@ -254,6 +270,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 void GuiComponent::load()
 {
 	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent texture.";
+	
 	// Create texture to hold rendered view
 	glGenTextures(1, &web_texture);
 	glBindTexture(GL_TEXTURE_2D, web_texture);
@@ -263,9 +280,12 @@ void GuiComponent::load()
 	glw::GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
-		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		std::stringstream msgStream;
+		msgStream << "Error loading GuiComponent in opengl: " << err.name;
+		std::string msg = msgStream.str();
+		
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::GlException( msg );
 	}
 	else
 	{
@@ -286,10 +306,10 @@ void GuiComponent::load()
 	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
 	if (!result)
 	{
-		// handle error
-		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not initialize CEF.";
-		// TODO: throw error
-		return;
+		std::string msg = "Error loading GuiComponent - could not initialize CEF.";
+		
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception( msg );		
 	}
 
 	CefWindowInfo window_info;
@@ -308,9 +328,11 @@ void GuiComponent::load()
 	
 	if (browser_.get() == nullptr)
 	{
-		BOOST_LOG_TRIVIAL(error) << "Error loading GuiComponent - could not create CEF browser.";
-		// TODO: throw error
-		return;
+		// TODO: terminate the render process...
+		std::string msg = "Error loading GuiComponent - could not create CEF browser.";
+		
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::Exception( msg );
 	}
 	
 	//browser_->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
@@ -329,8 +351,9 @@ void GuiComponent::load()
 
 void GuiComponent::unload()
 {
+	// TODO: properly dispose of browser
+	browser_->GetHost()->CloseBrowser( false );
 	browser_ = nullptr;
-	CefShutdown();
         
 	this->setVisible(false);
 }
@@ -468,7 +491,10 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 	// Set all of our GuiObject contexts
 	for ( auto& it : guiObjects_ )
 	{
-		std::string messageId = "TESTING";
+		std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+		messageIdMap_[messageId] = numMessagesSent_;
+		numMessagesSent_++;
+		
 		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create( cef_client::ADD_OBJECT );
 		message->GetArgumentList()->SetString( 0, messageId );
 		message->GetArgumentList()->SetString( 1, it.second->getName() );
@@ -480,6 +506,10 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 		message = CefProcessMessage::Create( cef_client::ADD_METHOD_TO_OBJECT );
 		for ( auto& name : names )
 		{
+			messageId = "Message_" + std::to_string(numMessagesSent_);
+			messageIdMap_[messageId] = numMessagesSent_;
+			numMessagesSent_++;
+			
 			message->GetArgumentList()->SetString( 0, messageId );
 			message->GetArgumentList()->SetString( 1, it.second->getName() );
 			message->GetArgumentList()->SetString( 2, name );
@@ -581,7 +611,6 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 {
 	//texture_->bind();
 	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
-	CefDoMessageLoopWork();
 	
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();

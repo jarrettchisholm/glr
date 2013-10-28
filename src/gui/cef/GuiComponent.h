@@ -144,6 +144,8 @@ private:
     CefRefPtr<CefRenderHandler> renderHandler_;
     
     bool bindDataSent_;
+    glmd::uint32 numMessagesSent_;
+    std::map< std::string, glmd::uint32 > messageIdMap_;
 
 	std::map< std::wstring, std::unique_ptr<GuiObject> > guiObjects_;
 
