@@ -330,7 +330,7 @@ void GuiComponent::load()
 	
 	if (browser_.get() == nullptr)
 	{
-		// TODO: terminate the render process...
+		// The render process should clean up on its own.
 		std::string msg = "Error loading GuiComponent - could not create CEF browser.";
 		
 		BOOST_LOG_TRIVIAL(error) << msg;
