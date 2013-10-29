@@ -26,6 +26,8 @@ public:
 	{
 	}
 	;
+	
+	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame) = 0; 
 
 	
 };

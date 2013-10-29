@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#ifdef USE_CEF
+
 #ifndef GUI_H_
 #define GUI_H_
 
@@ -56,4 +58,7 @@ private:
 }
 }
 }
+
 #endif /* GUI_H_ */
+
+#endif

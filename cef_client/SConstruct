@@ -73,7 +73,6 @@ def setupEnvironment(env):
 
 
 ### Handle arguments
-AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
 
 ### Argument flags
 doBeautification = False

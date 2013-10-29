@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#ifdef USE_CEF
+
 #include <sstream>
 
 #include <boost/log/trivial.hpp>
@@ -313,3 +315,5 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 }
 }
 }
+
+#endif

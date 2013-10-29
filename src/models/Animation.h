@@ -21,9 +21,11 @@
 
 #include "../glw/Animation.h"
 
+namespace glmd = glm::detail;
+
 namespace glr {
 namespace models {
-	
+
 
 /**
  * Animation class.  This class is essentially a wrapper around the glw::Animation object.
@@ -44,6 +46,9 @@ public:
 	glw::Animation* getAnimation();
 	glm::detail::float32 getAnimationTime();
 	
+	glm::detail::uint32 getStartFrame();
+	glm::detail::uint32 getEndFrame();
+	
 	// From glw::IAnimation
 	virtual const std::string getName();
 	virtual void setAnimationTime(glm::detail::float32 runningTime);
@@ -56,6 +61,10 @@ protected:
 	glw::Animation* animation_;
 	
 	glm::detail::float32 runningTime_;
+	
+	// Only play frames within this range
+	glmd::uint32 startFrame_;
+	glmd::uint32 endFrame_;
 	
 private:
 	void initialize(glw::Animation* animation);

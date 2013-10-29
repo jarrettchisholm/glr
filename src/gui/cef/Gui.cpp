@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#ifdef USE_CEF
+
 #include <iostream>
 #include <string.h>
 
@@ -176,3 +178,5 @@ int Gui::release(IGuiComponent* comp)
 }
 }
 }
+
+#endif

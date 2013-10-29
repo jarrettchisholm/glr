@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#ifdef USE_CEF
+
 #ifndef GUICOMPONENT_H_
 #define GUICOMPONENT_H_
 
@@ -33,9 +35,9 @@ namespace cef {
 class RenderHandler : public CefRenderHandler
 {
 public:
-	RenderHandler(glm::detail::uint32 web_texture) : web_texture(web_texture)
+	RenderHandler(glm::detail::uint32 webTexture) : webTexture(webTexture)
 	{
-		// TODO: error check web_texture value
+		// TODO: error check webTexture value
 	}
 
 	// CefRenderHandler interface
@@ -50,7 +52,7 @@ public:
 		std::cout << "painting!: " << width << " " << height << std::endl;
 		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
 		
-		glBindTexture(GL_TEXTURE_2D, web_texture);
+		glBindTexture(GL_TEXTURE_2D, webTexture);
 		
 		// Finally, we perform the main update, just copying the rect that is
 		// marked as dirty but not from scrolled data.
@@ -69,7 +71,7 @@ public:
 		glBindTexture(GL_TEXTURE_2D, 0);
 	};
 	
-	glm::detail::uint32 web_texture;
+	glm::detail::uint32 webTexture;
     
     // CefBase interface
 	// NOTE: Must be at bottom
@@ -135,7 +137,7 @@ private:
 	// Width and height of our window.
 	glmd::uint32 width_, height_;
 	// Storage for a texture
-	glm::detail::uint32 web_texture;
+	glm::detail::uint32 webTexture;
 	// Buffer used to store data for scrolling
 	char* scroll_buffer;
 
@@ -144,6 +146,7 @@ private:
     CefRefPtr<CefRenderHandler> renderHandler_;
     
     bool bindDataSent_;
+    // The number of unique message ids will be limited by the size of uint32 (but I don't think this will be a problem)
     glmd::uint32 numMessagesSent_;
     std::map< std::string, glmd::uint32 > messageIdMap_;
 
@@ -195,4 +198,7 @@ public:
 }
 }
 }
+
 #endif /* GUICOMPONENT_H_ */
+
+#endif

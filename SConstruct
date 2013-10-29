@@ -13,9 +13,9 @@ import multiprocessing
 from colorizer import colorizer
 from BuildHelper import *
 
+
+
 setup(ARGUMENTS)
-
-
 
 def setupDependencies():
 	### Set our libraries
@@ -53,8 +53,9 @@ def setupDependencies():
 	libraries.append(glLib)
 	libraries.append(glewLib)
 	libraries.append(libPThread)
-	libraries.append(cefLib)
-	libraries.append(cefDllWrapperLib)
+	if (buildFlags['useCef']):
+		libraries.append(cefLib)
+		libraries.append(cefDllWrapperLib)
 	libraries.append('assimp')
 	libraries.append('freeimage')
 	libraries.append(boostLogLib)
@@ -97,7 +98,8 @@ def setupEnvironment(env):
 		env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
 		
 		# include cflags and libs for gtk+-2.0
-		env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
+		if (buildFlags['useCef']):
+			env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
 def parseShadersIntoHeader():
 	"""Parse the OpenGL Shader files into a single C++ Header file."""
@@ -174,12 +176,12 @@ static std::map<std::string, std::string> SHADER_DATA = {
 	
 	print('Done parsing Shaders into header ShaderData.h')
 
-def compileCefClient(compiler, doClean):
+def compileCefClient(compiler):
 	os.chdir( 'cef_client' )
 	buildCommand = 'scons'
 	if (compiler):
 		buildCommand = buildCommand + " compiler="+compiler
-	if (doClean):
+	if (buildFlags['clean']):
 		buildCommand = buildCommand + " --clean"
 	result = subprocess.call( buildCommand, shell=True )
 	os.chdir( '..' )
@@ -187,9 +189,7 @@ def compileCefClient(compiler, doClean):
 
 
 
-### Handle arguments
-AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
-
+### Clear the screen
 clear()
 if (not isWindows):
 	os.system( 'echo' )
@@ -197,17 +197,9 @@ if (not isWindows):
 	os.system( 'echo' )
 
 
-### Argument flags
-doBeautification = False
-doClean = False
-
-if GetOption('beautify'):
-	doBeautification = True
-if GetOption('clean'):
-	doClean = True
 
 ### Prepare code for comilation
-if doBeautification:
+if buildFlags['beautify']:
 	print("Beautifying Code")
 	beautifyCode()
 	print("Done")
@@ -216,9 +208,10 @@ if doBeautification:
 
 
 ### Compile our client for CEF
-print("Compiling CEF Client")
-exitOnError( compileCefClient(compiler, doClean) )
-print("")
+if (buildFlags['useCef']):
+	print("Compiling CEF Client")
+	exitOnError( compileCefClient(compiler) )
+	print("")
 
 
 

@@ -33,6 +33,9 @@ void Animation::initialize(glw::Animation* animation)
 	assert( animation != nullptr );
 	
 	this->animation_ = animation;
+	runningTime_ = 0.0f;
+	startFrame_ = 0;
+	endFrame_ = 0;
 }
 
 void Animation::destroy()
@@ -49,6 +52,16 @@ glm::detail::float32  Animation::getAnimationTime()
 	return runningTime_;
 }
 
+glm::detail::uint32 Animation::getStartFrame()
+{
+	return startFrame_;
+}
+
+glm::detail::uint32 Animation::getEndFrame()
+{
+	return endFrame_;
+}
+
 const std::string Animation::getName()
 {
 	return animation_->getName();
@@ -62,7 +75,9 @@ void Animation::setAnimationTime(glm::detail::float32 runningTime)
 
 void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame)
 {
-	
+	startFrame_ = startFrame;
+	endFrame_ = endFrame;
+	animation_->setFrameClampping( startFrame_, endFrame_ );
 }
 
 }

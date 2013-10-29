@@ -73,7 +73,8 @@ private:
 	std::unique_ptr< glw::OpenGlDevice > openGlDevice_;
 	std::unique_ptr< BasicSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
-	std::unique_ptr< gui::cef::Gui > gui_;
+	
+	std::unique_ptr< gui::IGui > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	

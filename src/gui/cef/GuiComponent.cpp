@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#ifdef USE_CEF
+
 #include <iostream>
 #include <string.h>
 #include <cstring>
@@ -272,8 +274,8 @@ void GuiComponent::load()
 	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent texture.";
 	
 	// Create texture to hold rendered view
-	glGenTextures(1, &web_texture);
-	glBindTexture(GL_TEXTURE_2D, web_texture);
+	glGenTextures(1, &webTexture);
+	glBindTexture(GL_TEXTURE_2D, webTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	
@@ -319,7 +321,7 @@ void GuiComponent::load()
 	window_info.SetAsOffScreen(nullptr);
 	window_info.SetTransparentPainting(true);
 	
-	this->renderHandler_ = new RenderHandler(web_texture);
+	this->renderHandler_ = new RenderHandler(webTexture);
 	
 	BOOST_LOG_TRIVIAL(debug) << "Creating CEF Browser object.";
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
@@ -620,7 +622,7 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, web_texture);
+	glBindTexture(GL_TEXTURE_2D, webTexture);
 
 	// display
 	glBegin(GL_QUADS);
@@ -795,7 +797,7 @@ void GuiComponent::onPaint(
 		dx,
 		dy, 
 		scroll_rect,
-		web_texture, 
+		webTexture, 
 		width_, 
 		height_, 
 		needs_full_refresh, 
@@ -1037,3 +1039,5 @@ IGuiObject* GuiComponent::getGuiObject(std::wstring name)
 }
 }
 }
+
+#endif

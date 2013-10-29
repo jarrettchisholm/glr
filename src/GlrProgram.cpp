@@ -288,10 +288,13 @@ gui::IGui* GlrProgram::getHtmlGui()
 	{
 		return gui_.get();
 	}
-
+#ifdef USE_CEF
 	gui_ = std::unique_ptr<gui::cef::Gui>(new gui::cef::Gui(openGlDevice_.get(), shaderProgramManager_, window_->getWidth(), window_->getHeight()));
 
 	return gui_.get();
+#else
+	return nullptr;
+#endif
 }
 
 glw::IOpenGlDevice* GlrProgram::getOpenGlDevice()
