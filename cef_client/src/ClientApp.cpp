@@ -191,6 +191,12 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 		std::wstring attrName = message->GetArgumentList()->GetString(2);
 		CefRefPtr<CefV8Value> attrValue = getValue(message, 3);
 		
+		if (attrValue.get() == nullptr)
+		{
+			sendMessageException(browser, messageId, Exception::BIND_EXCEPTION, L"Value for attribute '" + objName + L"." + attrName + L"' was unparsable.");
+			return false;
+		}
+		
 		std::wcout << L"cef3_client AddAttributeToObject: " << objName << L" | " << attrName << L" | ";
 		if ( attrValue->IsString() )
 			std::cout << "(string) " << attrValue->GetStringValue().ToString() << std::endl;
@@ -314,6 +320,13 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 		for (int i = 0; i < numArguments; i++)
 		{
 			temp = getValue(message, i+3);
+			
+			if (temp.get() == nullptr)
+			{
+				// TODO: is EXECUTE_EXCEPTION the right kind of exception to throw here?
+				sendMessageException(browser, messageId, Exception::EXECUTE_EXCEPTION, L"Result value of function '" + funcName + L"' was unparsable.");
+				return false;
+			}
 			
 			if (temp != nullptr)
 			{

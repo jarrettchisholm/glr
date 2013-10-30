@@ -48,8 +48,9 @@ def setupDependencies():
 	libraries.append(glLib)
 	libraries.append(glewLib)
 	libraries.append(libPThread)
-	libraries.append(cefLib)
-	libraries.append(cefDllWrapperLib)
+	if buildFlags['useCef']:
+		libraries.append(cefLib)
+		libraries.append(cefDllWrapperLib)
 	libraries.append('sfml-system')
 	libraries.append('sfml-window')
 	libraries.append('assimp')
@@ -89,7 +90,8 @@ def setupEnvironment(env):
 		env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
 		
 		# include cflags and libs for gtk+-2.0
-		env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
+		if buildFlags['useCef']:
+			env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
 def copyResources():
 	"""Copies over resources to the build directory.
@@ -110,31 +112,29 @@ def copyResources():
 	#	print("Couldn't copy data");
 	
 	# TODO: Is this where we want cef locale data stored?
-	try:
-		if (not os.path.exists('./build/locales')):
-			shutil.copytree('../cef_locales/locales', 'build/locales')
-			shutil.copyfile('../cef_locales/cef.pak', 'build/cef.pak')
-			shutil.copyfile('../cef_locales/devtools_resources.pak', 'build/devtools_resources.pak')
-			os.chmod('build/', 0755)
-			print("Copied CEF locale data");
-	except:
-		print("Couldn't copy CEF locale data");
-		
-	try:
-		binary = 'cef3_client'
-		if (isWindows):
-			binary = 'cef3_client.exe'
-		
-		shutil.copyfile('../cef_client/build/' + binary, 'build/' + binary)
-		os.chmod('build/' + binary, 0755)
-		print("Copied " + binary);
-	except:
-		print("Couldn't copy cef3_client executable");
+	if buildFlags['useCef']:
+		try:
+			if (not os.path.exists('./build/locales')):
+				shutil.copytree('../cef_locales/locales', 'build/locales')
+				shutil.copyfile('../cef_locales/cef.pak', 'build/cef.pak')
+				shutil.copyfile('../cef_locales/devtools_resources.pak', 'build/devtools_resources.pak')
+				os.chmod('build/', 0755)
+				print("Copied CEF locale data");
+		except:
+			print("Couldn't copy CEF locale data");
+			
+		try:
+			binary = 'cef3_client'
+			if (isWindows):
+				binary = 'cef3_client.exe'
+			
+			shutil.copyfile('../cef_client/build/' + binary, 'build/' + binary)
+			os.chmod('build/' + binary, 0755)
+			print("Copied " + binary);
+		except:
+			print("Couldn't copy cef3_client executable");
 
 
-
-### Set available arguments
-AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
 
 ### Clear the screen
 clear()
@@ -143,15 +143,8 @@ if (not isWindows):
 	os.system( 'echo' )
 	os.system( 'echo' )
 
-doBeautification = False
-doClean = False
-if GetOption('beautify'):
-	doBeautification = True
-if GetOption('clean'):
-	doClean = True
-
 ### Prepare code for comilation, and compile our dependancy library, glr
-if doBeautification:
+if buildFlags['beautify']:
 	print("Beautifying Code")
 	beautifyCode()
 	print("Done")

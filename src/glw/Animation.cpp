@@ -225,7 +225,7 @@ void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animation
     glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->positionTimes_[nextPositionIndex] - animatedBoneNode->positionTimes_[positionIndex]);
     glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->positionTimes_[positionIndex]) / deltaTime;
     
-    std::cout << "calc pos: " << positionIndex << " " << nextPositionIndex << " " << deltaTime << " " << factor << std::endl;
+    //std::cout << "calc pos: " << positionIndex << " " << nextPositionIndex << " " << deltaTime << " " << factor << std::endl;
     
     //assert(factor >= 0.0f && factor <= 1.0f);
     const glm::vec3& start = animatedBoneNode->positions_[positionIndex];
@@ -319,7 +319,7 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 			
 			animationTime = fmod(animationTime, et) + st;
 			
-			std::cout << "findPosition: " << startFrame_ << ", " << endFrame_ << " | " << st << ", " << et << " | " << animationTime << std::endl;			
+			//std::cout << "findPosition: " << startFrame_ << ", " << endFrame_ << " | " << st << ", " << et << " | " << animationTime << std::endl;			
 		}
 		
 		// Interpolate scaling and generate scaling transformation matrix

@@ -13,7 +13,10 @@
 
 #include <boost/any.hpp>
 
-//#include "../../src/common/utilities/BoostAnyUtilities.h"
+#include "../../cef_client/src/FunctionList.h"
+#include "../../cef_client/src/ExceptionList.h"
+
+#include "../../src/common/utilities/StringUtilities.h"
 
 bool isEmpty(const boost::any& operand)
 {
@@ -63,6 +66,7 @@ struct GuiObject
 	
 };
 
+std::map< std::string, uint > messageIdMap;
 std::vector< std::shared_ptr<GuiObject> > guiObjects;
 
 void setupGuiObjects()
@@ -86,13 +90,17 @@ void setupGuiObjects()
 
 uint sendTestBindings(CefRefPtr<CefBrowser> browser)
 {
-	uint numSent;
+	uint numSent = 0;
 	
 	for ( auto& it : guiObjects )
 	{
+		std::string messageId = utilities::toString( it->name );
+		messageIdMap[messageId] = numSent;
+		
 		std::wcout << L"obj name: " << it->name << std::endl;
 		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddObject");
-		message->GetArgumentList()->SetString( 0, it->name );
+		message->GetArgumentList()->SetString( 0, messageId );
+		message->GetArgumentList()->SetString( 1, it->name );
 		browser->SendProcessMessage(PID_RENDERER, message);
 		numSent++;
 		
@@ -101,9 +109,13 @@ uint sendTestBindings(CefRefPtr<CefBrowser> browser)
 		message = CefProcessMessage::Create("AddMethodToObject");
 		for ( auto& name : names )
 		{
+			messageId = utilities::toString( it->name + name );
+			messageIdMap[messageId] = numSent;
+			
 			std::wcout << L"func name: " << name << std::endl;
-			message->GetArgumentList()->SetString( 0, it->name );
-			message->GetArgumentList()->SetString( 1, name );
+			message->GetArgumentList()->SetString( 0, messageId );
+			message->GetArgumentList()->SetString( 1, it->name );
+			message->GetArgumentList()->SetString( 2, name );
 			browser->SendProcessMessage(PID_RENDERER, message);
 			numSent++;
 		}
@@ -113,38 +125,42 @@ uint sendTestBindings(CefRefPtr<CefBrowser> browser)
 		message = CefProcessMessage::Create("AddAttributeToObject");
 		for ( auto& attr : attributes )
 		{
+			messageId = utilities::toString( it->name + attr.first );
+			messageIdMap[messageId] = numSent;
+			
 			std::wcout << L"attr name: " << attr.first << std::endl;
-			message->GetArgumentList()->SetString( 0, it->name );
-			message->GetArgumentList()->SetString( 1, attr.first );
+			message->GetArgumentList()->SetString( 0, messageId );
+			message->GetArgumentList()->SetString( 1, it->name );
+			message->GetArgumentList()->SetString( 2, attr.first );
 			
 			boost::any r = attr.second;
 			if ( isString(r) )
 			{
-				message->GetArgumentList()->SetString( 2, boost::any_cast<std::string>(r) );
+				message->GetArgumentList()->SetString( 3, boost::any_cast<std::string>(r) );
 			}
 			else if ( isWstring(r) )
 			{
-				message->GetArgumentList()->SetString( 2, boost::any_cast<std::wstring>(r) );
+				message->GetArgumentList()->SetString( 3, boost::any_cast<std::wstring>(r) );
 			}
 			else if ( isInt(r) )
 			{
-				message->GetArgumentList()->SetInt( 2, boost::any_cast<int>(r) );
+				message->GetArgumentList()->SetInt( 3, boost::any_cast<int>(r) );
 			}
 			else if ( isUint(r) )
 			{
-				message->GetArgumentList()->SetInt( 2, boost::any_cast<uint>(r) );
+				message->GetArgumentList()->SetInt( 3, boost::any_cast<uint>(r) );
 			}
 			else if ( isFloat(r) )
 			{
-				message->GetArgumentList()->SetDouble( 2, boost::any_cast<float>(r) );
+				message->GetArgumentList()->SetDouble( 3, boost::any_cast<float>(r) );
 			}
 			else if ( isDouble(r) )
 			{
-				message->GetArgumentList()->SetDouble( 2, boost::any_cast<double>(r) );
+				message->GetArgumentList()->SetDouble( 3, boost::any_cast<double>(r) );
 			}
 			else if ( isBool(r) )
 			{
-				message->GetArgumentList()->SetBool( 2, boost::any_cast<bool>(r) );
+				message->GetArgumentList()->SetBool( 3, boost::any_cast<bool>(r) );
 			}
 			
 			browser->SendProcessMessage(PID_RENDERER, message);
@@ -195,8 +211,8 @@ public:
 	bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message )
 	{
 		
-		std::string s = message->GetName();
-		std::cout << "CefClientTests OnProcessMessageReceived " << s << std::endl;
+		std::wstring s = message->GetName().ToWString();
+		std::wcout << L"CefClientTests OnProcessMessageReceived " << s << std::endl;
 		/*	
 		if( s == "ExecuteFunction" )
 		{	
@@ -355,25 +371,51 @@ public:
 			}
 		}
 		*/
-		if( s == "ReadyForBindings" )
+		if( s == glr::cef_client::READY_FOR_BINDINGS )
 		{ 
 			numSent_ = sendTestBindings(browser);
 			
-			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create("AllBindingsSent");
-			m->GetArgumentList()->SetInt( 0, numSent_ );
+			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( glr::cef_client::ALL_BINDINGS_SENT );
+			m->GetArgumentList()->SetString( 0, "TESTING" );
+			m->GetArgumentList()->SetInt( 1, numSent_ );
 			browser->SendProcessMessage(PID_RENDERER, m);
 			
 			std::cout << "ReadyForBindings finished with " << numSent_ << " messages(s) sent to the render process." << std::endl;
 		}
-		else if( s == "AllBindingsReceived" )
+		else if( s == glr::cef_client::ALL_BINDINGS_RECEIVED )
 		{ 
 			//browser_->GetMainFrame()->LoadURL(url_);
 			allBindingsReceived_ = true;
 		}
-		else if( s == "Exception" )
+		else if( s == glr::cef_client::SUCCESS )
+		{
+			// TODO: deal with success
+			std::string messageId = message->GetArgumentList()->GetString( 0 );
+
+			auto it = messageIdMap.find(messageId);
+			if (it == messageIdMap.end())
+			{
+				std::string msg = "Success message id '" + messageId + "' does not match any ids of sent messages.";
+				BOOST_FAIL( msg );
+			}
+			
+			messageIdMap.erase(it);
+			std::cout << "GuiComponent Success: " << messageId << std::endl;
+		}
+		else if( s == glr::cef_client::EXCEPTION )
 		{ 
 			//browser_->GetMainFrame()->LoadURL(url_);
-			BOOST_FAIL( "Exception sent from cef_client." );
+			glr::cef_client::Exception e = (glr::cef_client::Exception) message->GetArgumentList()->GetInt( 1 );
+			std::string errorMessage = message->GetArgumentList()->GetString( 2 );
+			// c++ exception doesn't seem to support wchar...
+			//std::wstring message = message->GetArgumentList()->GetWString( 2 );
+			
+			std::stringstream msgStream;
+			msgStream << errorMessage << " - Exception type: " << e;
+			
+			std::string msg = msgStream.str();
+			
+			BOOST_FAIL( msg );
 		}
 		
 		return true;
@@ -381,7 +423,12 @@ public:
 	
 	bool isAllBindingsReceived()
 	{
-		return allBindingsReceived_;
+		return allBindingsReceived_ && messageIdMap.empty();
+	}
+	
+	bool isAllBindingsSuccessful()
+	{
+		return messageIdMap.empty();
 	}
 
 private:
@@ -441,7 +488,7 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 	if (d.browser.get() == nullptr)
 		BOOST_FAIL( "Could not create CEF browser." );
 	
-	// TODO: haven't actually developed the tests yet...
+	
 	bool doWork = true;
 	auto start = std::chrono::system_clock::now();
 	while ( doWork )
@@ -455,8 +502,15 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 	
 	if ( !d.client->isAllBindingsReceived() )
 		BOOST_FAIL( "Not all bindings were received by the cef_client." );
+	if ( !d.client->isAllBindingsSuccessful() )
+		BOOST_FAIL( "Not all bindings were confirmed successful by the cef_client...it's possible they may have taken too long?" );
+	
+	// Properly dispose of the browser
+	d.browser->GetHost()->CloseBrowser( false );
 	
 	CefShutdown();
 }
+
+// TODO: maybe make an html page to actually call some of the bound functions...test the back and forth.
 
 BOOST_AUTO_TEST_SUITE_END()
