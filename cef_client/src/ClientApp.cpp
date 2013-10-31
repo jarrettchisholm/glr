@@ -412,7 +412,7 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	return false;
 }
 
-void ClientApp::sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, uint numBindings)
+void ClientApp::sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, unsigned int numBindings)
 {
 	CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( ALL_BINDINGS_RECEIVED );
 	m->GetArgumentList()->SetInt( 0, numBindings );
@@ -533,7 +533,7 @@ void ClientApp::SetList(CefRefPtr<CefListValue> source, CefRefPtr<CefV8Value> ta
 		SetListValue(target, i, source);
 }
 
-CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, uint index)
+CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, unsigned int index)
 {
 	CefValueType type = message->GetArgumentList()->GetType( index );
 	switch (type) {

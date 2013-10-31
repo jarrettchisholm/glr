@@ -29,7 +29,7 @@ public:
 	
 	/** HELPER FUNCTIONS **/
 	void copyToList(CefRefPtr<CefV8Value> value, int i, CefRefPtr<CefListValue> list);
-	CefRefPtr<CefV8Value> getValue(CefRefPtr<CefProcessMessage> message, uint index);
+	CefRefPtr<CefV8Value> getValue(CefRefPtr<CefProcessMessage> message, unsigned int index);
 	
 	// Transfer a V8 array to a List.
 	void SetList(CefRefPtr<CefV8Value> source, CefRefPtr<CefListValue> target);
@@ -62,7 +62,7 @@ public:
 	 */
 	void sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message);
 	void sendMessageSuccess(CefRefPtr<CefBrowser> browser, std::string messageId, std::wstring message);
-	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, uint numBindings);
+	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, unsigned int numBindings);
 	
 	/**
 	 * 

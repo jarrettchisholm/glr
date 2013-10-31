@@ -58,7 +58,7 @@ CallbackParameter::ParamType CallbackParameter::getType()
 	return type_;
 }
 
-CallbackParameter::ParamType CallbackParameter::setType(ParamType type)
+void CallbackParameter::setType(ParamType type)
 {
 	type_ = type;
 }

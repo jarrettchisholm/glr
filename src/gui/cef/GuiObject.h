@@ -13,7 +13,6 @@
 #include <map>
 
 #include "../IGuiObject.h"
-#include "../IAddFunctionListener.h"
 
 namespace glr {
 namespace gui {
@@ -68,7 +67,6 @@ private:
 	};
 
 	std::wstring name_;
-	IAddFunctionListener* addFunctionListener_;
 
 	std::map< std::wstring, int > functionTypeMap_;
 

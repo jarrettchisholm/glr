@@ -25,13 +25,15 @@
 import os
 import SCons
 
+isWindows = os.name == 'nt'
+
 # shortcuts
 Action = SCons.Action.Action
 Builder = SCons.Builder.Builder
 Tool = SCons.Tool
 
 class colorizer:
-	# define various colors
+	# define various colors		
 	cPurple	= '\033[95m'
 	cBlue 	= '\033[94m'
 	cGreen 	= '\033[92m'
@@ -67,6 +69,9 @@ class colorizer:
 			return self.c1+t+e+self.c2+" ==> "+e+"'"+self.c3+"%s" % (f) +e+"'"+e
 
 	def __init__(self,noColors=False):
+
+		if isWindows:
+			noColors = True
 
 		# just customize output, no colors
 		if noColors:
