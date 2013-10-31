@@ -118,9 +118,6 @@ GLuint Animation::getBindPoint()
 	return bindPoint_;
 }
 
-/**
- * Will set the animation time to runningTime.
- */
 void Animation::setAnimationTime(glmd::float32 runningTime)
 {
 	runningTime_ = runningTime;
@@ -128,7 +125,11 @@ void Animation::setAnimationTime(glmd::float32 runningTime)
 
 void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame)
 {
+	assert(startFrame >= 0);
+	assert(endFrame >= startFrame);
 	
+	startFrame_ = startFrame;
+	endFrame_ = endFrame;
 }
 
 const std::string Animation::getName()
@@ -368,19 +369,13 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 /**
  * Will generate the transformation matrices to be used to animate the model with the given bone data.
  */
-void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData, glmd::uint32 startFrame, glmd::uint32 endFrame)
-{
-	assert(startFrame >= 0);
-	assert(endFrame >= startFrame);
-	
+void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData)
+{	
 	glm::mat4 identity = glm::mat4();
 	//duration_= 2.9f;
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
 	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);
-	
-	startFrame_ = startFrame;
-	endFrame_ = endFrame;
 	
 	//std::cout << "animationTime: " << animationTime << std::endl;
 

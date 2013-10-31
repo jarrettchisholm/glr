@@ -391,8 +391,14 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	std::wstring s = name.ToWString();
 	CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
 	
-	// Implementation for setMessageCallback
-	if (s == L"setMessageCallback" && arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsFunction())
+	if (exception.length() > 0)
+	{
+		// Handle exceptions
+		std::wstring msg = L"cef3_client exception was detected for '" + s + L"' - Exception: " + exception.ToWString();
+		std::wcout << msg << std::endl;
+		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
+	}	
+	else if (s == L"setMessageCallback" && arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsFunction())
 	{
 		std::wcout << L"cef3_client Execute --- setMessageCallback" << std::endl;
 		std::wstring messageName = arguments[0]->GetStringValue();
@@ -404,8 +410,9 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	else
 	{
 		// TODO: error
-		std::wcout << L"cef3_client cannot execute function '" << s << L"'" << std::endl;
-		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, L"Cannot execute function '" + s + L"'.");
+		std::wstring msg = L"Cannot execute function '" + s + L"'.";
+		std::wcout << L"cef_client - " << msg << std::endl;
+		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
 	}
 	
 	// Function does not exist.

@@ -37,14 +37,26 @@ public:
 	GLuint getBufferId();
 	GLuint getBindPoint();
 	
+	/**
+	 * Will set the animation time to runningTime.
+	 */
 	void setAnimationTime(glmd::float32 runningTime);
+	/**
+	 * Set the animation to run only between the given start and end frame.
+	 * 
+	 * Note: A value of 0 for the start and end frame will run through all frames of the animation.
+	 * 
+	 * endFrame must be larger than or equal to startFrame.  
+	 * 
+	 * A value below zero for the start or end frame is invalid.
+	 */
 	void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame);
 	
 	const std::string getName();
 	
 	// TODO: make rootBoneNode const?
 	// TODO: Should we really be sending in BoneData&?  Shouldn't we send IMesh* or something?
-	void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData, glmd::uint32 startFrame = 0, glmd::uint32 endFrame = 0);
+	void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData);
 	
 	void generateIdentityBoneTransforms(glmd::uint32 numBones);
 

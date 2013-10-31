@@ -255,8 +255,8 @@ void Model::render(shaders::IShaderProgram* shader)
 		{			
 			glw::Animation* a = currentAnimation_->getAnimation();
 			a->setAnimationTime( currentAnimation_->getAnimationTime() );
-			//a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
-			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame());
+			a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
+			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());
 			a->bind();
 			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, a->getBindPoint() );
 		}

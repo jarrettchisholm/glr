@@ -12,6 +12,7 @@
 
 #include <string>
 #include <map>
+#include <mutex>
 
 #include <GL/glew.h>
 
@@ -149,6 +150,7 @@ private:
     // The number of unique message ids will be limited by the size of uint32 (but I don't think this will be a problem)
     glmd::uint32 numMessagesSent_;
     std::map< std::string, glmd::uint32 > messageIdMap_;
+    std::mutex messageIdMapMutex_;
 
 	std::map< std::wstring, std::unique_ptr<GuiObject> > guiObjects_;
 

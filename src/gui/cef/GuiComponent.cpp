@@ -152,7 +152,9 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		{
 			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
 			std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+			messageIdMapMutex_.lock();
 			messageIdMap_[messageId] = numMessagesSent_;
+			messageIdMapMutex_.unlock();
 			numMessagesSent_++;
 			
 			CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::FUNCTION_RESULT );
@@ -211,7 +213,9 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	{ 
 		glmd::uint32 numSent = sendBoundFunctionsToRenderProcess();
 		std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+		messageIdMapMutex_.lock();
 		messageIdMap_[messageId] = numMessagesSent_;
+		messageIdMapMutex_.unlock();
 		numMessagesSent_++;
 		
 		CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( cef_client::ALL_BINDINGS_SENT );
@@ -236,6 +240,8 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	{ 
 		// TODO: deal with success
 		std::string messageId = message->GetArgumentList()->GetString( 0 );
+		
+		messageIdMapMutex_.lock();
 		auto it = messageIdMap_.find(messageId);
 		if (it == messageIdMap_.end())
 		{
@@ -245,6 +251,8 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		}
 		
 		messageIdMap_.erase(it);
+		messageIdMapMutex_.unlock();
+		
 		//BOOST_LOG_TRIVIAL(warning) << "Success message not yet implemented.";
 		std::cout << "GuiComponent Success: " << messageId << std::endl;
 	}
@@ -494,7 +502,9 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 	for ( auto& it : guiObjects_ )
 	{
 		std::string messageId = "Message_" + std::to_string(numMessagesSent_);
+		messageIdMapMutex_.lock();
 		messageIdMap_[messageId] = numMessagesSent_;
+		messageIdMapMutex_.unlock();
 		numMessagesSent_++;
 		
 		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create( cef_client::ADD_OBJECT );
@@ -509,7 +519,10 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 		for ( auto& name : names )
 		{
 			messageId = "Message_" + std::to_string(numMessagesSent_);
+			messageIdMapMutex_.lock();
 			messageIdMap_[messageId] = numMessagesSent_;
+			messageIdMapMutex_.unlock();
+			
 			numMessagesSent_++;
 			
 			message->GetArgumentList()->SetString( 0, messageId );
