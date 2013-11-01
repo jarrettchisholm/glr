@@ -14,14 +14,34 @@
 namespace glr {
 namespace glw {
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
-		const std::string path, 
+		const std::string name,
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector<VertexBoneData > bones,
 		BoneData boneData)
-	: openGlDevice_(openGlDevice), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
+	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
+{
+	load();
+}
+
+Mesh::Mesh(IOpenGlDevice* openGlDevice,
+		const std::string name,
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	)
+	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors)
+{
+	bones_ = std::vector< VertexBoneData >();
+	boneData_ = BoneData();
+	
+	load();
+}
+
+void Mesh::load()
 {
 	BOOST_LOG_TRIVIAL(debug) << "loading mesh into video memory...";
 
@@ -47,25 +67,30 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
+	glBufferData(GL_ARRAY_BUFFER, colors_.size() * sizeof(glm::vec4), &colors_[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	
 	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
 	// TODO: We might want to not load any bone data (if there is none) and use a different shader?  Not sure best way to handle this.....?
 	// Deal with not having any bones
 	if (bones_.size() == 0)
 	{
-		bones_.resize( vertices.size() );
+		bones_.resize( vertices_.size() );
 		for (auto& b : bones_)
 		{
 			b.weights = glm::vec4(0.25f);
 		}
 	}
 	
-	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
 	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(3);
-	glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
+	glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
 	
 	/*
 	std::vector< glm::ivec4 > boneIds = std::vector< glm::ivec4 >();

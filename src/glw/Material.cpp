@@ -15,7 +15,7 @@ namespace glr {
 namespace glw {
 Material::Material(
 		IOpenGlDevice* openGlDevice,
-		const std::string path,
+		const std::string name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -23,7 +23,7 @@ Material::Material(
 		glm::detail::float32 shininess,
 		glm::detail::float32 strength
 		)
-	: openGlDevice_(openGlDevice), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
+	: openGlDevice_(openGlDevice), name_(name), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
 {
 	BOOST_LOG_TRIVIAL(debug) << "loading material...";
 	

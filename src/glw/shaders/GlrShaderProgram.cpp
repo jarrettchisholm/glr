@@ -19,6 +19,10 @@ GlrShaderProgram::GlrShaderProgram(std::string source) : source_(source)
 {
 }
 
+GlrShaderProgram::GlrShaderProgram(std::string name, std::string source) : name_(name), source_(source)
+{
+}
+
 
 GlrShaderProgram::~GlrShaderProgram()
 {
@@ -26,7 +30,7 @@ GlrShaderProgram::~GlrShaderProgram()
 
 void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Processing shader program.";
+	BOOST_LOG_TRIVIAL(debug) << "Processing shader program '" << name_ << "'.";
 
 	// Pre-Process shaders
 	GlrPreProcessor pp(source_);
@@ -59,7 +63,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 			{
 				BOOST_LOG_TRIVIAL(error) << s.first;
 			}
-			std::string msg("Could not find shader.");
+			std::string msg("Could not find shader '" + name_ + "'.");
 			BOOST_LOG_TRIVIAL(error) << msg;
 			throw exception::GlException(msg);
 		}

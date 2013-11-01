@@ -22,6 +22,28 @@ Model::Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDe
 	initialize(modelData);
 }
 
+Model::Model(glw::Mesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+{
+	meshManager_ = openGlDevice_->getMeshManager();
+	materialManager_ = openGlDevice_->getMaterialManager();
+	textureManager_ = openGlDevice_->getTextureManager();
+	animationManager_ = openGlDevice_->getAnimationManager();
+	
+	meshes_.push_back( static_cast<glw::Mesh*>(mesh) );
+	textures_.push_back( nullptr );
+	materials_.push_back( nullptr );
+	
+	animations_ = std::map< std::string, std::unique_ptr<Animation>>();
+	
+	rootBoneNode_ = glw::BoneNode();
+	
+	currentAnimation_ = nullptr;
+	
+	// NOTE: the below is prime for a memory leak
+	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
+	emptyAnimation_->generateIdentityBoneTransforms( 100 );
+}
+
 /**
  * Copy constructor.
  */
@@ -54,7 +76,7 @@ Model::Model(const Model& other)
 	currentAnimation_ = other.currentAnimation_;
 	
 	// TODO: make this not crappy
-	emptyAnimation_ = new glw::Animation( openGlDevice_ );
+	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
 	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 
@@ -86,7 +108,7 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		
 		glw::Texture* texture = textureManager_->getTexture(d->textureData.filename);
 		if (texture == nullptr)
-			texture = textureManager_->addTexture(d->textureData.filename);
+			texture = textureManager_->addTexture(d->textureData.filename, d->textureData.filename);
 		
 		textures_.push_back( texture );
 
@@ -177,7 +199,7 @@ struct AnimationData {
 	}
 	
 	// TODO: make this not crappy
-	emptyAnimation_ = new glw::Animation( openGlDevice_ );
+	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
 	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 

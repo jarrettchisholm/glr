@@ -13,6 +13,7 @@
 in vec2 textureCoord;
 in vec3 normalDirection;
 in vec3 lightDirection;
+in vec4 color;
 in float bug;
 
 @bind Texture
@@ -25,7 +26,8 @@ layout(std140) uniform Materials
 };
 
 
-void main() {
+void main()
+{
 	vec3 ct, cf;
 	vec4 texel;
 	float intensity, at, af;

@@ -195,6 +195,8 @@ void BasicSceneNode::render()
 	{
 		if (shaderProgram_ != nullptr) 
 		{
+			shaderProgram_->bind();
+			
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
 			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
 			int normalMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "normalMatrix");

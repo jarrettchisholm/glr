@@ -22,12 +22,12 @@ MaterialManager::~MaterialManager()
 {
 }
 
-Material* MaterialManager::getMaterial(const std::string filename)
+Material* MaterialManager::getMaterial(const std::string name)
 {
-	if ( materials_.find(filename) != materials_.end() )
+	if ( materials_.find(name) != materials_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Material found.";
-		return materials_[filename].get();
+		return materials_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Material not found.";
@@ -36,7 +36,7 @@ Material* MaterialManager::getMaterial(const std::string filename)
 }
 
 Material* MaterialManager::addMaterial(
-		const std::string path,
+		const std::string name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -47,15 +47,15 @@ Material* MaterialManager::addMaterial(
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading material...";
 
-	if ( materials_.find(path) != materials_.end() && materials_[path].get() != nullptr )
+	if ( materials_.find(name) != materials_.end() && materials_[name].get() != nullptr )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Material already exists.";
-		return materials_[path].get();
+		return materials_[name].get();
 	}
 
-	materials_[path] = std::unique_ptr<Material>(new Material(openGlDevice_, path, ambient, diffuse, specular, emission, shininess, strength));
+	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength));
 
-	return materials_[path].get();
+	return materials_[name].get();
 }
 }
 }

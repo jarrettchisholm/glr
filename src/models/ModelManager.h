@@ -29,14 +29,18 @@
 
 namespace glr {
 namespace models {
+
 class ModelManager : public IModelManager {
 public:
 	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
 
-	virtual IModel* getModel(const std::string filename);
-	virtual void loadModel(const std::string filename);
-	virtual std::unique_ptr<IModel> createModel(const std::string filename);
+	virtual IModel* getModel(const std::string name);
+	virtual void loadModel(const std::string name, const std::string filename);
+	virtual std::unique_ptr<IModel> createModel(const std::string name);
+	
+	// TESTING
+	virtual std::unique_ptr<IModel> createModel(glw::Mesh* mesh);
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
@@ -47,6 +51,7 @@ private:
 	
 	ModelLoader modelLoader_;
 };
+
 }
 }
 #endif /* MODELMANAGER_H_ */

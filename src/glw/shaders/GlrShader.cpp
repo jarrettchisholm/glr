@@ -19,6 +19,10 @@ GlrShader::GlrShader(std::string source) : source_(source)
 {
 }
 
+GlrShader::GlrShader(std::string name, std::string source) : name_(name), source_(source)
+{
+}
+
 
 GlrShader::~GlrShader()
 {
@@ -26,7 +30,7 @@ GlrShader::~GlrShader()
 
 void GlrShader::process(std::map< std::string, std::string > defineMap)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Processing shader.";
+	BOOST_LOG_TRIVIAL(debug) << "Processing shader '" << name_ << "'.";
 	GlrPreProcessor pp(source_);
 	pp.process(defineMap);
 	processedSource_ = pp.getProcessedSource();

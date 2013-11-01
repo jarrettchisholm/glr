@@ -22,6 +22,8 @@
 
 #include "IOpenGlDevice.h"
 
+#include "../common/utilities/Macros.h"
+
 namespace glr {
 namespace glw {
 
@@ -29,7 +31,7 @@ namespace glmd = glm::detail;
 
 class Animation : public IAnimation {
 public:
-	Animation(IOpenGlDevice* openGlDevice);
+	Animation(IOpenGlDevice* openGlDevice, const std::string name);
 	Animation(IOpenGlDevice* openGlDevice, const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	virtual ~Animation();
 	
@@ -52,14 +54,14 @@ public:
 	 */
 	void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame);
 	
-	const std::string getName();
-	
 	// TODO: make rootBoneNode const?
 	// TODO: Should we really be sending in BoneData&?  Shouldn't we send IMesh* or something?
 	void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData);
 	
 	void generateIdentityBoneTransforms(glmd::uint32 numBones);
-
+	
+	virtual const std::string getName();
+	
 private:
 	GLuint bufferId_;
 	GLuint bindPoint_;

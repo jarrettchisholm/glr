@@ -34,6 +34,7 @@ namespace shaders {
 class GlrShaderProgram {
 public:
 	GlrShaderProgram(std::string source);
+	GlrShaderProgram(std::string name, std::string source);
 	virtual ~GlrShaderProgram();
 
 	/**

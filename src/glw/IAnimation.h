@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "../common/utilities/Macros.h"
+
 namespace glr {
 namespace glw {
 

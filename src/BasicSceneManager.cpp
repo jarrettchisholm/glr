@@ -93,7 +93,7 @@ ILight* BasicSceneManager::createLight(const std::string name)
 
 void BasicSceneManager::drawAll()
 {
-	defaultShaderProgram_->bind();
+	//defaultShaderProgram_->bind();
 	
 	for ( auto it = cameras_.begin(); it != cameras_.end(); ++it )
 		it->second->render();
@@ -122,9 +122,32 @@ void BasicSceneManager::addCamera(std::shared_ptr<ICamera> camera)
 	node->attach(defaultShaderProgram_);
 }
 
+void BasicSceneManager::addSceneNode(std::shared_ptr<ISceneNode> sceneNode)
+{
+	// Error check
+	if ( sceneNodes_.find(sceneNode->getName()) != sceneNodes_.end())
+	{
+		std::stringstream msg;
+		msg << "SceneNode with name '" << sceneNode->getName() << "' already exists.";
+		BOOST_LOG_TRIVIAL(error) << msg.str();
+		throw exception::Exception(msg.str());
+	}
+
+	std::shared_ptr<ISceneNode> node = sceneNode;
+	sceneNodes_[sceneNode->getName()] = node;
+
+	// TODO: should we attach a default if no shader exists for scene node?
+	//node->attach(defaultShaderProgram_);
+}
+
 void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram)
 {
 	defaultShaderProgram_ = shaderProgram;
+}
+
+shaders::IShaderProgram* BasicSceneManager::getDefaultShaderProgram()
+{
+	return defaultShaderProgram_;
 }
 
 ICamera* BasicSceneManager::getActiveCamera()

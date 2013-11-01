@@ -15,9 +15,8 @@
 namespace glr {
 namespace glw {
 
-Animation::Animation(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+Animation::Animation(IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name)
 {
-	name_ = std::string("NULL");
 	duration_ = 0.0f;
 	ticksPerSecond_ = 0.0f;
 	animatedBoneNodes_ = std::map< std::string, AnimatedBoneNode >();

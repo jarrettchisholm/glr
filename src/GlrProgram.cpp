@@ -93,6 +93,17 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	if ( !settings_.defaultTextureDir.empty() )
 		settings.defaultTextureDir = settings_.defaultTextureDir;
 	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice(settings) );
+	
+	glw::GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		std::stringstream msgStream;
+		msgStream << "Error loading opengl: " << err.name;
+		std::string msg = msgStream.str();
+		
+		BOOST_LOG_TRIVIAL(error) << msg;
+		throw exception::GlException( msg );
+	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Initialize shader programs.";
 	// initialize shader program manager and scene manager AFTER we create the window

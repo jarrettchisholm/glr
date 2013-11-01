@@ -19,6 +19,8 @@
 #include "IOpenGlDevice.h"
 #include "shaders/IShaderProgram.h"
 
+#include "../common/utilities/Macros.h"
+
 namespace glr {
 namespace glw {
 	
@@ -38,7 +40,7 @@ class Material {
 public:
 	Material(
 		IOpenGlDevice* openGlDevice,
-		const std::string path,
+		const std::string name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -52,7 +54,9 @@ public:
 	GLuint getBufferId();
 	GLuint getBindPoint();
 
+	GETSET(std::string, name_, Name)
 private:
+	std::string name_;
 	void loadIntoVideoMemory();
 	
 	IOpenGlDevice* openGlDevice_;

@@ -25,8 +25,8 @@ public:
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
-	virtual Texture* getTexture(const std::string filename);
-	virtual Texture* addTexture(const std::string filename);
+	virtual Texture* getTexture(const std::string name);
+	virtual Texture* addTexture(const std::string name, const std::string filename);
 	
 private:
 	IOpenGlDevice* openGlDevice_;

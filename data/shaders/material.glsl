@@ -1,7 +1,8 @@
 #type na
 #name material
 
-struct Material {
+struct Material
+{
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;

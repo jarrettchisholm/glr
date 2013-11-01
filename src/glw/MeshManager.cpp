@@ -23,12 +23,12 @@ MeshManager::~MeshManager()
 {
 }
 
-Mesh* MeshManager::getMesh(const std::string filename)
+Mesh* MeshManager::getMesh(const std::string name)
 {
-	if ( meshes_.find(filename) != meshes_.end() )
+	if ( meshes_.find(name) != meshes_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Mesh found.";
-		return meshes_[filename].get();
+		return meshes_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Mesh not found.";
@@ -37,7 +37,7 @@ Mesh* MeshManager::getMesh(const std::string filename)
 }
 
 Mesh* MeshManager::addMesh(
-		const std::string path, 
+		const std::string name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -48,16 +48,38 @@ Mesh* MeshManager::addMesh(
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
 
-	if ( meshes_.find(path) != meshes_.end() && meshes_[path].get() != nullptr )
+	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Mesh already exists.";
-		return meshes_[path].get();
+		return meshes_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
-	meshes_[path] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, path, vertices, normals, textureCoordinates, colors, bones, boneData));
+	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData));
 
-	return meshes_[path].get();
+	return meshes_[name].get();
+}
+
+Mesh* MeshManager::addMesh(
+		const std::string name, 
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	)
+{
+	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
+
+	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
+	{
+		BOOST_LOG_TRIVIAL(debug) << "Mesh already exists.";
+		return meshes_[name].get();
+	}
+
+	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
+	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors));
+
+	return meshes_[name].get();
 }
 
 }

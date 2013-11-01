@@ -27,11 +27,11 @@ GlslShaderProgram::~GlslShaderProgram()
 
 void GlslShaderProgram::compile()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program.";
+	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program '" << name_ << "'.";
 
 	if ( programId_ < 0 )
 	{
-		BOOST_LOG_TRIVIAL(error) << "Could not load shader program - shader program already has an OpenGL id assigned to it.";
+		BOOST_LOG_TRIVIAL(error) << "Could not load shader program '" << name_ << "' - shader program already has an OpenGL id assigned to it.";
 		return;
 	}
 
@@ -52,9 +52,10 @@ void GlslShaderProgram::compile()
 	// NOTE: I need these in windows for some reason...?
 	glBindAttribLocation(programId_, 0, "in_Position");
 	glBindAttribLocation(programId_, 1, "in_Texture");
-	glBindAttribLocation(programId_, 2, "in_Color");
-	glBindAttribLocation(programId_, 3, "in_BoneIds");
-	glBindAttribLocation(programId_, 4, "in_BoneWeights");
+	glBindAttribLocation(programId_, 2, "in_Normal");
+	glBindAttribLocation(programId_, 3, "in_Color");
+	glBindAttribLocation(programId_, 4, "in_BoneIds");
+	glBindAttribLocation(programId_, 5, "in_BoneWeights");
 	
 	
 	glLinkProgram(programId_);
@@ -64,7 +65,7 @@ void GlslShaderProgram::compile()
 
 	if ( !linked )
 	{
-		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader program.";
+		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader program '" << name_ << "'.";
 
 		GLchar errorLog[1024] = { 0 };
 		glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
@@ -78,7 +79,7 @@ void GlslShaderProgram::compile()
 	
 	generateBindings();
 
-	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program.";
+	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program '" << name_ << "'.";
 }
 
 GLuint GlslShaderProgram::getGLShaderProgramId()

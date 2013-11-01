@@ -24,6 +24,8 @@
 #include "shaders/IShaderProgram.h"
 #include "IOpenGlDevice.h"
 
+#include "../common/utilities/Macros.h"
+
 
 namespace glr {
 namespace glw {
@@ -33,20 +35,30 @@ class IOpenGlDevice;
 class Mesh {
 public:
 	Mesh(IOpenGlDevice* openGlDevice,
-		const std::string path, 
-		std::vector< glm::vec3 > vertices, 
+		const std::string name,
+		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< VertexBoneData > bones,
-		BoneData boneData);
+		BoneData boneData
+	);
+	Mesh(IOpenGlDevice* openGlDevice,
+		const std::string name,
+		std::vector< glm::vec3 > vertices,
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	);
 	virtual ~Mesh();
 
 	void render();
 	
 	BoneData& getBoneData();
-
+	
+	GETSET(std::string, name_, Name)
 private:
+	std::string name_;
 	IOpenGlDevice* openGlDevice_;
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[5];
@@ -60,6 +72,8 @@ private:
 	BoneData boneData_;
 
 	std::string textureFileName_;
+	
+	void load();
 };
 
 }

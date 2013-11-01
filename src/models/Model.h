@@ -33,10 +33,13 @@
 
 namespace glr {
 namespace models {
+
 class Model : public IModel {
 public:
 	Model(glw::IOpenGlDevice* openGlDevice);
 	Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDevice* openGlDevice);
+	// TESTING
+	Model(glw::Mesh* mesh, glw::IOpenGlDevice* openGlDevice);	
 	Model(const Model& other);
 	virtual ~Model();
 
@@ -80,6 +83,7 @@ private:
 	void destroy();
 
 };
+
 }
 }
 #endif /* MODEL_H_ */

@@ -42,6 +42,7 @@ namespace shaders {
 class GlrShader {
 public:
 	GlrShader(std::string source);
+	GlrShader(std::string name, std::string source);
 	virtual ~GlrShader();
 
 	void process(std::map< std::string, std::string > defineMap);

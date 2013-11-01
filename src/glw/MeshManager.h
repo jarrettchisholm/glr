@@ -36,6 +36,13 @@ public:
 		std::vector< VertexBoneData > bones,
 		BoneData boneData
 	);
+	virtual Mesh* addMesh(
+		const std::string path, 
+		std::vector< glm::vec3 > vertices, 
+		std::vector< glm::vec3 > normals,
+		std::vector< glm::vec2 > textureCoordinates,
+		std::vector< glm::vec4 > colors
+	);
 	
 private:	
 	IOpenGlDevice* openGlDevice_;

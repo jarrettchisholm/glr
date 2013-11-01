@@ -42,14 +42,14 @@ ModelManager::~ModelManager()
  * @return The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
  * the ModelManager.
  */
-IModel* ModelManager::getModel(const std::string filename)
+IModel* ModelManager::getModel(const std::string name)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Retrieving model '" << filename << "'.";
+	BOOST_LOG_TRIVIAL(debug) << "Retrieving model '" << name << "'.";
 	
-	if ( models_.find(filename) != models_.end() )
+	if ( models_.find(name) != models_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Model found.";
-		return models_[filename].get();
+		return models_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
@@ -60,11 +60,11 @@ IModel* ModelManager::getModel(const std::string filename)
 /**
  * Loads the model from the given filename.
  */
-void ModelManager::loadModel(const std::string filename)
+void ModelManager::loadModel(const std::string name, const std::string filename)
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
 
-	if ( models_[filename] != 0 )
+	if ( models_[name] != 0 )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Model found...No need to load.";
 		//return models_[filename].get();
@@ -73,7 +73,7 @@ void ModelManager::loadModel(const std::string filename)
 	// Note: We allow the modelData shared pointer to die at the end of this method
 	std::vector< std::shared_ptr<ModelData> > modelData = modelLoader_.loadModel( filename );
 
-	models_[filename] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
+	models_[name] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
 
 	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
 
@@ -84,21 +84,29 @@ void ModelManager::loadModel(const std::string filename)
  * @return A unique pointer to a model object.  The model is a copy of the model that was loaded
  * from the specified file.
  */
-std::unique_ptr<IModel> ModelManager::createModel(const std::string filename)
+std::unique_ptr<IModel> ModelManager::createModel(const std::string name)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Creating model '" << filename << "'.";
+	BOOST_LOG_TRIVIAL(debug) << "Creating model '" << name << "'.";
 	
-	if ( models_.find(filename) != models_.end() )
+	if ( models_.find(name) != models_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Model found.";
 		
 		// Create a COPY of the model, and returns it wrapped in a unique pointer
-		return std::unique_ptr<IModel>( new Model(*models_[filename].get()) );
+		return std::unique_ptr<IModel>( new Model(*models_[name].get()) );
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
 	
 	return std::unique_ptr<IModel>( nullptr );
+}
+
+// TESTING
+std::unique_ptr<IModel> ModelManager::createModel(glw::Mesh* mesh)
+{
+	BOOST_LOG_TRIVIAL(debug) << "NOTE: Method 'ModelManager::createModel(glw::IMesh* mesh)' is for testing purposes only!";
+	
+	return std::unique_ptr<IModel>( new Model(mesh, openGlDevice_) );
 }
 
 }

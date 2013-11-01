@@ -28,6 +28,7 @@ public:
 	virtual ILight* createLight(const std::string name) = 0;
 
 	virtual void addCamera(std::shared_ptr<ICamera> camera) = 0;
+	virtual void addSceneNode(std::shared_ptr<ISceneNode> sceneNode) = 0;
 
 	virtual ISceneNode* getSceneNode(const std::string& name) = 0;
 	virtual ICamera* getCamera(const std::string& name) = 0;
@@ -49,6 +50,7 @@ public:
 
 	virtual void drawAll() = 0;
 
+	// @Deprecated(?)
 	virtual ISceneNode* getRootSceneNode() = 0;
 
 	virtual models::IModelManager* getModelManager() = 0;

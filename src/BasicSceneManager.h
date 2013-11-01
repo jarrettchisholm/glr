@@ -26,6 +26,7 @@ public:
 	virtual void drawAll();
 	
 	virtual void addCamera(std::shared_ptr<ICamera> camera);
+	virtual void addSceneNode(std::shared_ptr<ISceneNode> sceneNode);
 
 	virtual models::IModelManager* getModelManager();
 	virtual shaders::IShaderProgramManager* getShaderProgramManager();
@@ -53,6 +54,7 @@ public:
 	virtual const std::vector<LightData>& getLightData();
 
 	void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
+	shaders::IShaderProgram* getDefaultShaderProgram();
 
 	ICamera* getActiveCamera();
 	const glm::mat4& getModelMatrix();

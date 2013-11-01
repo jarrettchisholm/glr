@@ -10,7 +10,8 @@ in vec3 normalDirection;
 @bind Texture
 uniform sampler2DArray tex;
 
-void main() {
+void main()
+{
 	
 	gl_FragColor = texture2DArray(tex, vec3(textureCoord, 1));
 	

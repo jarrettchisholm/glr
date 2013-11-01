@@ -177,8 +177,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 	{
 		if ( isShader(entry.second))
 		{
-			BOOST_LOG_TRIVIAL(debug) << "Shader: " << entry.first;
-			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.second));
+			BOOST_LOG_TRIVIAL(debug) << "Shader Found: " << entry.first;
+			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second));
 			glrShaderMap_[entry.first] = s;
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
 			//if (!glrShaderMap_[entry.first]->containsPreProcessorCommands()) {
@@ -187,8 +187,8 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		}
 		else if ( isProgram(entry.second))
 		{
-			BOOST_LOG_TRIVIAL(debug) << "Shader Program: " << entry.first;
-			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.second));
+			BOOST_LOG_TRIVIAL(debug) << "Shader Program Found: " << entry.first;
+			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second));
 			glrProgramMap_[entry.first] = sp;
 		}
 		else

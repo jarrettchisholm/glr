@@ -15,17 +15,19 @@
 #include "IOpenGlDevice.h"
 
 #include "../common/utilities/ImageLoader.h"
+#include "../common/utilities/Macros.h"
 
 namespace glr {
 namespace glw {
+
 namespace glmd = glm::detail;
 
 class IOpenGlDevice;
 
 class Texture {
 public:
-	Texture(IOpenGlDevice* openGlDevice);
-	Texture(utilities::Image* image, IOpenGlDevice* openGlDevice);
+	Texture(IOpenGlDevice* openGlDevice, const std::string name);
+	Texture(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name);
 	virtual ~Texture();
 
 	void bind(GLuint texturePosition = 0);
@@ -33,7 +35,10 @@ public:
 	GLuint getBufferId();
 	GLuint getBindPoint();
 
-private:	
+	GETSET(std::string, name_, Name)
+
+private:
+	std::string name_;
 	IOpenGlDevice* openGlDevice_;
 	GLuint bufferId_;
 	GLuint bindPoint_;
@@ -42,6 +47,7 @@ private:
 
 	void loadIntoVideoMemory(utilities::Image* image);
 };
+
 }
 }
 #endif /* TEXTURE_H_ */

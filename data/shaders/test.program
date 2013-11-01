@@ -1,0 +1,5 @@
+#name test
+#type program
+
+#include "shader.vert"
+#include "test.frag"

@@ -24,12 +24,12 @@ TextureManager::~TextureManager()
 {
 }
 
-Texture* TextureManager::getTexture(const std::string filename)
+Texture* TextureManager::getTexture(const std::string name)
 {
-	if ( textures_.find(filename) != textures_.end() )
+	if ( textures_.find(name) != textures_.end() )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Texture found.";
-		return textures_[filename].get();
+		return textures_[name].get();
 	}
 
 	BOOST_LOG_TRIVIAL(debug) << "Texture not found.";
@@ -37,14 +37,14 @@ Texture* TextureManager::getTexture(const std::string filename)
 	return nullptr;
 }
 
-Texture* TextureManager::addTexture(const std::string filename)
+Texture* TextureManager::addTexture(const std::string name, const std::string filename)
 {
 	BOOST_LOG_TRIVIAL(debug) << "Loading texture...";
 
-	if ( textures_.find(filename) != textures_.end() && textures_[filename].get() != nullptr )
+	if ( textures_.find(name) != textures_.end() && textures_[name].get() != nullptr )
 	{
 		BOOST_LOG_TRIVIAL(debug) << "Texture already exists.";
-		return textures_[filename].get();
+		return textures_[name].get();
 	}
 
 	std::string basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
@@ -62,9 +62,9 @@ Texture* TextureManager::addTexture(const std::string filename)
 	BOOST_LOG_TRIVIAL(debug) << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
 
 	BOOST_LOG_TRIVIAL(debug) << "Creating texture.";
-	textures_[filename] = std::unique_ptr<Texture>(new Texture(image.get(), openGlDevice_));
+	textures_[name] = std::unique_ptr<Texture>(new Texture(image.get(), openGlDevice_, name));
 
-	return textures_[filename].get();
+	return textures_[name].get();
 }
 
 }

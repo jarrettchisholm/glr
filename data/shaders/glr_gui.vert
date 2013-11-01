@@ -12,7 +12,8 @@ out vec2 textureCoord;
 out vec3 normalDirection;
 out vec3 lightDirection;
 
-void main() {
+void main()
+{
 	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
 	
 	textureCoord = in_Texture;

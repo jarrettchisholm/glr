@@ -11,11 +11,11 @@
 namespace glr {
 namespace glw {
 	
-Texture::Texture(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+Texture::Texture(IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name)
 {
 }
 
-Texture::Texture(utilities::Image* image, IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+Texture::Texture(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name)
 {
 	if ( image == nullptr )
 		bufferId_ = 0;

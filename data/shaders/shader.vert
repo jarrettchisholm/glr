@@ -15,6 +15,7 @@
 
 in vec3 in_Position;
 in vec2 in_Texture;
+in vec4 in_Color;
 in vec3 in_Normal;
 in ivec4 in_BoneIds;
 in vec4 in_BoneWeights;
@@ -22,6 +23,7 @@ in vec4 in_BoneWeights;
 out vec2 textureCoord;
 out vec3 normalDirection;
 out vec3 lightDirection;
+out vec4 color;
 out float bug;
 
 @bind Light
@@ -36,7 +38,8 @@ layout(std140) uniform Bones
 	mat4 bones[ MAX_BONES ];
 };
 
-void main() {
+void main()
+{
 	// Calculate the transformation on the vertex position based on the bone weightings
 	mat4 boneTransform = bones[ in_BoneIds[0] ] * in_BoneWeights[0];
     boneTransform     += bones[ in_BoneIds[1] ] * in_BoneWeights[1];
@@ -63,6 +66,7 @@ void main() {
 	vec4 lightDirTemp = viewMatrix * lights[0].direction;
 	lightDirection = normalize(vec3(lightDirTemp));
 	
+	color = in_Color;
 	
 	
 	// If we have any bugs, should highlight the vertex red or green

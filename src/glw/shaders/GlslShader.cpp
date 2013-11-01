@@ -44,11 +44,11 @@ GlslShader::~GlslShader()
 
 void GlslShader::compile()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Compiling shader.";
+	BOOST_LOG_TRIVIAL(debug) << "Compiling shader '" << name_ << "'.";
 
 	if ( shaderId_ < 0 )
 	{
-		std::string msg("Could not load shader - shader already has an OpenGL id assigned to it.");
+		std::string msg("Could not load shader '" + name_ + "' - shader already has an OpenGL id assigned to it.");
 		BOOST_LOG_TRIVIAL(error) << msg;
 		throw exception::GlException(msg);
 	}
@@ -59,7 +59,7 @@ void GlslShader::compile()
 	switch ( type_ )
 	{
 	case TYPE_NONE:
-		BOOST_LOG_TRIVIAL(warning) << "Could not load shader - shader type is not known.";
+		BOOST_LOG_TRIVIAL(warning) << "Could not load shader '" + name_ + "' - shader type is not known.";
 		break;
 
 	case TYPE_VERTEX:
@@ -75,7 +75,7 @@ void GlslShader::compile()
 		break;
 
 	case TYPE_TESSELLATION:
-		std::string msg("Could not load shader - tessellation shaders are not yet implemented.");
+		std::string msg("Could not load shader '" + name_ + "' - tessellation shaders are not yet implemented.");
 		BOOST_LOG_TRIVIAL(warning) << msg;
 		throw exception::GlException(msg);
 	}
@@ -100,7 +100,7 @@ void GlslShader::compile()
 	if ( compiled == GL_FALSE )
 	{
 		std::stringstream msg;
-		msg << "Could not initialize shader.";
+		msg << "Could not initialize shader '" << name_ << "'.";
 
 		GLint infoLogLength;
 		glGetShaderiv(shaderId_, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -118,7 +118,7 @@ void GlslShader::compile()
 	}
 
 
-	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader.";
+	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader '" << name_ << "'.";
 }
 
 IShader::Type GlslShader::getType()
