@@ -54,17 +54,6 @@ public:
 	virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler();
 	
 	/**
-	 * Exceptions available:
-	 * 
-	 * BIND_EXCEPTION		- when something bad happens during binding
-	 * EXECUTE_EXCEPTION	- when something bad happens during execution of a bound function
-	 * MESSAGE_EXCEPTION	
-	 */
-	void sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message);
-	void sendMessageSuccess(CefRefPtr<CefBrowser> browser, std::string messageId, std::wstring message);
-	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, unsigned int numBindings);
-	
-	/**
 	 * 
 	 * 
 	 * List of available functions:
@@ -117,6 +106,17 @@ private:
 	int totalBindingsReceived_;
 	bool allBindingsSentMessageReceived_;
 	bool readyForBindingsMessageSent_;
+	
+	/**
+	 * Exceptions available:
+	 * 
+	 * BIND_EXCEPTION		- when something bad happens during binding
+	 * EXECUTE_EXCEPTION	- when something bad happens during execution of a bound function
+	 * MESSAGE_EXCEPTION	
+	 */
+	void sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message);
+	void sendMessageSuccess(CefRefPtr<CefBrowser> browser, std::string messageId, std::wstring message);
+	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, uint numBindings);
 	
 
 	// NOTE: Must be at bottom

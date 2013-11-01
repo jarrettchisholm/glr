@@ -8,6 +8,8 @@
 #include "FunctionBinding.h"
 #include "AttributeBinding.h"
 
+#include "ExceptionList.h"
+
 #ifndef OBJECTBINDING_H_
 #define OBJECTBINDING_H_
 
@@ -49,6 +51,8 @@ private:
 	std::wstring name_;
 	std::vector< FunctionBinding > functions_;
 	std::vector< AttributeBinding > attributes_;
+
+	void sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message);
 
 	// NOTE: Must be at bottom
 public:

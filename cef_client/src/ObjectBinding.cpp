@@ -5,6 +5,8 @@
 #include "DuplicateFunctionException.h"
 #include "DuplicateAttributeException.h"
 
+#include "FunctionList.h"
+
 namespace glr {
 namespace cef_client {
 
@@ -23,8 +25,15 @@ ObjectBinding::~ObjectBinding()
 bool ObjectBinding::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {		
 	std::wstring s = name.ToWString();
+	CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
 	
-	// Implementation for “setMessageCallback”
+	if (exception.length() > 0)
+	{
+		// Handle exceptions
+		std::wstring msg = L"cef3_client exception was detected for '" + s + L"' - Exception: " + exception.ToWString();
+		std::wcout << msg << std::endl;
+		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
+	}
 	if ( hasFunction(s) )
 	{
 		std::wcout << "cef3_client Execute " << name_ << "." << s << std::endl;
@@ -51,7 +60,6 @@ bool ObjectBinding::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
 				message->GetArgumentList()->SetDouble( i+2, arguments[i]->GetDoubleValue() );
 		}
 		
-		CefRefPtr<CefV8Context> context = CefV8Context::GetCurrentContext();
 		context->GetBrowser()->SendProcessMessage(PID_BROWSER, message);
 		
 		return true;
@@ -112,6 +120,15 @@ const std::vector< FunctionBinding > ObjectBinding::getFunctions()
 const std::vector< AttributeBinding > ObjectBinding::getAttributes()
 {
 	return attributes_;
+}
+
+void ObjectBinding::sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message)
+{
+	CefRefPtr<CefProcessMessage> m = CefProcessMessage::Create( EXCEPTION );
+	m->GetArgumentList()->SetString( 0, messageId );
+	m->GetArgumentList()->SetInt( 1, exception );
+	m->GetArgumentList()->SetString( 2, message );
+	browser->SendProcessMessage(PID_BROWSER, m);
 }
 
 }
