@@ -185,8 +185,8 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 			else if ( utilities::isUint(r) )
 			{
-				m->GetArgumentList()->SetInt( 3, boost::any_cast<uint>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<uint>(r) << std::endl;
+				m->GetArgumentList()->SetInt( 3, boost::any_cast<unsigned int>(r) );
+				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<unsigned int>(r) << std::endl;
 			}
 			else if ( utilities::isFloat(r) )
 			{

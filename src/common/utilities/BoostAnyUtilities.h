@@ -24,7 +24,7 @@ bool isInt(const boost::any& operand)
 
 bool isUint(const boost::any& operand)
 {
-    return operand.type() == typeid(uint);
+    return operand.type() == typeid(unsigned int);
 }
 
 bool isFloat(const boost::any& operand)

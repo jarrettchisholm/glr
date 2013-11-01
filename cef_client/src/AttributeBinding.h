@@ -24,7 +24,7 @@ public:
 	AttributeBinding(std::wstring name, std::wstring valueWstring);
 	AttributeBinding(std::wstring name, std::string valueString);
 	AttributeBinding(std::wstring name, int valueInt);
-	AttributeBinding(std::wstring name, uint valueUint);
+	AttributeBinding(std::wstring name, unsigned int valueUint);
 	AttributeBinding(std::wstring name, bool valueBool);
 	AttributeBinding(std::wstring name, float valueFloat);
 	AttributeBinding(std::wstring name, double valueDouble);
@@ -38,7 +38,7 @@ public:
 	GETSET(std::wstring, valueWstring_, ValueWstring)
 	GETSET(std::string, valueString_, ValueString)
 	GETSET(int, valueInt_, ValueInt)
-	GETSET(uint, valueUint_, ValueUint)
+	GETSET(unsigned int, valueUint_, ValueUint)
 	GETSET(bool, valueBool_, ValueBool)
 	GETSET(float, valueFloat_, ValueFloat)
 	GETSET(double, valueDouble_, ValueDouble)
@@ -61,7 +61,7 @@ private:
 	std::wstring valueWstring_;
 	std::string valueString_;
 	int valueInt_;
-	uint valueUint_;
+	unsigned int valueUint_;
 	bool valueBool_;
 	float valueFloat_;
 	double valueDouble_;

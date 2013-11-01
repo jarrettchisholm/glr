@@ -42,7 +42,7 @@ public:
 	};
 
 	ParamType getType();
-	ParamType setType(ParamType type);
+	void setType(ParamType type);
 
 	GETSET(int, intValue_, Int)
 	GETSET(float, floatValue_, Float)

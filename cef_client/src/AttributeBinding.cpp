@@ -19,7 +19,7 @@ AttributeBinding::AttributeBinding(std::wstring name, int valueInt) : name_(name
 {
 }
 
-AttributeBinding::AttributeBinding(std::wstring name, uint valueUint) : name_(name), valueUint_(valueUint), isUint_(true)
+AttributeBinding::AttributeBinding(std::wstring name, unsigned int valueUint) : name_(name), valueUint_(valueUint), isUint_(true)
 {
 }
 
