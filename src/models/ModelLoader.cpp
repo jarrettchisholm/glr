@@ -53,7 +53,7 @@ ModelLoader::~ModelLoader()
  */
 std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string filename)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
+	LOG_DEBUG( "Loading model '" + filename + "'." );
 
 	std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >();	
 
@@ -66,13 +66,13 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	if ( scene == nullptr )
 	{		
 		std::string msg = std::string("Unable to load model...");
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::Exception(msg);
 	}
 	else if ( scene->HasTextures() )
 	{		
 		std::string msg = std::string("Support for meshes with embedded textures is not implemented.");
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::Exception(msg);
 	}
 	
@@ -83,7 +83,10 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	AnimationSet animationSet = loadAnimations(filename, scene);
 	
-	BOOST_LOG_TRIVIAL(debug) << "Model has " << modelData.size() << " meshes.";
+	std::stringstream msg;
+	msg << "Model has " << modelData.size() << " meshes.";
+	LOG_DEBUG( msg.str() );
+	
 	int NumVertices = 0;
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
@@ -107,7 +110,7 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
 	aiReleaseImport(scene);
 
-	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
+	LOG_DEBUG( "Done loading model '" + filename + "'." );
 
 	return modelData;
 }
@@ -128,14 +131,14 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 {
 	MeshData data = MeshData();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading mesh '" << filename << "'.";
+	LOG_DEBUG( "loading mesh '" + filename + "'." );
 	
 	// Set the mesh name
 	if (mesh->mName.length > 0)
 		data.name = std::string( mesh->mName.C_Str() );
 	else
 		data.name = filename + "_mesh_" + std::to_string(index);
-	BOOST_LOG_TRIVIAL(debug) << "mesh name: " << data.name;
+	LOG_DEBUG( "mesh name: " + data.name );
 
 	// Load vertices, normals, texture coordinates, and colors
 	glm::detail::uint32 currentIndex = 0;
@@ -185,14 +188,14 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 			case 1: 
 				//face_mode = GL_POINTS;
 				msg = std::string("Unable to load model...Unsupported number of indices per face.");
-				BOOST_LOG_TRIVIAL(error) << msg;
+				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 				break;
 	
 			case 2: 
 				//face_mode = GL_LINES; 
 				msg = std::string("Unable to load model...Unsupported number of indices per face.");
-				BOOST_LOG_TRIVIAL(error) << msg;
+				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 				break;
 	
@@ -203,7 +206,7 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 			default:
 				//face_mode = GL_POLYGON; 
 				msg = std::string("Unable to load model...Unsupported number of indices per face.");
-				BOOST_LOG_TRIVIAL(error) << msg;
+				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 				break;
 		}
@@ -312,7 +315,7 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 	}
 	file.close();
 	*/
-	BOOST_LOG_TRIVIAL(debug) << "done loading mesh '" << filename << "'.";
+	LOG_DEBUG( "done loading mesh '" + filename + "'." );
 
 	//materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	//textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
@@ -333,7 +336,7 @@ TextureData ModelLoader::loadTexture(const std::string filename, glmd::uint32 in
 	
 	TextureData data = TextureData();
 
-	BOOST_LOG_TRIVIAL(debug) << "Loading texture.";
+	LOG_DEBUG( "Loading texture." );
 
 	aiReturn texFound = AI_SUCCESS;
 	aiString texPath;
@@ -345,18 +348,20 @@ TextureData ModelLoader::loadTexture(const std::string filename, glmd::uint32 in
 		// Error check
 		if (texFound != AI_SUCCESS)
 		{
-			BOOST_LOG_TRIVIAL(warning) << "Texture not found for model filename: " << filename;
+			LOG_WARN( "Texture not found for model filename: " + filename );
 			return data;
 		}
 		
-		BOOST_LOG_TRIVIAL(debug) << "Texture has filename: " << texPath.data;
+		std::stringstream msg;
+		msg << "Texture has filename: " << texPath.data;
+		LOG_DEBUG( msg.str() );
 		
 		data.filename = texPath.data;
 		
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "No material specified.";
+		LOG_DEBUG( "No material specified." );
 	}
 	return data;
 }
@@ -374,13 +379,13 @@ MaterialData ModelLoader::loadMaterial(const std::string filename, glmd::uint32 
 		
 	MaterialData data = MaterialData();
 
-	BOOST_LOG_TRIVIAL(debug) << "loading material...";
+	LOG_DEBUG( "loading material." );
 	aiColor4D c;
 	
 	// Set the material name
 	data.name = filename + "_material_" + std::to_string(index);
 
-	BOOST_LOG_TRIVIAL(debug) << "material name: " << data.name;
+	LOG_DEBUG( "material name: " + data.name );
 
 	data.diffuse[0] = 0.8f;
 	data.diffuse[1] = 0.8f;
@@ -413,7 +418,7 @@ MaterialData ModelLoader::loadMaterial(const std::string filename, glmd::uint32 
 	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &c))
 		utilities::AssImpUtilities::color4_to_vec4(&c, data.emission);
 	
-	BOOST_LOG_TRIVIAL(debug) << "done loading material.";
+	LOG_DEBUG( "done loading material." );
 	
 	return data;
 }
@@ -431,7 +436,7 @@ glw::BoneData ModelLoader::loadBones(const std::string filename, glmd::uint32 in
 	
 	glw::BoneData boneData = glw::BoneData();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading boneData...";
+	LOG_DEBUG( "loading boneData." );
 	
 	for (glmd::uint32 i = 0; i < mesh->mNumBones; i++) {
 		glw::Bone data = glw::Bone();
@@ -443,7 +448,7 @@ glw::BoneData ModelLoader::loadBones(const std::string filename, glmd::uint32 in
 		else
 			data.name = std::string( filename ) + "_bone_" + std::to_string(index);
 		
-		BOOST_LOG_TRIVIAL(debug) << "bone name: " << data.name;
+		LOG_DEBUG( "bone name: " + data.name );
 		
 		if (boneData.boneIndexMap.find(data.name) == boneData.boneIndexMap.end()) {
 			boneIndex = boneData.boneIndexMap.size();
@@ -463,7 +468,7 @@ glw::BoneData ModelLoader::loadBones(const std::string filename, glmd::uint32 in
 		//}
 	} 
 
-	BOOST_LOG_TRIVIAL(debug) << "done loading boneData...";
+	LOG_DEBUG( "done loading boneData." );
 	
 	return boneData;
 }
@@ -480,7 +485,9 @@ AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiSce
 	
 	AnimationSet animationSet = AnimationSet();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading " << scene->mNumAnimations << " animation(s)...";
+	std::stringstream msg;
+	msg << "loading " << scene->mNumAnimations << " animation(s).";
+	LOG_DEBUG( msg.str() );
 	
 	// Load BoneNodes
 	const aiNode* assImpRootNode = scene->mRootNode;
@@ -495,10 +502,10 @@ AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiSce
 		// Error check - animations with no name are not allowed
 		if (animation.name.compare( std::string("") ) == 0)
 		{
-			BOOST_LOG_TRIVIAL(warning) << "Animations with no name are not allowed.";
+			LOG_WARN( "Animations with no name are not allowed." );
 			
 			animation.name = filename + "_animation_" + std::to_string(i);
-			BOOST_LOG_TRIVIAL(warning) << "Setting animation name to: " << animation.name;
+			LOG_WARN( "Setting animation name to: " + animation.name );
 			// TODO: should we throw an exception?
 			//throw exception::Exception(msg);
 			
@@ -517,7 +524,8 @@ AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiSce
 			
 			AnimatedBoneNode abn = AnimatedBoneNode();
 			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
-			BOOST_LOG_TRIVIAL(debug) << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys;
+			
+			//std::cout << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys <<std::endl;
 			
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)
 			{
@@ -553,7 +561,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiSce
 			else 
 			{
 				// Warning - animated bone node already exists!
-				BOOST_LOG_TRIVIAL(warning) << "Animated bone node with name '" << abn.name << "' already exists!";
+				LOG_WARN( "Animated bone node with name '" + abn.name + "' already exists!" );
 			}
 		}
 		
@@ -565,11 +573,11 @@ AnimationSet ModelLoader::loadAnimations(const std::string filename, const aiSce
 		else 
 		{
 			// Warning - animated bone node already exists!
-			BOOST_LOG_TRIVIAL(warning) << "Animation with name '" << animation.name << "' already exists!";
+			LOG_WARN( "Animation with name '" + animation.name + "' already exists!" );
 		}
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "done loading animation...";
+	LOG_DEBUG( "done loading animation." );
 	
 	return animationSet;
 }

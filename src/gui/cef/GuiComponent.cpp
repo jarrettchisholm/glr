@@ -233,7 +233,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	else if( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_ )
 	{ 
 		std::string msg = "AllBindingsReceived message processed, but no binding data was sent.";
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::Exception( msg );
 	}
 	else if( s == cef_client::SUCCESS )
@@ -246,15 +246,16 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		if (it == messageIdMap_.end())
 		{
 			std::string msg = "Success message id '" + messageId + "' does not match any ids of sent messages.";
-			BOOST_LOG_TRIVIAL(error) << msg;
+			LOG_ERROR( msg );
 			throw exception::Exception( msg );
 		}
 		
 		messageIdMap_.erase(it);
 		messageIdMapMutex_.unlock();
 		
-		//BOOST_LOG_TRIVIAL(warning) << "Success message not yet implemented.";
-		std::cout << "GuiComponent Success: " << messageId << std::endl;
+		std::stringstream msg;
+		msg << "GuiComponent Success: " << messageId;
+		LOG_DEBUG( msg.str() );
 	}
 	else if( s == cef_client::EXCEPTION )
 	{ 
@@ -265,12 +266,10 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		//std::wstring message = message->GetArgumentList()->GetWString( 2 );		
 		
 		std::stringstream msgStream;
-		msgStream << errorMessage << " - Exception type: " << e;
+		msgStream << "Exception message received: " << errorMessage << " - Exception type: " << e;
 		
 		std::string msg = msgStream.str();
-		
-		BOOST_LOG_TRIVIAL(error) << "Exception message received: " << msg;
-		std::cout << "Exception message received." << msg << std::endl;
+		LOG_ERROR( msg );
 		throw exception::Exception( msg );
 	}
 	
@@ -279,7 +278,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 
 void GuiComponent::load()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent texture.";
+	LOG_DEBUG( "Creating GuiComponent texture." );
 	
 	// Create texture to hold rendered view
 	glGenTextures(1, &webTexture);
@@ -294,22 +293,22 @@ void GuiComponent::load()
 		msgStream << "Error loading GuiComponent in opengl: " << err.name;
 		std::string msg = msgStream.str();
 		
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully created GuiComponent texture.";
+		LOG_DEBUG( "Successfully created GuiComponent texture." );
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Creating GuiComponent CEF components.";
+	LOG_DEBUG( "Creating GuiComponent CEF components." );
 	
 	// Create Cef processes
 	CefMainArgs args;
 	CefSettings settings;
 
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
-	BOOST_LOG_TRIVIAL(debug) << "Initializing CEF.";
+	LOG_DEBUG( "Initializing CEF." );
 	bool result = CefInitialize(args, settings, nullptr);
 	
 	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
@@ -318,7 +317,7 @@ void GuiComponent::load()
 	{
 		std::string msg = "Error loading GuiComponent - could not initialize CEF.";
 		
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::Exception( msg );		
 	}
 
@@ -331,7 +330,7 @@ void GuiComponent::load()
 	
 	this->renderHandler_ = new RenderHandler(webTexture);
 	
-	BOOST_LOG_TRIVIAL(debug) << "Creating CEF Browser object.";
+	LOG_DEBUG( "Creating CEF Browser object." );
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
 	// We just want the render process created at this point so that we can do our bindings.
 	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings);
@@ -341,7 +340,7 @@ void GuiComponent::load()
 		// The render process should clean up on its own.
 		std::string msg = "Error loading GuiComponent - could not create CEF browser.";
 		
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::Exception( msg );
 	}
 	
@@ -356,7 +355,7 @@ void GuiComponent::load()
     
     //sendBoundFunctionsToRenderProcess();
     
-    BOOST_LOG_TRIVIAL(debug) << "Successfully created GuiComponent CEF components.";
+    LOG_DEBUG( "Successfully created GuiComponent CEF components." );
 }
 
 void GuiComponent::unload()
@@ -419,7 +418,9 @@ void GuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 
 			break;
 		default:
 			// Other mouse buttons are not handled here.
-			BOOST_LOG_TRIVIAL(warning) << "Unable to determine mouse button: " << buttonId;
+			std::stringstream msg;
+			msg << "Unable to determine mouse button: " << buttonId;
+			LOG_WARN( msg.str() );
 			return;
 	}
 	
@@ -857,7 +858,7 @@ bool GuiComponent::mapOnPaintToTexture(
 		char* scroll_buffer
 	)
 {
-	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
+	//LOG_DEBUG( << "mapOnPaintToTexture: " << dest_texture_width << "x" << dest_texture_width << " dest_texture: " << dest_texture;
 
 	glBindTexture(GL_TEXTURE_2D, dest_texture);
 
@@ -960,7 +961,7 @@ bool GuiComponent::mapOnPaintToTexture(
 		}
 	}
 
-	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 2";
+	//LOG_DEBUG( << "mapOnPaintToTexture: here 2";
 	if ( DEBUG_PAINT )
 	{
 		std::cout << (void*)wini << " Bitmap rect: w="
@@ -970,21 +971,21 @@ bool GuiComponent::mapOnPaintToTexture(
 				  << std::endl;
 	}
 
-	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 3";
+	//LOG_DEBUG( << "mapOnPaintToTexture: here 3";
 	for ( size_t i = 0; i < num_copy_rects; i++ )
 	{
 		int wid = copy_rects[i].width();
 		int hig = copy_rects[i].height();
 		int top = copy_rects[i].top() - bitmap_rect.top();
 		int left = copy_rects[i].left() - bitmap_rect.left();
-		//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 4";
+		//LOG_DEBUG( << "mapOnPaintToTexture: here 4";
 
 		if ( DEBUG_PAINT )
 		{
 			std::cout << (void*)wini << " Copy rect: w=" << wid << ", h=" << hig << ", ("
 					  << top << "," << left << ")" << std::endl;
 		}
-		//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 5";
+		//LOG_DEBUG( << "mapOnPaintToTexture: here 5";
 		for ( int jj = 0; jj < hig; jj++ )
 		{
 			memcpy(
@@ -993,7 +994,7 @@ bool GuiComponent::mapOnPaintToTexture(
 				wid * kBytesPerPixel
 				);
 		}
-		//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 6";
+		//LOG_DEBUG( << "mapOnPaintToTexture: here 6";
 		// Finally, we perform the main update, just copying the rect that is
 		// marked as dirty but not from scrolled data.
 		glTexSubImage2D(GL_TEXTURE_2D, 0,
@@ -1001,12 +1002,12 @@ bool GuiComponent::mapOnPaintToTexture(
 						wid, hig,
 						GL_BGRA, GL_UNSIGNED_BYTE, scroll_buffer
 						);
-		//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 7";
+		//LOG_DEBUG( << "mapOnPaintToTexture: here 7";
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	//BOOST_LOG_TRIVIAL(debug) << "mapOnPaintToTexture: here 8";
+	//LOG_DEBUG( << "mapOnPaintToTexture: here 8";
 
 	return true;
 }

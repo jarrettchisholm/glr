@@ -8,9 +8,11 @@
 #ifndef IMAGELOADER_H_
 #define IMAGELOADER_H_
 
+#include <sstream>
+
 #include "FreeImage.h"
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 namespace utilities {
 
@@ -43,11 +45,11 @@ public:
 
 	std::unique_ptr<Image> loadImageData(const char* filename, bool hasAlpha = true)
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Loading image.";
+		LOG_DEBUG( "Loading image." );
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
 		FIBITMAP* imageBitmap = FreeImage_Load(format, filename);
 
-		BOOST_LOG_TRIVIAL(debug) << "image loaded.";
+		LOG_DEBUG( "image loaded." );
 
 		FIBITMAP* temp = imageBitmap;
 		if ( hasAlpha )
@@ -58,7 +60,9 @@ public:
 
 		int w = FreeImage_GetWidth(imageBitmap);
 		int h = FreeImage_GetHeight(imageBitmap);
-		BOOST_LOG_TRIVIAL(debug) << "The size of the image '" << filename << "' is: " << w << "*" << h;
+		std::stringstream msg;
+		msg << "The size of the image '" << filename << "' is: " << w << "*" << h;
+		LOG_DEBUG( msg.str() );
 
 		GLubyte* imageBytes;
 		if ( hasAlpha )

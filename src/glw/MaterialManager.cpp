@@ -26,11 +26,11 @@ Material* MaterialManager::getMaterial(const std::string name)
 {
 	if ( materials_.find(name) != materials_.end() )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Material found.";
+		LOG_DEBUG( "Material '" + name + "' found." );
 		return materials_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Material not found.";
+	LOG_DEBUG( "Material '" + name + "' not found." );
 	
 	return nullptr;
 }
@@ -45,11 +45,11 @@ Material* MaterialManager::addMaterial(
 		glm::detail::float32 strength
 	)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading material...";
+	LOG_DEBUG( "Loading material '" + name + "'." );
 
 	if ( materials_.find(name) != materials_.end() && materials_[name].get() != nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Material already exists.";
+		LOG_DEBUG( "Material '" + name + "' already exists." );
 		return materials_[name].get();
 	}
 

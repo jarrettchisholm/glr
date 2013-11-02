@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../common/utilities/AssImpUtilities.h"
@@ -25,7 +27,7 @@ Material::Material(
 		)
 	: openGlDevice_(openGlDevice), name_(name), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
 {
-	BOOST_LOG_TRIVIAL(debug) << "loading material...";
+	LOG_DEBUG( "loading material..." );
 	
 	loadIntoVideoMemory();
 	
@@ -33,12 +35,16 @@ Material::Material(
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading material in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		std::stringstream msg;
+		msg << "OpenGL error: " << err.name;
+		LOG_ERROR( "Error loading material in opengl" );
+		LOG_ERROR( msg.str() );
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded material.  Buffer id: " << bufferId_;
+		std::stringstream msg;
+		msg << "Successfully loaded material.  Buffer id: " << bufferId_;
+		LOG_DEBUG( msg.str() );
 	}
 }
 

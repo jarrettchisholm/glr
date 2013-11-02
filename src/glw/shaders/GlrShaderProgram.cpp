@@ -8,7 +8,7 @@
 
 #include "GlrPreProcessor.h"
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 #include "../../exceptions/GlException.h"
 
@@ -29,7 +29,7 @@ GlrShaderProgram::~GlrShaderProgram()
 
 void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Processing shader program '" << name_ << "'.";
+	LOG_DEBUG( "Processing shader program '" + name_ + "'." );
 
 	// Pre-Process shaders
 	GlrPreProcessor pp(source_);
@@ -37,11 +37,13 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 	pp.process();
 
 	name_ = pp.getName();
-	BOOST_LOG_TRIVIAL(debug) << "name: " << name_;
-	//BOOST_LOG_TRIVIAL(debug) << "getProcessedSource: " << pp.getProcessedSource();
+	LOG_DEBUG( "name: " + name_ );
+	//LOG_DEBUG( << "getProcessedSource: " << pp.getProcessedSource();
 	std::vector<CPreProcessor::ShaderData> shaders = pp.getShaders();
 
-	BOOST_LOG_TRIVIAL(debug) << "Initializing shaders: " << shaders.size();
+	std::stringstream msg;
+	msg << "Initializing " << shaders.size() << " shaders.";
+	LOG_DEBUG( msg.str() );
 
 	for ( CPreProcessor::ShaderData s : shaders )
 	{
@@ -56,14 +58,14 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 		}
 		else
 		{
-			BOOST_LOG_TRIVIAL(error) << "Name requested: " << s.name;
-			BOOST_LOG_TRIVIAL(error) << "Names available: ";
+			LOG_ERROR( "Name requested: " + s.name );
+			LOG_ERROR( "Names available: " );
 			for ( auto s : glrShaderMap )
 			{
-				BOOST_LOG_TRIVIAL(error) << s.first;
+				LOG_ERROR( s.first );
 			}
 			std::string msg("Could not find shader '" + name_ + "'.");
-			BOOST_LOG_TRIVIAL(error) << msg;
+			LOG_ERROR( msg );
 			throw exception::GlException(msg);
 		}
 	}

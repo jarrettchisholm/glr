@@ -9,6 +9,7 @@
 #define GLSLSHADERPROGRAM_H_
 
 #include <vector>
+#include <memory>
 
 #include <glm/glm.hpp>
 

@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include "Texture.h"
 
 
@@ -52,7 +54,7 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 		
 		default:
 			// TODO: throw error
-			BOOST_LOG_TRIVIAL(error) << "Texture::loadIntoVideoMemory: Unknown image format.";
+			LOG_ERROR( "Texture::loadIntoVideoMemory: Unknown image format." );
 			break;
 	}
 	
@@ -63,12 +65,14 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Texture::loadIntoVideoMemory: error loading texture in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		std::stringstream msg;
+		msg << "OpenGL error: " << err.name;
+		LOG_ERROR( "Texture::loadIntoVideoMemory: error loading texture in opengl" );
+		LOG_ERROR( msg.str() );
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded texture.";
+		LOG_DEBUG( "Successfully loaded texture." );
 	}
 }
 

@@ -13,7 +13,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../common/logging/Logger.h"
+#include "common/logging/Logger.h"
 
 #include "BasicSceneNode.h"
 

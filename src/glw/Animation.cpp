@@ -35,12 +35,14 @@ Animation::Animation(IOpenGlDevice* openGlDevice, const std::string name) : open
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading animation in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		LOG_ERROR( "Error loading animation in opengl" );
+		LOG_ERROR( "OpenGL error: " + err.name );
 	}
 	else
 	{
-		//BOOST_LOG_TRIVIAL(debug) << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		//std::stringstream msg;
+		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		//LOG_DEBUG( msg.str() );
 	}
 }
 
@@ -55,7 +57,7 @@ Animation::Animation(
 	// We probably shouldn't have an animation object at all if it has no animated bone nodes...
 	assert( animatedBoneNodes_.size() != 0 );
 	
-	//BOOST_LOG_TRIVIAL(debug) << "loading animation...";
+	//LOG_DEBUG( "loading animation." );
 	bufferId_ = 0;
 	
 	startFrame_ = 0;
@@ -72,12 +74,14 @@ Animation::Animation(
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading animation in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		LOG_ERROR( "Error loading animation in opengl" );
+		LOG_ERROR( "OpenGL error: " + err.name );
 	}
 	else
 	{
-		//BOOST_LOG_TRIVIAL(debug) << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		//std::stringstream msg;
+		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		//LOG_DEBUG( msg.str() );
 	}
 }
 
@@ -241,11 +245,11 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
     if (animatedBoneNode->rotationTimes_.size() == 1)
     {
         out = animatedBoneNode->rotations_[0];
-        //BOOST_LOG_TRIVIAL(debug) << "HERE - rotationTimes_.size() == 1";
+        //std::cout << "HERE - rotationTimes_.size() == 1";
         return;
     }
     
-    //BOOST_LOG_TRIVIAL(debug) << "HERE - calcInterpolatedRotation";
+    //std::cout << "HERE - calcInterpolatedRotation";
     glmd::uint32 rotationIndex = findRotation(animationTime, animatedBoneNode);
     glmd::uint32 nextRotationIndex = (rotationIndex + 1);
     
@@ -256,13 +260,13 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
     //assert(factor >= 0.0f && factor <= 1.0f);
     const glm::quat& startrotationQ = animatedBoneNode->rotations_[rotationIndex];
     const glm::quat& endrotationQ   = animatedBoneNode->rotations_[nextRotationIndex];    
-    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << rotationIndex << " startrotationQ: " << startrotationQ.x << ", " << startrotationQ.y << ", " << startrotationQ.z << " factor: " << factor;
-    //BOOST_LOG_TRIVIAL(debug) << "HERE - " << nextRotationIndex << " endrotationQ: " << endrotationQ.x << ", " << endrotationQ.y << ", " << endrotationQ.z;
+    //std::cout << "HERE - " << rotationIndex << " startrotationQ: " << startrotationQ.x << ", " << startrotationQ.y << ", " << startrotationQ.z << " factor: " << factor;
+    //std::cout << "HERE - " << nextRotationIndex << " endrotationQ: " << endrotationQ.x << ", " << endrotationQ.y << ", " << endrotationQ.z;
     
     out = glm::slerp(startrotationQ, endrotationQ, factor);
     // TODO: I might not need to normalize the quaternion here...might already have been done in glm::mix??
 	out = glm::normalize( out );
-	//BOOST_LOG_TRIVIAL(debug) << "HERE - out: " << out.x << ", " << out.y << ", " << out.z << " factor: " << factor;
+	//std::cout << "HERE - out: " << out.x << ", " << out.y << ", " << out.z << " factor: " << factor;
 }
 
 
@@ -290,23 +294,23 @@ void Animation::calcInterpolatedScaling(glm::vec3& out, glmd::float32 animationT
 
 void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& globalInverseTransform, BoneNode& rootBoneNode, BoneData& boneData, const glm::mat4& parentTransform)
 {
-	//BOOST_LOG_TRIVIAL(debug) << "HERE - parentTransform: " << glm::to_string(parentTransform) << " time: " << animationTime;
+	//std::cout << "HERE - parentTransform: " << glm::to_string(parentTransform) << " time: " << animationTime;
 	
 	glm::mat4 nodeTransformation = glm::mat4( rootBoneNode.transformation );
-	//BOOST_LOG_TRIVIAL(debug) << "HERE - nodeTransformation1: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
+	//std::cout << "HERE - nodeTransformation1: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 	
 	AnimatedBoneNode* animatedBoneNode = nullptr;
 	auto it = animatedBoneNodes_.find( rootBoneNode.name );
 	
 	if ( it != animatedBoneNodes_.end() )
 	{
-		////BOOST_LOG_TRIVIAL(debug) << "Found animated bone node with name: " << rootBoneNode.name;
+		////std::cout << "Found animated bone node with name: " << rootBoneNode.name;
 		animatedBoneNode = &(it->second);
 	}
 	else
 	{
 		// TODO: throw error?
-		//BOOST_LOG_TRIVIAL(error) << "Error reading animation - unable to find animated bone node with name: " << rootBoneNode.name;
+		//LOG_ERROR( "Error reading animation - unable to find animated bone node with name: " + rootBoneNode.name );
 	}
 	
 	if (animatedBoneNode != nullptr)
@@ -326,38 +330,38 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		glm::vec3 Scaling;
 		calcInterpolatedScaling(Scaling, animationTime, animatedBoneNode);
 		glm::mat4 scalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime;
+		//std::cout << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime;
 		
 		// Interpolate rotation and generate rotation transformation matrix
 		glm::quat rotationQ;
 		calcInterpolatedRotation(rotationQ, animationTime, animatedBoneNode);
 		glm::mat4 rotationM = glm::mat4_cast(rotationQ);
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - rotationQ: " << rotationQ.x << ", " << rotationQ.y << ", " << rotationQ.z << " time: " << animationTime;
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - rotationM: " << glm::to_string(rotationM) << " time: " << animationTime;
+		//std::cout << "HERE - rotationQ: " << rotationQ.x << ", " << rotationQ.y << ", " << rotationQ.z << " time: " << animationTime;
+		//std::cout << "HERE - rotationM: " << glm::to_string(rotationM) << " time: " << animationTime;
 
 		// Interpolate translation and generate translation transformation matrix
 		glm::vec3 translation;
 		calcInterpolatedPosition(translation, animationTime, animatedBoneNode);
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - translation: " << glm::to_string(translation) << " time: " << animationTime;
+		//std::cout << "HERE - translation: " << glm::to_string(translation) << " time: " << animationTime;
 		glm::mat4 translationM = glm::translate( glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z) );
 		
 		// Combine the above transformations
 		nodeTransformation = translationM * rotationM * scalingM;
-		//BOOST_LOG_TRIVIAL(debug) << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
+		//std::cout << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 	}
 	   
 	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
-	//BOOST_LOG_TRIVIAL(debug) << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime;
+	//std::cout << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime;
 	
 	if (boneData.boneIndexMap.find( rootBoneNode.name ) != boneData.boneIndexMap.end())
 	{
 		glmd::uint32 boneIndex = boneData.boneIndexMap[ rootBoneNode.name ];
 		boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
-		//BOOST_LOG_TRIVIAL(debug) << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
+		//std::cout << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
 	}
 	else
 	{
-		//BOOST_LOG_TRIVIAL(debug) << name_ << " " << rootBoneNode.name << ": Couldn't find.";
+		//std::cout << name_ << " " << rootBoneNode.name << ": Couldn't find.";
 	}
 	
 	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++) {
@@ -378,20 +382,16 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 	
 	//std::cout << "animationTime: " << animationTime << std::endl;
 
-	//BOOST_LOG_TRIVIAL(debug) << "animationTime: " << animationTime;
+	//std::cout << "animationTime: " << animationTime;
 	readNodeHeirarchy(animationTime, globalInverseTransformation, rootBoneNode, boneData, identity);
 	
 	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size(), identity );
 	//currentTransforms_ = std::vector< glm::mat4 >( 100, identity );
 	
-	//BOOST_LOG_TRIVIAL(debug) << boneData.boneTransform.size() << " " << runningTime_ << " " << duration_ << " " << name_;
+	//std::cout << boneData.boneTransform.size() << " " << runningTime_ << " " << duration_ << " " << name_;
 	
 	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
 		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
-		
-		//if (name_.compare("Walk") == 0)
-		//	currentTransforms_[i] = glm::mat4(1.0);
-		//BOOST_LOG_TRIVIAL(debug) << "NUM" << i << " " << glm::to_string( currentTransforms_[i] );
 	}		
 }
 

@@ -44,15 +44,15 @@ ModelManager::~ModelManager()
  */
 IModel* ModelManager::getModel(const std::string name)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Retrieving model '" << name << "'.";
+	LOG_DEBUG( "Retrieving model '" + name + "'." );
 	
 	if ( models_.find(name) != models_.end() )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Model found.";
+		LOG_DEBUG( "Model found." );
 		return models_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
+	LOG_DEBUG( "Model not found." );
 	
 	return nullptr;
 }
@@ -62,11 +62,11 @@ IModel* ModelManager::getModel(const std::string name)
  */
 void ModelManager::loadModel(const std::string name, const std::string filename)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading model '" << filename << "'.";
+	LOG_DEBUG( "Loading model '" + filename + "'." );
 
 	if ( models_[name] != 0 )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Model found...No need to load.";
+		LOG_DEBUG( "Model found...No need to load." );
 		//return models_[filename].get();
 	}
 
@@ -75,7 +75,7 @@ void ModelManager::loadModel(const std::string name, const std::string filename)
 
 	models_[name] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
 
-	BOOST_LOG_TRIVIAL(debug) << "Done loading model '" << filename << "'.";
+	LOG_DEBUG( "Done loading model '" + filename + "'." );
 
 	//return models_[filename].get();
 }
@@ -86,17 +86,17 @@ void ModelManager::loadModel(const std::string name, const std::string filename)
  */
 std::unique_ptr<IModel> ModelManager::createModel(const std::string name)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Creating model '" << name << "'.";
+	LOG_DEBUG( "Creating model '" + name + "'." );
 	
 	if ( models_.find(name) != models_.end() )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Model found.";
+		LOG_DEBUG( "Model found." );
 		
 		// Create a COPY of the model, and returns it wrapped in a unique pointer
 		return std::unique_ptr<IModel>( new Model(*models_[name].get()) );
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Model not found.";
+	LOG_DEBUG( "Model not found." );
 	
 	return std::unique_ptr<IModel>( nullptr );
 }
@@ -104,7 +104,7 @@ std::unique_ptr<IModel> ModelManager::createModel(const std::string name)
 // TESTING
 std::unique_ptr<IModel> ModelManager::createModel(glw::Mesh* mesh)
 {
-	BOOST_LOG_TRIVIAL(debug) << "NOTE: Method 'ModelManager::createModel(glw::IMesh* mesh)' is for testing purposes only!";
+	LOG_DEBUG( "NOTE: Method 'ModelManager::createModel(glw::IMesh* mesh)' is for testing purposes only!" );
 	
 	return std::unique_ptr<IModel>( new Model(mesh, openGlDevice_) );
 }

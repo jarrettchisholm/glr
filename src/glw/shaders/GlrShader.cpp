@@ -9,7 +9,7 @@
 
 #include "GlrShader.h"
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 #include "GlrPreProcessor.h"
 
@@ -31,7 +31,7 @@ GlrShader::~GlrShader()
 
 void GlrShader::process(std::map< std::string, std::string > defineMap)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Processing shader '" << name_ << "'.";
+	LOG_DEBUG( "Processing shader '" + name_ + "'." );
 	GlrPreProcessor pp(source_);
 	pp.process(defineMap);
 	processedSource_ = pp.getProcessedSource();

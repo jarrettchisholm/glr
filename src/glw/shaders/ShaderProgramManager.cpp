@@ -12,7 +12,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 #include "ShaderProgramManager.h"
 
@@ -134,7 +134,7 @@ void ShaderProgramManager::load(std::vector<std::string> filenames)
 
 void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Reading shader programs from disk.";
+	LOG_DEBUG( "Reading shader programs from disk." );
 
 	std::map<std::string, std::string> dataMap;
 
@@ -171,14 +171,14 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 
 void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading shader programs.";
+	LOG_DEBUG( "Loading shader programs." );
 
 	// Add all shaders and shader programs to the maps
 	for ( auto entry : dataMap )
 	{
 		if ( isShader(entry.second))
 		{
-			BOOST_LOG_TRIVIAL(debug) << "Shader Found: " << entry.first;
+			LOG_DEBUG( "Shader Found: " + entry.first );
 			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second));
 			glrShaderMap_[entry.first] = s;
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
@@ -188,14 +188,14 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		}
 		else if ( isProgram(entry.second))
 		{
-			BOOST_LOG_TRIVIAL(debug) << "Shader Program Found: " << entry.first;
+			LOG_DEBUG( "Shader Program Found: " + entry.first );
 			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second));
 			glrProgramMap_[entry.first] = sp;
 		}
 		else
 		{
 			// Error
-			BOOST_LOG_TRIVIAL(error) << "ERROR loading shaders and shader programs.";
+			LOG_ERROR( "ERROR loading shaders and shader programs." );
 			// TODO: throw exception
 		}
 	}
@@ -209,7 +209,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 	for ( auto entry : glrProgramMap_ )
 	{
 		entry.second->process(glrShaderMap_);
-		BOOST_LOG_TRIVIAL(debug) << "entry.second->getName(): " << entry.second->getName();
+		LOG_DEBUG( "entry.second->getName(): " + entry.second->getName() );
 		glslProgramMap_[entry.second->getName()] = convertGlrProgramToGlslProgram(entry.second.get());
 	}
 

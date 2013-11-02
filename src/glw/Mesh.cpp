@@ -5,6 +5,8 @@
  *      Author: jarrett
  */
 
+#include <sstream>
+
 #include "Mesh.h"
 
 #include "../common/logging/Logger.h"
@@ -13,6 +15,7 @@
 
 namespace glr {
 namespace glw {
+
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		const std::string name,
 		std::vector< glm::vec3 > vertices, 
@@ -43,7 +46,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 
 void Mesh::load()
 {
-	BOOST_LOG_TRIVIAL(debug) << "loading mesh into video memory...";
+	LOG_DEBUG( "loading mesh '" + name_ +"' into video memory." );
 
 	// create our vao
 	glGenVertexArrays(1, &vaoId_);
@@ -121,12 +124,12 @@ void Mesh::load()
 	if (err.type != GL_NONE)
 	{
 		// TODO: throw error
-		BOOST_LOG_TRIVIAL(error) << "Error loading mesh in opengl";
-		BOOST_LOG_TRIVIAL(error) << "OpenGL error: " << err.name;
+		LOG_ERROR( "Error loading mesh '" + name_ + "' in opengl" );
+		LOG_ERROR( "OpenGL error: " + err.name );
 	}
 	else
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Successfully loaded mesh.";
+		LOG_DEBUG( "Successfully loaded mesh '" + name_ + "'." );
 	}
 }
 
@@ -147,6 +150,7 @@ BoneData& Mesh::getBoneData()
 {
 	return boneData_;
 }
+
 }
 }
 

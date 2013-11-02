@@ -9,6 +9,8 @@
 #include <windows.h>
 #endif
 
+#include <sstream>
+
 #include "TextureManager.h"
 
 #include "../common/utilities/ImageLoader.h"
@@ -28,40 +30,42 @@ Texture* TextureManager::getTexture(const std::string name)
 {
 	if ( textures_.find(name) != textures_.end() )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Texture found.";
+		LOG_DEBUG( "Texture '" + name + "' found." );
 		return textures_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Texture not found.";
+	LOG_DEBUG( "Texture '" + name + "' not found." );
 	
 	return nullptr;
 }
 
 Texture* TextureManager::addTexture(const std::string name, const std::string filename)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading texture...";
+	LOG_DEBUG( "Loading texture '" + name + "'." );
 
 	if ( textures_.find(name) != textures_.end() && textures_[name].get() != nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Texture already exists.";
+		LOG_DEBUG( "Texture already exists." );
 		return textures_[name].get();
 	}
 
 	std::string basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
 
-	BOOST_LOG_TRIVIAL(debug) << "Loading texture image.";
+	LOG_DEBUG( "Loading texture image." );
 	utilities::ImageLoader il = utilities::ImageLoader();
 	std::unique_ptr<utilities::Image> image = il.loadImageData(basepath + filename);
 
 	if ( image.get() == nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Unable to load texture: " << filename;
+		LOG_DEBUG( "Unable to load texture: " + filename );
 		return nullptr;
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
+	std::stringstream msg;
+	msg << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
+	LOG_DEBUG( msg.str() );
 
-	BOOST_LOG_TRIVIAL(debug) << "Creating texture.";
+	LOG_DEBUG( "Creating texture." );
 	textures_[name] = std::unique_ptr<Texture>(new Texture(image.get(), openGlDevice_, name));
 
 	return textures_[name].get();

@@ -46,7 +46,7 @@ Light::~Light()
 
 void Light::initialize()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Light initialized.";
+	LOG_DEBUG( "Light initialized." );
 }
 
 void Light::render()

@@ -9,12 +9,13 @@
 
 #include "GlslShaderProgram.h"
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 #include "../../exceptions/GlException.h"
 
 namespace glr {
 namespace shaders {
+
 GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders) : name_(name), shaders_(shaders)
 {
 	programId_ = -1;
@@ -27,11 +28,12 @@ GlslShaderProgram::~GlslShaderProgram()
 
 void GlslShaderProgram::compile()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Initializing shader program '" << name_ << "'.";
+	LOG_DEBUG( "Initializing shader program '" + name_ + "'." );
 
 	if ( programId_ < 0 )
 	{
-		BOOST_LOG_TRIVIAL(error) << "Could not load shader program '" << name_ << "' - shader program already has an OpenGL id assigned to it.";
+		// TODO: throw error
+		LOG_ERROR( "Could not load shader program '" + name_ + "' - shader program already has an OpenGL id assigned to it." );
 		return;
 	}
 
@@ -65,13 +67,13 @@ void GlslShaderProgram::compile()
 
 	if ( !linked )
 	{
-		BOOST_LOG_TRIVIAL(error) << "Could not initialize shader program '" << name_ << "'.";
+		LOG_ERROR( "Could not initialize shader program '" + name_ + "'." );
 
 		GLchar errorLog[1024] = { 0 };
 		glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
 
 		std::string msg( errorLog );
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		//throw exception::GlException(msg);
 		return;
 	}
@@ -79,7 +81,7 @@ void GlslShaderProgram::compile()
 	
 	generateBindings();
 
-	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader program '" << name_ << "'.";
+	LOG_DEBUG( "Done initializing shader program '" + name_ + "'." );
 }
 
 GLuint GlslShaderProgram::getGLShaderProgramId()
@@ -169,5 +171,6 @@ void GlslShaderProgram::unbindAll()
 {
 	glUseProgram(0);
 }
+
 }
 }

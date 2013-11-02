@@ -44,12 +44,12 @@ GlslShader::~GlslShader()
 
 void GlslShader::compile()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Compiling shader '" << name_ << "'.";
+	LOG_DEBUG( "Compiling shader '" + name_ + "'." );
 
 	if ( shaderId_ < 0 )
 	{
 		std::string msg("Could not load shader '" + name_ + "' - shader already has an OpenGL id assigned to it.");
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::GlException(msg);
 	}
 
@@ -59,7 +59,7 @@ void GlslShader::compile()
 	switch ( type_ )
 	{
 	case TYPE_NONE:
-		BOOST_LOG_TRIVIAL(warning) << "Could not load shader '" + name_ + "' - shader type is not known.";
+		LOG_WARN( "Could not load shader '" + name_ + "' - shader type is not known." );
 		break;
 
 	case TYPE_VERTEX:
@@ -76,17 +76,19 @@ void GlslShader::compile()
 
 	case TYPE_TESSELLATION:
 		std::string msg("Could not load shader '" + name_ + "' - tessellation shaders are not yet implemented.");
-		BOOST_LOG_TRIVIAL(warning) << msg;
+		LOG_WARN( msg );
 		throw exception::GlException(msg);
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Shader is of type '" << type_ << "'.";
+	std::stringstream msg;
+	msg << "Shader is of type '" << type_ << "'.";
+	LOG_DEBUG( msg.str() );
 
 	shaderId_ = glCreateShader(shaderType);
 
 	const char* source = source_.c_str();
 
-	//BOOST_LOG_TRIVIAL(debug) << "source: " << source;
+	//LOG_DEBUG( << "source: " << source;
 
 	glShaderSourceARB(shaderId_, 1, &source, nullptr);
 	//glShaderSourceARB(fragmentGlslShaderObject, 1, &FragmentShaderSource, &flength);
@@ -99,8 +101,8 @@ void GlslShader::compile()
 	// Handle any errors
 	if ( compiled == GL_FALSE )
 	{
-		std::stringstream msg;
-		msg << "Could not initialize shader '" << name_ << "'.";
+		std::stringstream errorMsg;
+		errorMsg << "Could not initialize shader '" << name_ << "'.";
 
 		GLint infoLogLength;
 		glGetShaderiv(shaderId_, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -108,17 +110,17 @@ void GlslShader::compile()
 		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
 		glGetShaderInfoLog(shaderId_, infoLogLength, NULL, strInfoLog);
 
-		msg << "\ncompiler_log: " << strInfoLog;
+		errorMsg << "\ncompiler_log: " << strInfoLog;
 
 		delete[] strInfoLog;
 
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( errorMsg.str() );
 
-		//throw exception::GlException(msg.str());
+		//throw exception::GlException(errorMsg.str());
 	}
 
 
-	BOOST_LOG_TRIVIAL(debug) << "Done initializing shader '" << name_ << "'.";
+	LOG_DEBUG( "Done initializing shader '" + name_ + "'." );
 }
 
 IShader::Type GlslShader::getType()

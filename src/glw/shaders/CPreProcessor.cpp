@@ -23,7 +23,7 @@
 #include <boost/wave/cpplexer/cpp_lex_token.hpp>    // token class
 #include <boost/wave/cpplexer/cpp_lex_iterator.hpp> // lexer class
 
-#include "../common/logging/Logger.h"
+#include "../../common/logging/Logger.h"
 
 namespace glr {
 namespace shaders {
@@ -304,8 +304,10 @@ bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string con
 		std::string editedFilename = filename;
 		// remove any quotations around the filename
 		boost::algorithm::erase_all(editedFilename, "\"");
-
-		BOOST_LOG_TRIVIAL(debug) << "adding: " << editedFilename << " size: " << shaderData_.size();
+		
+		std::stringstream msg;
+		msg << "adding: " << editedFilename << " size: " << shaderData_.size();
+		LOG_DEBUG( msg.str() );
 
 		shaderData_.push_back(ShaderData(editedFilename));
 	}

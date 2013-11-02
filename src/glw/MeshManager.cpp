@@ -27,11 +27,11 @@ Mesh* MeshManager::getMesh(const std::string name)
 {
 	if ( meshes_.find(name) != meshes_.end() )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Mesh found.";
+		LOG_DEBUG( "Mesh '" + name + "' found." );
 		return meshes_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Mesh not found.";
+	LOG_DEBUG( "Mesh '" + name + "' not found." );
 	
 	return nullptr;
 }
@@ -46,15 +46,15 @@ Mesh* MeshManager::addMesh(
 		BoneData boneData
 	)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
+	LOG_DEBUG( "Loading mesh..." );
 
 	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Mesh already exists.";
+		LOG_DEBUG( "Mesh already exists." );
 		return meshes_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
+	LOG_DEBUG( "Creating Mesh." );
 	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData));
 
 	return meshes_[name].get();
@@ -68,15 +68,15 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec4 > colors
 	)
 {
-	BOOST_LOG_TRIVIAL(debug) << "Loading mesh...";
+	LOG_DEBUG( "Loading mesh..." );
 
 	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
 	{
-		BOOST_LOG_TRIVIAL(debug) << "Mesh already exists.";
+		LOG_DEBUG( "Mesh already exists." );
 		return meshes_[name].get();
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Creating Mesh.";
+	LOG_DEBUG( "Creating Mesh." );
 	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors));
 
 	return meshes_[name].get();

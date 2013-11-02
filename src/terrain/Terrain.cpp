@@ -46,7 +46,7 @@ Terrain::~Terrain()
 
 void Terrain::initialize()
 {
-	BOOST_LOG_TRIVIAL(debug) << "Terrain initialized.";
+	LOG_DEBUG( "Terrain initialized." );
 }
 
 void Terrain::render()

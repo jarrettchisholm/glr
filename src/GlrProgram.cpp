@@ -15,7 +15,7 @@
 
 #include "GlrProgram.h"
 
-#include "../common/logging/Logger.h"
+#include "common/logging/Logger.h"
 
 #include "Window.h"
 
@@ -71,23 +71,23 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	{
 		std::stringstream msg;
 		msg << "Cannot create window - Window already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
-	BOOST_LOG_TRIVIAL(debug) << "Creating window.";
+	LOG_DEBUG( "Creating window." );
 	window_ = std::unique_ptr<IWindow>(new Window(width, height, title));
 	
-	BOOST_LOG_TRIVIAL(debug) << "Initializing GLEW.";
+	LOG_DEBUG( "Initializing GLEW." );
 	// Initialize GLEW
 	glewExperimental = true; // Needed in core profile
 	if ( glewInit() != GLEW_OK )
 	{
 		std::string msg("Failed to initialize GLEW.");
-		BOOST_LOG_TRIVIAL(warning) << msg;
+		LOG_WARN( msg );
 		throw exception::GlException(msg);
 	}
 	
-	BOOST_LOG_TRIVIAL(debug) << "OpenGL setup.";
+	LOG_DEBUG( "OpenGL setup." );
 	// Setup settings for open gl device
 	glr::glw::OpenGlDeviceSettings settings = glr::glw::OpenGlDeviceSettings();
 	if ( !settings_.defaultTextureDir.empty() )
@@ -101,16 +101,16 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		msgStream << "Error loading opengl: " << err.name;
 		std::string msg = msgStream.str();
 		
-		BOOST_LOG_TRIVIAL(error) << msg;
+		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
 
-	BOOST_LOG_TRIVIAL(debug) << "Initialize shader programs.";
+	LOG_DEBUG( "Initialize shader programs." );
 	// initialize shader program manager and scene manager AFTER we create the window
 	shaderProgramManager_ = openGlDevice_->getShaderProgramManager();
 	shaderProgramManager_->addDefaultBindListener( this );
 	
-	BOOST_LOG_TRIVIAL(debug) << "Create scene manager.";
+	LOG_DEBUG( "Create scene manager." );
 	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
 
 	// Set the default shader for the scene manager
@@ -119,7 +119,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	
 	sMgr_->setDefaultShaderProgram(shader);
 	
-	BOOST_LOG_TRIVIAL(debug) << "Set OpenGL matrices.";
+	LOG_DEBUG( "Set OpenGL matrices." );
 	// Set our opengl matrices
 	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
 	ICamera* camera = sMgr_->getActiveCamera();

@@ -43,7 +43,7 @@ ISceneNode* BasicSceneManager::createSceneNode(const std::string name)
 	{
 		std::stringstream msg;
 		msg << "SceneNode with name '" << name << "' already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
 
@@ -62,7 +62,7 @@ ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::ui
 	{
 		std::stringstream msg;
 		msg << "Camera with name '" << name << "' already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
 
@@ -81,7 +81,7 @@ ILight* BasicSceneManager::createLight(const std::string name)
 	{
 		std::stringstream msg;
 		msg << "Light with name '" << name << "' already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
 
@@ -112,7 +112,7 @@ void BasicSceneManager::addCamera(std::shared_ptr<ICamera> camera)
 	{
 		std::stringstream msg;
 		msg << "Camera with name '" << camera->getName() << "' already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
 
@@ -129,7 +129,7 @@ void BasicSceneManager::addSceneNode(std::shared_ptr<ISceneNode> sceneNode)
 	{
 		std::stringstream msg;
 		msg << "SceneNode with name '" << sceneNode->getName() << "' already exists.";
-		BOOST_LOG_TRIVIAL(error) << msg.str();
+		LOG_ERROR( msg.str() );
 		throw exception::Exception(msg.str());
 	}
 

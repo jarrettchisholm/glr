@@ -31,7 +31,6 @@ struct VertexBoneData
 			{
 				boneIds[i] = id;
 				weights[i] = weight;
-				//BOOST_LOG_TRIVIAL(debug) << "after: " << weights[i] << " " << id;
 				
 				assert( weights[0] + weights[1] + weights[2] + weights[3] < 1.05f );
 				

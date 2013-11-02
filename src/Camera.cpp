@@ -60,7 +60,7 @@ void Camera::initialize()
 
 	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
-	BOOST_LOG_TRIVIAL(debug) << "Camera initialized.";
+	LOG_DEBUG( "Camera initialized." );
 	//rotationQuaternion_.normalize();
 }
 
