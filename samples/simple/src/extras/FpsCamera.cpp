@@ -51,9 +51,9 @@ void FpsCamera::moveRight()
 	this->move( glm::vec3(speed_, 0.0f, 0.0f) );
 }
 
-void FpsCamera::rotate(const glm::vec3& radians)
+void FpsCamera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
 {
-	Camera::rotate(radians);
+	Camera::rotate(radians, axis);
 }
 
 /**

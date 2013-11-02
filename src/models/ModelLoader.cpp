@@ -57,13 +57,10 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 
 	std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >();	
 
-	// we are taking one of the postprocessing presets to avoid
-	// spelling out 20+ single postprocessing flags here.
-	//Assimp::Importer* importer = new Assimp::Importer();
-	//const aiScene* scene = importer->ReadFile(filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
-	
-	//const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	const aiScene* scene = aiImportFile(filename.c_str(), aiProcess_Triangulate);
+	// We don't currently support aiProcess_JoinIdenticalVertices or aiProcess_FindInvalidData
+	// aiProcess_JoinIdenticalVertices - doesn't work because we don't use vertex index lists (maybe we should?)
+	// aiProcess_FindInvalidData - I think it's due to the reduction of animation tracks containing redundant keys..
+	const aiScene* scene = aiImportFile(filename.c_str(), aiProcessPreset_TargetRealtime_MaxQuality ^ aiProcess_JoinIdenticalVertices ^ aiProcess_FindInvalidData);
 
 	// Error checking
 	if ( scene == nullptr )
@@ -131,7 +128,7 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 {
 	MeshData data = MeshData();
 	
-	BOOST_LOG_TRIVIAL(debug) << "loading mesh...";
+	BOOST_LOG_TRIVIAL(debug) << "loading mesh '" << filename << "'.";
 	
 	// Set the mesh name
 	if (mesh->mName.length > 0)
@@ -280,10 +277,11 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 		}
 	}
 	
-	std::cout << "NUM: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
+	std::cout << "Load results: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 	// Fill in any empty weights
 	
 	// DEBUGGING
+	/*
 	std::ofstream file;
 	file.open("bones.txt");
 	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
@@ -313,8 +311,8 @@ MeshData ModelLoader::loadMesh(const std::string filename, glmd::uint32 index, c
 		file << i << ": " << glm::to_string(data.textureCoordinates[ i ]) << "\n";
 	}
 	file.close();
-	
-	BOOST_LOG_TRIVIAL(debug) << "done loading mesh...";
+	*/
+	BOOST_LOG_TRIVIAL(debug) << "done loading mesh '" << filename << "'.";
 
 	//materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	//textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;

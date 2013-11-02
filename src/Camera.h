@@ -31,7 +31,9 @@ public:
 	virtual void attach(models::IModel* model);
 
 	virtual void move(const glm::vec3& moveVector);
-	virtual void rotate(const glm::vec3& radians);
+	virtual void rotate(const glm::detail::float32& radians, const glm::vec3& axis);
+	
+	virtual void lookAt(const glm::vec3& lookAt);
 
 	virtual void tick(glm::detail::float32 time);
 
@@ -39,10 +41,10 @@ public:
 
 private:
 	glm::quat rotationQuaternion_;
-	glm::vec3 rotation_;
 	glm::detail::int32 prevX_, prevY_;
 
 	glm::mat4 viewMatrix_;
+	glm::vec3 direction_;
 
 	glm::vec3 movementBuffer_;
 	glm::detail::float32 moveSpeed_, rotSpeed_;
