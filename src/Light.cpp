@@ -17,9 +17,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-#include <boost/log/trivial.hpp>
-
 #include "Light.h"
+
+#include "common/logging/Logger.h"
 
 #include "common/math/Math.h"
 

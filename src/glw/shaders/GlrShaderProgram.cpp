@@ -4,12 +4,11 @@
  * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
  *
  */
-
-#include <boost/log/trivial.hpp>
-
 #include "GlrShaderProgram.h"
 
 #include "GlrPreProcessor.h"
+
+#include "../common/logging/Logger.h"
 
 #include "../../exceptions/GlException.h"
 

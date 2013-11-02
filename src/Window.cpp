@@ -14,9 +14,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <boost/log/trivial.hpp>
-
 #include "Window.h"
+
+#include "../common/logging/Logger.h"
 
 namespace glr {
 Window::Window(int width, int height, std::string title): width_(width), height_(height)

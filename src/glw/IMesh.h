@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-#include <boost/log/trivial.hpp>
+#include "../common/logging/Logger.h"
 
 namespace glr {
 namespace glw {

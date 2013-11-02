@@ -9,12 +9,12 @@
 
 #include <GL/glew.h>
 
-#include <boost/log/trivial.hpp>
-
 #include "shaders/ShaderProgramManager.h"
 #include "shaders/IShader.h"
 
 #include "OpenGlDevice.h"
+
+#include "../common/logging/Logger.h"
 
 #include "MaterialManager.h"
 #include "TextureManager.h"

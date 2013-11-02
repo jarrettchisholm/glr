@@ -9,9 +9,9 @@
 
 #include <GL/glew.h>
 
-#include <boost/log/trivial.hpp>
-
 #include "GlslShader.h"
+
+#include "../../common/logging/Logger.h"
 
 #include "../../exceptions/GlException.h"
 

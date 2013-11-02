@@ -11,9 +11,9 @@
 
 #include <stdlib.h>
 
-#include <boost/log/trivial.hpp>
-
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "../common/logging/Logger.h"
 
 #include "BasicSceneNode.h"
 

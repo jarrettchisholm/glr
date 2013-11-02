@@ -9,13 +9,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <boost/log/trivial.hpp>
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #include "Camera.h"
+
+#include "common/logging/Logger.h"
 
 #include "common/math/Math.h"
 

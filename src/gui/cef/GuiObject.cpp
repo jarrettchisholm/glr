@@ -9,9 +9,9 @@
 
 #include <sstream>
 
-#include <boost/log/trivial.hpp>
-
 #include "GuiObject.h"
+
+#include "../../common/logging/Logger.h"
 
 namespace glr {
 namespace gui {

@@ -8,8 +8,6 @@
 #ifndef ASSIMPUTILITIES_H_
 #define ASSIMPUTILITIES_H_
 
-#include <boost/log/trivial.hpp>
-
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

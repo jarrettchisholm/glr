@@ -9,9 +9,10 @@
 #include <algorithm>
 #include <boost/regex.hpp>
 
-#include <boost/log/trivial.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
+
+#include "../common/logging/Logger.h"
 
 #include "ShaderProgramManager.h"
 

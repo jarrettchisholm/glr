@@ -17,11 +17,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-#include <boost/log/trivial.hpp>
-
 #include "Terrain.h"
 
-#include "common/math/Math.h"
+#include "../common/logging/Logger.h"
+
+#include "../common/math/Math.h"
 
 namespace glr {
 Terrain::Terrain(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)

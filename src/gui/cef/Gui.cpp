@@ -10,9 +10,9 @@
 #include <iostream>
 #include <string.h>
 
-#include <boost/log/trivial.hpp>
-
 #include "Gui.h"
+
+#include "../../common/logging/Logger.h"
 
 #include "../../glw/shaders/GlslShaderProgram.h"
 

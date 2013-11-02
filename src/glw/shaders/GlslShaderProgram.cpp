@@ -7,9 +7,9 @@
 
 #include <algorithm>
 
-#include <boost/log/trivial.hpp>
-
 #include "GlslShaderProgram.h"
+
+#include "../common/logging/Logger.h"
 
 #include "../../exceptions/GlException.h"
 

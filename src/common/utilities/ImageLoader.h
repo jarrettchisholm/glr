@@ -8,9 +8,9 @@
 #ifndef IMAGELOADER_H_
 #define IMAGELOADER_H_
 
-#include <boost/log/trivial.hpp>
-
 #include "FreeImage.h"
+
+#include "../common/logging/Logger.h"
 
 namespace utilities {
 

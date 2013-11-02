@@ -5,10 +5,11 @@
  *
  */
 
-#include <boost/log/trivial.hpp>
 #include <boost/regex.hpp>
 
 #include "GlrShader.h"
+
+#include "../common/logging/Logger.h"
 
 #include "GlrPreProcessor.h"
 

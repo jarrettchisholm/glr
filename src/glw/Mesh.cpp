@@ -5,11 +5,11 @@
  *      Author: jarrett
  */
 
-#include <boost/log/trivial.hpp>
+#include "Mesh.h"
+
+#include "../common/logging/Logger.h"
 
 #include "../common/utilities/AssImpUtilities.h"
-
-#include "Mesh.h"
 
 namespace glr {
 namespace glw {

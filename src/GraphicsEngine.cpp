@@ -5,8 +5,6 @@
  *      Author: jarrett
  */
 
-#include <boost/log/trivial.hpp>
-
 #include "GraphicsEngine.h"
 
 #include "Window.h"

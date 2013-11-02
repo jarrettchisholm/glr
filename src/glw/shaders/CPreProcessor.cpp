@@ -11,8 +11,6 @@
 #include <vector>
 #include <sstream>
 
-#include <boost/log/trivial.hpp>
-
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -25,8 +23,11 @@
 #include <boost/wave/cpplexer/cpp_lex_token.hpp>    // token class
 #include <boost/wave/cpplexer/cpp_lex_iterator.hpp> // lexer class
 
+#include "../common/logging/Logger.h"
+
 namespace glr {
 namespace shaders {
+
 std::map<std::string, std::string> CPreProcessor::files_ = std::map<std::string, std::string>();
 
 CPreProcessor::CPreProcessor(std::string source) : source_(source)
@@ -353,5 +354,6 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bo
 	// include file has not been located
 	return false;
 }
+
 }
 }

@@ -9,13 +9,13 @@
 
 #include <GL/glew.h>
 
-#include <boost/log/trivial.hpp>
-
 #include "glw/shaders/ShaderProgramManager.h"
 #include "glw/shaders/IShader.h"
 #include "exceptions/GlException.h"
 
 #include "GlrProgram.h"
+
+#include "../common/logging/Logger.h"
 
 #include "Window.h"
 

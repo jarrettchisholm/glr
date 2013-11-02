@@ -11,14 +11,14 @@
 #include <string.h>
 #include <cstring>
 
-#include <boost/log/trivial.hpp>
-
 #include "GuiComponent.h"
 
 #include "GuiObject.h"
 
 #include "../../common/utilities/ImageLoader.h"
 #include "../../common/utilities/BoostAnyUtilities.h"
+
+#include "../../common/logging/Logger.h"
 
 #include "../../exceptions/ExceptionInclude.h"
 
