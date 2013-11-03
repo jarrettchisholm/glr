@@ -44,7 +44,7 @@ GuiComponent::~GuiComponent()
 bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message )
 {
 	std::wstring s = message->GetName().ToWString();
-	std::wcout << L"GuiComponent OnProcessMessageReceived " << s << std::endl;
+	//std::wcout << L"GuiComponent OnProcessMessageReceived " << s << std::endl;
 	
 	// Do we need this?
 	// browser == m_Browser
@@ -55,7 +55,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		std::wstring functionName = message->GetArgumentList()->GetString(1);
 		glmd::int32 numArguments = message->GetArgumentList()->GetInt(2);
 		
-		std::wcout << L"GuiComponent ExecuteFunction " << objName << "." << functionName << " " << numArguments << std::endl;
+		//std::wcout << L"GuiComponent ExecuteFunction " << objName << "." << functionName << " " << numArguments << std::endl;
 		
 		std::vector< boost::any > params = std::vector< boost::any >();
 		
@@ -69,7 +69,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				{
 					glmd::int32 arg = message->GetArgumentList()->GetInt(i+2);
 					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_INT - " << arg << std::endl;
+					//std::cout << "VTYPE_INT - " << arg << std::endl;
 				}
 					break;
 				
@@ -77,7 +77,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				{
 					std::string arg = message->GetArgumentList()->GetString(i+2);
 					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_STRING - " << arg << std::endl;
+					//std::cout << "VTYPE_STRING - " << arg << std::endl;
 				}
 					break;
 
@@ -85,7 +85,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				{
 					bool arg = message->GetArgumentList()->GetBool(i+2);
 					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_BOOL - " << arg << std::endl;
+					//std::cout << "VTYPE_BOOL - " << arg << std::endl;
 				}
 					break;
 				
@@ -93,14 +93,14 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				{
 					glmd::float64 arg = message->GetArgumentList()->GetDouble(i+2);
 					params.push_back(boost::any(arg));
-					std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
+					//std::cout << "VTYPE_DOUBLE - " << arg << std::endl;
 				}
 					break;
 				
 				case VTYPE_BINARY:
 				{
 					std::string msg = "Error - VTYPE_BINARY not implemented as CEF3 argument type.";					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -108,7 +108,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				case VTYPE_DICTIONARY:
 				{
 					std::string msg = "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type.";					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -116,7 +116,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				case VTYPE_LIST:
 				{
 					std::string msg = "Error - VTYPE_LIST not implemented as CEF3 argument type.";					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -124,7 +124,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				case VTYPE_INVALID:
 				{
 					std::string msg = "Error - VTYPE_INVALID not implemented as CEF3 argument type.";					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -132,7 +132,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				case VTYPE_NULL:
 				{
 					std::string msg = "Error - VTYPE_NULL not implemented as CEF3 argument type.";					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -141,7 +141,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				default:
 				{
 					std::string msg = "Error - Unknown CEF3 argument type:" + type;					
-					std::cout << msg << std::endl;
+					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
 					break;
@@ -166,43 +166,43 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			{
 				// There is no return value (i.e. void), so set num return results 0
 				m->GetArgumentList()->SetInt( 2, 0 );
-				std::cout << "ExecuteFunction RESULT: void" << std::endl;
+				//std::cout << "ExecuteFunction RESULT: void" << std::endl;
 			}
 			else if ( utilities::isString(r) )
 			{
 				m->GetArgumentList()->SetString( 3, boost::any_cast<std::string>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<std::string>(r) << std::endl;
+				//std::cout << "ExecuteFunction RESULT:" << boost::any_cast<std::string>(r) << std::endl;
 			}
 			else if ( utilities::isWstring(r) )
 			{
 				m->GetArgumentList()->SetString( 3, boost::any_cast<std::wstring>(r) );
-				std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
+				//std::wcout << L"ExecuteFunction RESULT:" << boost::any_cast<std::wstring>(r) << std::endl;
 			}
 			else if ( utilities::isInt(r) )
 			{
 				m->GetArgumentList()->SetInt( 3, boost::any_cast<int>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<int>(r) << std::endl;
+				//std::cout << "ExecuteFunction RESULT:" << boost::any_cast<int>(r) << std::endl;
 			}
 			else if ( utilities::isUint(r) )
 			{
 				m->GetArgumentList()->SetInt( 3, boost::any_cast<unsigned int>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<unsigned int>(r) << std::endl;
+				//std::cout << "ExecuteFunction RESULT:" << boost::any_cast<unsigned int>(r) << std::endl;
 			}
 			else if ( utilities::isFloat(r) )
 			{
 				m->GetArgumentList()->SetDouble( 3, boost::any_cast<float>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<float>(r) << std::endl;
+				//std::cout << "ExecuteFunction RESULT:" << boost::any_cast<float>(r) << std::endl;
 			}
 			else if ( utilities::isDouble(r) )
 			{
 				m->GetArgumentList()->SetDouble( 3, boost::any_cast<double>(r) );
-				std::cout << "ExecuteFunction RESULT:" << boost::any_cast<double>(r) << std::endl;
+				//std::cout << "ExecuteFunction RESULT:" << boost::any_cast<double>(r) << std::endl;
 			}
 			else
 			{
-				std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
+				//std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
 				std::string msg = "Error - ExecuteFunction unable to determine result type.";					
-				std::cout << msg << std::endl;
+				LOG_ERROR( msg );
 				throw exception::Exception( msg );
 			}
 			
@@ -222,7 +222,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		m->GetArgumentList()->SetString( 0, messageId );
 		m->GetArgumentList()->SetInt( 1, numSent );
 		browser->SendProcessMessage(PID_RENDERER, m);
-		std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
+		//std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
 		bindDataSent_ = true;
 	}
 	else if( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_ )
@@ -384,11 +384,11 @@ unsigned int GuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsig
 
 void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	//std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
+	////std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
 	
 	//unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
     //unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
-    //std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
+    ////std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
 	//window_->mouseMoved(tex_coord_x, tex_coord_y);
 	
 	CefMouseEvent mouseEvent;
@@ -404,7 +404,7 @@ void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 
 void GuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
-	std::cout << "MOUSE BUTTON EVENT: " << buttonId << " " << xPos << " " << yPos << " " << down << std::endl;
+	//std::cout << "MOUSE BUTTON EVENT: " << buttonId << " " << xPos << " " << yPos << " " << down << std::endl;
 	CefBrowserHost::MouseButtonType buttonType = MBT_LEFT;
 	switch (buttonId)
 	{
@@ -464,13 +464,13 @@ void GuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 ySc
 
 void GuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 {
-	std::cout << "TEXT EVENT: " << evt << std::endl;
-	std::cout << "HERE 1 " << (char*)evt << std::endl;
+	//std::cout << "TEXT EVENT: " << evt << std::endl;
+	//std::cout << "HERE 1 " << (char*)evt << std::endl;
 	//window_->focus();
 	wchar_t outchars[2];
 	outchars[0] = evt[0];
 	outchars[1] = 0;
-	std::cout << "HERE 2 " << outchars[0] << std::endl;
+	//std::cout << "HERE 2 " << outchars[0] << std::endl;
 	//window_->textEvent(outchars, 1);
 }
 
@@ -547,7 +547,7 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 
 void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
 {
-	std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
+	//std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
 
 	CefKeyEvent keyEvent;
 	keyEvent.native_key_code = vk_code;
@@ -564,7 +564,7 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 		keyEvent.type = KEYEVENT_KEYUP;
 		host->SendKeyEvent(keyEvent);
 	*/
-		std::cout << "HERE 2 " << vk_code << std::endl;
+		//std::cout << "HERE 2 " << vk_code << std::endl;
 		keyEvent.type = KEYEVENT_CHAR;
 		browser_->GetHost()->SendKeyEvent(keyEvent);
 	}
@@ -593,7 +593,7 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 		//wchar_t outchars[2];
 		//outchars[0] = vk_code;
 		//outchars[1] = 0;
-		//std::cout << "HERE 2 " << outchars[0] << std::endl;
+		////std::cout << "HERE 2 " << outchars[0] << std::endl;
 		//window_->textEvent(outchars, 1);
 		//window_->keyEvent(pressed, mods, vk_code, scancode);
 	//}
@@ -657,17 +657,17 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 /*
 void GuiComponent::onCrashed(Berkelium::Window*win)
 {
-	std::cout << "*** onCrashed " << std::endl;
+	//std::cout << "*** onCrashed " << std::endl;
 }
 
 void GuiComponent::onUnresponsive(Berkelium::Window*win)
 {
-	std::cout << "*** onUnresponsive " << std::endl;
+	//std::cout << "*** onUnresponsive " << std::endl;
 }
 
 void GuiComponent::onScriptAlert(Berkelium::Window*win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool&success, Berkelium::WideString&value)
 {
-	std::wcout << L"*** onScriptAlert " << message << std::endl;
+	//std::wcout << L"*** onScriptAlert " << message << std::endl;
 }
 */
 
@@ -705,17 +705,17 @@ CefRefPtr<CefRenderHandler> GuiComponent::GetRenderHandler()
 /*
 void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, boost::any*args, size_t numArgs)
 {
-	   std::cout << "*** onJavascriptCallback at URL " << url << ", "
+	   //std::cout << "*** onJavascriptCallback at URL " << url << ", "
 	                  << (replyMsg?"synchronous":"async") << std::endl;
-	   std::wcout << L"    Function name: " << funcName << std::endl;
+	   //std::wcout << L"    Function name: " << funcName << std::endl;
 
 	   for (size_t i = 0; i < numArgs; i++) {
 	        Berkelium::WideString jsonStr = toJSON(args[i]);
-	        std::wcout << L"    Argument " << i << ": ";
+	        //std::wcout << L"    Argument " << i << ": ";
 	        if (args[i].type() == boost::any::JSSTRING) {
-	                std::wcout << L"(string) " << args[i].toString() << std::endl;
+	                //std::wcout << L"(string) " << args[i].toString() << std::endl;
 	        } else {
-	                std::wcout << jsonStr << std::endl;
+	                //std::wcout << jsonStr << std::endl;
 	        }
 	        Berkelium::Script::toJSON_free(jsonStr);
 	   }
@@ -726,7 +726,7 @@ void GuiComponent::onJavascriptCallback(Berkelium::Window*win, void* replyMsg, B
 	const std::wstring objName = getObjectName(berkeliumFuncName);
 	const std::wstring functionName = getFunctionName(berkeliumFuncName);
 
-	//std::wcout << objName << " " << functionName << std::endl;
+	////std::wcout << objName << " " << functionName << std::endl;
 
 
 	std::vector< CallbackParameter > params;
@@ -905,7 +905,7 @@ bool GuiComponent::mapOnPaintToTexture(
 
 			if ( DEBUG_PAINT )
 			{
-				std::cout << "Scroll rect: w=" << wid << ", h=" << hig << ", ("
+				//std::cout << "Scroll rect: w=" << wid << ", h=" << hig << ", ("
 						  << scrolled_shared_rect.left() << "," << scrolled_shared_rect.top()
 						  << ") by (" << dx << "," << dy << ")" << std::endl;
 			}
@@ -964,7 +964,7 @@ bool GuiComponent::mapOnPaintToTexture(
 	//LOG_DEBUG( << "mapOnPaintToTexture: here 2";
 	if ( DEBUG_PAINT )
 	{
-		std::cout << (void*)wini << " Bitmap rect: w="
+		//std::cout << (void*)wini << " Bitmap rect: w="
 				  << bitmap_rect.width() << ", h=" << bitmap_rect.height()
 				  << ", (" << bitmap_rect.top() << "," << bitmap_rect.left()
 				  << ") tex size " << dest_texture_width << "x" << dest_texture_height
@@ -982,7 +982,7 @@ bool GuiComponent::mapOnPaintToTexture(
 
 		if ( DEBUG_PAINT )
 		{
-			std::cout << (void*)wini << " Copy rect: w=" << wid << ", h=" << hig << ", ("
+			//std::cout << (void*)wini << " Copy rect: w=" << wid << ", h=" << hig << ", ("
 					  << top << "," << left << ")" << std::endl;
 		}
 		//LOG_DEBUG( << "mapOnPaintToTexture: here 5";

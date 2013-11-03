@@ -73,7 +73,16 @@ Model::Model(const Model& other)
 	
 	globalInverseTransformation_ = other.globalInverseTransformation_;
 	
-	currentAnimation_ = other.currentAnimation_;
+	currentAnimation_ = nullptr;
+	// Set the current animation to our copied animation
+	if ( other.currentAnimation_ != nullptr )
+	{
+		auto it = animations_.find( other.currentAnimation_->getName() );
+		if (it != animations_.end())
+		{
+			currentAnimation_ = it->second.get();
+		}
+	}
 	
 	// TODO: make this not crappy
 	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
@@ -119,39 +128,6 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		
 		materials_.push_back( material );
 		
-		
-/*
-struct BoneNode {
-	std::string name;
-	glm::mat4 transformation;
-	std::vector< BoneNode > children;
-};
-
-struct AnimatedBoneNode {
-	std::string name;
-	std::vector< glm::detail::float64 > positionTimes;
-	std::vector< glm::detail::float64 > rotationTimes;
-	std::vector< glm::detail::float64 > scalingTimes;
-	std::vector< glm::vec3 > positions;
-	std::vector< glm::quat > rotations;
-	std::vector< glm::vec3 > scalings;
-};
-
-struct Animation {
-	std::string name;
-	glm::detail::float64 duration;
-	glm::detail::float64 ticksPerSecond;
-	
-	std::map< std::string, AnimatedBoneNode > animatedBoneNodes;
-};
-
-struct AnimationData {
-	std::string name;
-	
-	BoneNode rootBoneNode;
-	std::map< std::string, Animation > animations;
-};
-*/
 		// Default to no animation
 		currentAnimation_ = nullptr;
 
@@ -274,8 +250,9 @@ void Model::render(shaders::IShaderProgram* shader)
 		}		
 		
 		if (currentAnimation_ != nullptr)
-		{			
+		{
 			glw::Animation* a = currentAnimation_->getAnimation();
+			std::cout << "NAME: " << currentAnimation_->getName() << " " << currentAnimation_->getStartFrame() << ", " << currentAnimation_->getEndFrame() << std::endl;
 			a->setAnimationTime( currentAnimation_->getAnimationTime() );
 			a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
 			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());

@@ -20,8 +20,14 @@ Animation::Animation(glw::Animation* animation, glw::IOpenGlDevice* openGlDevice
  */
 Animation::Animation(const Animation& other)
 {
+	
 	animation_ = other.animation_;
 	openGlDevice_ = other.openGlDevice_;
+	
+	std::cout << "HERE: " << other.startFrame_ << " " << other.endFrame_ << std::endl;
+	runningTime_ = other.runningTime_;
+	startFrame_ = other.startFrame_;
+	endFrame_ = other.endFrame_;
 }
 
 Animation::~Animation()

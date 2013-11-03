@@ -17,6 +17,7 @@ buildFlags['debug'] = True # True by default (at least for now)
 buildFlags['useCef'] = True
 buildFlags['beautify'] = False
 buildFlags['clean'] = False
+buildFlags['buildType'] = 'debug'
 
 cpp_paths = []
 cpp_defines = []
@@ -30,7 +31,7 @@ libraries = []
 def setup(ARGUMENTS):	
 	### Error check our platform type
 	if (not isLinux and not isWindows and not isMac):
-		print("Sorry, but it appears your platform is not recognized")
+		print("Sorry, but it appears your platform is not recognized.")
 		sys.exit(1)
 	
 	AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
@@ -38,22 +39,34 @@ def setup(ARGUMENTS):
 	
 	global buildFlags
 	
+	### Get our arguments
+	compiler = ARGUMENTS.get('compiler')
+	buildFlags['buildType'] = ARGUMENTS.get('buildType')
+	
+	### Set and error check our build flags
 	if (GetOption('without-cef') is True):
 		buildFlags['useCef'] = False
 	if (GetOption('beautify') is True):
 		buildFlags['beautify'] = True
 	if (GetOption('clean') is True):
 		buildFlags['clean'] = True
-	if (ARGUMENTS.get('debug') is True):
+	
+	if (buildFlags['buildType'] is None or buildFlags['buildType'] == ''):
+		buildFlags['buildType'] = 'debug'
+	
+	if ( buildFlags['buildType'] == 'debug' ):
 		buildFlags['debug'] = True
+	elif ( buildFlags['buildType'] == 'release' ):
+		buildFlags['debug'] = False
+	else:
+		print( "Invalid build type!" )
+		print( "Valid types are 'debug' or 'release'." )
+		sys.exit(1)
 	
 	if (buildFlags['useCef']):
 		cpp_defines.append('USE_CEF')
 	if (buildFlags['debug']):
 		cpp_defines.append('DEBUG')
-	
-	### Set our compiler
-	compiler = ARGUMENTS.get('compiler')
 	
 	if (compiler is None or compiler == ''):
 		compiler = 'default'
@@ -63,7 +76,7 @@ def setup(ARGUMENTS):
 		compiler = 'default'
 	
 	### Error check compiler
-	if (compiler == 'msvc' and isWindows):
+	if (compiler == 'msvc' and not isWindows):
 		print( "Cannot use msvc in this environment!" )
 		sys.exit(1)
 	
@@ -72,8 +85,11 @@ def setup(ARGUMENTS):
 		if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
 			if (buildFlags['debug']):
 				cpp_flags.append('-g')
-			cpp_flags.append('-O0') # optimization level 0
-			cpp_flags.append('-pg') # profiler
+				cpp_flags.append('-O0') # optimization level 0
+				cpp_flags.append('-pg') # profiler
+			else:
+				cpp_flags.append('-O3') # optimization level 3
+			
 			cpp_flags.append('-std=c++11')
 			cpp_flags.append('-pedantic-errors')
 			#cpp_flags.append('-Wall')
@@ -106,8 +122,11 @@ def setup(ARGUMENTS):
 			elif (compiler == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
-				cpp_flags.append('-O0') # optimization level 0
-				#cpp_flags.append('-pg') # profiler
+					cpp_flags.append('-O0') # optimization level 0
+					cpp_flags.append('-pg') # profiler
+				else:
+					cpp_flags.append('-O3') # optimization level 3
+				
 				cpp_flags.append('-std=c++11')
 				cpp_flags.append('-pedantic-errors')
 			

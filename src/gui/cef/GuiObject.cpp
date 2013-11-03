@@ -204,7 +204,7 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 	
 	int type = it->second;
 	
-	std::wcout << "calling: " << name << " | " << type << std::endl;
+	//std::wcout << "calling: " << name << " | " << type << std::endl;
 
 	boost::any variant;
 

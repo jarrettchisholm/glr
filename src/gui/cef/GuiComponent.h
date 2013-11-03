@@ -50,7 +50,7 @@ public:
 	
     void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
     {
-		std::cout << "painting!: " << width << " " << height << std::endl;
+		//std::cout << "painting!: " << width << " " << height << std::endl;
 		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
 		
 		glBindTexture(GL_TEXTURE_2D, webTexture);

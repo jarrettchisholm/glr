@@ -103,12 +103,15 @@ VariantDir('build', 'src', duplicate=0)
 
 ### Set our source files
 source_files = Glob('build/*.cpp', 'build/*.h')
+source_files += Glob('build/common/logger/*.cpp', 'build/common/logger/*.h')
 
 setupDependencies()
 
 ### Create our environment
 env = Environment(ENV = os.environ, TOOLS = [compiler])
 setupEnvironment(env)
+
+print("Build type: " + buildFlags['buildType'])
 
 # Tell SCons to build
 env.Program('build/cef3_client', source_files, LIBS = libraries, LIBPATH = library_paths)

@@ -2,12 +2,17 @@
 
 #include "FunctionList.h"
 
+#include "common/logger/Logger.h"
+
 namespace glr {
 namespace cef_client {
 	
 ClientApp::ClientApp()
 {
-	std::cout << "cef3_client here woo" << std::endl;
+	// Initialize the log using the specified log file
+	cs_logger::Logger::getInstance( "cef_client.log" );
+	
+	LOG_DEBUG( "cef3_client here woo" );
 	totalBindingsSent_ = 0;
 	totalBindingsReceived_ = 0;
 	allBindingsSentMessageReceived_ = false;
@@ -20,18 +25,18 @@ ClientApp::~ClientApp()
 
 void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context)
 {		
-	std::cout << "cef3_client OnContextCreated has been called!" << std::endl;
+	LOG_DEBUG( "cef3_client OnContextCreated has been called!" );
 	
 	if ( allBindingsSentMessageReceived_ )
 	{			
 		// Register our objects, functions and attributes
 		objectBindingMapMutex_.lock();
-		std::cout << "Binding " << objectBindingMap_.size() << " object(s)." << std::endl;
+		LOG_DEBUG( "Binding " << objectBindingMap_.size() << " object(s)." );
 		for ( auto& it : objectBindingMap_ )
 		{
 			// Add object
 			const std::wstring& objName = it.first;
-			std::wcout << L"Binding object " << objName << std::endl;
+			LOG_DEBUG( L"Binding object " << objName );
 			CefRefPtr<CefV8Value> obj = CefRefPtr<CefV8Value>();
 			if (objName.length() != 0)
 				obj = CefV8Value::CreateObject(nullptr);
@@ -40,10 +45,10 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 			
 			// Add attributes
 			const std::vector< AttributeBinding >& attributes = it.second.getAttributes();
-			std::cout << "Binding attributes " << attributes.size() << std::endl;
+			LOG_DEBUG( "Binding attributes " << attributes.size() );
 			for ( auto& a : attributes )
 			{
-				std::wcout << L"Binding attribute " << a.getName() << std::endl;
+				LOG_DEBUG( L"Binding attribute " << a.getName() );
 				CefRefPtr<CefV8Value> attrValue;
 				
 				if ( a.getValueV8()->IsString() )
@@ -70,10 +75,10 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 			
 			// Add functions
 			const std::vector< FunctionBinding >& functions = it.second.getFunctions();				
-			std::cout << "Binding functions " << functions.size() << std::endl;
+			LOG_DEBUG( "Binding functions " << functions.size() );
 			for ( auto& f : functions )
 			{
-				std::wcout << L"Binding function " << f.getName() << std::endl;
+				LOG_DEBUG( L"Binding function " << f.getName() );
 				
 				CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(f.getName(), handler);
 				
@@ -110,17 +115,17 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 
 void ClientApp::OnContextInitialized()
 {
-	//std::cout << "cef3_client OnContextInitialized has been called!" << std::endl;
+	//LOG_DEBUG( "cef3_client OnContextInitialized has been called!" );
 }
 
 void ClientApp::OnContextReleased(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context)
 {
-	std::cout << "cef3_client OnContextReleased has been called!" << std::endl;
+	LOG_DEBUG( "cef3_client OnContextReleased has been called!" );
 }
 
 void ClientApp::OnWebKitInitialized()
 {
-	std::cout << "cef3_client OnWebKitInitialized has been called!" << std::endl;
+	LOG_DEBUG( "cef3_client OnWebKitInitialized has been called!" );
 }
 
 CefRefPtr<CefRenderProcessHandler> ClientApp::GetRenderProcessHandler()
@@ -131,14 +136,14 @@ CefRefPtr<CefRenderProcessHandler> ClientApp::GetRenderProcessHandler()
 bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
 	std::wstring messageName = message->GetName().ToWString();
-	std::wcout << L"cef3_client OnProcessMessageReceived " << messageName << std::endl;
+	LOG_DEBUG( L"cef3_client OnProcessMessageReceived " << messageName );
 	
 	
 	if( messageName == ADD_OBJECT/* && browser == m_Browser*/ )
 	{
 		std::string messageId = message->GetArgumentList()->GetString(0);
 		std::wstring objName = message->GetArgumentList()->GetString(1);
-		std::wcout << L"cef3_client AddObject: " << objName << std::endl;
+		LOG_DEBUG( L"cef3_client AddObject: " << objName );
 		
 		objectBindingMapMutex_.lock();
 		ObjectBinding& obj = objectBindingMap_[ objName ];
@@ -160,7 +165,7 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 		std::string messageId = message->GetArgumentList()->GetString(0);
 		std::wstring objName = message->GetArgumentList()->GetString(1);
 		std::wstring funcName = message->GetArgumentList()->GetString(2);
-		std::wcout << L"cef3_client AddMethodToObject: " << objName << L" | " << funcName << std::endl;
+		LOG_DEBUG( L"cef3_client AddMethodToObject: " << objName << L" | " << funcName );
 		
 		objectBindingMapMutex_.lock();
 		ObjectBinding& obj = objectBindingMap_[ objName ];
@@ -199,17 +204,17 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 			return false;
 		}
 		
-		std::wcout << L"cef3_client AddAttributeToObject: " << objName << L" | " << attrName << L" | ";
+		LOG_DEBUG( L"cef3_client AddAttributeToObject: " << objName << L" | " << attrName << L" | " );
 		if ( attrValue->IsString() )
-			std::cout << "(string) " << attrValue->GetStringValue().ToString() << std::endl;
+			LOG_DEBUG( "(string) " << attrValue->GetStringValue().ToString() );
 		else if ( attrValue->IsInt() )
-			std::cout << "(int) " <<  attrValue->GetIntValue() << std::endl;
+			LOG_DEBUG( "(int) " <<  attrValue->GetIntValue() );
 		else if ( attrValue->IsUInt() )
-			std::cout << "(uint) " <<  attrValue->GetUIntValue() << std::endl;
+			LOG_DEBUG( "(uint) " <<  attrValue->GetUIntValue() );
 		else if ( attrValue->IsBool() )
-			std::cout << "(bool) " <<  attrValue->GetBoolValue() << std::endl;
+			LOG_DEBUG( "(bool) " <<  attrValue->GetBoolValue() );
 		else if ( attrValue->IsDouble() )
-			std::cout << "(double) " <<  attrValue->GetDoubleValue() << std::endl;
+			LOG_DEBUG( "(double) " <<  attrValue->GetDoubleValue() );
 		else
 		{
 			sendMessageException(browser, messageId, Exception::BIND_EXCEPTION, L"Attribute '" + objName + L"." + attrName + L"' has an unknown value type.");
@@ -244,7 +249,7 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 	{
 		std::string messageId = message->GetArgumentList()->GetString(0);
 		std::wstring funcName = message->GetArgumentList()->GetString(1);
-		std::wcout << L"cef3_client AddFunction: " << funcName << std::endl;
+		LOG_DEBUG( L"cef3_client AddFunction: " << funcName );
 		
 		objectBindingMapMutex_.lock();
 		ObjectBinding& obj = objectBindingMap_[ L"" ];
@@ -272,27 +277,27 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 	}
 	else if( messageName == ADD_ATTRIBUTE/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client AddAttribute message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client AddAttribute message not yet implemented." );
 	}
 	else if( messageName == REMOVE_FUNCTION/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client RemoveFunction message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client RemoveFunction message not yet implemented." );
 	}
 	else if( messageName == REMOVE_ATTRIBUTE/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client RemoveAttribute message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client RemoveAttribute message not yet implemented." );
 	}
 	else if( messageName == REMOVE_OBJECT/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client RemoveObject message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client RemoveObject message not yet implemented." );
 	}
 	else if( messageName == REMOVE_ATTRIBUTE_FROM_OBJECT/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client RemoveAttributeFromObject message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client RemoveAttributeFromObject message not yet implemented." );
 	}
 	else if( messageName == REMOVE_METHOD_FROM_OBJECT/* && browser == m_Browser*/ )
 	{
-		std::cout << "cef_client RemoveMethodFromObject message not yet implemented." << std::endl;
+		LOG_DEBUG( "cef_client RemoveMethodFromObject message not yet implemented." );
 	}
 	else if ( messageName == ALL_BINDINGS_SENT)
 	{
@@ -306,7 +311,7 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 			sendMessageAllBindingsReceived( browser, totalBindingsReceived_ );
 		}
 		objectBindingMapMutex_.unlock();
-		std::cout << "cef_client AllBindingsSent message processed" << std::endl;
+		LOG_DEBUG( "cef_client AllBindingsSent message processed" );
 	}
 	else if( messageName == FUNCTION_RESULT )
 	{
@@ -359,7 +364,7 @@ bool ClientApp::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProc
 				
 				// Second argument is the list of message arguments.
 				//CefRefPtr<CefListValue> list = message->GetArgumentList();
-				//std::cout << "list->GetSize() " << list->GetSize() << std::endl;
+				//LOG_DEBUG( "list->GetSize() " << list->GetSize() );
 				CefRefPtr<CefV8Value> args = CefV8Value::CreateArray(list->GetSize());
 				SetList(list, args);  // Helper function to convert CefListValue to CefV8Value.
 				
@@ -397,12 +402,12 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	{
 		// Handle exceptions
 		std::wstring msg = L"cef3_client exception was detected for '" + s + L"' - Exception: " + exception.ToWString();
-		std::wcout << msg << std::endl;
+		LOG_DEBUG( msg );
 		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
 	}
 	else if (s == L"setMessageCallback" && arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsFunction())
 	{
-		std::wcout << L"cef3_client Execute --- setMessageCallback" << std::endl;
+		LOG_DEBUG( L"cef3_client Execute --- setMessageCallback" );
 		std::wstring messageName = arguments[0]->GetStringValue();
 		
 		int browserId = context->GetBrowser()->GetIdentifier();
@@ -413,7 +418,7 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 	{
 		// TODO: error
 		std::wstring msg = L"Cannot execute function '" + s + L"'.";
-		std::wcout << L"cef_client - " << msg << std::endl;
+		LOG_DEBUG( L"cef_client - " << msg );
 		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
 	}
 	
@@ -549,7 +554,7 @@ CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, 
 		case VTYPE_STRING:
 		{
 			std::string arg = message->GetArgumentList()->GetString(index);
-			std::cout << "VTYPE_STRING - getValue -  " << arg << std::endl;
+			LOG_DEBUG( "VTYPE_STRING - getValue -  " << arg );
 			return CefV8Value::CreateString( arg );
 		}
 			break;
@@ -557,7 +562,7 @@ CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, 
 		case VTYPE_INT:
 		{
 			int arg = message->GetArgumentList()->GetInt(index);
-			std::cout << "VTYPE_INT - getValue -  " << arg << std::endl;
+			LOG_DEBUG( "VTYPE_INT - getValue -  " << arg );
 			return CefV8Value::CreateInt( arg );
 		}
 			break;
@@ -565,7 +570,7 @@ CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, 
 		case VTYPE_DOUBLE:
 		{
 			double arg = message->GetArgumentList()->GetDouble(index);
-			std::cout << "VTYPE_DOUBLE - getValue -  " << arg << std::endl;
+			LOG_DEBUG( "VTYPE_DOUBLE - getValue -  " << arg );
 			return CefV8Value::CreateDouble( arg );
 		}
 			break;
@@ -573,38 +578,38 @@ CefRefPtr<CefV8Value> ClientApp::getValue(CefRefPtr<CefProcessMessage> message, 
 		case VTYPE_BOOL:
 		{
 			bool arg = message->GetArgumentList()->GetBool(index);
-			std::cout << "VTYPE_BOOL - getValue -  " << arg << std::endl;
+			LOG_DEBUG( "VTYPE_BOOL - getValue -  " << arg );
 			return CefV8Value::CreateBool( arg );
 		}
 			break;
 	
 		case VTYPE_BINARY:
 			// TODO: error
-			std::cout << "Error - getValue - VTYPE_BINARY not implemented as CEF3 function result type." << std::endl;
+			LOG_DEBUG( "Error - getValue - VTYPE_BINARY not implemented as CEF3 function result type." );
 			break;
 			
 		case VTYPE_DICTIONARY:
 			// TODO: error
-			std::cout << "Error - getValue - VTYPE_DICTIONARY not implemented as CEF3 function result type." << std::endl;
+			LOG_DEBUG( "Error - getValue - VTYPE_DICTIONARY not implemented as CEF3 function result type." );
 			break;
 		
 		case VTYPE_LIST:
 			// TODO: error
-			std::cout << "Error - getValue - VTYPE_LIST not implemented as CEF3 function result type." << std::endl;
+			LOG_DEBUG( "Error - getValue - VTYPE_LIST not implemented as CEF3 function result type." );
 			break;
 		
 		case VTYPE_INVALID:
 			// TODO: error
-			std::cout << "Error - getValue - VTYPE_INVALID CEF3 function result type." << std::endl;
+			LOG_DEBUG( "Error - getValue - VTYPE_INVALID CEF3 function result type." );
 			break;
 			
 		case VTYPE_NULL:
 			// TODO: error
-			std::cout << "Error - getValue - VTYPE_NULL not implemented as CEF3 function result type." << std::endl;
+			LOG_DEBUG( "Error - getValue - VTYPE_NULL not implemented as CEF3 function result type." );
 			break;
 		
 		default:
-			std::cout << "Error - getValue - Unknown CEF3 function result type: " << type << std::endl;
+			LOG_DEBUG( "Error - getValue - Unknown CEF3 function result type: " << type );
 			break;
 	}
 	

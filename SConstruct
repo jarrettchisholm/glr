@@ -183,6 +183,8 @@ def compileCefClient(compiler):
 		buildCommand = buildCommand + " compiler="+compiler
 	if (buildFlags['clean']):
 		buildCommand = buildCommand + " --clean"
+	buildCommand = buildCommand + " buildType=" + buildFlags['buildType']
+	
 	result = subprocess.call( buildCommand, shell=True )
 	os.chdir( '..' )
 	return result
@@ -228,6 +230,7 @@ source_files = Glob('build/*.cpp', 'build/*.h')
 
 source_files = source_files + Glob('build/common/compatibility/*.cpp', 'build/common/compatibility/*.h')
 source_files = source_files + Glob('build/common/math/*.cpp', 'build/common/math/*.h')
+source_files = source_files + Glob('build/common/logger/*.cpp', 'build/common/logger/*.h')
 source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common/utilities/*.h')
 source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h')
 #source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
@@ -247,6 +250,8 @@ setupDependencies()
 ### Create our environment
 env = Environment(ENV = os.environ, TOOLS = [compiler])
 setupEnvironment(env)
+
+print("Build type: " + buildFlags['buildType'])
 
 ### Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
