@@ -7,6 +7,8 @@
 
 #include "FunctionList.h"
 
+#include "common/logger/Logger.h"
+
 namespace glr {
 namespace cef_client {
 

@@ -1,3 +1,6 @@
 [submodule "src/common/logger"]
 	path = src/common/logger
 	url = git@github.com:jarrettchisholm/logger.git
+[submodule "cef_client/src/common/logger"]
+	path = cef_client/src/common/logger
+	url = git@github.com:jarrettchisholm/logger.git
