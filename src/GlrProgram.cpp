@@ -15,7 +15,7 @@
 
 #include "GlrProgram.h"
 
-#include "common/logging/Logger.h"
+#include "common/logger/Logger.h"
 
 #include "Window.h"
 

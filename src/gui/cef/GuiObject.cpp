@@ -11,7 +11,7 @@
 
 #include "GuiObject.h"
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 namespace glr {
 namespace gui {

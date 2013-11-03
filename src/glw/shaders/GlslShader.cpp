@@ -11,7 +11,7 @@
 
 #include "GlslShader.h"
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 #include "../../exceptions/GlException.h"
 

@@ -31,12 +31,12 @@ bool ObjectBinding::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
 	{
 		// Handle exceptions
 		std::wstring msg = L"cef3_client exception was detected for '" + s + L"' - Exception: " + exception.ToWString();
-		std::wcout << msg << std::endl;
+		LOG_DEBUG( msg );
 		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
 	}
 	if ( hasFunction(s) )
 	{
-		std::wcout << "cef3_client Execute " << name_ << "." << s << std::endl;
+		LOG_DEBUG( "cef3_client Execute " << name_ << "." << s );
 		
 		// Send function call to browser process
 		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("ExecuteFunction");
@@ -67,7 +67,7 @@ bool ObjectBinding::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
 	else
 	{
 		// TODO: error
-		std::wcout << "CEF Object " << name_ << " has no method '" << s << "'" << std::endl;
+		LOG_DEBUG( "CEF Object " << name_ << " has no method '" << s << "'" );
 	}
 	
 	// Function does not exist.

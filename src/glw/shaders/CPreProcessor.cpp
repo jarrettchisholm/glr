@@ -23,7 +23,7 @@
 #include <boost/wave/cpplexer/cpp_lex_token.hpp>    // token class
 #include <boost/wave/cpplexer/cpp_lex_iterator.hpp> // lexer class
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 namespace glr {
 namespace shaders {

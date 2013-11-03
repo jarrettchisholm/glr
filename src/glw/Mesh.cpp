@@ -9,7 +9,7 @@
 
 #include "Mesh.h"
 
-#include "../common/logging/Logger.h"
+#include "../common/logger/Logger.h"
 
 #include "../common/utilities/AssImpUtilities.h"
 

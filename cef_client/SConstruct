@@ -35,15 +35,21 @@ def setupDependencies():
 	### Set our required libraries
 	cefLib = 'cef'
 	cefDllWrapperLib = 'cef_dll_wrapper'
+	boostLogLib = 'boost_log'
+	boostLogSetupLib = 'boost_log_setup'
 	
 	if (isWindows):
 		cefLib = 'libcef'
 		cefDllWrapperLib = 'libcef_dll_wrapper'
+		boostLogLib = 'libboost_log-vc120-mt-1_55'
+		boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
 
 
 	# Set our required libraries
 	libraries.append(cefLib)
 	libraries.append(cefDllWrapperLib)
+	libraries.append(boostLogLib)
+	libraries.append(boostLogSetupLib)
 	
 	### Set our library paths
 	library_paths.append('../lib')

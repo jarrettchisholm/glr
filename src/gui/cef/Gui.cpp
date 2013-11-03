@@ -12,7 +12,7 @@
 
 #include "Gui.h"
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 #include "../../glw/shaders/GlslShaderProgram.h"
 

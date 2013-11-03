@@ -18,7 +18,7 @@
 #include "../../common/utilities/ImageLoader.h"
 #include "../../common/utilities/BoostAnyUtilities.h"
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 #include "../../exceptions/ExceptionInclude.h"
 

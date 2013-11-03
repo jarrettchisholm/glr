@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 
-#include "../common/logging/Logger.h"
+#include "../common/logger/Logger.h"
 
 namespace glr {
 namespace glw {

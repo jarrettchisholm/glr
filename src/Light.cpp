@@ -19,7 +19,7 @@
 
 #include "Light.h"
 
-#include "common/logging/Logger.h"
+#include "common/logger/Logger.h"
 
 #include "common/math/Math.h"
 

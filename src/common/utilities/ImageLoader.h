@@ -12,7 +12,7 @@
 
 #include "FreeImage.h"
 
-#include "../../common/logging/Logger.h"
+#include "../../common/logger/Logger.h"
 
 namespace utilities {
 
