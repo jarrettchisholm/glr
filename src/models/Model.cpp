@@ -252,7 +252,6 @@ void Model::render(shaders::IShaderProgram* shader)
 		if (currentAnimation_ != nullptr)
 		{
 			glw::Animation* a = currentAnimation_->getAnimation();
-			std::cout << "NAME: " << currentAnimation_->getName() << " " << currentAnimation_->getStartFrame() << ", " << currentAnimation_->getEndFrame() << std::endl;
 			a->setAnimationTime( currentAnimation_->getAnimationTime() );
 			a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
 			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData());

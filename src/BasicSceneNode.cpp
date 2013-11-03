@@ -195,7 +195,6 @@ void BasicSceneNode::render()
 	{
 		if (shaderProgram_ != nullptr) 
 		{
-			std::cout << "node name: " << name_ << std::endl;
 			shaderProgram_->bind();
 			
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
