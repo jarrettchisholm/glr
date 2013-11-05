@@ -54,7 +54,7 @@ void Camera::initialize()
 	moveSpeed_ = 0.05f;
 	rotSpeed_ = 18.0f;
 
-	rotationQuaternion_ = glm::quat(1.0f, 1.0f, 1.0f, 1.0f);
+	rotationQuaternion_ = glm::quat(1.0f, 0.0f, 0.0f, 3.14f*0.5f);
 	rotationQuaternion_ = glm::normalize(rotationQuaternion_);
 	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -114,7 +114,8 @@ void Camera::move(const glm::vec3& moveVector)
 void Camera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
 {
 	//direction_ += glm::rotate(direction_, radians * 0.2f, axis);
-	rotation_ += (radians * axis);
+	rotationQuaternion_ = glm::normalize( rotationQuaternion_ * glm::angleAxis(radians, axis));
+	//rotation_ += (radians * axis);
 }
 
 void Camera::lookAt(const glm::vec3& lookAt)
@@ -122,8 +123,10 @@ void Camera::lookAt(const glm::vec3& lookAt)
 	// TODO: this is broken - i need to fix it.
 	glm::quat look = glm::quat_cast( glm::lookAt(pos_, lookAt, glm::vec3(0.0f, 1.0f, 0.0f)) );
 	rotation_ = glm::eulerAngles(look);
+		
+	//rotation_.z = 0.0f;
 	
-	rotation_.z = 0.0f;
+	//rotation_ = glm::normalize( rotation_ );
 }
 
 /**
@@ -141,7 +144,7 @@ void Camera::tick(glm::detail::float32 time)
 	
 	//std::cout << glm::to_string(rotation_) << " | " << glm::to_string(glm::eulerAngles(pitch)) << " | " << glm::to_string(glm::eulerAngles(heading)) << " | " << glm::to_string(glm::eulerAngles(other)) << std::endl;
 
-	rotationQuaternion_ = glm::normalize(heading * pitch * other);
+	//rotationQuaternion_ = glm::normalize(heading * pitch * other);
 	
 	clearMovementBuffer();
 }

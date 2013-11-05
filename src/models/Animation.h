@@ -50,15 +50,20 @@ public:
 	glm::detail::uint32 getEndFrame();
 	
 	// From glw::IAnimation
-	virtual const std::string getName();
+	virtual const std::string& getName();
 	virtual void setAnimationTime(glm::detail::float32 runningTime);
 	
 	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame); 
+	
+	std::vector<glmd::uint32>& getIndexCache();
 
 protected:
 	glw::IOpenGlDevice* openGlDevice_;
 	
 	glw::Animation* animation_;
+	
+	// TESTING
+	std::vector<glmd::uint32> indexCache_;
 	
 	glm::detail::float32 runningTime_;
 	
