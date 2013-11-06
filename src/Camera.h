@@ -40,7 +40,7 @@ public:
 	virtual const glm::mat4& getViewMatrix();
 
 private:
-	glm::quat rotationQuaternion_;
+	glm::quat orientationQuaternion_;
 	glm::detail::int32 prevX_, prevY_;
 
 	glm::mat4 viewMatrix_;

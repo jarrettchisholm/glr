@@ -47,28 +47,30 @@ Camera::~Camera()
 void Camera::initialize()
 {
 	clearMovementBuffer();
-
+first = 0;
 	xRot_ = 0.0f;
 	yRot_ = 0.0f;
 
 	moveSpeed_ = 0.05f;
 	rotSpeed_ = 18.0f;
 
-	rotationQuaternion_ = glm::quat(1.0f, 0.0f, 0.0f, 3.14f*0.5f);
-	rotationQuaternion_ = glm::normalize(rotationQuaternion_);
+	orientationQuaternion_ = glm::quat(); //glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+	orientationQuaternion_ = glm::normalize(orientationQuaternion_);
+	std::cout << "quat initialized: " << glm::to_string( glm::eulerAngles(orientationQuaternion_) ) << std::endl;
+	//orientationQuaternion_ = glm::normalize( orientationQuaternion_ * glm::angleAxis(90.0f, glm::vec3(0.0f, 0.0f, 1.0f)) );
 	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 	LOG_DEBUG( "Camera initialized." );
-	//rotationQuaternion_.normalize();
+	//orientationQuaternion_.normalize();
 }
 
 void Camera::render()
 {
 	if ( isActive() )
 	{
-		glm::quat temp = glm::conjugate(rotationQuaternion_);
+		glm::quat temp = glm::conjugate(orientationQuaternion_);
 		//viewMatrix_ = glm::lookAt(pos_, pos_ + direction_, glm::vec3(0.0f, 1.0f, 0.0f));
 		viewMatrix_ = glm::mat4_cast(temp);
 		viewMatrix_ = glm::translate(viewMatrix_, glm::vec3(-pos_.x, -pos_.y, -pos_.z));
@@ -113,16 +115,19 @@ void Camera::move(const glm::vec3& moveVector)
  */
 void Camera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
 {
-	//direction_ += glm::rotate(direction_, radians * 0.2f, axis);
-	rotationQuaternion_ = glm::normalize( rotationQuaternion_ * glm::angleAxis(radians, axis));
-	//rotation_ += (radians * axis);
+	if ( axis == glm::vec3(0.0f, 1.0f, 0.0f) )
+		orientationQuaternion_ =  glm::normalize(glm::angleAxis(radians, axis)) * orientationQuaternion_;
+	else
+		orientationQuaternion_ = orientationQuaternion_ * glm::normalize(glm::angleAxis(radians, axis));
 }
 
 void Camera::lookAt(const glm::vec3& lookAt)
 {
 	// TODO: this is broken - i need to fix it.
-	glm::quat look = glm::quat_cast( glm::lookAt(pos_, lookAt, glm::vec3(0.0f, 1.0f, 0.0f)) );
-	rotation_ = glm::eulerAngles(look);
+	//orientationQuaternion_ = glm::quat_cast( glm::lookAt(pos_, lookAt, glm::vec3(0.0f, 1.0f, 0.0f)) );
+	//orientationQuaternion_ = glm::normalize( orientationQuaternion_ );
+	
+	//rotation_ = glm::eulerAngles(look);
 		
 	//rotation_.z = 0.0f;
 	
@@ -134,17 +139,17 @@ void Camera::lookAt(const glm::vec3& lookAt)
  */
 void Camera::tick(glm::detail::float32 time)
 {
-	//pos_ += rotationQuaternion_ * movementBuffer_ * time;
-	pos_ += rotationQuaternion_ * movementBuffer_;
+	//pos_ += orientationQuaternion_ * movementBuffer_ * time;
+	pos_ += orientationQuaternion_ * movementBuffer_;
 
 	// rotation
-	glm::quat pitch = glm::angleAxis(rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::quat heading = glm::angleAxis(rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::quat other = glm::angleAxis(rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	//glm::quat pitch = glm::angleAxis(rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	//glm::quat heading = glm::angleAxis(rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::quat other = glm::angleAxis(rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	
 	//std::cout << glm::to_string(rotation_) << " | " << glm::to_string(glm::eulerAngles(pitch)) << " | " << glm::to_string(glm::eulerAngles(heading)) << " | " << glm::to_string(glm::eulerAngles(other)) << std::endl;
 
-	//rotationQuaternion_ = glm::normalize(heading * pitch * other);
+	//orientationQuaternion_ = glm::normalize(heading * pitch * other);
 	
 	clearMovementBuffer();
 }

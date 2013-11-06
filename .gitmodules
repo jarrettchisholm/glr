@@ -10,3 +10,6 @@
 [submodule "cef_client/src/common/utilities"]
 	path = cef_client/src/common/utilities
 	url = git@github.com:jarrettchisholm/utilities.git
+[submodule "src/common/math"]
+	path = src/common/math
+	url = git@github.com:jarrettchisholm/math.git
