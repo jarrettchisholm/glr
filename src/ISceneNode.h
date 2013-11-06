@@ -24,6 +24,12 @@ public:
 	{
 	}
 	;
+	
+	enum TransformSpace
+	{
+		TS_LOCAL = 0,
+		TS_WORLD
+	};
 
 	//virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt) = 0;
 	//virtual void addChild(ISceneNode* node) = 0;
@@ -38,16 +44,16 @@ public:
 	virtual void setPosition(glm::vec3& newPos) = 0;
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
-	virtual glm::vec3 getScale() = 0;
-	virtual void setScale(glm::vec3 scale) = 0;
+	virtual glm::vec3& getScale() = 0;
+	virtual void setScale(const glm::vec3& scale) = 0;
 	virtual void setScale(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
-	virtual void translate(glm::vec3 trans) = 0;
-	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
+	virtual void translate(const glm::vec3& trans, TransformSpace relativeTo = TS_LOCAL) = 0;
+	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z, TransformSpace relativeTo = TS_LOCAL) = 0;
 
-	virtual glm::vec3& getRotation() = 0;
-	virtual void rotate(glm::vec3 degrees) = 0;
-	virtual void rotate(glm::quat quaternion) = 0;
+	virtual const glm::quat& getOrientation() = 0;
+	virtual void rotate(const glm::detail::float32 degrees, const glm::vec3& axis, TransformSpace relativeTo = TS_LOCAL) = 0;
+	virtual void rotate(const glm::quat& quaternion, TransformSpace relativeTo = TS_LOCAL) = 0;
 
 	virtual void attach(models::IModel* model) = 0;
 	virtual void attach(shaders::IShaderProgram* shaderProgram) = 0;

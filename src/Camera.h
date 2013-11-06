@@ -31,7 +31,6 @@ public:
 	virtual void attach(models::IModel* model);
 
 	virtual void move(const glm::vec3& moveVector);
-	virtual void rotate(const glm::detail::float32& radians, const glm::vec3& axis);
 	
 	virtual void lookAt(const glm::vec3& lookAt);
 
@@ -40,7 +39,6 @@ public:
 	virtual const glm::mat4& getViewMatrix();
 
 private:
-	glm::quat orientationQuaternion_;
 	glm::detail::int32 prevX_, prevY_;
 
 	glm::mat4 viewMatrix_;

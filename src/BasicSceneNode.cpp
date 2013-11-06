@@ -43,11 +43,11 @@ BasicSceneNode::BasicSceneNode(const std::string name, glw::IOpenGlDevice* openG
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
+BasicSceneNode::BasicSceneNode(const std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
 	 : name_(name), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
-	rotate(rotation);
+	rotate(orientation);
 	setScale(scale);
 
 	active_ = true;
@@ -139,12 +139,12 @@ void BasicSceneNode::setPosition(glm::detail::float32 x, glm::detail::float32 y,
 	pos_ = glm::vec3(x, y, z);
 }
 
-glm::vec3 BasicSceneNode::getScale()
+glm::vec3& BasicSceneNode::getScale()
 {
 	return scale_;
 }
 
-void BasicSceneNode::setScale(glm::vec3 scale)
+void BasicSceneNode::setScale(const glm::vec3& scale)
 {
 	scale_ = scale;
 }
@@ -154,29 +154,55 @@ void BasicSceneNode::setScale(glm::detail::float32 x, glm::detail::float32 y, gl
 	scale_ = glm::vec3(x, y, z);
 }
 
-void BasicSceneNode::translate(glm::vec3 trans)
+void BasicSceneNode::translate(const glm::vec3& trans, TransformSpace relativeTo)
 {
 	pos_ += trans;
 }
 
-void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z)
+void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z, TransformSpace relativeTo)
 {
 	pos_ += glm::vec3(x, y, z);
 }
 
-glm::vec3& BasicSceneNode::getRotation()
+const glm::quat& BasicSceneNode::getOrientation()
 {
-	return rotation_;
+	return orientationQuaternion_;
 }
 
-void BasicSceneNode::rotate(glm::quat quaternion)
+void BasicSceneNode::rotate(const glm::quat& quaternion, TransformSpace relativeTo)
 {
-	// TODO: implement
+	switch( relativeTo )
+	{
+		case TransformSpace::TS_LOCAL:
+			orientationQuaternion_ = orientationQuaternion_ * glm::normalize( quaternion );
+			break;
+		
+		case TransformSpace::TS_WORLD:
+			orientationQuaternion_ =  glm::normalize( quaternion ) * orientationQuaternion_;
+			break;
+			
+		default:
+			// TODO: error
+			break;
+	}		
 }
 
-void BasicSceneNode::rotate(glm::vec3 degrees)
+void BasicSceneNode::rotate(const glm::detail::float32 degrees, const glm::vec3& axis, TransformSpace relativeTo)
 {
-	rotation_ += degrees;
+	switch( relativeTo )
+	{
+		case TransformSpace::TS_LOCAL:
+			orientationQuaternion_ = glm::normalize( glm::angleAxis(degrees, axis) ) * orientationQuaternion_;
+			break;
+		
+		case TransformSpace::TS_WORLD:
+			orientationQuaternion_ =  orientationQuaternion_ * glm::normalize( glm::angleAxis(degrees, axis) );
+			break;
+			
+		default:
+			// TODO: error
+			break;
+	}
 }
 
 models::IModel* BasicSceneNode::getModel()
@@ -206,9 +232,12 @@ void BasicSceneNode::render()
 			const glm::mat4 viewMatrix = openGlDevice_->getViewMatrix();
 			
 			glm::mat4 newModel = glm::translate(modelMatrix, pos_);
-			newModel = glm::rotate(newModel, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			newModel = glm::rotate(newModel, rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			newModel = glm::rotate(newModel, rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			
+			newModel = newModel * glm::mat4_cast( orientationQuaternion_ );
+			
+			//newModel = glm::rotate(newModel, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			//newModel = glm::rotate(newModel, rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			//newModel = glm::rotate(newModel, rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
 			newModel = glm::scale(newModel, scale_);
 			
 			

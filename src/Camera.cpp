@@ -47,7 +47,7 @@ Camera::~Camera()
 void Camera::initialize()
 {
 	clearMovementBuffer();
-first = 0;
+
 	xRot_ = 0.0f;
 	yRot_ = 0.0f;
 
@@ -58,7 +58,7 @@ first = 0;
 	orientationQuaternion_ = glm::normalize(orientationQuaternion_);
 	std::cout << "quat initialized: " << glm::to_string( glm::eulerAngles(orientationQuaternion_) ) << std::endl;
 	//orientationQuaternion_ = glm::normalize( orientationQuaternion_ * glm::angleAxis(90.0f, glm::vec3(0.0f, 0.0f, 1.0f)) );
-	rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
+	//rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	viewMatrix_ = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
@@ -108,17 +108,6 @@ void Camera::clearMovementBuffer()
 void Camera::move(const glm::vec3& moveVector)
 {
 	movementBuffer_ += moveVector;
-}
-
-/**
- *
- */
-void Camera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
-{
-	if ( axis == glm::vec3(0.0f, 1.0f, 0.0f) )
-		orientationQuaternion_ =  glm::normalize(glm::angleAxis(radians, axis)) * orientationQuaternion_;
-	else
-		orientationQuaternion_ = orientationQuaternion_ * glm::normalize(glm::angleAxis(radians, axis));
 }
 
 void Camera::lookAt(const glm::vec3& lookAt)

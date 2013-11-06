@@ -22,7 +22,7 @@ class BasicSceneNode : public virtual ISceneNode {
 public:
 	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
 	BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string name, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
 	/*
@@ -40,16 +40,16 @@ public:
 	virtual void setPosition(glm::vec3& newPos);
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
-	virtual glm::vec3 getScale();
-	virtual void setScale(glm::vec3 scale);
+	virtual glm::vec3& getScale();
+	virtual void setScale(const glm::vec3& scale);
 	virtual void setScale(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
-	virtual void translate(glm::vec3 trans);
-	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
+	virtual void translate(const glm::vec3& trans, TransformSpace relativeTo = TS_LOCAL);
+	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z, TransformSpace relativeTo = TS_LOCAL);
 
-	virtual glm::vec3& getRotation();
-	virtual void rotate(glm::vec3 degrees);
-	virtual void rotate(glm::quat quaternion);
+	virtual const glm::quat& getOrientation();
+	virtual void rotate(const glm::detail::float32 degrees, const glm::vec3& axis, TransformSpace relativeTo = TS_LOCAL);
+	virtual void rotate(const glm::quat& quaternion, TransformSpace relativeTo = TS_LOCAL);
 
 	virtual void attach(models::IModel* model);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);
@@ -68,8 +68,8 @@ protected:
 
 	std::string name_;
 	std::map<std::string, ISceneNode*> children_;
+	glm::quat orientationQuaternion_;
 	glm::vec3 pos_;
-	glm::vec3 rotation_;
 	glm::vec3 scale_;
 
 	bool active_;

@@ -51,9 +51,12 @@ void FpsCamera::moveRight()
 	this->move( glm::vec3(speed_, 0.0f, 0.0f) );
 }
 
-void FpsCamera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
+void FpsCamera::rotate(const glm::detail::float32& degrees, const glm::vec3& axis)
 {
-	Camera::rotate(radians, axis);
+	if ( axis == glm::vec3(0.0f, 1.0f, 0.0f) )
+		Camera::rotate(degrees, axis, TransformSpace::TS_LOCAL);
+	else
+		Camera::rotate(degrees, axis, TransformSpace::TS_WORLD);
 }
 
 /**

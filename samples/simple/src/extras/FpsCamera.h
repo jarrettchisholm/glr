@@ -28,7 +28,7 @@ public:
 	void moveLeft();
 	void moveRight();
 	
-	virtual void rotate(const glm::detail::float32& radians, const glm::vec3& axis);
+	virtual void rotate(const glm::detail::float32& degrees, const glm::vec3& axis);
 
 	void tick(glmd::float32 time);
 
