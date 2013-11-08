@@ -15,10 +15,10 @@
 //#include "IGraphicsEngine.h"
 #include "GraphicsEngine.h"
 #include "IWindow.h"
-
 #include "ISceneManager.h"
 #include "ISceneNode.h"
 #include "ICamera.h"
+
 #include "models/IModelManager.h"
 
 #include "gui/IGui.h"

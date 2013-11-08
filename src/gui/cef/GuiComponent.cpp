@@ -361,8 +361,11 @@ void GuiComponent::load()
 void GuiComponent::unload()
 {
 	// TODO: properly dispose of browser
-	browser_->GetHost()->CloseBrowser( false );
-	browser_ = nullptr;
+	if ( browser_ != nullptr )
+	{
+		browser_->GetHost()->CloseBrowser( true );
+		browser_ = nullptr;
+	}
         
 	this->setVisible(false);
 }

@@ -1,15 +1,15 @@
 [submodule "src/common/logger"]
 	path = src/common/logger
-	url = git@github.com:jarrettchisholm/logger.git
+	url = https://github.com/jarrettchisholm/logger.git
 [submodule "cef_client/src/common/logger"]
 	path = cef_client/src/common/logger
-	url = git@github.com:jarrettchisholm/logger.git
+	url = https://github.com/jarrettchisholm/logger.git
 [submodule "src/common/utilities"]
 	path = src/common/utilities
-	url = git@github.com:jarrettchisholm/utilities.git
+	url = https://github.com/jarrettchisholm/utilities.git
 [submodule "cef_client/src/common/utilities"]
 	path = cef_client/src/common/utilities
-	url = git@github.com:jarrettchisholm/utilities.git
+	url = https://github.com/jarrettchisholm/utilities.git
 [submodule "src/common/math"]
 	path = src/common/math
-	url = git@github.com:jarrettchisholm/math.git
+	url = https://github.com/jarrettchisholm/math.git

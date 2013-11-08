@@ -12,6 +12,7 @@ public:
 };
 
 const std::string Constants::MODEL_DIRECTORY = std::string("/home/jarrett/projects/chisholmsoft/models/");
+
 }
 }
 #endif /* CONSTANTS_H_ */
