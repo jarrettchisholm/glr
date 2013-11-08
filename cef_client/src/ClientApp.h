@@ -116,7 +116,7 @@ private:
 	 */
 	void sendMessageException(CefRefPtr<CefBrowser> browser, std::string messageId, Exception exception, std::wstring message);
 	void sendMessageSuccess(CefRefPtr<CefBrowser> browser, std::string messageId, std::wstring message);
-	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, uint numBindings);
+	void sendMessageAllBindingsReceived(CefRefPtr<CefBrowser> browser, unsigned int numBindings);
 	
 
 	// NOTE: Must be at bottom
