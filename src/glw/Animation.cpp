@@ -194,14 +194,14 @@ glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNo
 glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
 {
 	assert(animatedBoneNode->rotationTimes_.size() > 0);
-	assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode->rotationTimes_.size() );
+	assert( indexCache_[1] >= 0 && indexCache_[1] < animatedBoneNode->rotationTimes_.size() );
 	
 	// Search first from cache position
-	for (glmd::uint32 i = indexCache_[0]; i < animatedBoneNode->rotationTimes_.size() - 1; i++)
+	for (glmd::uint32 i = indexCache_[1]; i < animatedBoneNode->rotationTimes_.size() - 1; i++)
 	{
 		if (animationTime < (glmd::float32)animatedBoneNode->rotationTimes_[i + 1])
 		{
-			indexCache_[0] = i;
+			indexCache_[1] = i;
 			return i;
 		}
 	}
@@ -211,7 +211,7 @@ glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNo
 	{
 		if (animationTime < (glmd::float32)animatedBoneNode->rotationTimes_[i + 1])
 		{
-			indexCache_[0] = i;
+			indexCache_[1] = i;
 			return i;
 		}
 	}
@@ -225,14 +225,14 @@ glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNo
 glmd::uint32 Animation::findScaling(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
 {
 	assert(animatedBoneNode->scalingTimes_.size() > 0);
-	assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode->scalingTimes_.size() );
+	assert( indexCache_[2] >= 0 && indexCache_[2] < animatedBoneNode->scalingTimes_.size() );
 	
 	// Search first from cache position
-	for (glmd::uint32 i = indexCache_[0]; i < animatedBoneNode->scalingTimes_.size() - 1; i++)
+	for (glmd::uint32 i = indexCache_[2]; i < animatedBoneNode->scalingTimes_.size() - 1; i++)
 	{
 		if (animationTime < (glmd::float32)animatedBoneNode->scalingTimes_[i + 1])
 		{
-			indexCache_[0] = i;
+			indexCache_[2] = i;
 			return i;
 		}
 	}
@@ -242,7 +242,7 @@ glmd::uint32 Animation::findScaling(glmd::float32 animationTime, AnimatedBoneNod
 	{
 		if (animationTime < (glmd::float32)animatedBoneNode->scalingTimes_[i + 1])
 		{
-			indexCache_[0] = i;
+			indexCache_[2] = i;
 			return i;
 		}
 	}

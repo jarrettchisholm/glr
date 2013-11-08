@@ -56,7 +56,7 @@ void Camera::initialize()
 
 	orientationQuaternion_ = glm::quat(); //glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	orientationQuaternion_ = glm::normalize(orientationQuaternion_);
-	std::cout << "quat initialized: " << glm::to_string( glm::eulerAngles(orientationQuaternion_) ) << std::endl;
+
 	//orientationQuaternion_ = glm::normalize( orientationQuaternion_ * glm::angleAxis(90.0f, glm::vec3(0.0f, 0.0f, 1.0f)) );
 	//rotation_ = glm::vec3(0.0f, 0.0f, 0.0f);
 
