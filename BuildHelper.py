@@ -119,6 +119,9 @@ def setup(ARGUMENTS):
 				
 				if (buildFlags['debug']):
 					link_flags.append('/DEBUG') # Enable debug during linking
+					cpp_flags.append('/Od') # Disables optimization
+				else:
+					cpp_flags.append('/Ox') # Full optimization
 			elif (compiler == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
