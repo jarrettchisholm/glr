@@ -20,7 +20,7 @@ Animation::Animation(glw::Animation* animation, glw::IOpenGlDevice* openGlDevice
  */
 Animation::Animation(const Animation& other)
 {
-	
+	//animation_ = new glw::Animation( *(other.animation_) );
 	animation_ = other.animation_;
 	openGlDevice_ = other.openGlDevice_;
 	

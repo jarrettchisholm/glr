@@ -118,6 +118,8 @@ def setup(ARGUMENTS):
 				cpp_flags.append('/MD')
 				
 				if (buildFlags['debug']):
+					cpp_flags.append('/Zi') # Produces a program database (PDB) that contains type information and symbolic debugging information for use with the debugger.
+					cpp_flags.append('/FS') # Allows multiple cl.exe processes to write to the same .pdb file
 					link_flags.append('/DEBUG') # Enable debug during linking
 			elif (compiler == 'mingw'):
 				if (buildFlags['debug']):

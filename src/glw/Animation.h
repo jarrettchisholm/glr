@@ -33,9 +33,11 @@ class Animation : public IAnimation {
 public:
 	Animation(IOpenGlDevice* openGlDevice, const std::string name);
 	Animation(IOpenGlDevice* openGlDevice, const std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
+	Animation(const Animation& other);
 	virtual ~Animation();
 	
 	void bind();
+	void bind(std::vector< glm::mat4 >& transformations);
 	GLuint getBufferId();
 	GLuint getBindPoint();
 	
@@ -101,6 +103,7 @@ private:
 
 	void setupAnimationUbo();
 	void loadIntoVideoMemory();
+	void loadIntoVideoMemory(std::vector< glm::mat4 >& transformations);
 	
 	glmd::uint32 findPosition(float animationTime, AnimatedBoneNode* animatedBoneNode);
 	glmd::uint32 findRotation(float animationTime, AnimatedBoneNode* animatedBoneNode);

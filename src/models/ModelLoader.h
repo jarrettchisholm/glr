@@ -29,16 +29,17 @@ public:
 	ModelLoader();
 	virtual ~ModelLoader();
 
-	std::vector< std::shared_ptr<ModelData> > loadModel(const std::string filename);
+	std::vector< std::shared_ptr<ModelData> > loadModel(const std::string& name, const std::string& filename);
+	std::vector< std::shared_ptr<ModelData> > loadModel(const std::string& filename);
 	
 private:
 	aiLogStream stream;
 
-	MeshData loadMesh(const std::string filename, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap);
-	TextureData loadTexture(const std::string filename, glmd::uint32 index, const aiMaterial* material);
-	MaterialData loadMaterial(const std::string filename, glmd::uint32 index, const aiMaterial* material);
-	glw::BoneData loadBones(const std::string filename, glmd::uint32 index, const aiMesh* mesh);
-	AnimationSet loadAnimations(const std::string filename, const aiScene* scene);
+	MeshData loadMesh(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap);
+	TextureData loadTexture(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMaterial* material);
+	MaterialData loadMaterial(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMaterial* material);
+	glw::BoneData loadBones(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMesh* mesh);
+	AnimationSet loadAnimations(const std::string& name, const std::string& filename, const aiScene* scene);
 	
 	glw::BoneNode loadBoneNode( const aiNode* node );
 	glm::mat4 convertAssImpMatrix(const aiMatrix4x4* m);

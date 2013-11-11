@@ -144,6 +144,7 @@ void Mesh::render()
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 
 	glBindVertexArray(0);
+	glFinish();
 }
 
 BoneData& Mesh::getBoneData()

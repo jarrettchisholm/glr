@@ -85,6 +85,40 @@ Animation::Animation(
 	}
 }
 
+Animation::Animation(const Animation& other)
+{
+	bufferId_ = 0;
+	
+	startFrame_ = 0;
+	endFrame_ = 0;
+	
+	runningTime_ = 0.0f;
+	
+	ticksPerSecond_ = other.ticksPerSecond_;
+	openGlDevice_ = other.openGlDevice_;
+	name_ = other.name_;
+	duration_ = other.duration_;
+	animatedBoneNodes_ = other.animatedBoneNodes_;
+	
+	currentTransforms_ = std::vector< glm::mat4 >();
+	
+	setupAnimationUbo();
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// TODO: throw error
+		LOG_ERROR( "Error loading animation in opengl" );
+		LOG_ERROR( "OpenGL error: " + err.name );
+	}
+	else
+	{
+		//std::stringstream msg;
+		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		//LOG_DEBUG( msg.str() );
+	}
+}
+
 Animation::~Animation()
 {
 	openGlDevice_->releaseBufferObject( bufferId_ );
@@ -98,7 +132,14 @@ void Animation::setupAnimationUbo()
 void Animation::loadIntoVideoMemory()
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
+	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0], GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
+}
+
+void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), &transformations[0]);
 }
 
 /**
@@ -107,8 +148,17 @@ void Animation::loadIntoVideoMemory()
 void Animation::bind()
 {
 	loadIntoVideoMemory();
-
+	//std::cout << "binding '" << name_ << "'" << " | " << bufferId_;
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	//std::cout << " | " << bindPoint_ << std::endl << std::endl;
+}
+
+void Animation::bind(std::vector< glm::mat4 >& transformations)
+{
+	loadIntoVideoMemory(transformations);
+	//std::cout << "binding '" << name_ << "'" << " | " << bufferId_;
+	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	//std::cout << " | " << bindPoint_ << std::endl << std::endl;
 }
 
 GLuint Animation::getBufferId()
@@ -397,7 +447,7 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		if ( it != boneData.boneIndexMap.end() )
 		{
 			glmd::uint32 boneIndex = it->second;
-			currentTransforms_[boneIndex] = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
+			boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
 			//std::cout << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
 		}
 		//else
@@ -436,16 +486,17 @@ void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, B
 	//currentTransforms_ = std::vector< glm::mat4 >( 100, identity );
 	
 	//std::cout << boneData.boneTransform.size() << " " << runningTime_ << " " << duration_ << " " << name_;
+	//std::cout << " | " << indexCache_[0] << ", " << indexCache_[1] << ", " << indexCache_[2] << " | " << startFrame_ << ", " << endFrame_ << std::endl;
 	
-	//for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
-	//	currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
-	//}		
+	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
+		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
+	}		
 }
 
 // TODO: Testing this for now...I think maybe this isn't a good way to do it???  Not sure
 void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
 {
-	glm::mat4 identity = glm::mat4() * 1.0f;
+	glm::mat4 identity = glm::mat4();
 	
 	currentTransforms_ = std::vector< glm::mat4 >( numBones, identity );
 	

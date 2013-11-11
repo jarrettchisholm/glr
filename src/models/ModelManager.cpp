@@ -42,7 +42,7 @@ ModelManager::~ModelManager()
  * @return The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
  * the ModelManager.
  */
-IModel* ModelManager::getModel(const std::string name)
+IModel* ModelManager::getModel(const std::string& name)
 {
 	LOG_DEBUG( "Retrieving model '" + name + "'." );
 	
@@ -60,8 +60,10 @@ IModel* ModelManager::getModel(const std::string name)
 /**
  * Loads the model from the given filename.
  */
-void ModelManager::loadModel(const std::string name, const std::string filename)
+void ModelManager::loadModel(const std::string& name, const std::string& filename)
 {
+	std::cout << name << std::endl;
+	std::cout << filename << std::endl;
 	LOG_DEBUG( "Loading model '" + filename + "'." );
 
 	if ( models_[name] != 0 )
@@ -71,7 +73,7 @@ void ModelManager::loadModel(const std::string name, const std::string filename)
 	}
 
 	// Note: We allow the modelData shared pointer to die at the end of this method
-	std::vector< std::shared_ptr<ModelData> > modelData = modelLoader_.loadModel( filename );
+	std::vector< std::shared_ptr<ModelData> > modelData = modelLoader_.loadModel( name, filename );
 
 	models_[name] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
 
@@ -84,7 +86,7 @@ void ModelManager::loadModel(const std::string name, const std::string filename)
  * @return A unique pointer to a model object.  The model is a copy of the model that was loaded
  * from the specified file.
  */
-std::unique_ptr<IModel> ModelManager::createModel(const std::string name)
+std::unique_ptr<IModel> ModelManager::createModel(const std::string& name)
 {
 	LOG_DEBUG( "Creating model '" + name + "'." );
 	

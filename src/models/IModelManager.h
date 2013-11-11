@@ -24,9 +24,9 @@ public:
 	}
 	;
 
-	virtual IModel* getModel(const std::string name) = 0;
-	virtual void loadModel(const std::string name, const std::string filename) = 0;
-	virtual std::unique_ptr<IModel> createModel(const std::string name) = 0;
+	virtual IModel* getModel(const std::string& name) = 0;
+	virtual void loadModel(const std::string& name, const std::string& filename) = 0;
+	virtual std::unique_ptr<IModel> createModel(const std::string& name) = 0;
 	
 	// TESTING
 	virtual std::unique_ptr<IModel> createModel(glw::Mesh* mesh) = 0;
