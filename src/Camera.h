@@ -31,8 +31,6 @@ public:
 	virtual void attach(models::IModel* model);
 
 	virtual void move(const glm::vec3& moveVector);
-	
-	virtual void lookAt(const glm::vec3& lookAt);
 
 	virtual void tick(glm::detail::float32 time);
 

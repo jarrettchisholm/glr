@@ -110,19 +110,6 @@ void Camera::move(const glm::vec3& moveVector)
 	movementBuffer_ += moveVector;
 }
 
-void Camera::lookAt(const glm::vec3& lookAt)
-{
-	// TODO: this is broken - i need to fix it.
-	//orientationQuaternion_ = glm::quat_cast( glm::lookAt(pos_, lookAt, glm::vec3(0.0f, 1.0f, 0.0f)) );
-	//orientationQuaternion_ = glm::normalize( orientationQuaternion_ );
-	
-	//rotation_ = glm::eulerAngles(look);
-		
-	//rotation_.z = 0.0f;
-	
-	//rotation_ = glm::normalize( rotation_ );
-}
-
 /**
  *
  */

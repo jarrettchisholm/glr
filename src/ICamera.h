@@ -21,8 +21,6 @@ public:
 	virtual bool isActive() = 0;
 
 	virtual void move(const glm::vec3& moveVector) = 0;
-	
-	virtual void lookAt(const glm::vec3& lookAt) = 0;
 
 	virtual void tick(glm::detail::float32 time) = 0;
 

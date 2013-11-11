@@ -50,6 +50,8 @@ public:
 	virtual const glm::quat& getOrientation();
 	virtual void rotate(const glm::detail::float32 degrees, const glm::vec3& axis, TransformSpace relativeTo = TS_LOCAL);
 	virtual void rotate(const glm::quat& quaternion, TransformSpace relativeTo = TS_LOCAL);
+	
+	virtual void lookAt(const glm::vec3& lookAt);
 
 	virtual void attach(models::IModel* model);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);

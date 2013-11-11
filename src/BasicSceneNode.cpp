@@ -205,6 +205,14 @@ void BasicSceneNode::rotate(const glm::detail::float32 degrees, const glm::vec3&
 	}
 }
 
+void BasicSceneNode::lookAt(const glm::vec3& lookAt)
+{
+	assert(lookAt != pos_);
+	
+	glm::mat4 lookAtMatrix = glm::lookAt(pos_, pos_ + lookAt, glm::vec3(0.0f, 1.0f, 0.0f));
+	orientationQuaternion_ =  glm::normalize( orientationQuaternion_ * glm::quat_cast( lookAtMatrix ) );
+}
+
 models::IModel* BasicSceneNode::getModel()
 {
 	return model_;
