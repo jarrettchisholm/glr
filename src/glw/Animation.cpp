@@ -129,17 +129,82 @@ void Animation::setupAnimationUbo()
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0]);
 }
 
+// TODO: Look at making this more efficient?
+// Note: I couldn't just use glBufferSubData, as it didn't seem to synchronize when the previous buffer data was to be used for a draw call.
+// Furthermore, it appears 'buffer orphaning' is not working either. That is, when I added 
+// `glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);` before my call to `glBufferSubData`, 
+// I get the same results.
+// StackOverflow Question: http://stackoverflow.com/questions/19897461/glbuffersubdata-between-gldrawarrays-calls-mangling-data#19897905
 void Animation::loadIntoVideoMemory()
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
-	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0], GL_DYNAMIC_DRAW);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
+	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+	//glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
+	void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
+	if (d != nullptr)
+	{
+		memcpy( d, &currentTransforms_[0], currentTransforms_.size() * sizeof(glm::mat4) );
+		GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
+		
+		if (r == GL_FALSE)
+		{
+			// Throw exception?
+			GlError err = openGlDevice_->getGlError();
+			LOG_ERROR( "Call to 'glUnmapBuffer' failed." );
+			if (err.type != GL_NONE)
+			{
+				LOG_ERROR( "OpenGL error: " + err.name );
+			}
+			assert(0);
+		}
+	}
+	else
+	{
+		// Throw exception?
+		GlError err = openGlDevice_->getGlError();
+		LOG_ERROR( "Call to 'glMapBufferRange' failed." );
+		if (err.type != GL_NONE)
+		{
+			LOG_ERROR( "OpenGL error: " + err.name );
+		}
+		assert(0);
+	}
 }
 
 void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), &transformations[0]);
+	//glBufferData(GL_UNIFORM_BUFFER, transformations.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
+	//glBufferSubData(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), &transformations[0]);
+	void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
+	if (d != nullptr)
+	{
+		memcpy( d, &transformations[0], transformations.size() * sizeof(glm::mat4) );
+		GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
+		
+		if (r == GL_FALSE)
+		{
+			// Throw exception?
+			GlError err = openGlDevice_->getGlError();
+			LOG_ERROR( "Call to 'glUnmapBuffer' failed." );
+			if (err.type != GL_NONE)
+			{
+				LOG_ERROR( "OpenGL error: " + err.name );
+			}
+			assert(0);
+		}
+	}
+	else
+	{
+		// Throw exception?
+		GlError err = openGlDevice_->getGlError();
+		LOG_ERROR( "Call to 'glMapBufferRange' failed." );
+		if (err.type != GL_NONE)
+		{
+			LOG_ERROR( "OpenGL error: " + err.name );
+		}
+		assert(0);
+	}
 }
 
 /**
@@ -148,17 +213,15 @@ void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
 void Animation::bind()
 {
 	loadIntoVideoMemory();
-	//std::cout << "binding '" << name_ << "'" << " | " << bufferId_;
+	
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
-	//std::cout << " | " << bindPoint_ << std::endl << std::endl;
 }
 
 void Animation::bind(std::vector< glm::mat4 >& transformations)
 {
 	loadIntoVideoMemory(transformations);
-	//std::cout << "binding '" << name_ << "'" << " | " << bufferId_;
+
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
-	//std::cout << " | " << bindPoint_ << std::endl << std::endl;
 }
 
 GLuint Animation::getBufferId()
@@ -189,27 +252,6 @@ const std::string& Animation::getName()
 {
 	return name_;
 }
-
-/*
-struct Bone {
-	std::string name;
-	glm::mat4 boneOffset;
-	glm::mat4 finalTransformation;
-};
-
-struct BoneData {
-	std::string name;
-	std::map< std::string, glm::detail::uint32 > boneIndexMap;
-	std::vector< Bone > boneTransform;
-	//glm::mat4 inverseTransformation;
-};
- 
-struct BoneNode {
-	std::string name;
-	glm::mat4 transformation;
-	std::vector< BoneNode > children;
-};
-*/
 
 glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
 {
