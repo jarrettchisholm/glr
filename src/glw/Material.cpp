@@ -69,7 +69,7 @@ Material::~Material()
 void Material::bind()
 {
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
-	
+	//std::cout << "material: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 	/*
 	for (int i=0; i < 4; i++)
 		std::cout << ambient_[i] << " ";

@@ -54,10 +54,12 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 	// Find and set the number of bind points available
 	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
 	
-	for (GLint i=0; i < maxNumBindPoints_; i++)
+	for (GLuint i=0; i < maxNumBindPoints_; i++)
 	{
 		bindPoints_.push_back(i);
 	}
+	
+	bindings_ = std::vector< glmd::int32 >( 1000, -1 );
 	
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true));
 	
@@ -181,17 +183,40 @@ void OpenGlDevice::releaseFrameBufferObject(GLuint bufferId)
  */
 GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
 {
-	
 	// TODO: Do I need a better algorithm here?
 	GLuint bindPoint = bindPoints_[currentBindPoint_];
 	currentBindPoint_++;
-	
-	if ( currentBindPoint_ > bindPoints_.size() )
-		currentBindPoint_ = 1;
-		
+
+	if ( currentBindPoint_ >= bindPoints_.size() )
+		currentBindPoint_ = 0;
+
+	assert(bindPoint >= 0);
+	assert(bindPoint < maxNumBindPoints_);
+
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
-		
+
 	return bindPoint;
+	
+	/*
+	if (bindings_[bufferId] < 0)
+	{
+		GLuint bindPoint = bindPoints_[currentBindPoint_];
+		currentBindPoint_++;
+		
+		if ( currentBindPoint_ >= bindPoints_.size() )
+			currentBindPoint_ = 0;
+			
+		bindings_[bufferId] = bindPoint;
+		std::cout << bufferId << ": " << bindings_[bufferId] << std::endl;
+	}
+	
+	assert(bindings_[bufferId] >= 0);
+	assert(bindings_[bufferId] < maxNumBindPoints_);
+	
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindings_[bufferId], bufferId);
+		
+	return bindings_[bufferId];
+	*/
 	
 
 	// This algorithm was my first attempt at making it more 'efficient' by keeping a cache, and by moving

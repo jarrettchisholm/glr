@@ -65,6 +65,7 @@ private:
 	std::unordered_map<GLuint, GLuint> boundBuffers_;
 	GLint maxNumBindPoints_;
 	glmd::uint32 currentBindPoint_;
+	std::vector< glmd::int32 > bindings_;
 	
 	std::unique_ptr<IMaterialManager> materialManager_;
 	std::unique_ptr<ITextureManager> textureManager_;
