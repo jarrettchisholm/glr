@@ -215,6 +215,8 @@ void Animation::bind()
 	loadIntoVideoMemory();
 	
 	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	
+	//std::cout << "animation: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 }
 
 void Animation::bind(std::vector< glm::mat4 >& transformations)
