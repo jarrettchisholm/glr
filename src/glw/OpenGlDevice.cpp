@@ -54,7 +54,7 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 	// Find and set the number of bind points available
 	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
 	
-	for (GLint i=0; i < maxNumBindPoints_; i++)
+	for (GLuint i=0; i < maxNumBindPoints_; i++)
 	{
 		bindPoints_.push_back(i);
 	}
@@ -186,9 +186,12 @@ GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
 	GLuint bindPoint = bindPoints_[currentBindPoint_];
 	currentBindPoint_++;
 	
-	if ( currentBindPoint_ > bindPoints_.size() )
-		currentBindPoint_ = 1;
-		
+	if ( currentBindPoint_ >= bindPoints_.size() )
+		currentBindPoint_ = 0;
+	
+	assert(bindPoint >= 0);
+	assert(bindPoint < maxNumBindPoints_);
+	
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
 		
 	return bindPoint;
