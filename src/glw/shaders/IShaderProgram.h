@@ -53,14 +53,17 @@ public:
 	 * @param varName The shader variable name to bind.
 	 * @param bindPoint The OpenGL bind point to bind the shader variable to.
 	 */
-	virtual void bindVariable(std::string varName, GLuint bindPoint) = 0;
+	//virtual void bindVariable(std::string varName, GLuint bindPoint) = 0;
 	/**
 	 * Bind all shader variables of the type bindType to the given bindPoint.
 	 * 
 	 * @param bindType The shader variable type to bind.
 	 * @param bindPoint The OpenGL bind point to bind the shader variable(s) to.
 	 */
-	virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint) = 0;
+	//virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint) = 0;
+	
+	virtual GLuint getBindPointByVariableName(std::string varName) = 0;
+	virtual GLuint getBindPointByBindingName(IShader::BindType bindType) = 0;
 	
 	/**
 	 * Add a listener, which will be notified when this shader gets bound.

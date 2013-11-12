@@ -61,7 +61,7 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 	
 	bindings_ = std::vector< glmd::int32 >( 1000, -1 );
 	
-	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true));
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(this, true));
 	
 	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(this) );
 	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(this) );
@@ -181,21 +181,13 @@ void OpenGlDevice::releaseFrameBufferObject(GLuint bufferId)
 /**
  * 
  */
-GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
+void OpenGlDevice::bindBuffer(GLuint bufferId, GLuint bindPoint)
 {
-	// TODO: Do I need a better algorithm here?
-	GLuint bindPoint = bindPoints_[currentBindPoint_];
-	currentBindPoint_++;
-
-	if ( currentBindPoint_ >= bindPoints_.size() )
-		currentBindPoint_ = 0;
-
+	//std::cout << bufferId << " | " << bindPoint << " / " << maxNumBindPoints_ << std::endl;
 	assert(bindPoint >= 0);
 	assert(bindPoint < maxNumBindPoints_);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
-
-	return bindPoint;
 	
 	/*
 	if (bindings_[bufferId] < 0)
@@ -271,6 +263,21 @@ void OpenGlDevice::unbindBuffer(GLuint bufferId)
 	{
 		boundBuffers_.erase( it );
 	}
+}
+
+GLuint OpenGlDevice::getBindPoint()
+{
+	// TODO: Do I need a better algorithm here?
+	GLuint bindPoint = bindPoints_[currentBindPoint_];
+	currentBindPoint_++;
+
+	if ( currentBindPoint_ >= bindPoints_.size() )
+		currentBindPoint_ = 0;
+
+	assert(bindPoint >= 0);
+	assert(bindPoint < maxNumBindPoints_);
+
+	return bindPoint;
 }
 
 GlError OpenGlDevice::getGlError()

@@ -23,7 +23,7 @@ namespace alg = boost::algorithm;
 
 namespace glr {
 namespace shaders {
-ShaderProgramManager::ShaderProgramManager(bool autoLoad, std::vector<IShaderProgramBindListener*> defaultBindListeners)
+ShaderProgramManager::ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, bool autoLoad, std::vector<IShaderProgramBindListener*> defaultBindListeners) : openGlDevice_(openGlDevice)
 {
 	defaultBindListeners_ = defaultBindListeners;
 	
@@ -252,7 +252,7 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 		}
 	}
 
-	return std::unique_ptr<GlslShaderProgram>(new GlslShaderProgram(glrProgram->getName(), glslShaders));
+	return std::unique_ptr<GlslShaderProgram>(new GlslShaderProgram(glrProgram->getName(), glslShaders, openGlDevice_));
 }
 
 bool ShaderProgramManager::isShader(std::string s)

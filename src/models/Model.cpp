@@ -246,7 +246,9 @@ void Model::render(shaders::IShaderProgram* shader)
 		if ( materials_[i] != nullptr )
 		{
 			materials_[i]->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_MATERIAL, materials_[i]->getBindPoint() );
+			
+			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
+			openGlDevice_->bindBuffer( materials_[i]->getBufferId(), bindPoint );
 		}		
 		
 		if (currentAnimation_ != nullptr)
@@ -256,7 +258,9 @@ void Model::render(shaders::IShaderProgram* shader)
 			a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
 			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), currentAnimation_->getIndexCache());
 			a->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, a->getBindPoint() );
+			
+			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			openGlDevice_->bindBuffer( a->getBufferId(), bindPoint );
 		}
 		else
 		{
@@ -264,7 +268,9 @@ void Model::render(shaders::IShaderProgram* shader)
 			// TODO: Do we need to do this?
 			// TODO: find a better way to load 'empty' bone data in the shader
 			emptyAnimation_->bind();
-			shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_BONE, emptyAnimation_->getBindPoint() );
+			
+			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			openGlDevice_->bindBuffer( emptyAnimation_->getBufferId(), bindPoint );
 		}
 		
 		meshes_[i]->render();

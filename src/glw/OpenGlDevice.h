@@ -45,8 +45,9 @@ public:
 	virtual void releaseBufferObject(GLuint bufferId);
 	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
 	virtual void releaseFrameBufferObject(GLuint bufferId);
-	virtual GLuint bindBuffer(GLuint bufferId);
+	virtual void bindBuffer(GLuint bufferId, GLuint bindPoint);
 	virtual void unbindBuffer(GLuint bufferId);
+	virtual GLuint getBindPoint();
 	
 	virtual GlError getGlError();
 	

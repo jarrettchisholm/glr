@@ -28,7 +28,7 @@ namespace fs = boost::filesystem;
 
 class ShaderProgramManager : public IShaderProgramManager {
 public:
-	ShaderProgramManager(bool autoLoad = true, std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>());
+	ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, bool autoLoad = true, std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>());
 	virtual ~ShaderProgramManager();
 
 	virtual IShaderProgram* getShaderProgram(const std::string name);
@@ -53,6 +53,8 @@ private:
 	std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
 	std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
 	std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
+	
+	glw::IOpenGlDevice* openGlDevice_;
 	
 	std::vector<IShaderProgramBindListener*> defaultBindListeners_;
 
