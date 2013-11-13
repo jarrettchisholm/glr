@@ -11,7 +11,9 @@
 #include <memory>
 #include <unordered_map>
 
-#ifdef _WIN32
+#include "Configure.h"
+
+#if defined(OS_WINDOWS)
 #include <windows.h>
 #endif
 

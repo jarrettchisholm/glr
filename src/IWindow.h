@@ -16,6 +16,8 @@
 #include <windows.h>
 #endif
 
+#include <glm/glm.hpp>
+
 namespace glr {
 
 class IWindow {

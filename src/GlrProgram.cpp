@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 
+#include "Window.h"
+
 #include "glw/shaders/ShaderProgramManager.h"
 #include "glw/shaders/IShader.h"
 #include "exceptions/GlException.h"
@@ -17,9 +19,8 @@
 
 #include "common/logger/Logger.h"
 
-#include "Window.h"
-
 namespace glr {
+
 GlrProgram::GlrProgram(ProgramSettings settings)
 {
 	initialize( settings );
@@ -325,4 +326,5 @@ IWindow* GlrProgram::getWindow()
 {
 	return window_.get();
 }
+
 }
