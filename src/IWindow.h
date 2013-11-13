@@ -12,11 +12,9 @@
 
 #include "Configure.h"
 
-
+#if defined(OS_WINDOWS)
 #include <windows.h>
-
-
-#include "gui/IGui.h"
+#endif
 
 namespace glr {
 
