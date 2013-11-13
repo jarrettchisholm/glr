@@ -17,6 +17,7 @@
 
 
 namespace glr {
+
 struct LightData {
 	glm::vec4 ambient;
 	glm::vec4 diffuse;
@@ -38,5 +39,6 @@ public:
 	virtual const LightData& getLightData() = 0;
 	// TODO: add 'get' methods for each piece of light data
 };
+
 }
 #endif /* ILIGHT_H_ */

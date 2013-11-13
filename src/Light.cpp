@@ -24,6 +24,7 @@
 #include "common/math/Math.h"
 
 namespace glr {
+
 Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 {
 	setPosition(0, 0, 0);
@@ -77,4 +78,5 @@ const LightData& Light::getLightData()
 {
 	return lightData_;
 }
+
 }

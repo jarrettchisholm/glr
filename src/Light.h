@@ -15,6 +15,7 @@
 #include "BasicSceneNode.h"
 
 namespace glr {
+
 class Light : public virtual ILight, public BasicSceneNode {
 public:
 	Light(glw::IOpenGlDevice* openGlDevice);
@@ -36,5 +37,6 @@ private:
 
 	void initialize();
 };
+
 }
 #endif /* LIGHT_H_ */

@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "BasicSceneNode.h"
 #include "Light.h"
+#include "SkyBox.h"
 #include "models/ModelManager.h"
 #include "exceptions/Exception.h"
 
@@ -87,6 +88,23 @@ ILight* BasicSceneManager::createLight(const std::string name)
 
 	std::shared_ptr<ILight> node = std::shared_ptr<ILight>(new Light(name, openGlDevice_));
 	lights_[name] = node;
+
+	return node.get();
+}
+
+ISkyBox* BasicSceneManager::createSkyBox(const std::string name)
+{
+	// Error check
+	if ( skyBoxes_.find(name) != skyBoxes_.end())
+	{
+		std::stringstream msg;
+		msg << "SkyBox with name '" << name << "' already exists.";
+		LOG_ERROR( msg.str() );
+		throw exception::Exception(msg.str());
+	}
+
+	std::shared_ptr<ISkyBox> node = std::shared_ptr<ISkyBox>(new SkyBox(name, openGlDevice_));
+	skyBoxes_[name] = node;
 
 	return node.get();
 }
