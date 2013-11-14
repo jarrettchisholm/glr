@@ -111,5 +111,12 @@ std::unique_ptr<IModel> ModelManager::createModel(glw::Mesh* mesh)
 	return std::unique_ptr<IModel>( new Model(mesh, openGlDevice_) );
 }
 
+std::unique_ptr<IModel> ModelManager::createModel(std::vector< std::shared_ptr<ModelData> > modelData)
+{
+	LOG_DEBUG( "NOTE: Method 'ModelManager::createModel(std::vector< std::shared_ptr<ModelData> > modelData)' is for testing purposes only!" );
+	
+	return std::unique_ptr<IModel>( new Model(modelData, openGlDevice_) );
+}
+
 }
 }

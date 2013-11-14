@@ -41,6 +41,7 @@ public:
 	
 	// TESTING
 	virtual std::unique_ptr<IModel> createModel(glw::Mesh* mesh);
+	virtual std::unique_ptr<IModel> createModel(std::vector< std::shared_ptr<ModelData> > modelData);
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;

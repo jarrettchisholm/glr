@@ -38,6 +38,9 @@ public:
 	virtual ISceneNode* getSceneNode(const std::string& name);
 	virtual ICamera* getCamera(const std::string& name);
 	virtual ILight* getLight(const std::string& name);
+	
+	// Testing
+	virtual ISkyBox* getSkyBox(const std::string& name);
 
 	virtual void destroySceneNode(const std::string& name);
 	virtual void destroySceneNode(ISceneNode* node);

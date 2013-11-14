@@ -77,7 +77,7 @@ void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height)
 	height_ = height;
 	
 	std::cout << width_ << " " << height_ << std::endl;
-	projectionMatrix_ = glm::perspective(60.0f, (glmd::float32)width / (glmd::float32)height, 0.1f, 100.f);
+	projectionMatrix_ = glm::perspective(60.0f, (glmd::float32)width / (glmd::float32)height, 0.1f, 500.f);
 }
 
 void Window::initialize()

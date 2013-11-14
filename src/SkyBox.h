@@ -1,8 +1,8 @@
 #ifndef SKYBOX_H_
 #define SKYBOX_H_
 
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "ISkyBox.h"
 #include "BasicSceneNode.h"

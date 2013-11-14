@@ -21,6 +21,7 @@
 
 
 namespace glr {
+
 BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
@@ -266,4 +267,5 @@ void BasicSceneNode::render()
 		model_->render(shaderProgram_);
 	}
 }
+
 }

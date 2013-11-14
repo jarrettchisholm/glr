@@ -30,6 +30,7 @@ public:
 	
 	// TESTING
 	virtual std::unique_ptr<IModel> createModel(glw::Mesh* mesh) = 0;
+	virtual std::unique_ptr<IModel> createModel(std::vector< std::shared_ptr<ModelData> > modelData) = 0;
 };
 
 }

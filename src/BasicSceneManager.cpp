@@ -118,6 +118,9 @@ void BasicSceneManager::drawAll()
 		
 	for ( auto it = lights_.begin(); it != lights_.end(); ++it )
 		it->second->render();
+		
+	for ( auto it = skyBoxes_.begin(); it != skyBoxes_.end(); ++it )
+		it->second->render();
 
 	for ( auto it = sceneNodes_.begin(); it != sceneNodes_.end(); ++it )
 		it->second->render();
@@ -220,6 +223,16 @@ ILight* BasicSceneManager::getLight(const std::string& name)
 	}
 
 	return lights_[name].get();
+}
+
+ISkyBox* BasicSceneManager::getSkyBox(const std::string& name)
+{
+	if ( skyBoxes_.find(name) == skyBoxes_.end())
+	{
+		return nullptr;
+	}
+
+	return skyBoxes_[name].get();
 }
 
 const std::vector<LightData>& BasicSceneManager::getLightData()

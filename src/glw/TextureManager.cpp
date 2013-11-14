@@ -57,7 +57,7 @@ Texture* TextureManager::addTexture(const std::string name, const std::string fi
 
 	if ( image.get() == nullptr )
 	{
-		LOG_DEBUG( "Unable to load texture: " + filename );
+		LOG_WARN( "Unable to load texture: " + filename );
 		return nullptr;
 	}
 
