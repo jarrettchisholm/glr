@@ -10,12 +10,14 @@
 
 #include <string>
 
-#include "ISceneManager.h"
 #include "Configure.h"
 
-#include "gui/IGui.h"
+#if defined(OS_WINDOWS)
+#include <windows.h>
+#endif
 
 namespace glr {
+
 class IWindow {
 public:
 	virtual ~IWindow()
@@ -47,5 +49,6 @@ public:
 	virtual glm::detail::uint32 getDepth() = 0;
 	virtual const glm::mat4& getProjectionMatrix() = 0;
 };
+
 }
 #endif /* IWINDOW_H_ */
