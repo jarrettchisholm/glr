@@ -34,7 +34,7 @@ public:
 	virtual void render() = 0;
 	virtual IGuiComponent* loadFromFile(std::string filename) = 0;
 	virtual IGuiComponent* loadFromData(std::string data) = 0;
-	virtual glm::detail::int32 release(IGuiComponent*) = 0;
+	virtual void release(IGuiComponent*) = 0;
 };
 }
 }

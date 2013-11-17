@@ -32,9 +32,10 @@ GlrShader::~GlrShader()
 void GlrShader::process(std::map< std::string, std::string > defineMap)
 {
 	LOG_DEBUG( "Processing shader '" + name_ + "'." );
-	std::cout << "OK OK OK: " << name_ << " | " << baseDirectory_ << std::endl;
+	
 	GlrPreProcessor pp(source_, baseDirectory_);
 	pp.process(defineMap);
+	
 	processedSource_ = pp.getProcessedSource();
 	type_ = IShader::parseType(pp.getType());
 

@@ -11,10 +11,13 @@
 
 #include "../common/utilities/AssImpUtilities.h"
 
+#include "../exceptions/GlException.h"
+
 #include "Material.h"
 
 namespace glr {
 namespace glw {
+
 Material::Material(
 		IOpenGlDevice* openGlDevice,
 		const std::string name,
@@ -34,17 +37,16 @@ Material::Material(
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
-		// TODO: throw error
-		std::stringstream msg;
-		msg << "OpenGL error: " << err.name;
-		LOG_ERROR( "Error loading material in opengl" );
-		LOG_ERROR( msg.str() );
+		std::stringstream ss;
+		ss << "Error while loading material '" << name_ << "' in OpenGl: " << err.name;
+		LOG_ERROR( ss.str() );
+		throw exception::GlException( ss.str() );
 	}
 	else
 	{
-		std::stringstream msg;
-		msg << "Successfully loaded material.  Buffer id: " << bufferId_;
-		LOG_DEBUG( msg.str() );
+		std::stringstream ss;
+		ss << "Successfully loaded material.  Buffer id: " << bufferId_;
+		LOG_DEBUG( ss.str() );
 	}
 }
 
@@ -99,4 +101,3 @@ GLuint Material::getBindPoint()
 
 }
 }
-

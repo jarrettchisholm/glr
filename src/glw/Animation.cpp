@@ -5,12 +5,16 @@
  *	  Author: jarrett
  */
 
+#include <sstream>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 #include "Animation.h"
 
 #include "Constants.h"
+
+#include "../exceptions/GlException.h"
 
 namespace glr {
 namespace glw {
@@ -30,20 +34,6 @@ Animation::Animation(IOpenGlDevice* openGlDevice, const std::string name) : open
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	setupAnimationUbo();
-	
-	GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// TODO: throw error
-		LOG_ERROR( "Error loading animation in opengl" );
-		LOG_ERROR( "OpenGL error: " + err.name );
-	}
-	else
-	{
-		//std::stringstream msg;
-		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
-		//LOG_DEBUG( msg.str() );
-	}
 }
 
 Animation::Animation(
@@ -69,20 +59,6 @@ Animation::Animation(
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	setupAnimationUbo();
-	
-	GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// TODO: throw error
-		LOG_ERROR( "Error loading animation in opengl" );
-		LOG_ERROR( "OpenGL error: " + err.name );
-	}
-	else
-	{
-		//std::stringstream msg;
-		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
-		//LOG_DEBUG( msg.str() );
-	}
 }
 
 Animation::Animation(const Animation& other)
@@ -103,20 +79,6 @@ Animation::Animation(const Animation& other)
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	setupAnimationUbo();
-	
-	GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// TODO: throw error
-		LOG_ERROR( "Error loading animation in opengl" );
-		LOG_ERROR( "OpenGL error: " + err.name );
-	}
-	else
-	{
-		//std::stringstream msg;
-		//msg << "Successfully loaded animation.  Buffer id: " << bufferId_;
-		//LOG_DEBUG( msg.str() );
-	}
 }
 
 Animation::~Animation()
@@ -127,6 +89,23 @@ Animation::~Animation()
 void Animation::setupAnimationUbo()
 {
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0]);
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		openGlDevice_->releaseBufferObject( bufferId_ );
+		
+		std::string msg = std::string("Error while loading animation '") + name_ + std::string("' in OpenGl: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		std::stringstream ss;
+		ss << "Successfully loaded animation.  Buffer id: " << bufferId_;
+		LOG_DEBUG( ss.str() );
+	}
 }
 
 // TODO: Look at making this more efficient?
@@ -137,10 +116,16 @@ void Animation::setupAnimationUbo()
 // StackOverflow Question: http://stackoverflow.com/questions/19897461/glbuffersubdata-between-gldrawarrays-calls-mangling-data#19897905
 void Animation::loadIntoVideoMemory()
 {
+	loadIntoVideoMemory( currentTransforms_ );
+}
+
+void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
+{
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
 	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
 	//glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
 	void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
+	
 	if (d != nullptr)
 	{
 		memcpy( d, &currentTransforms_[0], currentTransforms_.size() * sizeof(glm::mat4) );
@@ -148,62 +133,27 @@ void Animation::loadIntoVideoMemory()
 		
 		if (r == GL_FALSE)
 		{
-			// Throw exception?
 			GlError err = openGlDevice_->getGlError();
-			LOG_ERROR( "Call to 'glUnmapBuffer' failed." );
-			if (err.type != GL_NONE)
-			{
-				LOG_ERROR( "OpenGL error: " + err.name );
-			}
-			assert(0);
+			
+			// Cleanup
+			//glBindBuffer(0);
+			
+			std::string msg = std::string("Call to 'glUnmapBuffer' failed with error: ") + err.name;
+			LOG_ERROR( msg );
+			throw exception::GlException( msg );
+			
 		}
 	}
 	else
 	{
-		// Throw exception?
 		GlError err = openGlDevice_->getGlError();
-		LOG_ERROR( "Call to 'glMapBufferRange' failed." );
-		if (err.type != GL_NONE)
-		{
-			LOG_ERROR( "OpenGL error: " + err.name );
-		}
-		assert(0);
-	}
-}
-
-void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
-{
-	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
-	//glBufferData(GL_UNIFORM_BUFFER, transformations.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
-	//glBufferSubData(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), &transformations[0]);
-	void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
-	if (d != nullptr)
-	{
-		memcpy( d, &transformations[0], transformations.size() * sizeof(glm::mat4) );
-		GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
+			
+		// Cleanup
+		//glBindBuffer(0);
 		
-		if (r == GL_FALSE)
-		{
-			// Throw exception?
-			GlError err = openGlDevice_->getGlError();
-			LOG_ERROR( "Call to 'glUnmapBuffer' failed." );
-			if (err.type != GL_NONE)
-			{
-				LOG_ERROR( "OpenGL error: " + err.name );
-			}
-			assert(0);
-		}
-	}
-	else
-	{
-		// Throw exception?
-		GlError err = openGlDevice_->getGlError();
-		LOG_ERROR( "Call to 'glMapBufferRange' failed." );
-		if (err.type != GL_NONE)
-		{
-			LOG_ERROR( "OpenGL error: " + err.name );
-		}
-		assert(0);
+		std::string msg = std::string("Call to 'glMapBufferRange' failed with error: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
 	}
 }
 

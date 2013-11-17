@@ -41,9 +41,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 	//LOG_DEBUG( << "getProcessedSource: " << pp.getProcessedSource();
 	std::vector<CPreProcessor::ShaderData> shaders = pp.getShaders();
 
-	std::stringstream msg;
-	msg << "Initializing " << shaders.size() << " shaders.";
-	LOG_DEBUG( msg.str() );
+	LOG_DEBUG( "Initializing " << shaders.size() << " shaders." );
 
 	for ( CPreProcessor::ShaderData s : shaders )
 	{
@@ -64,6 +62,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 			{
 				LOG_ERROR( s.first );
 			}
+			
 			std::string msg("Could not find shader '" + name_ + "'.");
 			LOG_ERROR( msg );
 			throw exception::GlException(msg);

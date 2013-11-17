@@ -42,7 +42,7 @@ public:
 	virtual void render();
 	virtual IGuiComponent* loadFromFile(std::string filename);
 	virtual IGuiComponent* loadFromData(std::string data);
-	virtual glm::detail::int32 release(IGuiComponent*);
+	virtual void release(IGuiComponent*);
 
 private:
 	std::vector< std::unique_ptr<GuiComponent> > views_;

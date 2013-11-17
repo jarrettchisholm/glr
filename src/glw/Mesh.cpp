@@ -13,6 +13,8 @@
 
 #include "../common/utilities/AssImpUtilities.h"
 
+#include "../exceptions/GlException.h"
+
 namespace glr {
 namespace glw {
 
@@ -123,9 +125,15 @@ void Mesh::load()
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
-		// TODO: throw error
-		LOG_ERROR( "Error loading mesh '" + name_ + "' in opengl" );
-		LOG_ERROR( "OpenGL error: " + err.name );
+		// Cleanup
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDeleteVertexArrays(1, &vaoId_);
+		glDeleteBuffers(5, &vboIds_[0]);
+		
+		std::string msg = std::string( "Error while loading mesh '" + name_ + "' in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
 	}
 	else
 	{

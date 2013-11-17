@@ -162,7 +162,7 @@ IGuiComponent* Gui::loadFromData(std::string data)
 	return views_.back().get();
 }
 
-int Gui::release(IGuiComponent* comp)
+void Gui::release(IGuiComponent* comp)
 {
 	for ( int i = 0; i < views_.size(); i++ )
 	{
@@ -171,8 +171,6 @@ int Gui::release(IGuiComponent* comp)
 			views_.erase(views_.begin() + i);
 		}
 	}
-
-	return 0;
 }
 
 }

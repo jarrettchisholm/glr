@@ -17,6 +17,7 @@
 
 namespace glr {
 namespace shaders {
+
 GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(type)
 {
 	shaderId_ = -1;
@@ -58,26 +59,38 @@ void GlslShader::compile()
 
 	switch ( type_ )
 	{
-	case TYPE_NONE:
-		LOG_WARN( "Could not load shader '" + name_ + "' - shader type is not known." );
-		break;
-
-	case TYPE_VERTEX:
-		shaderType = GL_VERTEX_SHADER;
-		break;
-
-	case TYPE_FRAGMENT:
-		shaderType = GL_FRAGMENT_SHADER;
-		break;
-
-	case TYPE_GEOMETRY:
-		shaderType = GL_GEOMETRY_SHADER;
-		break;
-
-	case TYPE_TESSELLATION:
-		std::string msg("Could not load shader '" + name_ + "' - tessellation shaders are not yet implemented.");
-		LOG_WARN( msg );
-		throw exception::GlException(msg);
+		case TYPE_NONE:
+		{
+			std::string msg("Could not load shader '" + name_ + "' - shader type is not known.");
+			LOG_ERROR( msg );
+			throw exception::GlException(msg);
+		}
+	
+		case TYPE_VERTEX:
+			shaderType = GL_VERTEX_SHADER;
+			break;
+	
+		case TYPE_FRAGMENT:
+			shaderType = GL_FRAGMENT_SHADER;
+			break;
+	
+		case TYPE_GEOMETRY:
+			shaderType = GL_GEOMETRY_SHADER;
+			break;
+	
+		case TYPE_TESSELLATION:
+		{
+			std::string msg("Could not load shader '" + name_ + "' - tessellation shaders are not yet implemented.");
+			LOG_ERROR( msg );
+			throw exception::GlException(msg);
+		}
+		
+		default:
+		{
+			std::string msg("Could not load shader '" + name_ + "' - shader type is an invalid value.");
+			LOG_ERROR( msg );
+			throw exception::GlException(msg);
+		}
 	}
 
 	std::stringstream msg;
@@ -87,11 +100,7 @@ void GlslShader::compile()
 	shaderId_ = glCreateShader(shaderType);
 
 	const char* source = source_.c_str();
-
-	//LOG_DEBUG( << "source: " << source;
-
 	glShaderSourceARB(shaderId_, 1, &source, nullptr);
-	//glShaderSourceARB(fragmentGlslShaderObject, 1, &FragmentShaderSource, &flength);
 
 	glCompileShader(shaderId_);
 
@@ -114,9 +123,11 @@ void GlslShader::compile()
 
 		delete[] strInfoLog;
 
-		LOG_ERROR( errorMsg.str() );
+		// Cleanup
+		glDeleteShader(shaderId_);
 
-		//throw exception::GlException(errorMsg.str());
+		LOG_ERROR( errorMsg.str() );
+		throw exception::GlException(errorMsg.str());
 	}
 
 
@@ -146,5 +157,6 @@ GLuint GlslShader::getGLShaderId()
 void GlslShader::bind()
 {
 }
+
 }
 }

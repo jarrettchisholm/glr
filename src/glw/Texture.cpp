@@ -9,6 +9,9 @@
 
 #include "Texture.h"
 
+#include "../exceptions/GlException.h"
+#include "../exceptions/FormatException.h"
+
 
 namespace glr {
 namespace glw {
@@ -53,9 +56,11 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 			break;
 		
 		default:
-			// TODO: throw error
-			LOG_ERROR( "Texture::loadIntoVideoMemory: Unknown image format." );
-			break;
+		{
+			std::string msg = std::string( "Texture::loadIntoVideoMemory: Unknown image format." );
+			LOG_ERROR( msg );
+			throw exception::FormatException( msg );
+		}
 	}
 	
 	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internalFormat,  image->width, image->height, 1, 0, internalFormat, GL_UNSIGNED_BYTE, image->data);
@@ -64,11 +69,13 @@ void Texture::loadIntoVideoMemory(utilities::Image* image)
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
-		// TODO: throw error
-		std::stringstream msg;
-		msg << "OpenGL error: " << err.name;
-		LOG_ERROR( "Texture::loadIntoVideoMemory: error loading texture in opengl" );
-		LOG_ERROR( msg.str() );
+		// Cleanup
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+		glDeleteTextures(1, &bufferId_);
+		
+		std::string msg = std::string( "Error while loading texture '" + name_ + "' in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
 	}
 	else
 	{

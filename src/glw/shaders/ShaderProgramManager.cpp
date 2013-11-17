@@ -14,6 +14,8 @@
 
 #include "../../common/logger/Logger.h"
 
+#include "../../exceptions/FormatException.h"
+
 #include "ShaderProgramManager.h"
 
 #include "ShaderData.h"
@@ -185,9 +187,9 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std:
 		{
 			std::string type = std::string("Shader");
 			if (isMisc)
-				type = std::string("Shader Include");
+				type = std::string("Shader include");
 
-			LOG_DEBUG( type + " Found: " + entry.first + " | " + baseDirectory);
+			LOG_DEBUG( type + " found: " + entry.first);
 			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
 			glrShaderMap_[entry.first] = s;
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
@@ -197,16 +199,22 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std:
 		}
 		else if ( isProgram(entry.second) )
 		{
-			LOG_DEBUG( "Shader Program Found: " + entry.first );
+			LOG_DEBUG( "Shader program found: " + entry.first );
 			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
 			glrProgramMap_[entry.first] = sp;
 		}
 		else
 		{
 			// Error
-			LOG_ERROR( "Unknown shader / shader program type for file: " << entry.first );
+			std::string msg = std::string("Unknown shader / shader program type for file: ") + entry.first;
+			LOG_ERROR( msg );
 			LOG_ERROR( entry.second );
-			// TODO: throw exception
+			
+			// Cleanup
+			glrShaderMap_.clear();
+			glrProgramMap_.clear();
+			
+			throw exception::FormatException( msg );
 		}
 	}
 

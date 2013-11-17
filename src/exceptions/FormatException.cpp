@@ -18,5 +18,5 @@ FormatException::~FormatException() throw()
 {
 }
 
-} /* namespace exception */
-} /* namespace glr */
+}
+}

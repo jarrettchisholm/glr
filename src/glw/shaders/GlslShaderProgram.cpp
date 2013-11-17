@@ -31,10 +31,10 @@ void GlslShaderProgram::compile()
 	LOG_DEBUG( "Initializing shader program '" + name_ + "'." );
 
 	if ( programId_ < 0 )
-	{
-		// TODO: throw error
-		LOG_ERROR( "Could not load shader program '" + name_ + "' - shader program already has an OpenGL id assigned to it." );
-		return;
+	{		
+		std::string msg = std::string( "Could not load shader program '" + name_ + "' - shader program already has an OpenGL id assigned to it." );
+		LOG_ERROR( msg );
+		throw exception::GlException(msg);
 	}
 
 	// Compile all shaders
@@ -67,15 +67,28 @@ void GlslShaderProgram::compile()
 
 	if ( !linked )
 	{
-		LOG_ERROR( "Could not initialize shader program '" + name_ + "'." );
+		std::stringstream ss;
+		ss << "Could not initialize shader program '" << name_ << "'.";
+		
+		GLint infoLogLength;
+		glGetProgramiv(programId_, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-		GLchar errorLog[1024] = { 0 };
-		glGetProgramInfoLog(programId_, 1024, nullptr, errorLog);
+		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
+		glGetProgramInfoLog(programId_, infoLogLength, nullptr, strInfoLog);
 
-		std::string msg( errorLog );
-		LOG_ERROR( msg );
-		//throw exception::GlException(msg);
-		return;
+		ss << "\ncompiler_log: " << strInfoLog;
+
+		delete[] strInfoLog;
+		
+		// Cleanup
+		for ( auto s : shaders_ )
+		{
+			glDetachShader(programId_, s->getGLShaderId());
+		}
+		glDeleteProgram(programId_);
+		
+		LOG_ERROR( ss.str() );
+		throw exception::GlException(ss.str());
 	}
 	
 	

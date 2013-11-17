@@ -12,11 +12,14 @@
 
 namespace glr {
 namespace exception {
+
 class IoException : public Exception {
 public:
 	IoException(const std::string message = "Glr IoException");
 	virtual ~IoException() throw();
 };
-} /* namespace exception */
-} /* namespace glr */
+
+}
+}
+
 #endif /* IOEXCEPTION_H_ */

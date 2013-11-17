@@ -9,6 +9,7 @@
 
 namespace glr {
 namespace exception {
+
 IoException::IoException(const std::string message) : Exception(message)
 {
 }
@@ -16,5 +17,6 @@ IoException::IoException(const std::string message) : Exception(message)
 IoException::~IoException() throw()
 {
 }
-} /* namespace exception */
-} /* namespace glr */
+
+}
+}

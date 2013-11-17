@@ -27,4 +27,5 @@ protected:
 
 }
 }
+
 #endif /* EXCEPTION_H_ */

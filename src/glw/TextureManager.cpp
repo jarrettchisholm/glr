@@ -14,10 +14,12 @@
 #include "TextureManager.h"
 
 #include "../common/utilities/ImageLoader.h"
+#include "../exceptions/Exception.h"
 
 
 namespace glr {
 namespace glw {
+
 TextureManager::TextureManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 }
@@ -45,7 +47,7 @@ Texture* TextureManager::addTexture(const std::string name, const std::string fi
 
 	if ( textures_.find(name) != textures_.end() && textures_[name].get() != nullptr )
 	{
-		LOG_DEBUG( "Texture already exists." );
+		LOG_DEBUG( "Texture already exists - returning already existing texture." );
 		return textures_[name].get();
 	}
 
@@ -57,8 +59,9 @@ Texture* TextureManager::addTexture(const std::string name, const std::string fi
 
 	if ( image.get() == nullptr )
 	{
-		LOG_WARN( "Unable to load texture: " + filename );
-		return nullptr;
+		std::string msg = std::string( "Unable to load texture: " + filename );
+		LOG_ERROR( msg );
+		throw exception::Exception( msg );
 	}
 
 	std::stringstream msg;

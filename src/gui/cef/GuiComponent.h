@@ -53,6 +53,8 @@ public:
 		//std::cout << "painting!: " << width << " " << height << std::endl;
 		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
 		
+		// TODO: make this use a shader
+		// TODO: make this paint only sections that have changed (do I really want/need to do this?)
 		glBindTexture(GL_TEXTURE_2D, webTexture);
 		
 		// Finally, we perform the main update, just copying the rect that is
