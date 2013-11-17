@@ -30,14 +30,13 @@ namespace shaders {
 
 std::map<std::string, std::string> CPreProcessor::files_ = std::map<std::string, std::string>();
 
-CPreProcessor::CPreProcessor(std::string source) : source_(source)
+CPreProcessor::CPreProcessor(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
 {
 	name_ = "";
 	type_ = "";
 	shaderData_ = std::vector<ShaderData>();
 	processedSource_ = std::string();
 }
-
 
 CPreProcessor::~CPreProcessor()
 {
@@ -295,7 +294,7 @@ void CPreProcessor::found_include_directive(std::string const& filename, bool in
 template <typename ContextT>
 bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next)
 {
-	//std::cout << "found_include_directive:" << filename << std::endl;
+	std::cout << "found_include_directive:" << filename << std::endl;
 
 	boost::regex systemIncludeRegex("<.*>");
 
@@ -318,25 +317,33 @@ bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string con
 
 
 template <typename ContextT>
-bool CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bool is_system, char const*current_name, std::string&dir_path, std::string&native_name)
+bool CPreProcessor::locate_include_file(ContextT& ctx, std::string& file_path, bool is_system, char const* current_name, std::string& dir_path, std::string& native_name)
 {
 	//if (is_system) {
-	// Check if file is in the files map
+	// Check if file is in the files map	
 	if ( CPreProcessor::files_.find(file_path) != CPreProcessor::files_.end())
 	{
-		//std::cout << "locate_include_file: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
+		std::cout << "locate_include_file 1: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 		native_name = file_path;
 
 		return true;
 	}
 	else
 	{
+		namespace fs = boost::filesystem;
 		//} else {
 		// could not locate file
+		
+		fs::path baseDir = fs::path(baseDirectory_);
+		if ( fs::exists(baseDir) && fs::is_directory(baseDir))
+		{
+			file_path = baseDir.string() + std::string("/") + file_path;
+		}
+		std::cout << "baseDirectory_: " << baseDirectory_ << std::endl;
+		std::cout << "locate_include_file doesn't exist 2: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
 			return false;
-
-		namespace fs = boost::filesystem;
+		
 
 		fs::path native_path(wave::util::create_path(file_path));
 		if ( !fs::exists(native_path))
@@ -344,6 +351,7 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string&file_path, bo
 			//BOOST_WAVE_THROW_CTX(ctx, preprocess_exception, bad_include_file,
 			//    file_path.c_str(), ctx.get_main_pos());
 			//std::cout << "error: doesn't exist" << std::endl;
+			std::cout << "locate_include_file doesn't exist 3: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 			return false;
 		}
 

@@ -47,8 +47,10 @@ void ShaderProgramManager::reloadShaders()
 	glslProgramMap_.clear();
 	glslShaderMap_.clear();
 	
-	//loadStandardShaderPrograms();
-	loadShaderPrograms(constants::SHADER_DIRECTORY);
+	loadStandardShaderPrograms();
+	//loadShaderPrograms(constants::SHADER_DIRECTORY);
+	for ( auto& dir : loadedShaderDirectories_ )
+		load( dir );
 }
 
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name)
@@ -58,6 +60,7 @@ IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name)
 
 void ShaderProgramManager::loadShaderPrograms(const std::string directory)
 {
+	loadedShaderDirectories_.push_back( directory );
 	load(directory);
 }
 
@@ -93,10 +96,10 @@ void ShaderProgramManager::removeAllDefaultBindListeners()
 
 void ShaderProgramManager::load(const std::string directory)
 {
-	return load( fs::path(directory) );
+	return load( fs::path(directory), directory );
 }
 
-void ShaderProgramManager::load(fs::path directory)
+void ShaderProgramManager::load(fs::path directory, std::string baseDirectory)
 {
 	std::vector<std::string> filenames;
 
@@ -114,10 +117,10 @@ void ShaderProgramManager::load(fs::path directory)
 		}
 	}
 
-	return load( filenames );
+	return load( filenames, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::vector<std::string> filenames)
+void ShaderProgramManager::load(std::vector<std::string> filenames, std::string baseDirectory)
 {
 	std::vector<fs::path> filePaths;
 
@@ -129,10 +132,10 @@ void ShaderProgramManager::load(std::vector<std::string> filenames)
 		}
 	}
 
-	return load( filePaths );
+	return load( filePaths, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::vector<fs::path> filePaths)
+void ShaderProgramManager::load(std::vector<fs::path> filePaths, std::string baseDirectory)
 {
 	LOG_DEBUG( "Reading shader programs from disk." );
 
@@ -146,7 +149,7 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 			fs::ifstream file(filePaths[i]);
 			std::string contents = "";
 
-			std::string line;
+			std::string line = std::string();
 
 			while ( getline(file, line))
 			{
@@ -166,36 +169,43 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths)
 		}
 	}
 
-	load( dataMap );
+	load( dataMap, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
+void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std::string baseDirectory)
 {
 	LOG_DEBUG( "Loading shader programs." );
 
 	// Add all shaders and shader programs to the maps
 	for ( auto entry : dataMap )
 	{
-		if ( isShader(entry.second))
+		bool isShader = this->isShader(entry.second);
+		bool isMisc = this->isMisc(entry.second);
+		if ( isShader || isMisc )
 		{
-			LOG_DEBUG( "Shader Found: " + entry.first );
-			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second));
+			std::string type = std::string("Shader");
+			if (isMisc)
+				type = std::string("Shader Include");
+
+			LOG_DEBUG( type + " Found: " + entry.first + " | " + baseDirectory);
+			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
 			glrShaderMap_[entry.first] = s;
 			// Add shader to glsl shader map if it doesn't have any preprocessor commands
 			//if (!glrShaderMap_[entry.first]->containsPreProcessorCommands()) {
 			//	glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
 			//}
 		}
-		else if ( isProgram(entry.second))
+		else if ( isProgram(entry.second) )
 		{
 			LOG_DEBUG( "Shader Program Found: " + entry.first );
-			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second));
+			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
 			glrProgramMap_[entry.first] = sp;
 		}
 		else
 		{
 			// Error
-			LOG_ERROR( "ERROR loading shaders and shader programs." );
+			LOG_ERROR( "Unknown shader / shader program type for file: " << entry.first );
+			LOG_ERROR( entry.second );
 			// TODO: throw exception
 		}
 	}
@@ -221,6 +231,10 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap)
 		for ( IShaderProgramBindListener* bindListener : defaultBindListeners_)
 			entry.second->addBindListener( bindListener );
 	}
+	
+	// Clear out the temporary Glr shader / shader program maps
+	glrProgramMap_.clear();
+	glrShaderMap_.clear();
 }
 
 std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram)
@@ -255,16 +269,44 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 	return std::unique_ptr<GlslShaderProgram>(new GlslShaderProgram(glrProgram->getName(), glslShaders));
 }
 
+//std::string ShaderProgramManager::prepend_ = std::string(".*(\\s+)\\#type(\\s+)");
+//std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s+\\n+.*)");
+std::string ShaderProgramManager::prepend_ = std::string(".*\\#type(\\s+)");
+std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s*\\n+.*)");
+
 bool ShaderProgramManager::isShader(std::string s)
 {
-	return !isProgram(s);
+	
+	
+	boost::regex vertexShaderRegex(ShaderProgramManager::prepend_ + "vertex" + ShaderProgramManager::append_, boost::regex_constants::icase);
+	boost::regex fragmentShaderRegex(ShaderProgramManager::prepend_ + "fragment" + ShaderProgramManager::append_, boost::regex_constants::icase);
+	boost::regex tessellationShaderRegex(ShaderProgramManager::prepend_ + "tessellation" + ShaderProgramManager::append_, boost::regex_constants::icase);
+	boost::regex geometryShaderRegex(ShaderProgramManager::prepend_ + "geometry" + ShaderProgramManager::append_, boost::regex_constants::icase);
+
+	bool matches = boost::regex_match(s, vertexShaderRegex) 
+					|| boost::regex_match(s, fragmentShaderRegex) 
+					|| boost::regex_match(s, tessellationShaderRegex) 
+					|| boost::regex_match(s, geometryShaderRegex)
+	;
+
+	return matches;
+	//return !isProgram(s);
 }
 
 bool ShaderProgramManager::isProgram(std::string s)
 {	
-	boost::regex shaderRegex(".*(\\s+)\\#type(\\s+)program(\\s*|\\s+\\n+.*)", boost::regex_constants::icase);
+	boost::regex shaderRegex(ShaderProgramManager::prepend_ + "program" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
 	return(boost::regex_match(s, shaderRegex));
 }
+
+bool ShaderProgramManager::isMisc(std::string s)
+{	
+	boost::regex includeRegex(ShaderProgramManager::prepend_ + "na" + ShaderProgramManager::append_, boost::regex_constants::icase);
+
+	return(boost::regex_match(s, includeRegex));
+}
+
+
 }
 }

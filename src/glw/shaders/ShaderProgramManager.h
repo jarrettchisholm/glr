@@ -40,13 +40,20 @@ public:
 	void removeAllDefaultBindListeners();
 
 	void loadStandardShaderPrograms();
+	
+	/**
+	 * Unloads and then reloads all of the shaders that have previously been loaded.
+	 * 
+	 * Note that this method is destructive - if you have any pointers to shader programs, their contents
+	 * will become undefined after calling this method.
+	 */
 	virtual void reloadShaders();
 
 	void load(const std::string directory);
-	void load(fs::path directory);
-	void load(std::vector<std::string> filenames);
-	void load(std::vector<fs::path> filePaths);
-	void load(std::map<std::string, std::string> dataMap);
+	void load(fs::path directory, std::string baseDirectory = std::string());
+	void load(std::vector<std::string> filenames, std::string baseDirectory = std::string());
+	void load(std::vector<fs::path> filePaths, std::string baseDirectory = std::string());
+	void load(std::map<std::string, std::string> dataMap, std::string baseDirectory = std::string());
 
 private:
 	std::map< std::string, std::shared_ptr<GlrShaderProgram> >				glrProgramMap_;
@@ -58,8 +65,16 @@ private:
 
 	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
 
+	// A list of all of the directories that have had their shaders loaded
+	std::vector< std::string > loadedShaderDirectories_;
+
 	bool isShader(std::string s);
 	bool isProgram(std::string s);
+	bool isMisc(std::string s);
+	
+	// Used for searching for the 'type' of a shader / shader program file
+	static std::string prepend_;
+	static std::string append_;
 };
 }
 }

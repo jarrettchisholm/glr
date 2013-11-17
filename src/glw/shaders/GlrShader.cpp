@@ -16,11 +16,11 @@
 namespace glr {
 namespace shaders {
 
-GlrShader::GlrShader(std::string source) : source_(source)
+GlrShader::GlrShader(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
 {
 }
 
-GlrShader::GlrShader(std::string name, std::string source) : name_(name), source_(source)
+GlrShader::GlrShader(std::string name, std::string source, std::string baseDirectory) : name_(name), source_(source), baseDirectory_(baseDirectory)
 {
 }
 
@@ -32,7 +32,8 @@ GlrShader::~GlrShader()
 void GlrShader::process(std::map< std::string, std::string > defineMap)
 {
 	LOG_DEBUG( "Processing shader '" + name_ + "'." );
-	GlrPreProcessor pp(source_);
+	std::cout << "OK OK OK: " << name_ << " | " << baseDirectory_ << std::endl;
+	GlrPreProcessor pp(source_, baseDirectory_);
 	pp.process(defineMap);
 	processedSource_ = pp.getProcessedSource();
 	type_ = IShader::parseType(pp.getType());

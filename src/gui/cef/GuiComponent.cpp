@@ -571,24 +571,6 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 		keyEvent.type = KEYEVENT_CHAR;
 		browser_->GetHost()->SendKeyEvent(keyEvent);
 	}
-	
-	
-	// TODO: make this not hardcoded
-	if ( vk_code == '`' || vk_code == '~' )
-	{
-		browser_->GetMainFrame()->ExecuteJavaScript(
-										L"if( $('#console').hasClass('hidden') ) {\
-											$('#console').removeClass('hidden');\
-											$('#console').addClass('visible');\
-											$('#console').click();\
-										} else {\
-											$('#console').addClass('hidden');\
-											$('#console').removeClass('visible');\
-										}",
-										"about:blank", 
-										0
-									);
-	}
 	//else
 	
 	//{

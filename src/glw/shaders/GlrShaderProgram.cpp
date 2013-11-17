@@ -14,11 +14,11 @@
 
 namespace glr {
 namespace shaders {
-GlrShaderProgram::GlrShaderProgram(std::string source) : source_(source)
+GlrShaderProgram::GlrShaderProgram(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
 {
 }
 
-GlrShaderProgram::GlrShaderProgram(std::string name, std::string source) : name_(name), source_(source)
+GlrShaderProgram::GlrShaderProgram(std::string name, std::string source, std::string baseDirectory) : name_(name), source_(source), baseDirectory_(baseDirectory)
 {
 }
 
@@ -32,7 +32,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 	LOG_DEBUG( "Processing shader program '" + name_ + "'." );
 
 	// Pre-Process shaders
-	GlrPreProcessor pp(source_);
+	GlrPreProcessor pp(source_, baseDirectory_);
 
 	pp.process();
 

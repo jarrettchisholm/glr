@@ -53,7 +53,7 @@ namespace shaders {
  */
 class CPreProcessor : public wave::context_policies::default_preprocessing_hooks {
 public:
-	CPreProcessor(std::string source);
+	CPreProcessor(std::string source, std::string baseDirectory = std::string());
 	virtual ~CPreProcessor();
 
 	/**
@@ -182,6 +182,7 @@ public:
 
 protected:
 	static std::map<std::string, std::string> files_;
+	std::string baseDirectory_;
 
 private:
 	std::string name_;

@@ -41,8 +41,8 @@ namespace shaders {
  */
 class GlrShader {
 public:
-	GlrShader(std::string source);
-	GlrShader(std::string name, std::string source);
+	GlrShader(std::string source, std::string baseDirectory = std::string());
+	GlrShader(std::string name, std::string source, std::string baseDirectory = std::string());
 	virtual ~GlrShader();
 
 	void process(std::map< std::string, std::string > defineMap);
@@ -61,6 +61,7 @@ private:
 
 	std::string source_;
 	std::string processedSource_;
+	std::string baseDirectory_;
 
 	GlrParser::StringBindingsMap bindings_;
 };

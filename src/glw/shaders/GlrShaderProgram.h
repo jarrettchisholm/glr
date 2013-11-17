@@ -33,8 +33,8 @@ namespace shaders {
  */
 class GlrShaderProgram {
 public:
-	GlrShaderProgram(std::string source);
-	GlrShaderProgram(std::string name, std::string source);
+	GlrShaderProgram(std::string source, std::string baseDirectory = std::string());
+	GlrShaderProgram(std::string name, std::string source, std::string baseDirectory = std::string());
 	virtual ~GlrShaderProgram();
 
 	/**
@@ -54,6 +54,7 @@ private:
 	std::string source_;
 
 	std::vector< std::shared_ptr<GlrShader> > shaders_;
+	std::string baseDirectory_;
 };
 
 }

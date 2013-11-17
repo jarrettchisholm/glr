@@ -22,7 +22,7 @@ namespace shaders {
  */
 class GlrPreProcessor : public CPreProcessor {
 public:
-	GlrPreProcessor(std::string source);
+	GlrPreProcessor(std::string source, std::string baseDirectory = std::string());
 
 private:
 };
