@@ -40,6 +40,9 @@ public:
 	virtual glm::vec2 getPosition();
 	virtual glm::detail::uint32 getDepth();
 	virtual const glm::mat4& getProjectionMatrix();
+	
+	virtual void addWindowResizeListener(IWindowResizeListener* listener);
+	virtual void removeWindowResizeListener(IWindowResizeListener* listener);
 
 private:
 	glmd::int32 x_, y_;
@@ -49,6 +52,8 @@ private:
 	std::unique_ptr<sf::Window> window_;
 
 	glm::mat4 projectionMatrix_;
+	
+	std::vector< IWindowResizeListener* > windowResizeListeners_;
 
 	void initialize();
 };

@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <vector>
 
 #include <GL/glew.h>
 
@@ -18,7 +19,10 @@
 
 #include "common/logger/Logger.h"
 
+#include "exceptions/Exception.h"
+
 namespace glr {
+
 Window::Window(int width, int height, std::string title): width_(width), height_(height)
 {
 	sf::ContextSettings settings;
@@ -78,10 +82,17 @@ void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height)
 	
 	std::cout << width_ << " " << height_ << std::endl;
 	projectionMatrix_ = glm::perspective(60.0f, (glmd::float32)width / (glmd::float32)height, 0.1f, 500.f);
+	
+	for ( auto it : windowResizeListeners_ )
+	{
+		it->windowSizeUpdate( width_, height_ );
+	}
 }
 
 void Window::initialize()
 {
+	windowResizeListeners_ = std::vector< IWindowResizeListener* >();
+	
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	//glClearDepth(1.0f);
@@ -162,4 +173,34 @@ const glm::mat4& Window::getProjectionMatrix()
 {
 	return projectionMatrix_;
 }
+
+void Window::addWindowResizeListener(IWindowResizeListener* listener)
+{
+	if ( std::find( windowResizeListeners_.begin(), windowResizeListeners_.end(), listener) == windowResizeListeners_.end() )
+	{
+		windowResizeListeners_.push_back( listener );
+	}
+	else
+	{
+		std::string msg = std::string( "Cannot add IWindowResizeListener to Window - IWindowResizeListener object already exists in list." );
+		LOG_ERROR( msg );
+		throw exception::Exception( msg );
+	}	
+}
+
+void Window::removeWindowResizeListener(IWindowResizeListener* listener)
+{
+	auto it = std::find( windowResizeListeners_.begin(), windowResizeListeners_.end(), listener);
+	if ( it != windowResizeListeners_.end() )
+	{
+		windowResizeListeners_.erase( it );
+	}
+	else
+	{
+		std::string msg = std::string( "Cannot remove IWindowResizeListener from Window - IWindowResizeListener object does not exist in list." );
+		LOG_ERROR( msg );
+		throw exception::Exception( msg );
+	}
+}
+
 }

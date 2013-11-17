@@ -294,7 +294,7 @@ void CPreProcessor::found_include_directive(std::string const& filename, bool in
 template <typename ContextT>
 bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string const& filename, bool include_next)
 {
-	std::cout << "found_include_directive:" << filename << std::endl;
+	//std::cout << "found_include_directive:" << filename << std::endl;
 
 	boost::regex systemIncludeRegex("<.*>");
 
@@ -305,7 +305,7 @@ bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string con
 		boost::algorithm::erase_all(editedFilename, "\"");
 		
 		std::stringstream msg;
-		msg << "adding: " << editedFilename << " size: " << shaderData_.size();
+		//msg << "adding: " << editedFilename << " size: " << shaderData_.size();
 		LOG_DEBUG( msg.str() );
 
 		shaderData_.push_back(ShaderData(editedFilename));
@@ -323,7 +323,7 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string& file_path, b
 	// Check if file is in the files map	
 	if ( CPreProcessor::files_.find(file_path) != CPreProcessor::files_.end())
 	{
-		std::cout << "locate_include_file 1: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
+		//std::cout << "locate_include_file 1: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 		native_name = file_path;
 
 		return true;
@@ -339,8 +339,8 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string& file_path, b
 		{
 			file_path = baseDir.string() + std::string("/") + file_path;
 		}
-		std::cout << "baseDirectory_: " << baseDirectory_ << std::endl;
-		std::cout << "locate_include_file doesn't exist 2: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
+		//std::cout << "baseDirectory_: " << baseDirectory_ << std::endl;
+		//std::cout << "locate_include_file doesn't exist 2: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
 			return false;
 		
@@ -351,7 +351,7 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string& file_path, b
 			//BOOST_WAVE_THROW_CTX(ctx, preprocess_exception, bad_include_file,
 			//    file_path.c_str(), ctx.get_main_pos());
 			//std::cout << "error: doesn't exist" << std::endl;
-			std::cout << "locate_include_file doesn't exist 3: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
+			//std::cout << "locate_include_file doesn't exist 3: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 			return false;
 		}
 

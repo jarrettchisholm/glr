@@ -36,19 +36,19 @@ namespace cef {
 class RenderHandler : public CefRenderHandler
 {
 public:
-	RenderHandler(glm::detail::uint32 webTexture) : webTexture(webTexture)
+	RenderHandler(glm::detail::uint32 webTexture, glm::detail::uint32 width, glm::detail::uint32 height) : webTexture(webTexture), width_(width), height_(height)
 	{
 		// TODO: error check webTexture value
 	}
 
 	// CefRenderHandler interface
-	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect)
+	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect)
 	{
-		rect = CefRect(0, 0, 800, 600);
+		rect = CefRect(0, 0, width_, height_);
 		return true;
 	};
 	
-    void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height)
+    void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height)
     {
 		//std::cout << "painting!: " << width << " " << height << std::endl;
 		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
@@ -74,7 +74,15 @@ public:
 		glBindTexture(GL_TEXTURE_2D, 0);
 	};
 	
+	void windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height)
+	{
+		width_ = width;
+		height_ = height;
+	}
+	
 	glm::detail::uint32 webTexture;
+	glm::detail::uint32 width_;
+	glm::detail::uint32 height_;
     
     // CefBase interface
 	// NOTE: Must be at bottom
@@ -115,6 +123,8 @@ public:
 	virtual IGuiObject* createGuiObject(std::wstring name);
 	virtual IGuiObject* getGuiObject(std::wstring name);
 	
+	void windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height);
+	
 	// Implement functions for CefClient
 	/**
 	 * Processes a message received from the render process.
@@ -138,9 +148,10 @@ private:
 	glw::IOpenGlDevice* openGlDevice_;
 
 	// Width and height of our window.
-	glmd::uint32 width_, height_;
+	glmd::uint32 width_;
+	glmd::uint32 height_;
 	// Storage for a texture
-	glm::detail::uint32 webTexture;
+	glmd::uint32 webTexture;
 	// Buffer used to store data for scrolling
 	char* scroll_buffer;
 

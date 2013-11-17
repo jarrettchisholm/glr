@@ -328,7 +328,7 @@ void GuiComponent::load()
 	window_info.SetAsOffScreen(nullptr);
 	window_info.SetTransparentPainting(true);
 	
-	this->renderHandler_ = new RenderHandler(webTexture);
+	this->renderHandler_ = new RenderHandler(webTexture, width_, height_);
 	
 	LOG_DEBUG( "Creating CEF Browser object." );
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
@@ -1033,6 +1033,15 @@ IGuiObject* GuiComponent::getGuiObject(std::wstring name)
 	}
 
 	return guiObjects_[name].get();
+}
+
+void GuiComponent::windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height)
+{
+	// Is this the right way to cast?  Is there a better way to do this?
+	if ( renderHandler_.get() != nullptr )
+		((RenderHandler*)renderHandler_.get())->windowSizeUpdate( width, height );
+	
+	browser_->GetHost()->WasResized();
 }
 
 }

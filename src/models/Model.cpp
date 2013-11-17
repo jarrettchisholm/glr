@@ -115,11 +115,18 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		meshes_.push_back( mesh );
 		
 		
-		glw::Texture* texture = textureManager_->getTexture(d->textureData.filename);
-		if (texture == nullptr)
-			texture = textureManager_->addTexture(d->textureData.filename, d->textureData.filename);
-		
-		textures_.push_back( texture );
+		if ( d->textureData.filename != std::string("") )
+		{
+			glw::Texture* texture = textureManager_->getTexture(d->textureData.filename);
+			if (texture == nullptr)
+				texture = textureManager_->addTexture(d->textureData.filename, d->textureData.filename);
+			
+			textures_.push_back( texture );
+		}
+		else
+		{
+			textures_.push_back( nullptr );
+		}
 
 
 		glw::Material* material = materialManager_->getMaterial(d->materialData.name);

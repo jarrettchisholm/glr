@@ -173,6 +173,14 @@ void Gui::release(IGuiComponent* comp)
 	}
 }
 
+void Gui::windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height)
+{
+	for ( auto& it : views_ )
+	{
+		it->windowSizeUpdate( width, height );
+	}
+}
+
 }
 }
 }

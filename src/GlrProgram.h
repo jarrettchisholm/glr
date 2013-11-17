@@ -74,7 +74,8 @@ private:
 	std::unique_ptr< BasicSceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
 	
-	std::unique_ptr< gui::IGui > gui_;
+	// Would it be better to use IGui instead of the cef Gui class here?
+	std::unique_ptr< gui::cef::Gui > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	

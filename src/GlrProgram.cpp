@@ -301,6 +301,7 @@ gui::IGui* GlrProgram::getHtmlGui()
 	}
 #ifdef USE_CEF
 	gui_ = std::unique_ptr<gui::cef::Gui>(new gui::cef::Gui(openGlDevice_.get(), shaderProgramManager_, window_->getWidth(), window_->getHeight()));
+	window_->addWindowResizeListener( gui_.get() );
 
 	return gui_.get();
 #else

@@ -14,6 +14,7 @@
 
 namespace glr {
 namespace gui {
+
 class IGui {
 public:
 	virtual ~IGui()
@@ -36,6 +37,8 @@ public:
 	virtual IGuiComponent* loadFromData(std::string data) = 0;
 	virtual void release(IGuiComponent*) = 0;
 };
+
 }
 }
+
 #endif /* IGUI_H_ */
