@@ -89,9 +89,6 @@ def setupEnvironment(env):
 	env.Append( CPPPATH = cpp_paths )
 	env.Append( LINKFLAGS = link_flags )
 	
-	env['CCCOMSTR'] = "Compiling $TARGET"
-	env['LINKCOMSTR'] = "Linking $TARGET"
-	
 	env.SetOption('num_jobs', multiprocessing.cpu_count())
 	if isLinux:
 		# Set our runtime library locations
