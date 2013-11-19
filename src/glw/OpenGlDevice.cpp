@@ -59,7 +59,7 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 		bindPoints_.push_back(i);
 	}
 	
-	bindings_ = std::vector< glmd::int32 >( 1000, -1 );
+	//bindings_ = std::vector< glmd::int32 >( 1000, -1 );
 	
 	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(this, true));
 	
@@ -256,6 +256,7 @@ void OpenGlDevice::bindBuffer(GLuint bufferId, GLuint bindPoint)
 	*/
 }
 
+// Do I need this function any more?
 void OpenGlDevice::unbindBuffer(GLuint bufferId)
 {
 	auto it = boundBuffers_.find( bufferId );
@@ -272,12 +273,23 @@ GLuint OpenGlDevice::getBindPoint()
 	currentBindPoint_++;
 
 	if ( currentBindPoint_ >= bindPoints_.size() )
-		currentBindPoint_ = 0;
+	{
+		//currentBindPoint_ = 0;
+		// We have run out of bind points
+		std::string msg = std::string("Unable to get bind point - maximum number of bind points (" + currentBindPoint_ + ")reached.");
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
 
 	assert(bindPoint >= 0);
 	assert(bindPoint < maxNumBindPoints_);
 
 	return bindPoint;
+}
+
+void OpenGlDevice::invalidateBindPoints()
+{
+	currentBindPoint_ = 0;
 }
 
 GlError OpenGlDevice::getGlError()
@@ -359,5 +371,6 @@ const OpenGlDeviceSettings& OpenGlDevice::getOpenGlDeviceSettings()
 {
 	return settings_;
 }
+
 }
 }

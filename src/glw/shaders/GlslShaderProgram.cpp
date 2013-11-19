@@ -92,6 +92,10 @@ GLuint GlslShaderProgram::getGLShaderProgramId()
 void GlslShaderProgram::bind()
 {
 	glUseProgram(programId_);
+
+	// We need to invalidate the current bind points so that we can rebind what we need to
+	// to this shader program.
+	openGlDevice_->invalidateBindPoints();
 	
 	// Bind all the variables to bind points
 	for ( auto& b : bindings_ )

@@ -71,6 +71,14 @@ public:
 	virtual void unbindBuffer(GLuint bufferId) = 0;
 	virtual GLuint getBindPoint() = 0;
 	
+	/**
+	 * Will 'invalidate' all active bind points, which effectively means that the next call to `getBindPoint()` will return
+	 * the first bind point, and any buffers that are currently attached to a bind point must no longer be considered active.
+	 * 
+	 * This method is typically called when we are binding a new shader program.
+	 */
+	virtual void invalidateBindPoints() = 0;
+	
 	virtual GlError getGlError() = 0;
 	
 	/* Getters */
