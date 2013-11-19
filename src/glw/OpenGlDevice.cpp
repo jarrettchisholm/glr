@@ -16,6 +16,8 @@
 
 #include "../common/logger/Logger.h"
 
+#include "../exceptions/GlException.h"
+
 #include "MaterialManager.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
@@ -276,9 +278,10 @@ GLuint OpenGlDevice::getBindPoint()
 	{
 		//currentBindPoint_ = 0;
 		// We have run out of bind points
-		std::string msg = std::string("Unable to get bind point - maximum number of bind points (" + currentBindPoint_ + ")reached.");
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
+		std::stringstream ss;
+		ss << std::string("Unable to get bind point - maximum number of bind points (") << currentBindPoint_ << std::string(")reached.");
+		LOG_ERROR( ss.str() );
+		throw exception::GlException( ss.str() );
 	}
 
 	assert(bindPoint >= 0);
