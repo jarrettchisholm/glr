@@ -16,6 +16,8 @@
 
 #include "../common/logger/Logger.h"
 
+#include "../exceptions/GlException.h"
+
 #include "MaterialManager.h"
 #include "TextureManager.h"
 #include "MeshManager.h"
@@ -59,9 +61,9 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
 		bindPoints_.push_back(i);
 	}
 	
-	bindings_ = std::vector< glmd::int32 >( 1000, -1 );
+	//bindings_ = std::vector< glmd::int32 >( 1000, -1 );
 	
-	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(true));
+	shaderProgramManager_ = std::unique_ptr< shaders::ShaderProgramManager >(new shaders::ShaderProgramManager(this, true));
 	
 	materialManager_ = std::unique_ptr<IMaterialManager>( new MaterialManager(this) );
 	textureManager_ = std::unique_ptr<ITextureManager>( new TextureManager(this) );
@@ -181,21 +183,13 @@ void OpenGlDevice::releaseFrameBufferObject(GLuint bufferId)
 /**
  * 
  */
-GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
+void OpenGlDevice::bindBuffer(GLuint bufferId, GLuint bindPoint)
 {
-	// TODO: Do I need a better algorithm here?
-	GLuint bindPoint = bindPoints_[currentBindPoint_];
-	currentBindPoint_++;
-
-	if ( currentBindPoint_ >= bindPoints_.size() )
-		currentBindPoint_ = 0;
-
+	//std::cout << bufferId << " | " << bindPoint << " / " << maxNumBindPoints_ << std::endl;
 	assert(bindPoint >= 0);
 	assert(bindPoint < maxNumBindPoints_);
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, bufferId);
-
-	return bindPoint;
 	
 	/*
 	if (bindings_[bufferId] < 0)
@@ -264,6 +258,7 @@ GLuint OpenGlDevice::bindBuffer(GLuint bufferId)
 	*/
 }
 
+// Do I need this function any more?
 void OpenGlDevice::unbindBuffer(GLuint bufferId)
 {
 	auto it = boundBuffers_.find( bufferId );
@@ -271,6 +266,33 @@ void OpenGlDevice::unbindBuffer(GLuint bufferId)
 	{
 		boundBuffers_.erase( it );
 	}
+}
+
+GLuint OpenGlDevice::getBindPoint()
+{
+	// TODO: Do I need a better algorithm here?
+	GLuint bindPoint = bindPoints_[currentBindPoint_];
+	currentBindPoint_++;
+
+	if ( currentBindPoint_ >= bindPoints_.size() )
+	{
+		//currentBindPoint_ = 0;
+		// We have run out of bind points
+		std::stringstream ss;
+		ss << std::string("Unable to get bind point - maximum number of bind points (") << currentBindPoint_ << std::string(")reached.");
+		LOG_ERROR( ss.str() );
+		throw exception::GlException( ss.str() );
+	}
+
+	assert(bindPoint >= 0);
+	assert(bindPoint < maxNumBindPoints_);
+
+	return bindPoint;
+}
+
+void OpenGlDevice::invalidateBindPoints()
+{
+	currentBindPoint_ = 0;
 }
 
 GlError OpenGlDevice::getGlError()
@@ -352,5 +374,6 @@ const OpenGlDeviceSettings& OpenGlDevice::getOpenGlDeviceSettings()
 {
 	return settings_;
 }
+
 }
 }

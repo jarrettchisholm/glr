@@ -10,10 +10,6 @@
 
 #include <memory>
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
 #include <SFML/Window.hpp>
 
 #include "IWindow.h"

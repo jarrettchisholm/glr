@@ -15,6 +15,8 @@
 
 #include "IShaderProgram.h"
 
+#include "../IOpenGlDevice.h"
+
 #include "GlslShader.h"
 
 namespace glr {
@@ -25,7 +27,7 @@ namespace shaders {
  */
 class GlslShaderProgram : public IShaderProgram {
 public:
-	GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders);
+	GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice);
 	virtual ~GlslShaderProgram();
 
 	virtual void bind();
@@ -33,8 +35,10 @@ public:
 	virtual IShader::BindingsMap getBindings();
 	void compile();
 
-	virtual void bindVariable(std::string varName, GLuint bindPoint);
-	virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint);
+	//virtual void bindVariable(std::string varName, GLuint bindPoint);
+	//virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint);
+	virtual GLuint getBindPointByVariableName(std::string varName);
+	virtual GLuint getBindPointByBindingName(IShader::BindType bindType);
 
 	std::string getName();
 	
@@ -49,7 +53,9 @@ private:
 
 	std::string name_;
 
-	std::vector< std::shared_ptr<GlslShader> > shaders_;	
+	glw::IOpenGlDevice* openGlDevice_;
+
+	std::vector< std::shared_ptr<GlslShader> > shaders_;
 	IShader::BindingsMap bindings_;
 	
 	std::vector<IShaderProgramBindListener*> bindListeners_;

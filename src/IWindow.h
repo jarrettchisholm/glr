@@ -15,7 +15,11 @@
 #include "ISceneManager.h"
 #include "Configure.h"
 
-#include "gui/IGui.h"
+#if defined(OS_WINDOWS)
+#include <windows.h>
+#endif
+
+#include <glm/glm.hpp>
 
 namespace glr {
 

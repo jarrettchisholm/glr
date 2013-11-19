@@ -32,7 +32,12 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, StringBi
 	// Convert bindings
 	for ( auto it = bindings.begin(); it != bindings.end(); ++it )
 	{
-		bindings_.push_back(IShader::Binding(IShader::parseBindType(it->first), it->second));
+		IShader::Binding binding = IShader::Binding();
+		binding.type = IShader::parseBindType(it->first);
+		binding.variableName = it->second;
+		binding.bindPoint = -1;
+		
+		bindings_.push_back(binding);
 		//bindings_[ IShader::parseBindType(it->first) ] = it->second;
 		//std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 	}

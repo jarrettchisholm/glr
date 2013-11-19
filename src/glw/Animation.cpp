@@ -31,7 +31,7 @@ Animation::Animation(IOpenGlDevice* openGlDevice, const std::string name) : open
 	startFrame_ = 0;
 	endFrame_ = 0;
 	
-	currentTransforms_ = std::vector< glm::mat4 >();
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
 	
 	setupAnimationUbo();
 }
@@ -56,7 +56,7 @@ Animation::Animation(
 	// Error check - default to 25 ticks per second
 	ticksPerSecond_ = ( ticksPerSecond_ != 0.0f ? ticksPerSecond_ : 25.0f );
 	
-	currentTransforms_ = std::vector< glm::mat4 >();
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
 	
 	setupAnimationUbo();
 }
@@ -76,7 +76,7 @@ Animation::Animation(const Animation& other)
 	duration_ = other.duration_;
 	animatedBoneNodes_ = other.animatedBoneNodes_;
 	
-	currentTransforms_ = std::vector< glm::mat4 >();
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
 	
 	setupAnimationUbo();
 }
@@ -124,36 +124,39 @@ void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
 	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
 	//glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
-	void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
-	
-	if (d != nullptr)
-	{
-		memcpy( d, &currentTransforms_[0], currentTransforms_.size() * sizeof(glm::mat4) );
-		GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
+	if (currentTransforms_.size() > 0)
+	{		
+		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
 		
-		if (r == GL_FALSE)
+		if (d != nullptr)
+		{
+			memcpy( d, &currentTransforms_[0], currentTransforms_.size() * sizeof(glm::mat4) );
+			GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
+			
+			if (r == GL_FALSE)
+			{
+				GlError err = openGlDevice_->getGlError();
+				
+				// Cleanup
+				//glBindBuffer(0);
+				
+				std::string msg = std::string("Call to 'glUnmapBuffer' failed with error: ") + err.name;
+				LOG_ERROR( msg );
+				throw exception::GlException( msg );
+				
+			}
+		}
+		else
 		{
 			GlError err = openGlDevice_->getGlError();
-			
+				
 			// Cleanup
 			//glBindBuffer(0);
 			
-			std::string msg = std::string("Call to 'glUnmapBuffer' failed with error: ") + err.name;
+			std::string msg = std::string("Call to 'glMapBufferRange' failed with error: ") + err.name;
 			LOG_ERROR( msg );
 			throw exception::GlException( msg );
-			
 		}
-	}
-	else
-	{
-		GlError err = openGlDevice_->getGlError();
-			
-		// Cleanup
-		//glBindBuffer(0);
-		
-		std::string msg = std::string("Call to 'glMapBufferRange' failed with error: ") + err.name;
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
 	}
 }
 
@@ -164,7 +167,7 @@ void Animation::bind()
 {
 	loadIntoVideoMemory();
 	
-	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	
 	//std::cout << "animation: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 }
@@ -173,7 +176,7 @@ void Animation::bind(std::vector< glm::mat4 >& transformations)
 {
 	loadIntoVideoMemory(transformations);
 
-	bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
+	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 }
 
 GLuint Animation::getBufferId()

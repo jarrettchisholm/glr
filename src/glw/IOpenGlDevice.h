@@ -67,8 +67,17 @@ public:
 	virtual void releaseBufferObject(GLuint bufferId) = 0;
 	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer) = 0;
 	virtual void releaseFrameBufferObject(GLuint bufferId) = 0;
-	virtual GLuint bindBuffer(GLuint bufferId) = 0;
+	virtual void bindBuffer(GLuint bufferId, GLuint bindPoint) = 0;
 	virtual void unbindBuffer(GLuint bufferId) = 0;
+	virtual GLuint getBindPoint() = 0;
+	
+	/**
+	 * Will 'invalidate' all active bind points, which effectively means that the next call to `getBindPoint()` will return
+	 * the first bind point, and any buffers that are currently attached to a bind point must no longer be considered active.
+	 * 
+	 * This method is typically called when we are binding a new shader program.
+	 */
+	virtual void invalidateBindPoints() = 0;
 	
 	virtual GlError getGlError() = 0;
 	
