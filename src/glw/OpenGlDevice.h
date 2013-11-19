@@ -50,6 +50,7 @@ public:
 	virtual GLuint getBindPoint();
 	
 	virtual void invalidateBindPoints();
+	virtual glm::detail::uint32 getMaximumNumberOfBindPoints();
 	
 	virtual GlError getGlError();
 	

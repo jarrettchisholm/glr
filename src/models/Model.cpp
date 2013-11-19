@@ -254,32 +254,41 @@ void Model::render(shaders::IShaderProgram* shader)
 		
 		if ( materials_[i] != nullptr )
 		{
-			materials_[i]->bind();
-			
-			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
-			openGlDevice_->bindBuffer( materials_[i]->getBufferId(), bindPoint );
+			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
+			if (bindPoint >= 0)
+			{
+				materials_[i]->bind();
+
+				openGlDevice_->bindBuffer( materials_[i]->getBufferId(), bindPoint );
+			}
 		}		
 		
 		if (currentAnimation_ != nullptr)
 		{
-			glw::Animation* a = currentAnimation_->getAnimation();
-			a->setAnimationTime( currentAnimation_->getAnimationTime() );
-			a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
-			a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), currentAnimation_->getIndexCache());
-			a->bind();
-			
-			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
-			openGlDevice_->bindBuffer( a->getBufferId(), bindPoint );
+			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			if (bindPoint >= 0)
+			{
+				glw::Animation* a = currentAnimation_->getAnimation();
+				a->setAnimationTime( currentAnimation_->getAnimationTime() );
+				a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
+				a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), currentAnimation_->getIndexCache());
+				a->bind();
+				
+				openGlDevice_->bindBuffer( a->getBufferId(), bindPoint );
+			}
 		}
 		else
 		{
 			// Zero out the animation data
 			// TODO: Do we need to do this?
 			// TODO: find a better way to load 'empty' bone data in the shader
-			emptyAnimation_->bind();
-			
-			GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
-			openGlDevice_->bindBuffer( emptyAnimation_->getBufferId(), bindPoint );
+			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			if (bindPoint >= 0)
+			{
+				emptyAnimation_->bind();
+
+				openGlDevice_->bindBuffer( emptyAnimation_->getBufferId(), bindPoint );
+			}
 		}
 		
 		meshes_[i]->render();

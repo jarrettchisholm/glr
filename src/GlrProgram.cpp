@@ -201,13 +201,16 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 			std::vector<GLuint> ubos = it->second;
 			for ( auto ubo : ubos )
 			{
-				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+				GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_LIGHT );
+				if ( bindPoint >= 0 )
+				{
+					glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+					glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
+				
+					openGlDevice_->bindBuffer( ubo, bindPoint );
+				}
 				
 				//GLuint bindPoint = openGlDevice_->bindBuffer( ubo );
-				GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_LIGHT );
-				openGlDevice_->bindBuffer( ubo, bindPoint );
-				
 				//shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
 			}
 		}

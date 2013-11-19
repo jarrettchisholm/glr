@@ -295,6 +295,11 @@ void OpenGlDevice::invalidateBindPoints()
 	currentBindPoint_ = 0;
 }
 
+glm::detail::uint32 OpenGlDevice::getMaximumNumberOfBindPoints()
+{
+	return maxNumBindPoints_;
+}
+
 GlError OpenGlDevice::getGlError()
 {
 	GlError glErrorObj = GlError();

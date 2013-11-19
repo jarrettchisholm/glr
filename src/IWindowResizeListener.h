@@ -2,6 +2,7 @@
 #define IWINDOWRESIZELISTENER_H_
 
 #include <string>
+#include <glm/glm.hpp>
 
 namespace glr {
 

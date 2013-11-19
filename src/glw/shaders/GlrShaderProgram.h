@@ -59,4 +59,5 @@ private:
 
 }
 }
+
 #endif /* GLRSHADERPROGRAM_H */

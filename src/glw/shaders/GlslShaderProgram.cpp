@@ -124,7 +124,7 @@ void GlslShaderProgram::bind()
 		bindListener->shaderBindCallback( this );
 }
 
-GLuint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
+GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 {
 	for ( auto& b : bindings_ )
 	{
@@ -139,7 +139,7 @@ GLuint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 	return -1;
 }
 
-GLuint GlslShaderProgram::getBindPointByVariableName(std::string varName)
+GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName)
 {
 	for ( auto& b : bindings_ )
 	{
@@ -184,7 +184,7 @@ void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GL
 }
 */
 
-std::string GlslShaderProgram::getName()
+const std::string& GlslShaderProgram::getName()
 {
 	return name_;
 }

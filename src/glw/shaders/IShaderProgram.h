@@ -45,7 +45,7 @@ public:
 	 */
 	virtual IShader::BindingsMap getBindings() = 0;
 	
-	virtual std::string getName() = 0;
+	virtual const std::string& getName() = 0;
 	
 	/**
 	 * Bind the shader variable with name varName to the given bindPoint.
@@ -54,6 +54,7 @@ public:
 	 * @param bindPoint The OpenGL bind point to bind the shader variable to.
 	 */
 	//virtual void bindVariable(std::string varName, GLuint bindPoint) = 0;
+	
 	/**
 	 * Bind all shader variables of the type bindType to the given bindPoint.
 	 * 
@@ -62,8 +63,25 @@ public:
 	 */
 	//virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint) = 0;
 	
-	virtual GLuint getBindPointByVariableName(std::string varName) = 0;
-	virtual GLuint getBindPointByBindingName(IShader::BindType bindType) = 0;
+	/**
+	 * Get the OpenGL shader bind point for the variable with the given name varName.
+	 * 
+	 * If the variable with the name varName is found, a valid bind point value is returned.  The value
+	 * can be converted to an unsigned int safely.
+	 * 
+	 * If no binding exists for the variable with name varName, -1 is returned.
+	 */
+	virtual GLint getBindPointByVariableName(const std::string& varName) = 0;
+	
+	/**
+	 * Get the OpenGL shader bind point for the variable with bind type bindType.
+	 * 
+	 * If the variable with bind type bindType is found, a valid bind point value is returned.  The value
+	 * can be converted to an unsigned int safely.
+	 * 
+	 * If no binding exists for the variable with bind type bindType, -1 is returned.
+	 */
+	virtual GLint getBindPointByBindingName(IShader::BindType bindType) = 0;
 	
 	/**
 	 * Add a listener, which will be notified when this shader gets bound.

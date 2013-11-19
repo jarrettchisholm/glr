@@ -37,10 +37,13 @@ public:
 
 	//virtual void bindVariable(std::string varName, GLuint bindPoint);
 	//virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint);
-	virtual GLuint getBindPointByVariableName(std::string varName);
-	virtual GLuint getBindPointByBindingName(IShader::BindType bindType);
+	virtual GLint getBindPointByVariableName(const std::string& varName);
+	virtual GLint getBindPointByBindingName(IShader::BindType bindType);
+	
+	//virtual bool hasBindingName(IShader::BindType bindType);
+	//virtual bool hasVariableName(const std::string& varName);
 
-	std::string getName();
+	const std::string& getName();
 	
 	virtual void addBindListener(IShaderProgramBindListener* bindListener);
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener);

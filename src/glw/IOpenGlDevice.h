@@ -79,6 +79,11 @@ public:
 	 */
 	virtual void invalidateBindPoints() = 0;
 	
+	/**
+	 * Returns the maximum number of bind points available for use.
+	 */
+	virtual glm::detail::uint32 getMaximumNumberOfBindPoints() = 0;
+	
 	virtual GlError getGlError() = 0;
 	
 	/* Getters */
