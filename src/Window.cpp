@@ -11,7 +11,6 @@
 
 #include <SFML/OpenGL.hpp>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Window.h"
@@ -19,6 +18,7 @@
 #include "common/logger/Logger.h"
 
 namespace glr {
+
 Window::Window(int width, int height, std::string title): width_(width), height_(height)
 {
 	sf::ContextSettings settings;
@@ -162,4 +162,5 @@ const glm::mat4& Window::getProjectionMatrix()
 {
 	return projectionMatrix_;
 }
+
 }

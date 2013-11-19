@@ -93,7 +93,13 @@ public:
 		return BIND_TYPE_NONE;
 	}
 
-	typedef std::pair<BindType, std::string> Binding;
+	struct Binding
+	{
+		BindType type;
+		std::string variableName;
+		GLuint bindPoint;
+	};
+	//typedef std::pair<BindType, std::string> Binding;
 	typedef std::vector< Binding > BindingsMap;
 
 

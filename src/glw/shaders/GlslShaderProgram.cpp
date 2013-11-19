@@ -16,7 +16,7 @@
 namespace glr {
 namespace shaders {
 
-GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders) : name_(name), shaders_(shaders)
+GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice) : name_(name), shaders_(shaders), openGlDevice_(openGlDevice)
 {
 	programId_ = -1;
 }
@@ -92,12 +92,57 @@ GLuint GlslShaderProgram::getGLShaderProgramId()
 void GlslShaderProgram::bind()
 {
 	glUseProgram(programId_);
+
+	// We need to invalidate the current bind points so that we can rebind what we need to
+	// to this shader program.
+	openGlDevice_->invalidateBindPoints();
+	
+	// Bind all the variables to bind points
+	for ( auto& b : bindings_ )
+	{
+		b.bindPoint = openGlDevice_->getBindPoint();
+
+		GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  b.variableName.c_str());
+		glUniformBlockBinding(programId_, uniformBlockIndex, b.bindPoint);
+	}
 	
 	// Notify all listeners that we have bound this shader program
 	for ( auto bindListener : bindListeners_ )
 		bindListener->shaderBindCallback( this );
 }
 
+GLuint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
+{
+	for ( auto& b : bindings_ )
+	{
+		if (b.type == bindType)
+		{
+			return b.bindPoint;
+		}
+	}
+	// Didn't find binding type in bind map
+	LOG_WARN( "Unable to find binding for bind type: " << bindType );
+	
+	return -1;
+}
+
+GLuint GlslShaderProgram::getBindPointByVariableName(std::string varName)
+{
+	for ( auto& b : bindings_ )
+	{
+		if (b.variableName == varName)
+		{
+			return b.bindPoint;
+		}
+	}
+	
+	// Didn't find binding type in bind map
+	LOG_WARN( "Unable to find binding for variable name: " << varName );
+	
+	return -1;
+}
+
+/*
 void GlslShaderProgram::bindVariable(std::string varName, GLuint bindPoint)
 {
 	GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_, varName.c_str());
@@ -124,6 +169,7 @@ void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GL
 	//glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, ubo);
 	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
+*/
 
 std::string GlslShaderProgram::getName()
 {

@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 
+#include "Window.h"
+
 #include "glw/shaders/ShaderProgramManager.h"
 #include "glw/shaders/IShader.h"
 #include "exceptions/GlException.h"
@@ -17,9 +19,8 @@
 
 #include "common/logger/Logger.h"
 
-#include "Window.h"
-
 namespace glr {
+
 GlrProgram::GlrProgram(ProgramSettings settings)
 {
 	initialize( settings );
@@ -203,9 +204,11 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 				glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, lightData.size() * sizeof(LightData), &lightData[0]);
 				
-				GLuint bindPoint = openGlDevice_->bindBuffer( ubo );
+				//GLuint bindPoint = openGlDevice_->bindBuffer( ubo );
+				GLuint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_LIGHT );
+				openGlDevice_->bindBuffer( ubo, bindPoint );
 				
-				shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
+				//shader->bindVariableByBindingName(shaders::IShader::BIND_TYPE_LIGHT, bindPoint);
 			}
 		}
 	}
@@ -247,15 +250,15 @@ void GlrProgram::setupUniformBufferObjectBindings(shaders::IShaderProgram* shade
 {
 	shaders::IShader::BindingsMap bindings = shader->getBindings();
 	
-	for ( auto it = bindings.begin(); it != bindings.end(); ++it )
+	for ( auto& b : bindings )
 	{
 		//std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 
-		switch ( it->first )
+		switch ( b.type )
 		{
 		case shaders::IShader::BIND_TYPE_LIGHT:
-			if ( lightUbos_.find(it->second) == lightUbos_.end())
-				setupLightUbo(it->second, shader);
+			if ( lightUbos_.find(b.variableName) == lightUbos_.end())
+				setupLightUbo(b.variableName, shader);
 			break;
 
 		// TODO: implement other bindings (materials, etc)
@@ -323,4 +326,5 @@ IWindow* GlrProgram::getWindow()
 {
 	return window_.get();
 }
+
 }
