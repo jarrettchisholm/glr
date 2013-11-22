@@ -107,4 +107,3 @@ catch ( glr::FormatException& e )
 	exit(EXIT_FAILURE);
 }
 
-// etc

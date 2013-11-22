@@ -24,9 +24,6 @@ public:
 	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
 	virtual ILight* createLight(const std::string name);
 	
-	// Testing
-	virtual ISkyBox* createSkyBox(const std::string name);
-	
 	virtual void drawAll();
 	
 	virtual void addCamera(std::shared_ptr<ICamera> camera);
@@ -38,9 +35,6 @@ public:
 	virtual ISceneNode* getSceneNode(const std::string& name);
 	virtual ICamera* getCamera(const std::string& name);
 	virtual ILight* getLight(const std::string& name);
-	
-	// Testing
-	virtual ISkyBox* getSkyBox(const std::string& name);
 
 	virtual void destroySceneNode(const std::string& name);
 	virtual void destroySceneNode(ISceneNode* node);
@@ -71,7 +65,6 @@ private:
 	std::shared_ptr<ISceneNode> rootSceneNode_;
 	std::map<std::string, std::shared_ptr<ICamera> > cameras_;
 	std::map<std::string, std::shared_ptr<ILight> > lights_;
-	std::map<std::string, std::shared_ptr<ISkyBox> > skyBoxes_;
 
 	std::unique_ptr<models::IModelManager> modelManager_;
 	
