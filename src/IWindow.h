@@ -12,7 +12,6 @@
 
 #include "IWindowResizeListener.h"
 
-#include "ISceneManager.h"
 #include "Configure.h"
 
 #if defined(OS_WINDOWS)
