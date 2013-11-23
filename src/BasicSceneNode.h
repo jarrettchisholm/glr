@@ -21,8 +21,8 @@ namespace glr {
 class BasicSceneNode : public virtual ISceneNode {
 public:
 	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string name, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string& name, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
 	/*

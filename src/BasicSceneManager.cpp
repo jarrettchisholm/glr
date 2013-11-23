@@ -36,7 +36,7 @@ BasicSceneManager::~BasicSceneManager()
 {
 }
 
-ISceneNode* BasicSceneManager::createSceneNode(const std::string name)
+ISceneNode* BasicSceneManager::createSceneNode(const std::string& name)
 {
 	// Error check
 	if ( sceneNodes_.find(name) != sceneNodes_.end())
@@ -55,7 +55,7 @@ ISceneNode* BasicSceneManager::createSceneNode(const std::string name)
 	return node.get();
 }
 
-ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed)
+ICamera* BasicSceneManager::createCamera(const std::string& name, glm::detail::uint32 speed, glm::detail::uint32 rotationSpeed)
 {
 	// Error check
 	if ( cameras_.find(name) != cameras_.end())
@@ -74,7 +74,7 @@ ICamera* BasicSceneManager::createCamera(const std::string name, glm::detail::ui
 	return node.get();
 }
 
-ILight* BasicSceneManager::createLight(const std::string name)
+ILight* BasicSceneManager::createLight(const std::string& name)
 {
 	// Error check
 	if ( lights_.find(name) != lights_.end())

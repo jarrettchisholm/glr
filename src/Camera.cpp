@@ -24,6 +24,7 @@
 #include <iostream>
 
 namespace glr {
+
 Camera::Camera(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 {
 	setPosition(0.0f, 0.0f, 0.0f);
@@ -129,4 +130,5 @@ void Camera::tick(glm::detail::float32 time)
 	
 	clearMovementBuffer();
 }
+
 }

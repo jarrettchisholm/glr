@@ -112,7 +112,19 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	shaderProgramManager_->addDefaultBindListener( this );
 	
 	LOG_DEBUG( "Create scene manager." );
-	sMgr_ = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
+	std::shared_ptr<BasicSceneManager> sceneManager = std::shared_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
+	setSceneManager( sceneManager );
+	
+	openGlDevice_->setProjectionMatrix( window_->getProjectionMatrix() );
+	
+	return window_.get();
+}
+
+void GlrProgram::setSceneManager(std::shared_ptr<ISceneManager> sceneManager)
+{
+	// Question: Do I want to be able to just overwrite the previous scene manager?  Or do I maybe want to throw an exception
+	// if a scene manager is already set?
+	sMgr_ = sceneManager;
 
 	// Set the default shader for the scene manager
 	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_basic");
@@ -128,9 +140,6 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	{
 		openGlDevice_->setViewMatrix( camera->getViewMatrix() );
 	}
-	openGlDevice_->setProjectionMatrix( window_->getProjectionMatrix() );
-	
-	return window_.get();
 }
 
 void GlrProgram::beginRender()

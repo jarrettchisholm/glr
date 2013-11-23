@@ -20,9 +20,9 @@ public:
 	BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneManager();
 
-	virtual ISceneNode* createSceneNode(const std::string name);
-	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
-	virtual ILight* createLight(const std::string name);
+	virtual ISceneNode* createSceneNode(const std::string& name);
+	virtual ICamera* createCamera(const std::string& name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
+	virtual ILight* createLight(const std::string& name);
 	
 	virtual void drawAll();
 	
@@ -54,13 +54,13 @@ public:
 
 	virtual const std::vector<LightData>& getLightData();
 
-	void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
+	virtual void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
 	shaders::IShaderProgram* getDefaultShaderProgram();
 
-	ICamera* getActiveCamera();
-	const glm::mat4& getModelMatrix();
+	virtual ICamera* getActiveCamera();
+	virtual const glm::mat4& getModelMatrix();
 
-private:
+protected:
 	std::map<std::string, std::shared_ptr<ISceneNode> > sceneNodes_;
 	std::shared_ptr<ISceneNode> rootSceneNode_;
 	std::map<std::string, std::shared_ptr<ICamera> > cameras_;

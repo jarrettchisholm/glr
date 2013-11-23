@@ -23,9 +23,9 @@ public:
 	}
 	;
 
-	virtual ISceneNode* createSceneNode(const std::string name) = 0;
-	virtual ICamera* createCamera(const std::string name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5) = 0;
-	virtual ILight* createLight(const std::string name) = 0;
+	virtual ISceneNode* createSceneNode(const std::string& name) = 0;
+	virtual ICamera* createCamera(const std::string& name, glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5) = 0;
+	virtual ILight* createLight(const std::string& name) = 0;
 
 	virtual void addCamera(std::shared_ptr<ICamera> camera) = 0;
 	virtual void addSceneNode(std::shared_ptr<ISceneNode> sceneNode) = 0;
@@ -52,6 +52,11 @@ public:
 
 	// @Deprecated(?)
 	virtual ISceneNode* getRootSceneNode() = 0;
+	
+	virtual void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram) = 0;
+	
+	virtual ICamera* getActiveCamera() = 0;
+	virtual const glm::mat4& getModelMatrix() = 0;
 
 	virtual models::IModelManager* getModelManager() = 0;
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() = 0;
