@@ -29,10 +29,10 @@ TextureManager::~TextureManager()
 
 Texture2D* TextureManager::getTexture2D(const std::string& name)
 {
-	if ( textures_.find(name) != textures_.end() )
+	if ( textures2D_.find(name) != textures2D_.end() )
 	{
 		LOG_DEBUG( "Texture '" + name + "' found." );
-		return textures_[name].get();
+		return textures2D_[name].get();
 	}
 
 	LOG_DEBUG( "Texture '" + name + "' not found." );
@@ -47,17 +47,19 @@ Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename)
 {
-	LOG_DEBUG( "Loading texture '" + name + "'." );
+	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
 
-	if ( textures_.find(name) != textures_.end() && textures_[name].get() != nullptr )
+	auto it = textures2D_.find(name);
+
+	if ( it != textures2D_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture already exists - returning already existing texture." );
-		return textures_[name].get();
+		return it->second.get();
 	}
 
 	const std::string& basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
 
-	LOG_DEBUG( "Loading texture image." );
+	LOG_DEBUG( "Loading texture 2d image." );
 	utilities::ImageLoader il = utilities::ImageLoader();
 	std::unique_ptr<utilities::Image> image = il.loadImageData(basepath + filename);
 
@@ -73,36 +75,85 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const std::stri
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image)
 {
-	LOG_DEBUG( "Loading texture '" + name + "' from image." );
+	LOG_DEBUG( "Loading texture 2d '" + name + "' from image." );
 
-	auto it = textures_.find(name);
+	if ( image == nullptr )
+	{
+		std::string msg = std::string( "Unable to load texture: " + name );
+		LOG_ERROR( msg );
+		throw exception::Exception( msg );
+	}
 
-	if ( it != textures_.end() && it->second.get() != nullptr )
+	auto it = textures2D_.find(name);
+
+	if ( it != textures2D_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture already exists - returning already existing texture." );
 		return it->second.get();
 	}
 	
 	std::stringstream msg;
-	msg << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
+	msg << "TextureManager::addTexture2D: image: " << image->width << "x" << image->height;
 	LOG_DEBUG( msg.str() );
 
-	LOG_DEBUG( "Creating texture." );
-	textures_[name] = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name));
+	LOG_DEBUG( "Creating texture 2d." );
+	textures2D_[name] = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name));
 
-	return textures_[name].get();
+	return textures2D_[name].get();
 }
 
 Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string> filenames)
 {
-	// TODO: implement
-	return nullptr;
+	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
+
+	auto it = textures2DArray_.find(name);
+
+	if ( it != textures2DArray_.end() && it->second.get() != nullptr )
+	{
+		LOG_DEBUG( "Texture 2d array already exists - returning already existing texture 2d array." );
+		return it->second.get();
+	}
+
+	const std::string& basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
+
+	LOG_DEBUG( "Loading texture image." );
+	utilities::ImageLoader il = utilities::ImageLoader();
+	
+	auto images = std::vector< std::unique_ptr<utilities::Image> >();
+	for (auto& s : filenames)
+	{
+		images.push_back( il.loadImageData(basepath + s) );
+	}
+	
+	auto imagesAsPointers = std::vector<utilities::Image*>();
+	for (auto& image : images)
+	{
+		imagesAsPointers.push_back( image.get() );
+	}
+
+	return addTexture2DArray( name, imagesAsPointers );
 }
 
 Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images)
 {
-	// TODO: implement
-	return nullptr;
+	LOG_DEBUG( "Loading texture 2d array '" + name + "' from images." );
+
+	auto it = textures2DArray_.find(name);
+
+	if ( it != textures2DArray_.end() && it->second.get() != nullptr )
+	{
+		LOG_DEBUG( "Texture 2d array already exists - returning already existing texture 2d array." );
+		return it->second.get();
+	}
+
+	std::stringstream msg;
+	msg << "TextureManager::addTexture2DArray: number of images: " << images.size();
+	LOG_DEBUG( msg.str() );
+
+	LOG_DEBUG( "Creating texture 2d array." );
+	textures2DArray_[name] = std::unique_ptr<Texture2DArray>(new Texture2DArray(images, openGlDevice_, name));
+
+	return textures2DArray_[name].get();
 }
 
 }

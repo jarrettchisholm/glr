@@ -35,7 +35,8 @@ public:
 private:
 	IOpenGlDevice* openGlDevice_;
 
-	std::map< std::string, std::unique_ptr<Texture2D> > textures_;
+	std::map< std::string, std::unique_ptr<Texture2D> > textures2D_;
+	std::map< std::string, std::unique_ptr<Texture2DArray> > textures2DArray_;
 };
 
 }
