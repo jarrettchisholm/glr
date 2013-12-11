@@ -13,7 +13,6 @@
 
 #include "TextureManager.h"
 
-#include "../common/utilities/ImageLoader.h"
 #include "../exceptions/Exception.h"
 
 
@@ -28,7 +27,7 @@ TextureManager::~TextureManager()
 {
 }
 
-Texture* TextureManager::getTexture(const std::string name)
+Texture2D* TextureManager::getTexture2D(const std::string& name)
 {
 	if ( textures_.find(name) != textures_.end() )
 	{
@@ -41,7 +40,12 @@ Texture* TextureManager::getTexture(const std::string name)
 	return nullptr;
 }
 
-Texture* TextureManager::addTexture(const std::string name, const std::string filename)
+Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
+{
+	
+}
+
+Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename)
 {
 	LOG_DEBUG( "Loading texture '" + name + "'." );
 
@@ -51,7 +55,7 @@ Texture* TextureManager::addTexture(const std::string name, const std::string fi
 		return textures_[name].get();
 	}
 
-	std::string basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
+	const std::string& basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
 
 	LOG_DEBUG( "Loading texture image." );
 	utilities::ImageLoader il = utilities::ImageLoader();
@@ -64,14 +68,41 @@ Texture* TextureManager::addTexture(const std::string name, const std::string fi
 		throw exception::Exception( msg );
 	}
 
+	return addTexture2D( name, image.get() );
+}
+
+Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image)
+{
+	LOG_DEBUG( "Loading texture '" + name + "' from image." );
+
+	auto it = textures_.find(name);
+
+	if ( it != textures_.end() && it->second.get() != nullptr )
+	{
+		LOG_DEBUG( "Texture already exists - returning already existing texture." );
+		return it->second.get();
+	}
+	
 	std::stringstream msg;
 	msg << "TextureManager::addTexture: image: " << image->width << "x" << image->height;
 	LOG_DEBUG( msg.str() );
 
 	LOG_DEBUG( "Creating texture." );
-	textures_[name] = std::unique_ptr<Texture>(new Texture(image.get(), openGlDevice_, name));
+	textures_[name] = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name));
 
 	return textures_[name].get();
+}
+
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string> filenames)
+{
+	// TODO: implement
+	return nullptr;
+}
+
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images)
+{
+	// TODO: implement
+	return nullptr;
 }
 
 }

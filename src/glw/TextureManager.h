@@ -16,23 +16,28 @@
 
 #include "ITextureManager.h"
 
-#include "Texture.h"
-
 namespace glr {
 namespace glw {
+
 class TextureManager : public ITextureManager {
 public:
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
-	virtual Texture* getTexture(const std::string name);
-	virtual Texture* addTexture(const std::string name, const std::string filename);
+	virtual Texture2D* getTexture2D(const std::string& name);
+	virtual Texture2DArray* getTexture2DArray(const std::string& name);
+	
+	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename);
+	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image);
+	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string> filenames);
+	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images);
 	
 private:
 	IOpenGlDevice* openGlDevice_;
 
-	std::map< std::string, std::unique_ptr<Texture> > textures_;
+	std::map< std::string, std::unique_ptr<Texture2D> > textures_;
 };
+
 }
 }
 #endif /* TEXTUREMANAGER_H_ */

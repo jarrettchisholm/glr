@@ -35,13 +35,12 @@ public:
 	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
 
-	virtual IModel* getModel(const std::string& name);
-	virtual void loadModel(const std::string& name, const std::string& filename);
-	virtual std::unique_ptr<IModel> createModel(const std::string& name);
 	
-	// TESTING
-	virtual std::unique_ptr<IModel> createModel(glw::Mesh* mesh);
-	virtual std::unique_ptr<IModel> createModel(std::vector< std::shared_ptr<ModelData> > modelData);
+	virtual IModel* getModel(const std::string& name);
+	
+	virtual void loadModel(const std::string& name, const std::string& filename);
+	
+	virtual std::unique_ptr<IModel> createInstance(const std::string& name);
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;

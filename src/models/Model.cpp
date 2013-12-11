@@ -117,9 +117,9 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		
 		if ( d->textureData.filename != std::string("") )
 		{
-			glw::Texture* texture = textureManager_->getTexture(d->textureData.filename);
+			auto texture = textureManager_->getTexture2D(d->textureData.filename);
 			if (texture == nullptr)
-				texture = textureManager_->addTexture(d->textureData.filename, d->textureData.filename);
+				texture = textureManager_->addTexture2D(d->textureData.filename, d->textureData.filename);
 			
 			textures_.push_back( texture );
 		}
@@ -129,7 +129,7 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		}
 
 
-		glw::Material* material = materialManager_->getMaterial(d->materialData.name);
+		auto material = materialManager_->getMaterial(d->materialData.name);
 		if (material == nullptr)
 			material = materialManager_->addMaterial(d->materialData.name, d->materialData.ambient, d->materialData.diffuse, d->materialData.specular, d->materialData.emission, d->materialData.shininess, d->materialData.strength);
 		
@@ -248,8 +248,17 @@ void Model::render(shaders::IShaderProgram* shader)
 		if ( textures_[i] != nullptr )
 		{
 			// TODO: bind to an actual texture position (for multiple textures per mesh, which we currently don't support...maybe at some point we will???  Why would we need multiple textures?)
+			//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE_2D, textures_[i]->getBindPoint() );
 			textures_[i]->bind();
-			//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, textures_[i]->getBindPoint() );
+			/*
+			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_TEXTURE_2D );
+			if (bindPoint >= 0)
+			{
+				textures_[i]->bind();
+
+				openGlDevice_->bindBuffer( textures_[i]->getBufferId(), bindPoint );
+			}
+			*/
 		}
 		
 		if ( materials_[i] != nullptr )

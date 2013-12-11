@@ -16,8 +16,11 @@ in vec3 lightDirection;
 in vec4 color;
 in float bug;
 
-@bind Texture
-uniform sampler2DArray tex;
+@bind Texture2D
+uniform sampler2D tex2D;
+
+@bind Texture2DArray
+uniform sampler2DArray tex2DArray;
 
 @bind Material
 layout(std140) uniform Materials 
@@ -35,7 +38,8 @@ void main()
  
 	cf = intensity * (materials[0].diffuse).rgb + materials[0].ambient.rgb;
 	af = materials[0].diffuse.a;
-	texel = texture2DArray(tex, vec3(textureCoord, 1));
+	//texel = texture2DArray(tex2DArray, vec3(textureCoord, 1));
+	texel = texture2D(tex2D, textureCoord);
  
 	ct = texel.rgb;
 	at = texel.a;

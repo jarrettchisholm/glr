@@ -37,11 +37,6 @@ ModelManager::~ModelManager()
 	aiDetachAllLogStreams();
 }
 
-/**
- *
- * @return The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
- * the ModelManager.
- */
 IModel* ModelManager::getModel(const std::string& name)
 {
 	LOG_DEBUG( "Retrieving model '" + name + "'." );
@@ -57,9 +52,7 @@ IModel* ModelManager::getModel(const std::string& name)
 	return nullptr;
 }
 
-/**
- * Loads the model from the given filename.
- */
+
 void ModelManager::loadModel(const std::string& name, const std::string& filename)
 {
 	std::cout << name << std::endl;
@@ -82,11 +75,7 @@ void ModelManager::loadModel(const std::string& name, const std::string& filenam
 	//return models_[filename].get();
 }
 
-/**
- * @return A unique pointer to a model object.  The model is a copy of the model that was loaded
- * from the specified file.
- */
-std::unique_ptr<IModel> ModelManager::createModel(const std::string& name)
+std::unique_ptr<IModel> ModelManager::createInstance(const std::string& name)
 {
 	LOG_DEBUG( "Creating model '" + name + "'." );
 	
@@ -101,21 +90,6 @@ std::unique_ptr<IModel> ModelManager::createModel(const std::string& name)
 	LOG_DEBUG( "Model not found." );
 	
 	return std::unique_ptr<IModel>( nullptr );
-}
-
-// TESTING
-std::unique_ptr<IModel> ModelManager::createModel(glw::Mesh* mesh)
-{
-	LOG_DEBUG( "NOTE: Method 'ModelManager::createModel(glw::IMesh* mesh)' is for testing purposes only!" );
-	
-	return std::unique_ptr<IModel>( new Model(mesh, openGlDevice_) );
-}
-
-std::unique_ptr<IModel> ModelManager::createModel(std::vector< std::shared_ptr<ModelData> > modelData)
-{
-	LOG_DEBUG( "NOTE: Method 'ModelManager::createModel(std::vector< std::shared_ptr<ModelData> > modelData)' is for testing purposes only!" );
-	
-	return std::unique_ptr<IModel>( new Model(modelData, openGlDevice_) );
 }
 
 }

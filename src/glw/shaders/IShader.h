@@ -65,10 +65,29 @@ public:
 		BIND_TYPE_LIGHT,
 		BIND_TYPE_MATERIAL,
 		BIND_TYPE_COLOR,
-		BIND_TYPE_TEXTURE,
+		BIND_TYPE_TEXTURE_1D,
+		BIND_TYPE_TEXTURE_1D_ARRAY,
+		BIND_TYPE_TEXTURE_2D,
+		BIND_TYPE_TEXTURE_2D_ARRAY,
+		BIND_TYPE_TEXTURE_3D,
 		BIND_TYPE_BONE
 	};
 
+
+	// TODO: Maybe switch to using a map for mapping bindings?
+	/*
+	const static std::map<std::string, BindType> bindMap = {
+		{ std::string("Light"), 			BIND_TYPE_LIGHT }, 
+		{ std::string("Material"), 			BIND_TYPE_MATERIAL }, 
+		{ std::string("Color"), 			BIND_TYPE_COLOR }, 
+		{ std::string("Texture1D"), 		BIND_TYPE_TEXTURE_1D },
+		{ std::string("Texture1DArray"), 	BIND_TYPE_TEXTURE_1D_ARRAY },
+		{ std::string("Texture"), 			BIND_TYPE_TEXTURE },
+		{ std::string("TextureArray"), 		BIND_TYPE_TEXTURE_ARRAY },
+		{ std::string("Texture3D"), 		BIND_TYPE_TEXTURE_3D },
+		{ std::string("Bone"), 				BIND_TYPE_BONE }
+	};
+	*/
 	/**
 	 * Parses the type of shader data of the given string type, and returns the shader data type.
 	 * 
@@ -85,8 +104,16 @@ public:
 			return BIND_TYPE_MATERIAL;
 		else if ( type.compare("Color") == 0 )
 			return BIND_TYPE_COLOR;
-		else if ( type.compare("Texture") == 0 )
-			return BIND_TYPE_TEXTURE;
+		else if ( type.compare("Texture1D") == 0 )
+			return BIND_TYPE_TEXTURE_1D;
+		else if ( type.compare("Texture1DArray") == 0 )
+			return BIND_TYPE_TEXTURE_1D_ARRAY;
+		else if ( type.compare("Texture2D") == 0 )
+			return BIND_TYPE_TEXTURE_2D;
+		else if ( type.compare("Texture2DArray") == 0 )
+			return BIND_TYPE_TEXTURE_2D_ARRAY;
+		else if ( type.compare("Texture3D") == 0 )
+			return BIND_TYPE_TEXTURE_3D;
 		else if ( type.compare("Bone") == 0 )
 			return BIND_TYPE_BONE;
 

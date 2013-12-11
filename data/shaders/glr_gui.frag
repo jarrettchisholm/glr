@@ -7,13 +7,13 @@
 in vec2 textureCoord;
 in vec3 normalDirection;
 
-@bind Texture
-uniform sampler2DArray tex;
+@bind Texture2D
+uniform sampler2D tex2D;
 
 void main()
 {
 	
-	gl_FragColor = texture2DArray(tex, vec3(textureCoord, 1));
+	gl_FragColor = texture2D(tex2D, textureCoord);
 	
 	/*
 	float bug = 0.0;	

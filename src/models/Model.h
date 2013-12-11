@@ -27,7 +27,7 @@
 #include "../glw/IAnimationManager.h"
 
 #include "../glw/Mesh.h"
-#include "../glw/Texture.h"
+#include "../glw/Texture2D.h"
 #include "../glw/Material.h"
 #include "../glw/Animation.h"
 
@@ -55,7 +55,7 @@ protected:
 	glw::IOpenGlDevice* openGlDevice_;
 
 	std::vector<glw::Mesh*> meshes_;
-	std::vector<glw::Texture*> textures_;
+	std::vector<glw::Texture2D*> textures_;
 	std::vector<glw::Material*> materials_;
 	std::map< std::string, std::unique_ptr<Animation>> animations_;
 	
