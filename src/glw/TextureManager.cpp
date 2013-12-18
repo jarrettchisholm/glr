@@ -42,7 +42,8 @@ Texture2D* TextureManager::getTexture2D(const std::string& name)
 
 Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
 {
-	
+	// TODO: implement
+	return nullptr;
 }
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename)
