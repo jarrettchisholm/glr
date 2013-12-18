@@ -13,6 +13,8 @@
 #include "Texture2D.h"
 #include "Texture2DArray.h"
 
+#include "ITexture.h"
+
 #include "../common/utilities/ImageLoader.h"
 
 namespace glr {
@@ -36,8 +38,8 @@ public:
 	virtual Texture2D* getTexture2D(const std::string& name) = 0;
 	virtual Texture2DArray* getTexture2DArray(const std::string& name) = 0;
 	
-	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename) = 0;
-	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image) = 0;
+	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings = TextureSettings()) = 0;
+	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings = TextureSettings()) = 0;
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string> filenames) = 0;
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images) = 0;
 	// Do I want to do this one?

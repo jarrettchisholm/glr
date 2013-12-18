@@ -15,6 +15,7 @@
 #include "../glw/shaders/IShaderProgram.h"
 
 #include "../glw/IMesh.h"
+#include "../glw/ITexture.h"
 
 namespace glr {
 namespace models {
@@ -41,6 +42,7 @@ struct MaterialData {
 
 struct TextureData {
 	std::string filename;
+	glw::TextureSettings settings;
 };
 
 

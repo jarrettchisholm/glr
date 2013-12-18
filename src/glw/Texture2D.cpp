@@ -9,11 +9,11 @@
 namespace glr {
 namespace glw {
 	
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
 {
 }
 
-Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
+Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
 {
 	bufferId_ = 0;
 	
@@ -145,8 +145,8 @@ void Texture2D::allocateVideoMemory()
 	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, settings_.textureWrapS);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings_.textureWrapT);
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat_,  image_.width, image_.height, 0, internalFormat_, GL_UNSIGNED_BYTE, nullptr);
 }

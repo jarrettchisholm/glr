@@ -46,7 +46,7 @@ Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
 	return nullptr;
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename)
+Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings)
 {
 	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
 
@@ -71,10 +71,10 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const std::stri
 		throw exception::Exception( msg );
 	}
 
-	return addTexture2D( name, image.get() );
+	return addTexture2D( name, image.get(), settings );
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image)
+Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings)
 {
 	LOG_DEBUG( "Loading texture 2d '" + name + "' from image." );
 
@@ -98,7 +98,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	LOG_DEBUG( msg.str() );
 
 	LOG_DEBUG( "Creating texture 2d." );
-	textures2D_[name] = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name));
+	textures2D_[name] = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name, settings));
 
 	return textures2D_[name].get();
 }

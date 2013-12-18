@@ -119,7 +119,7 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		{
 			auto texture = textureManager_->getTexture2D(d->textureData.filename);
 			if (texture == nullptr)
-				texture = textureManager_->addTexture2D(d->textureData.filename, d->textureData.filename);
+				texture = textureManager_->addTexture2D(d->textureData.filename, d->textureData.filename, d->textureData.settings);
 			
 			textures_.push_back( texture );
 		}

@@ -27,8 +27,8 @@ public:
 	virtual Texture2D* getTexture2D(const std::string& name);
 	virtual Texture2DArray* getTexture2DArray(const std::string& name);
 	
-	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename);
-	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image);
+	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings = TextureSettings());
+	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings = TextureSettings());
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string> filenames);
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images);
 	
