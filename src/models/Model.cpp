@@ -197,18 +197,36 @@ glw::IMesh* Model::getMesh(glmd::uint32 index)
 
 void Model::removeMesh(glmd::uint32 index)
 {
+	meshes_.erase(meshes_.begin() + index);
+	materials_.erase(materials_.begin() + index);
+	textures_.erase(textures_.begin() + index);
 }
 
 void Model::removeMesh(glw::IMesh* mesh)
 {
+	glmd::int32 index = getIndexOf(mesh);
+	
+	meshes_.erase(meshes_.begin() + index);
+	materials_.erase(materials_.begin() + index);
+	textures_.erase(textures_.begin() + index);
 }
 
 void Model::addMesh(glw::IMesh* mesh)
 {
+	assert( mesh != nullptr );
+	
+	meshes_.push_back(mesh);
+	materials_.push_back( nullptr );
+	textures_.push_back( nullptr );
 }
 
 void Model::addMesh(glw::IMesh* mesh, glmd::uint32 index)
 {
+	assert( mesh != nullptr );
+	
+	meshes_.insert(meshes_.begin() + index, mesh);
+	materials_.insert(materials_.begin() + index, nullptr);
+	textures_.insert(textures_.begin() + index, nullptr);
 }
 
 glmd::uint32 Model::getNumberOfMeshes()
@@ -223,7 +241,7 @@ glw::ITexture* Model::getTexture(glmd::uint32 index)
 
 glw::ITexture* Model::getTexture(glw::IMesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		return textures_[i];
 	
@@ -237,23 +255,29 @@ void Model::removeTexture(glmd::uint32 index)
 
 void Model::removeTexture(glw::ITexture* texture)
 {
+	glmd::int32 i = getIndexOf(texture);
+	if (i >= 0)
+		textures_[i] = nullptr;
 }
 
 void Model::removeTexture(glw::IMesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		textures_[i] = nullptr;
 }
 
 void Model::addTexture(glw::ITexture* texture, glmd::uint32 index)
 {
-	//textures_[index] = texture;
+	assert( texture != nullptr );
+	//assert( index < meshes_.size() );
+	
+	textures_[index] = texture;
 }
 
 void Model::addTexture(glw::ITexture* texture, glw::Mesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		textures_[i] = texture;
 }
@@ -270,7 +294,7 @@ glw::IMaterial* Model::getMaterial(glmd::uint32 index)
 
 glw::IMaterial* Model::getMaterial(glw::IMesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		return materials_[i];
 	
@@ -284,23 +308,29 @@ void Model::removeMaterial(glmd::uint32 index)
 
 void Model::removeMaterial(glw::IMaterial* material)
 {
-	
+	glmd::int32 i = getIndexOf(material);
+	if (i >= 0)
+		materials_[i] = nullptr;
 }
 
 void Model::removeMaterial(glw::IMesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		materials_[i] = nullptr;
 }
 
 void Model::addMaterial(glw::IMaterial* material, glmd::uint32 index)
 {
+	assert( material != nullptr );
+	//assert( index < meshes_.size() );
+	
+	materials_[index] = material;
 }
 
 void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
 {
-	glmd::int32 i = getIndexOfMesh(mesh);
+	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
 		materials_[i] = material;
 }
@@ -368,11 +398,33 @@ void Model::setCurrentAnimation(IAnimation* animation)
 	currentAnimation_ = static_cast<Animation*>(animation);
 }
 
-glmd::int32 Model::getIndexOfMesh(glw::IMesh* mesh)
+glmd::int32 Model::getIndexOf(glw::IMesh* mesh)
 {
 	for (glmd::uint32 i=0; i < meshes_.size(); i++)
 	{
 		if (meshes_[i] == mesh)
+			return i;
+	}
+	
+	return -1;
+}
+
+glmd::int32 Model::getIndexOf(glw::ITexture* texture)
+{
+	for (glmd::uint32 i=0; i < textures_.size(); i++)
+	{
+		if (textures_[i] == texture)
+			return i;
+	}
+	
+	return -1;
+}
+
+glmd::int32 Model::getIndexOf(glw::IMaterial* material)
+{
+	for (glmd::uint32 i=0; i < materials_.size(); i++)
+	{
+		if (materials_[i] == material)
 			return i;
 	}
 	

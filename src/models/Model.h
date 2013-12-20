@@ -108,7 +108,9 @@ protected:
 	void loadMaterials(const aiScene* scene);
 	void loadAnimations(const aiScene* scene);
 	
-	glmd::int32 getIndexOfMesh(glw::IMesh* mesh);
+	glmd::int32 getIndexOf(glw::IMesh* mesh);
+	glmd::int32 getIndexOf(glw::ITexture* texture);
+	glmd::int32 getIndexOf(glw::IMaterial* material);
 	
 private:
 	void initialize(std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >());
