@@ -190,6 +190,126 @@ void Model::destroy()
 {
 }
 
+glw::IMesh* Model::getMesh(glmd::uint32 index)
+{
+	return meshes_[index];
+}
+
+void Model::removeMesh(glmd::uint32 index)
+{
+}
+
+void Model::removeMesh(glw::IMesh* mesh)
+{
+}
+
+void Model::addMesh(glw::IMesh* mesh)
+{
+}
+
+void Model::addMesh(glw::IMesh* mesh, glmd::uint32 index)
+{
+}
+
+glmd::uint32 Model::getNumberOfMeshes()
+{
+	return meshes_.size();
+}
+
+glw::ITexture* Model::getTexture(glmd::uint32 index)
+{
+	return textures_[index];
+}
+
+glw::ITexture* Model::getTexture(glw::IMesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		return textures_[i];
+	
+	return nullptr;
+}
+
+void Model::removeTexture(glmd::uint32 index)
+{
+	textures_[index] = nullptr;
+}
+
+void Model::removeTexture(glw::ITexture* texture)
+{
+}
+
+void Model::removeTexture(glw::IMesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		textures_[i] = nullptr;
+}
+
+void Model::addTexture(glw::ITexture* texture, glmd::uint32 index)
+{
+	//textures_[index] = texture;
+}
+
+void Model::addTexture(glw::ITexture* texture, glw::Mesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		textures_[i] = texture;
+}
+
+glmd::uint32 Model::getNumberOfTextures()
+{
+	return textures_.size();
+}
+
+glw::IMaterial* Model::getMaterial(glmd::uint32 index)
+{
+	return materials_[index];
+}
+
+glw::IMaterial* Model::getMaterial(glw::IMesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		return materials_[i];
+	
+	return nullptr;
+}
+
+void Model::removeMaterial(glmd::uint32 index)
+{
+	materials_[index] = nullptr;
+}
+
+void Model::removeMaterial(glw::IMaterial* material)
+{
+	
+}
+
+void Model::removeMaterial(glw::IMesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		materials_[i] = nullptr;
+}
+
+void Model::addMaterial(glw::IMaterial* material, glmd::uint32 index)
+{
+}
+
+void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
+{
+	glmd::int32 i = getIndexOfMesh(mesh);
+	if (i >= 0)
+		materials_[i] = material;
+}
+
+glmd::uint32 Model::getNumberOfMaterials()
+{
+	return materials_.size();
+}
+
 /**
  * Gets the animation that is currently active for this model.  If no animation is active, it will return
  * nullptr.
@@ -199,6 +319,42 @@ void Model::destroy()
 IAnimation* Model::getCurrentAnimation()
 {
 	return currentAnimation_;
+}
+
+/**
+ * Will return the animation associated with this model with the given name.  Returns nullptr if no animation
+ * is associated with this model with the given name.
+ * 
+ * @param name The name of the animation to retrieve.
+ * 
+ * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
+ * is associated with this model with the given name.
+ */
+IAnimation* Model::getAnimation(const std::string& name)
+{	
+	if ( animations_.find(name) != animations_.end() )
+	{
+		return animations_[name].get();
+	}
+	
+	return nullptr;
+}
+
+void Model::removeAnimation(const std::string& name)
+{
+}
+
+void Model::removeAnimation(glw::IAnimation* animation)
+{
+}
+
+void Model::addAnimation(glw::IAnimation* animation)
+{
+}
+
+glmd::uint32 Model::getNumberOfAnimations()
+{
+	return animations_.size();
 }
 
 /**
@@ -212,23 +368,15 @@ void Model::setCurrentAnimation(IAnimation* animation)
 	currentAnimation_ = static_cast<Animation*>(animation);
 }
 
-/**
- * Will return the animation associated with this model with the given name.  Returns nullptr if no animation
- * is associated with this model with the given name.
- * 
- * @param name The name of the animation to retrieve.
- * 
- * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
- * is associated with this model with the given name.
- */
-IAnimation* Model::getAnimation(const std::string name)
-{	
-	if ( animations_.find(name) != animations_.end() )
+glmd::int32 Model::getIndexOfMesh(glw::IMesh* mesh)
+{
+	for (glmd::uint32 i=0; i < meshes_.size(); i++)
 	{
-		return animations_[name].get();
+		if (meshes_[i] == mesh)
+			return i;
 	}
 	
-	return nullptr;
+	return -1;
 }
 
 /**

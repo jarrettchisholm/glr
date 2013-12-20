@@ -97,7 +97,7 @@ public:
 	}
 	;
 
-	virtual IAnimation* getAnimation(const std::string name) = 0;
+	virtual IAnimation* getAnimation(const std::string& name) = 0;
 	virtual IAnimation* getCurrentAnimation() = 0;
 	virtual void setCurrentAnimation(IAnimation* animation) = 0;
 	

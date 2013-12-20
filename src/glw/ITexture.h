@@ -26,7 +26,13 @@ struct TextureSettings {
 };
 
 class ITexture {
+public:
+	virtual ~ITexture()
+	{
+	}
+	;
 	
+	virtual void bind(GLuint texturePosition = 0) = 0;
 };
 
 /**

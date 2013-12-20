@@ -119,6 +119,18 @@ struct BoneData {
 	std::vector< Bone > boneTransform;
 };
 
+class IMesh {
+public:
+	virtual ~IMesh()
+	{
+	}
+	;
+
+	virtual void render() = 0;
+	
+	virtual BoneData& getBoneData() = 0;
+};
+
 }
 }
 

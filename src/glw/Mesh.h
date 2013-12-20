@@ -32,7 +32,7 @@ namespace glw {
 	
 class IOpenGlDevice;
 	
-class Mesh {
+class Mesh : public IMesh {
 public:
 	Mesh(IOpenGlDevice* openGlDevice,
 		const std::string name,
@@ -52,9 +52,9 @@ public:
 	);
 	virtual ~Mesh();
 
-	void render();
+	virtual void render();
 	
-	BoneData& getBoneData();
+	virtual BoneData& getBoneData();
 	
 	GETSET(std::string, name_, Name)
 private:

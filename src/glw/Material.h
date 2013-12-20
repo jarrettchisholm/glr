@@ -19,6 +19,8 @@
 #include "IOpenGlDevice.h"
 #include "shaders/IShaderProgram.h"
 
+#include "IMaterial.h"
+
 #include "../common/utilities/Macros.h"
 
 namespace glr {
@@ -36,7 +38,7 @@ struct MaterialData
 	//glm::detail::float32 strength;
 };
 	
-class Material {
+class Material : public IMaterial {
 public:
 	Material(
 		IOpenGlDevice* openGlDevice,
@@ -50,8 +52,8 @@ public:
 	);
 	virtual ~Material();
 
-	void bind();
-	GLuint getBufferId();
+	virtual void bind();
+	virtual GLuint getBufferId();
 	GLuint getBindPoint();
 
 	GETSET(std::string, name_, Name)

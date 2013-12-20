@@ -26,10 +26,10 @@
 #include "../glw/IMeshManager.h"
 #include "../glw/IAnimationManager.h"
 
-#include "../glw/Mesh.h"
-#include "../glw/Texture2D.h"
-#include "../glw/Material.h"
-#include "../glw/Animation.h"
+#include "../glw/IMesh.h"
+#include "../glw/ITexture.h"
+#include "../glw/IMaterial.h"
+#include "../glw/IAnimation.h"
 
 namespace glr {
 namespace models {
@@ -43,9 +43,39 @@ public:
 	Model(const Model& other);
 	virtual ~Model();
 
-	virtual IAnimation* getAnimation(const std::string name);
+	glw::IMesh* getMesh(glmd::uint32 index);
+	void removeMesh(glmd::uint32 index);
+	void removeMesh(glw::IMesh* mesh);
+	void addMesh(glw::IMesh* mesh);
+	void addMesh(glw::IMesh* mesh, glmd::uint32 index);
+	glmd::uint32 getNumberOfMeshes();
+	
+	glw::ITexture* getTexture(glmd::uint32 index);
+	glw::ITexture* getTexture(glw::IMesh* mesh);
+	void removeTexture(glmd::uint32 index);
+	void removeTexture(glw::ITexture* texture);
+	void removeTexture(glw::IMesh* mesh);
+	void addTexture(glw::ITexture* texture, glmd::uint32 index);
+	void addTexture(glw::ITexture* texture, glw::Mesh* mesh);
+	glmd::uint32 getNumberOfTextures();
+	
+	glw::IMaterial* getMaterial(glmd::uint32 index);
+	glw::IMaterial* getMaterial(glw::IMesh* mesh);
+	void removeMaterial(glmd::uint32 index);
+	void removeMaterial(glw::IMaterial* material);
+	void removeMaterial(glw::IMesh* mesh);
+	void addMaterial(glw::IMaterial* material, glmd::uint32 index);
+	void addMaterial(glw::IMaterial* material, glw::Mesh* mesh);
+	glmd::uint32 getNumberOfMaterials();
+	
 	virtual IAnimation* getCurrentAnimation();
+	virtual IAnimation* getAnimation(const std::string& name);
+	void removeAnimation(const std::string& name);
+	void removeAnimation(glw::IAnimation* animation);
+	void addAnimation(glw::IAnimation* animation);
+	glmd::uint32 getNumberOfAnimations();
 	virtual void setCurrentAnimation(IAnimation* animation);
+
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
@@ -54,9 +84,9 @@ protected:
 
 	glw::IOpenGlDevice* openGlDevice_;
 
-	std::vector<glw::Mesh*> meshes_;
-	std::vector<glw::Texture2D*> textures_;
-	std::vector<glw::Material*> materials_;
+	std::vector<glw::IMesh*> meshes_;
+	std::vector<glw::ITexture*> textures_;
+	std::vector<glw::IMaterial*> materials_;
 	std::map< std::string, std::unique_ptr<Animation>> animations_;
 	
 	Animation* currentAnimation_;
@@ -77,6 +107,8 @@ protected:
 	void loadTextures(const aiScene* scene);
 	void loadMaterials(const aiScene* scene);
 	void loadAnimations(const aiScene* scene);
+	
+	glmd::int32 getIndexOfMesh(glw::IMesh* mesh);
 	
 private:
 	void initialize(std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >());
