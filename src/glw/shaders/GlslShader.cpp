@@ -25,33 +25,49 @@ GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(t
 	//initialize();
 }
 
-GlslShader::GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings, IntegerBindingsMap locationBindings) : name_(name), source_(source), type_(type)
+GlslShader::GlslShader(std::string name, std::string source, Type type, std::vector< std::pair<std::string, std::string> > bindings, std::vector< std::pair<glmd::int32, std::string> > locationBindings) : name_(name), source_(source), type_(type)
 {
 	shaderId_ = -1;
 
 	// Convert bindings
-	for ( auto it = bindings.begin(); it != bindings.end(); it++ )
+	for ( auto& it : bindings )
 	{
 		IShader::Binding binding = IShader::Binding();
-		binding.type = IShader::parseBindType(it->first);
-		binding.variableName = it->second;
+		binding.type = IShader::parseBindType(it.first);
+		binding.variableName = it.second;
 		binding.bindPoint = -1;
 		
 		bindings_.push_back(binding);
-		//bindings_[ IShader::parseBindType(it->first) ] = it->second;
-		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+		//bindings_[ IShader::parseBindType(it.first) ] = it.second;
+		std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 	
-	for ( auto it = locationBindings.begin(); it != locationBindings.end(); it++ )
+	GLint maxNumLocations = 0;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxNumLocations);
+	
+	for ( auto& it : locationBindings )
 	{
+		// Validate the int32
+		if (it.first < 0 || it.first >= maxNumLocations)
+		{
+			std::stringstream ss;
+			ss << "Location defined by '@location' annotation is outside of the available range of locations.";
+			ss << "\n";
+			ss << "Value defined: " << it.first;
+			ss << "\n";
+			ss << "Acceptable range: 0 to " << maxNumLocations;
+			LOG_ERROR( ss.str() );
+			throw exception::GlException( ss.str() );
+		}
+		
 		IShader::Binding binding = IShader::Binding();
 		binding.type = IShader::BindType::BIND_TYPE_LOCATION;
-		binding.variableName = it->second;
-		binding.bindPoint = it->first;
+		binding.variableName = it.second;
+		binding.bindPoint = it.first;
 		
 		bindings_.push_back(binding);
-		//bindings_[ IShader::parseBindType(it->first) ] = it->second;
-		std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
+		//bindings_[ IShader::parseBindType(it.first) ] = it.second;
+		std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 }
 

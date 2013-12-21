@@ -30,16 +30,13 @@ class GlrParser {
 	typedef std::vector< std::pair<std::string, std::string> > Map;
 
 public:
-	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
-	typedef std::vector< std::pair<glmd::int32, std::string> > IntegerBindingsMap;
-
 	GlrParser(std::string source);
 	virtual ~GlrParser();
 
 	void parse();
 
-	StringBindingsMap getBindBindings();
-	IntegerBindingsMap getLocationBindings();
+	std::vector< std::pair<std::string, std::string> > getBindBindings();
+	std::vector< std::pair<glmd::int32, std::string> > getLocationBindings();
 
 
 	/*
@@ -52,8 +49,8 @@ public:
 
 private:
 	std::string source_;
-	StringBindingsMap bindBindings_;
-	IntegerBindingsMap locationBindings_;
+	std::vector< std::pair<std::string, std::string> > bindBindings_;
+	std::vector< std::pair<glmd::int32, std::string> > locationBindings_;
 
 	template <typename It> void parseBind(It f, It l);
 	template <typename It> void parseLocation(It f, It l);

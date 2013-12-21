@@ -76,12 +76,12 @@ std::string GlrShader::getSource()
 	return source_;
 }
 
-GlrParser::StringBindingsMap GlrShader::getBindings()
+std::vector< std::pair<std::string, std::string> > GlrShader::getBindings()
 {
 	return bindBindings_;
 }
 
-GlrParser::IntegerBindingsMap GlrShader::getLocationBindings()
+std::vector< std::pair<glmd::int32, std::string> > GlrShader::getLocationBindings()
 {
 	return locationBindings_;
 }

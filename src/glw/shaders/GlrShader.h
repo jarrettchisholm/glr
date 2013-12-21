@@ -51,8 +51,8 @@ public:
 	IShader::Type getType();
 	std::string getProcessedSource();
 	std::string getSource();
-	GlrParser::StringBindingsMap getBindings();
-	GlrParser::IntegerBindingsMap getLocationBindings();
+	std::vector< std::pair<std::string, std::string> > getBindings();
+	std::vector< std::pair<glmd::int32, std::string> > getLocationBindings();
 
 	bool containsPreProcessorCommands();
 
@@ -64,8 +64,8 @@ private:
 	std::string processedSource_;
 	std::string baseDirectory_;
 
-	GlrParser::StringBindingsMap bindBindings_;
-	GlrParser::IntegerBindingsMap locationBindings_;
+	std::vector< std::pair<std::string, std::string> > bindBindings_;
+	std::vector< std::pair<glmd::int32, std::string> > locationBindings_;
 };
 
 }

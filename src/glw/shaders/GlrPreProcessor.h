@@ -13,6 +13,8 @@
 
 #include "CPreProcessor.h"
 
+#include "../../exceptions/GlException.h"
+
 namespace glr {
 namespace shaders {
 

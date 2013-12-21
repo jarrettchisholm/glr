@@ -61,7 +61,8 @@ void GlslShaderProgram::compile()
 	
 	
 	glLinkProgram(programId_);
-
+	//GLint pos = glGetAttribLocation(programId_, "in_Position");
+	//std::cout << "hi: " << pos << std::endl;
 	GLint linked;
 	glGetProgramiv(programId_, GL_LINK_STATUS, &linked);
 
