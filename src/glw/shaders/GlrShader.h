@@ -52,6 +52,7 @@ public:
 	std::string getProcessedSource();
 	std::string getSource();
 	GlrParser::StringBindingsMap getBindings();
+	GlrParser::IntegerBindingsMap getLocationBindings();
 
 	bool containsPreProcessorCommands();
 
@@ -63,7 +64,8 @@ private:
 	std::string processedSource_;
 	std::string baseDirectory_;
 
-	GlrParser::StringBindingsMap bindings_;
+	GlrParser::StringBindingsMap bindBindings_;
+	GlrParser::IntegerBindingsMap locationBindings_;
 };
 
 }

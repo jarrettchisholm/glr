@@ -14,6 +14,8 @@
 
 #include "IShader.h"
 
+namespace glmd = glm::detail;
+
 namespace glr {
 namespace shaders {
 
@@ -23,9 +25,10 @@ namespace shaders {
 class GlslShader : public IShader {
 public:
 	typedef std::vector< std::pair<std::string, std::string> > StringBindingsMap;
+	typedef std::vector< std::pair<glmd::int32, std::string> > IntegerBindingsMap;
 
 	GlslShader(std::string source, Type type);
-	GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings);
+	GlslShader(std::string name, std::string source, Type type, StringBindingsMap bindings, IntegerBindingsMap locationBindings);
 	virtual ~GlslShader();
 
 	virtual void bind();

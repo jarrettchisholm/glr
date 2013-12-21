@@ -134,7 +134,7 @@ GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 		}
 	}
 	// Didn't find binding type in bind map
-	LOG_WARN( "Unable to find binding for bind type: " << bindType );
+	//LOG_WARN( "Unable to find binding for bind type: " << bindType );
 	
 	return -1;
 }
@@ -150,7 +150,7 @@ GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName)
 	}
 	
 	// Didn't find binding type in bind map
-	LOG_WARN( "Unable to find binding for variable name: " << varName );
+	//LOG_WARN( "Unable to find binding for variable name: " << varName );
 	
 	return -1;
 }

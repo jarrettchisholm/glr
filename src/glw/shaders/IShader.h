@@ -62,6 +62,7 @@ public:
 	 */
 	enum BindType {
 		BIND_TYPE_NONE = 0,
+		BIND_TYPE_LOCATION,
 		BIND_TYPE_LIGHT,
 		BIND_TYPE_MATERIAL,
 		BIND_TYPE_COLOR,

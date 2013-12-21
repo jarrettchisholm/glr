@@ -262,7 +262,8 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 						s->getName(),
 						s->getProcessedSource(),
 						s->getType(),
-						s->getBindings()
+						s->getBindings(),
+						s->getLocationBindings()
 						)
 					)
 				);
@@ -270,7 +271,7 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 		else
 		{
 			// Otherwise, use the already existing shader
-			glslShaders.push_back(glslShaderMap_[s->getName()]);
+			glslShaders.push_back( glslShaderMap_[s->getName()] );
 		}
 	}
 

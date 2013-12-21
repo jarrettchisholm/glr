@@ -41,11 +41,18 @@ void GlrShader::process(std::map< std::string, std::string > defineMap)
 
 	GlrParser op(processedSource_);
 	op.parse();
-	bindings_ = op.getBindings();
+	bindBindings_ = op.getBindBindings();
+	locationBindings_ = op.getLocationBindings();
 
-	// Remove all '@bind' lines
-	const boost::regex e("@bind(\\s+)(\\S+)\\n+");
-	processedSource_ = boost::regex_replace(processedSource_, e, "\n");
+	// Remove all '@bind' and '@location' lines
+	{
+		const boost::regex e("@bind(\\s+)(\\S+)\\n+");
+		processedSource_ = boost::regex_replace(processedSource_, e, "\n");
+	}
+	{
+		const boost::regex e("@location(\\s+)(\\S+)\\n+");
+		processedSource_ = boost::regex_replace(processedSource_, e, "\n");
+	}
 	//std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
@@ -71,7 +78,12 @@ std::string GlrShader::getSource()
 
 GlrParser::StringBindingsMap GlrShader::getBindings()
 {
-	return bindings_;
+	return bindBindings_;
+}
+
+GlrParser::IntegerBindingsMap GlrShader::getLocationBindings()
+{
+	return locationBindings_;
 }
 
 bool GlrShader::containsPreProcessorCommands()
