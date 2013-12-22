@@ -49,20 +49,29 @@ void GlslShaderProgram::compile()
 	{
 		glAttachShader(programId_, s->getGLShaderId());
 	}
+	
+	generateBindings();
 
-	// TODO: make these not hard coded?
-	// NOTE: I need these in windows for some reason...?
-	glBindAttribLocation(programId_, 0, "in_Position");
-	glBindAttribLocation(programId_, 1, "in_Texture");
-	glBindAttribLocation(programId_, 2, "in_Normal");
-	glBindAttribLocation(programId_, 3, "in_Color");
-	glBindAttribLocation(programId_, 4, "in_BoneIds");
-	glBindAttribLocation(programId_, 5, "in_BoneWeights");
+	// Note: reservedVertexAttribLocations is defined in IShader.h
+	for ( auto& it : reservedVertexAttribLocations )
+	{
+		glBindAttribLocation(programId_, it.second, it.first.c_str());
+		//std::cout << name_ << " | binding: " << it.second << " " << it.first << std::endl;
+	}
+	
+	// Bind all shader defined attribute locations
+	for ( auto& b : bindings_ )
+	{
+		if (b.type == IShader::BindType::BIND_TYPE_LOCATION)
+		{
+			//std::cout << name_ << " | binding: " << b.bindPoint << " " << b.variableName << std::endl;
+			glBindAttribLocation(programId_, b.bindPoint, b.variableName.c_str());
+		}
+	}
 	
 	
 	glLinkProgram(programId_);
-	//GLint pos = glGetAttribLocation(programId_, "in_Position");
-	//std::cout << "hi: " << pos << std::endl;
+
 	GLint linked;
 	glGetProgramiv(programId_, GL_LINK_STATUS, &linked);
 
@@ -91,9 +100,6 @@ void GlslShaderProgram::compile()
 		LOG_ERROR( ss.str() );
 		throw exception::GlException(ss.str());
 	}
-	
-	
-	generateBindings();
 
 	LOG_DEBUG( "Done initializing shader program '" + name_ + "'." );
 }
@@ -114,6 +120,10 @@ void GlslShaderProgram::bind()
 	// Bind all the variables to bind points
 	for ( auto& b : bindings_ )
 	{
+		// Ignore location bind types (they are set before the shader program is linked)
+		if (b.type == IShader::BindType::BIND_TYPE_LOCATION)
+			continue;
+
 		b.bindPoint = openGlDevice_->getBindPoint();
 
 		GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  b.variableName.c_str());
@@ -154,6 +164,13 @@ GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName)
 	//LOG_WARN( "Unable to find binding for variable name: " << varName );
 	
 	return -1;
+}
+
+GLint GlslShaderProgram::getVertexAttributeLocationByName(const std::string& varName)
+{
+	GLint pos = glGetAttribLocation(programId_, varName.c_str());
+	
+	return pos;
 }
 
 /*

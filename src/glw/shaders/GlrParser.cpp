@@ -45,7 +45,6 @@ template <typename It> void GlrParser::parseBind(It f, It l)
 	
 		if ( hasResults )
 		{
-			std::cout << "OK1: ";
 			bindBindings_ = mappings;
 			//for ( auto it = mappings.begin(); it != mappings.end(); ++it )
 			//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";

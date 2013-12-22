@@ -38,8 +38,7 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, std::vec
 		binding.bindPoint = -1;
 		
 		bindings_.push_back(binding);
-		//bindings_[ IShader::parseBindType(it.first) ] = it.second;
-		std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
+		//std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 	
 	GLint maxNumLocations = 0;
@@ -48,6 +47,8 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, std::vec
 	for ( auto& it : locationBindings )
 	{
 		// Validate the int32
+		// TODO: Do I need to check and make sure the value is greater than the reserved vertex attribute locations?  Or is it
+		// a good idea to let the user override these reserved locations...?
 		if (it.first < 0 || it.first >= maxNumLocations)
 		{
 			std::stringstream ss;
@@ -66,8 +67,7 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, std::vec
 		binding.bindPoint = it.first;
 		
 		bindings_.push_back(binding);
-		//bindings_[ IShader::parseBindType(it.first) ] = it.second;
-		std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
+		//std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 }
 

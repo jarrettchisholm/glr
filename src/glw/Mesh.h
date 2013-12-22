@@ -57,7 +57,7 @@ public:
 	virtual BoneData& getBoneData();
 	
 	GETSET(std::string, name_, Name)
-private:
+protected:
 	std::string name_;
 	IOpenGlDevice* openGlDevice_;
 	glm::detail::uint32 vaoId_;
@@ -73,7 +73,9 @@ private:
 
 	std::string textureFileName_;
 	
-	void load();
+	// TODO: make these similar to Texture2D class?
+	virtual void load();
+	virtual void unload();
 };
 
 }

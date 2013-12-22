@@ -16,8 +16,22 @@
 
 #include <GL/glew.h>
 
+#include <glm/glm.hpp>
+
+namespace glmd = glm::detail;
+
 namespace glr {
 namespace shaders {
+
+// Reserved vertex attribute locations
+const static std::vector< std::pair< std::string, glmd::uint32> > reservedVertexAttribLocations = {
+	std::pair< std::string, glmd::uint32>( std::string("in_Position"), 		0),
+	std::pair< std::string, glmd::uint32>( std::string("in_Texture"), 		1),
+	std::pair< std::string, glmd::uint32>( std::string("in_Normal"), 		2),
+	std::pair< std::string, glmd::uint32>( std::string("in_Color"), 		3),
+	std::pair< std::string, glmd::uint32>( std::string("in_BoneIds"), 		4),
+	std::pair< std::string, glmd::uint32>( std::string("in_BoneWeights"), 	5)
+};
 
 class IShader {
 public:
@@ -129,7 +143,6 @@ public:
 	};
 	//typedef std::pair<BindType, std::string> Binding;
 	typedef std::vector< Binding > BindingsMap;
-
 
 	virtual ~IShader()
 	{

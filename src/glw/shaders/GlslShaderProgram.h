@@ -35,14 +35,11 @@ public:
 	virtual IShader::BindingsMap getBindings();
 	void compile();
 
-	//virtual void bindVariable(std::string varName, GLuint bindPoint);
-	//virtual void bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint);
 	virtual GLint getBindPointByVariableName(const std::string& varName);
 	virtual GLint getBindPointByBindingName(IShader::BindType bindType);
 	
-	//virtual bool hasBindingName(IShader::BindType bindType);
-	//virtual bool hasVariableName(const std::string& varName);
-
+	virtual GLint getVertexAttributeLocationByName(const std::string& varName);
+	
 	const std::string& getName();
 	
 	virtual void addBindListener(IShaderProgramBindListener* bindListener);

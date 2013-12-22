@@ -84,6 +84,16 @@ public:
 	virtual GLint getBindPointByBindingName(IShader::BindType bindType) = 0;
 	
 	/**
+	 * Get the OpenGL shader vertex attribute location for the variable with the given name varName.
+	 * 
+	 * If the vertex attribute variable with the name varName is found, a valid vertex attribute location value is returned.  The value
+	 * can be converted to an unsigned int safely.
+	 * 
+	 * If no active vertex attribute exists with name varName, -1 is returned.
+	 */
+	virtual GLint getVertexAttributeLocationByName(const std::string& varName) = 0;
+	
+	/**
 	 * Add a listener, which will be notified when this shader gets bound.
 	 * 
 	 * @param bindListener A pointer to an object implementing the IShaderProgramBindListener interface.

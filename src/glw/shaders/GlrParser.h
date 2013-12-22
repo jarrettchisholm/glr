@@ -164,7 +164,7 @@ public:
 		locationGrammar() : locationGrammar::base_type(start)
 		{
 			using namespace qi;
-			ident = lexeme [ alnum >> *alnum ];
+			ident = lexeme [ (alnum | char_('_')) >> *(alnum | char_('_')) ];
 
 			annot = "@location" >> +digit >> eol;
 
@@ -174,14 +174,14 @@ public:
 
 			    /*
 			     * Match to things like:
-			     * @bind texture0
-			     * uniform sampler2D texture;
+			     * @location 0
+			     * in vec2 texture;
 			     *
 			     * or
 			     *
-			     * @bind texture0
-			     * uniform
-			     * sampler2D
+			     * @location 0
+			     * in
+			     * vec2
 			     * texture
 			     * ;
 			     */
@@ -194,6 +194,8 @@ public:
 
 				// or
 				|
+
+				// TODO: Do I need this part for location???
 
 			    /*
 			     * Match to things like:

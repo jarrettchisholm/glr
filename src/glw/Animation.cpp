@@ -125,7 +125,7 @@ void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
 	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
 	//glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
 	if (currentTransforms_.size() > 0)
-	{		
+	{
 		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
 		
 		if (d != nullptr)

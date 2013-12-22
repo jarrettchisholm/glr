@@ -126,10 +126,7 @@ void Mesh::load()
 	if (err.type != GL_NONE)
 	{
 		// Cleanup
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDeleteVertexArrays(1, &vaoId_);
-		glDeleteBuffers(5, &vboIds_[0]);
+		unload();
 		
 		std::string msg = std::string( "Error while loading mesh '" + name_ + "' in OpenGL: " + err.name);
 		LOG_ERROR( msg );
@@ -139,6 +136,14 @@ void Mesh::load()
 	{
 		LOG_DEBUG( "Successfully loaded mesh '" + name_ + "'." );
 	}
+}
+
+void Mesh::unload()
+{
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDeleteVertexArrays(1, &vaoId_);
+	glDeleteBuffers(5, &vboIds_[0]);
 }
 
 Mesh::~Mesh()
