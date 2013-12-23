@@ -20,13 +20,11 @@
 #include "../../glw/shaders/IShaderProgramManager.h"
 #include "../../glw/IOpenGlDevice.h"
 
-#include "../../IWindowResizeListener.h"
-
 namespace glr {
 namespace gui {
 namespace cef {
 
-class Gui : public IGui, public IWindowResizeListener {
+class Gui : public IGui {
 public:
 	Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
 	virtual ~Gui();

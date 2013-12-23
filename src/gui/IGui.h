@@ -12,10 +12,12 @@
 
 #include "IGuiComponent.h"
 
+#include "../IWindowResizeListener.h"
+
 namespace glr {
 namespace gui {
 
-class IGui {
+class IGui: public IWindowResizeListener {
 public:
 	virtual ~IGui()
 	{
@@ -36,6 +38,8 @@ public:
 	virtual IGuiComponent* loadFromFile(std::string filename) = 0;
 	virtual IGuiComponent* loadFromData(std::string data) = 0;
 	virtual void release(IGuiComponent*) = 0;
+	
+	virtual void windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
 };
 
 }
