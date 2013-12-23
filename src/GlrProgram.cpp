@@ -19,6 +19,8 @@
 
 #include "common/logger/Logger.h"
 
+#include "gui/cef/Gui.h"
+
 namespace glr {
 
 GlrProgram::GlrProgram(ProgramSettings settings)

@@ -23,7 +23,7 @@
 #include "BasicSceneManager.h"
 #include "Light.h"
 
-#include "gui/cef/Gui.h"
+#include "gui/IGui.h"
 
 #include "glw/shaders/IShaderProgramManager.h"
 #include "glw/shaders/IShaderProgramBindListener.h"
@@ -79,7 +79,7 @@ private:
 	std::unique_ptr< IWindow > window_;
 	
 	// Would it be better to use IGui instead of the cef Gui class here?
-	std::unique_ptr< gui::cef::Gui > gui_;
+	std::unique_ptr< gui::IGui > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	
