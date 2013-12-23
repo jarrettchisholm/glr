@@ -27,7 +27,7 @@ Main::Main()
 	sfmlWindow_->setKeyRepeatEnabled(false);
 
 	// Add model
-	smgr_->getModelManager()->loadModel( std::string("LuckyBunny"), std::string(modelsDir + "LuckyBunny.blend") );
+	smgr_->getModelManager()->loadModel( std::string("LuckyBunny"), std::string(modelsDir + "LuckyBunny.3ds") );
 	cubeModel_ = smgr_->getModelManager()->createInstance( std::string("LuckyBunny") );
 	glr::ISceneNode* node = smgr_->createSceneNode("test_node");
 	node->setPosition( 0.0f, 0.0f, 0.0f );

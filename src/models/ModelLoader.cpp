@@ -191,29 +191,28 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 		switch ( face->mNumIndices )
 		{
 			case 1: 
-				//face_mode = GL_POINTS;
-				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+				msg = std::string("Unable to load model...Unsupported number of indices per face (1).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
-				break;
 	
 			case 2: 
-				//face_mode = GL_LINES; 
-				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+				msg = std::string("Unable to load model...Unsupported number of indices per face (2).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
-				break;
 	
 			case 3: 
 				face_mode = GL_TRIANGLES; 
 				break;
 	
-			default:
-				//face_mode = GL_POLYGON; 
-				msg = std::string("Unable to load model...Unsupported number of indices per face.");
+			case 4:
+				msg = std::string("Unable to load model...Unsupported number of indices per face (4).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
-				break;
+			
+			default:
+				msg = std::string("Unable to load model...Unknown number of indices per face.");
+				LOG_ERROR( msg );
+				throw exception::Exception(msg);
 		}
 
 		glm::detail::uint32 numIndices = face->mNumIndices;
