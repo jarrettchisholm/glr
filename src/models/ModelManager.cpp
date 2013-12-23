@@ -79,12 +79,14 @@ std::unique_ptr<IModel> ModelManager::createInstance(const std::string& name)
 {
 	LOG_DEBUG( "Creating model '" + name + "'." );
 	
-	if ( models_.find(name) != models_.end() )
+	auto it = models_.find(name);
+	
+	if ( it != models_.end() )
 	{
 		LOG_DEBUG( "Model found." );
 		
 		// Create a COPY of the model, and returns it wrapped in a unique pointer
-		return std::unique_ptr<IModel>( new Model(*models_[name].get()) );
+		return std::unique_ptr<IModel>( new Model(*it->second.get()) );
 	}
 
 	LOG_DEBUG( "Model not found." );

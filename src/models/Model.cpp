@@ -65,6 +65,7 @@ Model::Model(const Model& other)
 	
 	for ( auto& a : other.animations_)
 	{
+		std::cout << a.first << std::endl;
 		animations_[ a.first ] = std::unique_ptr<Animation>( new Animation(*a.second.get()) );
 	}
 	
@@ -77,6 +78,7 @@ Model::Model(const Model& other)
 	// Set the current animation to our copied animation
 	if ( other.currentAnimation_ != nullptr )
 	{
+		std::cout << other.currentAnimation_->getName() << std::endl;
 		auto it = animations_.find( other.currentAnimation_->getName() );
 		if (it != animations_.end())
 		{
@@ -106,9 +108,12 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 	textureManager_ = openGlDevice_->getTextureManager();
 	animationManager_ = openGlDevice_->getAnimationManager();
 	
-	for ( std::shared_ptr<ModelData> d : modelData)
+	// Default to no animation
+	currentAnimation_ = nullptr;
+	
+	for ( auto d : modelData)
 	{
-		glw::Mesh* mesh = meshManager_->getMesh(d->meshData.name);
+		auto mesh = meshManager_->getMesh(d->meshData.name);
 		if (mesh == nullptr)
 			mesh = meshManager_->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones, d->boneData);
 		
@@ -135,9 +140,6 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		
 		materials_.push_back( material );
 		
-		// Default to no animation
-		currentAnimation_ = nullptr;
-
 		// Create bone structure (tree structure)
 		rootBoneNode_ = d->animationSet.rootBoneNode;
 		
@@ -147,12 +149,12 @@ void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
 		// Load the animation information
 		for ( auto& kv : d->animationSet.animations)
 		{
-			glw::Animation* animation = animationManager_->getAnimation( kv.first );
+			auto animation = animationManager_->getAnimation( kv.first );
 			
 			if (animation == nullptr)
 			{	
 				// Create animated bone node information
-				std::map< std::string, glw::AnimatedBoneNode > animatedBoneNodes = std::map< std::string, glw::AnimatedBoneNode >();
+				auto animatedBoneNodes = std::map< std::string, glw::AnimatedBoneNode >();
 				for ( auto& kvAnimatedBoneNode : kv.second.animatedBoneNodes )
 				{
 					animatedBoneNodes[ kvAnimatedBoneNode.first ] = glw::AnimatedBoneNode( 
