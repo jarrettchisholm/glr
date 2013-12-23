@@ -141,7 +141,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 		imagesAsPointers.push_back( image.get() );
 	}
 
-	return addTexture2DArray( name, imagesAsPointers );
+	return addTexture2DArray( name, imagesAsPointers, settings );
 }
 
 Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images, const TextureSettings settings)
