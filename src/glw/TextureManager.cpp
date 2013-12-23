@@ -29,10 +29,11 @@ TextureManager::~TextureManager()
 
 Texture2D* TextureManager::getTexture2D(const std::string& name)
 {
-	if ( textures2D_.find(name) != textures2D_.end() )
+	auto it = textures2D_.find(name);
+	if ( it != textures2D_.end() )
 	{
 		LOG_DEBUG( "Texture '" + name + "' found." );
-		return textures2D_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Texture '" + name + "' not found." );
@@ -42,7 +43,15 @@ Texture2D* TextureManager::getTexture2D(const std::string& name)
 
 Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
 {
-	// TODO: implement
+	auto it = textures2DArray_.find(name);
+	if ( it != textures2DArray_.end() )
+	{
+		LOG_DEBUG( "Texture 2D array '" + name + "' found." );
+		return it->second.get();
+	}
+
+	LOG_DEBUG( "Texture 2D array '" + name + "' not found." );
+	
 	return nullptr;
 }
 
@@ -103,7 +112,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	return textures2D_[name].get();
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string> filenames)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string> filenames, const TextureSettings settings)
 {
 	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
@@ -135,7 +144,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	return addTexture2DArray( name, imagesAsPointers );
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images, const TextureSettings settings)
 {
 	LOG_DEBUG( "Loading texture 2d array '" + name + "' from images." );
 
@@ -152,7 +161,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	LOG_DEBUG( msg.str() );
 
 	LOG_DEBUG( "Creating texture 2d array." );
-	textures2DArray_[name] = std::unique_ptr<Texture2DArray>(new Texture2DArray(images, openGlDevice_, name));
+	textures2DArray_[name] = std::unique_ptr<Texture2DArray>(new Texture2DArray(images, openGlDevice_, name, settings));
 
 	return textures2DArray_[name].get();
 }

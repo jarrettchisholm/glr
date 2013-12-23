@@ -35,29 +35,6 @@ public:
 	virtual void bind(GLuint texturePosition = 0) = 0;
 };
 
-/**
- * Will return the OpenGL compatible format of the given image Format 'format'.
- * 
- * If no known compatible OpenGL format is found, FORMAT_UNKNOWN is returned.
- * 
- * @param format
- * 
- * @return The OpenGL compatible format of the given image Format 'format', or FORMAT_UNKNOWN if no known compatible OpenGL format is found.
- */
-static GLint getInternalFormat( utilities::Format format )
-{	
-	switch (format)
-	{
-		case utilities::Format::FORMAT_RGB:
-			return GL_RGB;
-		
-		case utilities::Format::FORMAT_RGBA:
-			return GL_RGBA;
-	}
-	
-	return (GLint)utilities::Format::FORMAT_UNKNOWN;
-}
-
 }
 }
 

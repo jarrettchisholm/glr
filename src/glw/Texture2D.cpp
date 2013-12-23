@@ -54,7 +54,7 @@ GLuint Texture2D::getBindPoint()
 void Texture2D::setData(utilities::Image* image)
 {
 	image_ = *image;
-	internalFormat_ = getInternalFormat(image_.format);
+	internalFormat_ = utilities::getOpenGlImageFormat(image_.format);
 }
 
 utilities::Image* Texture2D::getData()

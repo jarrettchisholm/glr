@@ -40,8 +40,8 @@ public:
 	
 	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings = TextureSettings()) = 0;
 	virtual Texture2D* addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings = TextureSettings()) = 0;
-	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string> filenames) = 0;
-	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images) = 0;
+	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string> filenames, const TextureSettings settings = TextureSettings()) = 0;
+	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*> images, const TextureSettings settings = TextureSettings()) = 0;
 	// Do I want to do this one?
 	//virtual Texture2DArray* addTexture2DArray(const std::string name, const std::vector<Texture2D*> textures) = 0;
 	

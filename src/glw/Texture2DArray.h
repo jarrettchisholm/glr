@@ -20,8 +20,8 @@ class IOpenGlDevice;
 
 class Texture2DArray : public ITexture {
 public:
-	Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name);
-	Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name);
+	Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings = TextureSettings());
+	Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings = TextureSettings());
 	virtual ~Texture2DArray();
 
 	virtual void bind(GLuint texturePosition = 0);
@@ -45,11 +45,18 @@ private:
 	GLuint bufferId_;
 	GLuint bindPoint_;
 	
+	TextureSettings settings_;
+	
 	std::vector<utilities::Image> images_;
 	
 	//GLuint textureId_;
 
 	void loadIntoVideoMemory();
+	
+	/**
+	 * Helper method - returns true if all of the images in the vector are the same internal format, and false otherwise.
+	 */
+	bool areImagesSameFormat();
 };
 
 }

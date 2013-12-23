@@ -9,11 +9,11 @@
 namespace glr {
 namespace glw {
 	
-Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name)
+Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
 }
 
-Texture2DArray::Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name) : openGlDevice_(openGlDevice), name_(name)
+Texture2DArray::Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
 	bufferId_ = 0;
 	
@@ -68,30 +68,25 @@ std::vector<utilities::Image>& Texture2DArray::getData()
 }
 
 void Texture2DArray::pushToVideoMemory()
-{	
-	glmd::uint32 index = 1;
+{
+	glmd::uint32 index = 0;
+	GLint internalFormat = utilities::Format::FORMAT_UNKNOWN;
+	
+	if (images_.size() > 0)
+	{
+		internalFormat = utilities::getOpenGlImageFormat(images_[0].format);
+		if (internalFormat == utilities::Format::FORMAT_UNKNOWN)
+		{
+			std::string msg = std::string( "Texture2DArray::pushToVideoMemory: Unknown image format." );
+			LOG_ERROR( msg );
+			throw exception::FormatException( msg );
+		}
+	}
+	
+
 	for ( auto& image : images_ )
 	{
-		GLint internalFormat = GL_RGB;
-	
-		switch (image.format)
-		{
-			case utilities::Format::FORMAT_RGB:
-				// Assigned as the default value
-				break;
-			
-			case utilities::Format::FORMAT_RGBA:
-				internalFormat = GL_RGBA;
-				break;
-			
-			default:
-			{
-				std::string msg = std::string( "Texture2DArray::pushToVideoMemory: Unknown image format." );
-				LOG_ERROR( msg );
-				throw exception::FormatException( msg );
-			}
-		}
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internalFormat,  image.width, image.height, index, 0, internalFormat, GL_UNSIGNED_BYTE, &(image.data[0]));
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, index, image.width, image.height, 1, internalFormat, GL_UNSIGNED_BYTE, &(image.data[0]));
 		index++;
 	}
 
@@ -108,7 +103,7 @@ void Texture2DArray::pushToVideoMemory()
 	}
 	else
 	{
-		LOG_DEBUG( "Successfully loaded texture." );
+		LOG_DEBUG( "Successfully loaded texture 2d array." );
 	}
 }
 
@@ -167,14 +162,51 @@ void Texture2DArray::allocateVideoMemory()
 		LOG_WARN( msg );
 	}
 	
+	if (!areImagesSameFormat())
+	{
+		std::string msg = std::string( "Cannot allocate video memory - images are not all the same format.");
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	
+	// TODO: check images are all the same size?
+	
 	glGenTextures(images_.size(), &bufferId_);
 
 	glBindTexture(GL_TEXTURE_2D_ARRAY, bufferId_);
 	
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, settings_.textureWrapS);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, settings_.textureWrapT);
+	
+	// Get the OpenGL format for the images
+	auto& image = images_[0];
+	GLint internalFormat = utilities::getOpenGlImageFormat(image.format);
+	if (internalFormat == utilities::Format::FORMAT_UNKNOWN)
+	{
+		std::string msg = std::string( "Texture2DArray::allocateVideoMemory: Unknown image format." );
+		LOG_ERROR( msg );
+		throw exception::FormatException( msg );
+	}
+	
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internalFormat,  image.width, image.height, images_.size(), 0, internalFormat, GL_UNSIGNED_BYTE, nullptr);
+}
+
+bool Texture2DArray::areImagesSameFormat()
+{
+	if (images_.size() == 0)
+		return true;
+	
+	utilities::Format format = images_[0].format;
+	
+	for ( auto& image : images_ )
+	{
+		if (format != image.format)
+			return false;
+	}
+	
+	return true;
 }
 
 }
