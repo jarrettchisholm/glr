@@ -146,7 +146,6 @@ GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 	{
 		if (b.type == bindType)
 		{
-			LOG_WARN( "found: " << bindType << " " << b.bindPoint );
 			return b.bindPoint;
 		}
 	}
