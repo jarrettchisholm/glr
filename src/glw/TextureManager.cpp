@@ -132,7 +132,17 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	auto images = std::vector< std::unique_ptr<utilities::Image> >();
 	for (auto& s : filenames)
 	{
-		images.push_back( il.loadImageData(basepath + s) );
+		auto image = il.loadImageData(basepath + s);
+		if (image.get() == nullptr)
+		{
+			// Cleanup
+			images.clear();
+			std::string msg = std::string( "Unable to load texture for texture 2d array: " + s );
+			LOG_ERROR( msg );
+			throw exception::Exception( msg );
+		}
+		
+		images.push_back( std::move(image) );
 	}
 	
 	auto imagesAsPointers = std::vector<utilities::Image*>();
