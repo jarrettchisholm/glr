@@ -127,7 +127,12 @@ void GlslShaderProgram::bind()
 		b.bindPoint = openGlDevice_->getBindPoint();
 
 		GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  b.variableName.c_str());
-		glUniformBlockBinding(programId_, uniformBlockIndex, b.bindPoint);
+		if ( uniformBlockIndex != GL_INVALID_INDEX )
+			glUniformBlockBinding(programId_, uniformBlockIndex, b.bindPoint);
+		else
+		{
+			LOG_WARN( std::string("Unable to find block index for variable '" + b.variableName + "' in shader program '" + name_ + "'.") );
+		}
 	}
 	
 	// Notify all listeners that we have bound this shader program
@@ -141,6 +146,7 @@ GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 	{
 		if (b.type == bindType)
 		{
+			LOG_WARN( "found: " << bindType << " " << b.bindPoint );
 			return b.bindPoint;
 		}
 	}

@@ -19,8 +19,8 @@ in float bug;
 @bind Texture2D
 uniform sampler2D tex2D;
 
-@bind Texture2DArray
-uniform sampler2DArray tex2DArray;
+//@bind Texture2DArray
+//uniform sampler2DArray tex2DArray;
 
 @bind Material
 layout(std140) uniform Materials 

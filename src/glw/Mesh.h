@@ -35,7 +35,7 @@ class IOpenGlDevice;
 class Mesh : public IMesh {
 public:
 	Mesh(IOpenGlDevice* openGlDevice,
-		const std::string name,
+		const std::string& name,
 		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -44,7 +44,7 @@ public:
 		BoneData boneData
 	);
 	Mesh(IOpenGlDevice* openGlDevice,
-		const std::string name,
+		const std::string& name,
 		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,

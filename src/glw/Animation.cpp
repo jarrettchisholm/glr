@@ -497,7 +497,7 @@ void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
 	
 	currentTransforms_ = std::vector< glm::mat4 >( numBones, identity );
 	
-	std::cout << "generateIdentityBoneTransforms: " << currentTransforms_.size() << std::endl;
+	LOG_DEBUG("generateIdentityBoneTransforms: " << currentTransforms_.size() );
 }
 
 }

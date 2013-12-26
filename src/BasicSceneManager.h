@@ -65,6 +65,7 @@ protected:
 	std::shared_ptr<ISceneNode> rootSceneNode_;
 	std::map<std::string, std::shared_ptr<ICamera> > cameras_;
 	std::map<std::string, std::shared_ptr<ILight> > lights_;
+	
 
 	std::unique_ptr<models::IModelManager> modelManager_;
 	
