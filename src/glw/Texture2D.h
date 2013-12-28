@@ -41,11 +41,11 @@ public:
 	void setData(utilities::Image* image);
 	
 	utilities::Image* getData();
-	void pushToVideoMemory();
-	void pullFromVideoMemory();
-	void freeLocalData();
-	void freeVideoMemory();
-	void allocateVideoMemory();
+	virtual void pushToVideoMemory();
+	virtual void pullFromVideoMemory();
+	virtual void freeLocalData();
+	virtual void freeVideoMemory();
+	virtual void allocateVideoMemory();
 
 	GETSET(std::string, name_, Name)
 
@@ -59,10 +59,6 @@ private:
 	
 	utilities::Image image_;
 	GLint internalFormat_;
-	
-	//GLuint textureId_;
-
-	void loadIntoVideoMemory();
 };
 
 }

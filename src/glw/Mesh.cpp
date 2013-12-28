@@ -18,6 +18,11 @@
 namespace glr {
 namespace glw {
 
+Mesh::Mesh(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
+{
+	vaoId_ = 0;
+}
+
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		const std::string& name,
 		std::vector< glm::vec3 > vertices, 
@@ -28,7 +33,10 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		BoneData boneData)
 	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
 {
-	load();
+	vaoId_ = 0;
+	
+	allocateVideoMemory();
+	pushToVideoMemory();
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
@@ -42,38 +50,134 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 {
 	bones_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
+	vaoId_ = 0;
 	
-	load();
+	allocateVideoMemory();
+	pushToVideoMemory();
 }
 
-void Mesh::load()
+Mesh::~Mesh()
+{
+	freeVideoMemory();
+}
+
+void Mesh::pushToVideoMemory()
 {
 	LOG_DEBUG( "loading mesh '" + name_ +"' into video memory." );
 
+	if (vaoId_ == 0)
+	{
+		std::string msg = std::string( "Mesh has not been allocated in video memory yet." );
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	
+	glBindVertexArray(vaoId_);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_.size() * sizeof(glm::vec3), &vertices_[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[1]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, textureCoordinates_.size() * sizeof(glm::vec2), &textureCoordinates_[0]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[2]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, normals_.size() * sizeof(glm::vec3), &normals_[0]);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, colors_.size() * sizeof(glm::vec4), &colors_[0]);
+	
+	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
+	
+	// TODO: We might want to not load any bone data (if there is none) and use a different shader?  Not sure best way to handle this.....?
+	// Deal with not having any bones
+	if (bones_.size() == 0)
+	{
+		bones_.resize( vertices_.size() );
+		for (auto& b : bones_)
+		{
+			b.weights = glm::vec4(0.25f);
+		}
+	}
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, bones_.size() * sizeof(VertexBoneData), &bones_[0]);
+	
+	glBindVertexArray(0);
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{		
+		std::string msg = std::string( "Error while push data for mesh '" + name_ + "' to video memory in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		LOG_DEBUG( "Successfully pushed data for mesh '" + name_ + "' to video memory." );
+	}
+}
+
+void Mesh::pullFromVideoMemory()
+{
+	// TODO: Implement
+}
+
+void Mesh::freeLocalData()
+{
+	vertices_ = std::vector< glm::vec3 >();
+	normals_ = std::vector< glm::vec3 >();
+	textureCoordinates_ = std::vector< glm::vec2 >();
+	colors_ = std::vector< glm::vec4 >();
+	bones_ = std::vector< VertexBoneData >();
+}
+
+void Mesh::freeVideoMemory()
+{
+	if (vaoId_ == 0)
+		return;
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDeleteVertexArrays(1, &vaoId_);
+	glDeleteBuffers(5, &vboIds_[0]);
+	
+	vaoId_ = 0;
+}
+
+void Mesh::allocateVideoMemory()
+{
+	if (vaoId_ > 0)
+	{
+		std::string msg = std::string( "Mesh already has a vertex array object generated." );
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	
 	// create our vao
 	glGenVertexArrays(1, &vaoId_);
+	
 	glBindVertexArray(vaoId_);
 
 	// create our vbos
 	glGenBuffers(5, &vboIds_[0]);
-
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
-	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), &vertices_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[1]);
-	glBufferData(GL_ARRAY_BUFFER, textureCoordinates_.size() * sizeof(glm::vec2), &textureCoordinates_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, textureCoordinates_.size() * sizeof(glm::vec2), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[2]);
-	glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3), &normals_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
-	glBufferData(GL_ARRAY_BUFFER, colors_.size() * sizeof(glm::vec4), &colors_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, colors_.size() * sizeof(glm::vec4), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	
@@ -91,63 +195,28 @@ void Mesh::load()
 	}
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
-	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), &bones_[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(4);
 	glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 	glEnableVertexAttribArray(5);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
-	
-	/*
-	std::vector< glm::ivec4 > boneIds = std::vector< glm::ivec4 >();
-	std::vector< glm::vec4 > weights = std::vector< glm::vec4 >();
-	
-	for ( VertexBoneData& d : bones_ )
-	{
-		boneIds.push_back( d.boneIds );
-		weights.push_back( d.weights );
-	}
-	
-	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
-	glBufferData(GL_ARRAY_BUFFER, boneIds.size() * sizeof(glm::ivec4), &boneIds[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(3);
-	glVertexAttribIPointer(3, 4, GL_INT, 0, 0);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
-	glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec4), &weights[0], GL_STATIC_DRAW);
-	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	*/
-	// Disable our Vertex Array Object
-	//glEnableVertexAttribArray(0);
-	// Disable our Vertex Buffer Object
+
 	glBindVertexArray(0);
 	
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
 		// Cleanup
-		unload();
+		freeVideoMemory();
 		
-		std::string msg = std::string( "Error while loading mesh '" + name_ + "' in OpenGL: " + err.name);
+		std::string msg = std::string( "Error while allocating video memory for mesh '" + name_ + "' in OpenGL: " + err.name);
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
 	else
 	{
-		LOG_DEBUG( "Successfully loaded mesh '" + name_ + "'." );
+		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
 	}
-}
-
-void Mesh::unload()
-{
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDeleteVertexArrays(1, &vaoId_);
-	glDeleteBuffers(5, &vboIds_[0]);
-}
-
-Mesh::~Mesh()
-{
 }
 
 void Mesh::render()

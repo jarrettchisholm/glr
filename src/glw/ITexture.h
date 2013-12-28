@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+#include "IGraphicsObject.h"
+
 #include "../common/logger/Logger.h"
 #include "../common/utilities/ImageLoader.h"
 
@@ -25,7 +27,7 @@ struct TextureSettings {
 	GLint textureWrapT;
 };
 
-class ITexture {
+class ITexture : public IGraphicsObject {
 public:
 	virtual ~ITexture()
 	{

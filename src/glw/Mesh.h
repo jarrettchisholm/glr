@@ -34,6 +34,7 @@ class IOpenGlDevice;
 	
 class Mesh : public IMesh {
 public:
+	Mesh(IOpenGlDevice* openGlDevice, const std::string& name);
 	Mesh(IOpenGlDevice* openGlDevice,
 		const std::string& name,
 		std::vector< glm::vec3 > vertices,
@@ -56,6 +57,12 @@ public:
 	
 	virtual BoneData& getBoneData();
 	
+	virtual void pushToVideoMemory();
+	virtual void pullFromVideoMemory();
+	virtual void freeLocalData();
+	virtual void freeVideoMemory();
+	virtual void allocateVideoMemory();
+	
 	GETSET(std::string, name_, Name)
 protected:
 	std::string name_;
@@ -72,10 +79,6 @@ protected:
 	BoneData boneData_;
 
 	std::string textureFileName_;
-	
-	// TODO: make these similar to Texture2D class?
-	virtual void load();
-	virtual void unload();
 };
 
 }

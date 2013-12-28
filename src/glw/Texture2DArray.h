@@ -31,11 +31,11 @@ public:
 	
 	void setData(std::vector<utilities::Image*> images);
 	std::vector<utilities::Image>& getData();
-	void pushToVideoMemory();
-	void pullFromVideoMemory();
-	void freeLocalData();
-	void freeVideoMemory();
-	void allocateVideoMemory();
+	virtual void pushToVideoMemory();
+	virtual void pullFromVideoMemory();
+	virtual void freeLocalData();
+	virtual void freeVideoMemory();
+	virtual void allocateVideoMemory();
 
 	GETSET(std::string, name_, Name)
 
@@ -48,10 +48,6 @@ private:
 	TextureSettings settings_;
 	
 	std::vector<utilities::Image> images_;
-	
-	//GLuint textureId_;
-
-	void loadIntoVideoMemory();
 	
 	/**
 	 * Helper method - returns true if all of the images in the vector are the same internal format, and false otherwise.

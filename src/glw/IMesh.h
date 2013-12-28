@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+#include "IGraphicsObject.h"
+
 #include "../common/logger/Logger.h"
 
 namespace glr {
@@ -119,7 +121,7 @@ struct BoneData {
 	std::vector< Bone > boneTransform;
 };
 
-class IMesh {
+class IMesh : public IGraphicsObject {
 public:
 	virtual ~IMesh()
 	{
