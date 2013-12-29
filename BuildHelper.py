@@ -1,6 +1,7 @@
 import subprocess, sys, os
 import platform
 import multiprocessing
+import shlex
 
 from SCons.Script import *
 
