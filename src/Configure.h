@@ -1,9 +1,3 @@
-/**
- *
- *
- *
- */
-
 #if defined(_WIN32) || defined(_WIN64)
 #define OS_WINDOWS 1
 #elif defined(linux) || defined(freebsd) || defined(__linux__)
