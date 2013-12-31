@@ -30,6 +30,7 @@ public:
 	 */
 	virtual void addFunction(std::wstring name, std::function<void()> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<int()> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<unsigned int()> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<float()> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<std::wstring()> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<char()> function) = 0;
@@ -44,6 +45,7 @@ public:
 	 */
 	virtual void addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function) = 0;
+	virtual void addFunction(std::wstring name, std::function<unsigned int(std::vector<boost::any>)> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function) = 0;

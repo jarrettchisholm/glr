@@ -44,6 +44,13 @@ void GuiObject::addFunction(std::wstring name, std::function<int()> function)
 	addFunction(name);
 }
 
+void GuiObject::addFunction(std::wstring name, std::function<unsigned int()> function)
+{
+	functionTypeMap_[name] = FunctionTypes::TYPE_UNSIGNED_INT;
+	functionMapUnsignedInt_[name] = function;
+	addFunction(name);
+}
+
 void GuiObject::addFunction(std::wstring name, std::function<float()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_FLOAT;
@@ -91,6 +98,13 @@ void GuiObject::addFunction(std::wstring name, std::function<int(std::vector<boo
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_INT;
 	functionMapWithParamatersInt_[name] = function;
+	addFunction(name);
+}
+
+void GuiObject::addFunction(std::wstring name, std::function<unsigned int(std::vector<boost::any>)> function)
+{
+	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_UNSIGNED_INT;
+	functionMapWithParamatersUnsignedInt_[name] = function;
 	addFunction(name);
 }
 
@@ -163,6 +177,10 @@ std::wstring GuiObject::getFunctionDefinitions()
 		{
 			definitions << " " << FunctionTypes::TYPE_INT << " " << name << " 0";
 		}
+		else if (type == FunctionTypes::TYPE_UNSIGNED_INT || type == FunctionTypes::TYPE_WITH_PARAMETERS_UNSIGNED_INT)
+		{
+			definitions << " " << FunctionTypes::TYPE_UNSIGNED_INT << " " << name << " 0";
+		}
 		else if (type == FunctionTypes::TYPE_FLOAT || type == FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT)
 		{
 			definitions << " " << FunctionTypes::TYPE_FLOAT << " " << name << " 0";
@@ -171,6 +189,10 @@ std::wstring GuiObject::getFunctionDefinitions()
 		{
 			definitions << " " << FunctionTypes::TYPE_STRING << " " << name << " 0";
 		}
+		else if (type == FunctionTypes::TYPE_WSTRING || type == FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING)
+		{
+			definitions << " " << FunctionTypes::TYPE_WSTRING << " " << name << " 0";
+		}
 		else if (type == FunctionTypes::TYPE_CHAR || type == FunctionTypes::TYPE_WITH_PARAMETERS_CHAR)
 		{
 			definitions << " " << FunctionTypes::TYPE_CHAR << " " << name << " 0";
@@ -178,10 +200,6 @@ std::wstring GuiObject::getFunctionDefinitions()
 		else if (type == FunctionTypes::TYPE_BOOL || type == FunctionTypes::TYPE_WITH_PARAMETERS_BOOL)
 		{
 			definitions << " " << FunctionTypes::TYPE_BOOL << " " << name << " 0";
-		}
-		else if (type == FunctionTypes::TYPE_INT || type == FunctionTypes::TYPE_WITH_PARAMETERS_INT)
-		{
-			definitions << " " << FunctionTypes::TYPE_INT << " " << name << " 0";
 		}
 	}
 	
@@ -219,6 +237,13 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 		case FunctionTypes::TYPE_INT:
 		{
 			int r = functionMapInt_[name]();
+			variant = boost::any(r);
+		}
+		break;
+		
+		case FunctionTypes::TYPE_UNSIGNED_INT:
+		{
+			int r = functionMapUnsignedInt_[name]();
 			variant = boost::any(r);
 		}
 		break;
@@ -268,6 +293,13 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 		case FunctionTypes::TYPE_WITH_PARAMETERS_INT:
 		{
 			int r = functionMapWithParamatersInt_[name](params);
+			variant = boost::any(r);
+		}
+		break;
+		
+		case FunctionTypes::TYPE_WITH_PARAMETERS_UNSIGNED_INT:
+		{
+			int r = functionMapWithParamatersUnsignedInt_[name](params);
 			variant = boost::any(r);
 		}
 		break;

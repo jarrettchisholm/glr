@@ -25,6 +25,7 @@ public:
 	
 	virtual void addFunction(std::wstring name, std::function<void()> function);
 	virtual void addFunction(std::wstring name, std::function<int()> function);
+	virtual void addFunction(std::wstring name, std::function<unsigned int()> function);
 	virtual void addFunction(std::wstring name, std::function<float()> function);
 	virtual void addFunction(std::wstring name, std::function<std::string()> function);
 	virtual void addFunction(std::wstring name, std::function<std::wstring()> function);
@@ -34,6 +35,7 @@ public:
 
 	virtual void addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function);
 	virtual void addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function);
+	virtual void addFunction(std::wstring name, std::function<unsigned int(std::vector<boost::any>)> function);
 	virtual void addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function);
 	virtual void addFunction(std::wstring name, std::function<std::string(std::vector<boost::any>)> function);
 	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function);
@@ -51,6 +53,7 @@ private:
 	enum FunctionTypes {
 		TYPE_VOID = 0,
 		TYPE_INT,
+		TYPE_UNSIGNED_INT,
 		TYPE_FLOAT,
 		TYPE_STRING,
 		TYPE_WSTRING,
@@ -59,6 +62,7 @@ private:
 
 		TYPE_WITH_PARAMETERS_VOID,
 		TYPE_WITH_PARAMETERS_INT,
+		TYPE_WITH_PARAMETERS_UNSIGNED_INT,
 		TYPE_WITH_PARAMETERS_FLOAT,
 		TYPE_WITH_PARAMETERS_STRING,
 		TYPE_WITH_PARAMETERS_WSTRING,
@@ -72,6 +76,7 @@ private:
 
 	std::map< std::wstring, std::function<void()> >				functionMapVoid_;
 	std::map< std::wstring, std::function<int()> >				functionMapInt_;
+	std::map< std::wstring, std::function<unsigned int()> >		functionMapUnsignedInt_;
 	std::map< std::wstring, std::function<float()> >			functionMapFloat_;
 	std::map< std::wstring, std::function<std::string()> > 		functionMapString_;
 	std::map< std::wstring, std::function<std::wstring()> > 	functionMapWstring_;
@@ -80,6 +85,7 @@ private:
 
 	std::map< std::wstring, std::function<void( std::vector<boost::any> )> >				functionMapWithParamatersVoid_;
 	std::map< std::wstring, std::function<int( std::vector<boost::any> )> >				 	functionMapWithParamatersInt_;
+	std::map< std::wstring, std::function<unsigned int( std::vector<boost::any> )> >		functionMapWithParamatersUnsignedInt_;
 	std::map< std::wstring, std::function<float( std::vector<boost::any> )> >			   	functionMapWithParamatersFloat_;
 	std::map< std::wstring, std::function<std::string(std::vector<boost::any> )> > 			functionMapWithParamatersString_;
 	std::map< std::wstring, std::function<std::wstring(std::vector<boost::any> )> > 		functionMapWithParamatersWstring_;
