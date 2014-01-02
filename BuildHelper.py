@@ -11,7 +11,8 @@ isWindows = os.name == 'nt'
 isMac = platform.system() == 'Darwin'
 
 ### Compiler
-compiler = 'default'
+buildOptions = {}
+buildOptions['compiler'] = 'default'
 
 buildFlags = {}
 buildFlags['debug'] = True # True by default (at least for now)
@@ -39,9 +40,10 @@ def setup(ARGUMENTS):
 	AddOption('--without-cef', dest='without-cef', action='store_true', help='will compile glr without using Chromium Embedded Framework as the html gui system')
 	
 	global buildFlags
+	global buildOptions
 	
 	### Get our arguments
-	compiler = ARGUMENTS.get('compiler')
+	buildOptions['compiler'] = ARGUMENTS.get('compiler')
 	buildFlags['buildType'] = ARGUMENTS.get('buildType')
 	
 	### Set and error check our build flags
@@ -69,21 +71,21 @@ def setup(ARGUMENTS):
 	if (buildFlags['debug']):
 		cpp_defines.append('DEBUG')
 	
-	if (compiler is None or compiler == ''):
-		compiler = 'default'
-	if (compiler == 'gcc' and isWindows):
-		compiler = 'mingw'
-	if (compiler == 'msvc' and isWindows):
-		compiler = 'default'
+	if (buildOptions['compiler'] is None or buildOptions['compiler'] == ''):
+		buildOptions['compiler'] = 'default'
+	if (buildOptions['compiler'] == 'gcc' and isWindows):
+		buildOptions['compiler'] = 'mingw'
+	if (buildOptions['compiler'] == 'msvc' and isWindows):
+		buildOptions['compiler'] = 'default'
 	
 	### Error check compiler
-	if (compiler == 'msvc' and not isWindows):
+	if (buildOptions['compiler'] == 'msvc' and not isWindows):
 		print( "Cannot use msvc in this environment!" )
 		sys.exit(1)
 	
 	### Set our OS specific compiler variables
 	if (not isWindows):
-		if (compiler == 'gcc' or (compiler == 'default' and isLinux)):
+		if (buildOptions['compiler'] == 'gcc' or (buildOptions['compiler'] == 'default' and isLinux)):
 			if (buildFlags['debug']):
 				cpp_flags.append('-g')
 				cpp_flags.append('-O0') # optimization level 0
@@ -112,7 +114,7 @@ def setup(ARGUMENTS):
 			cpp_paths.append('/usr/local/include/cef3')
 	else:
 		if isWindows:
-			if (compiler == 'default'):
+			if (buildOptions['compiler'] == 'default'):
 				cpp_flags.append('/w') # disables warnings (Windows)
 				cpp_flags.append('/wd4350') # disables the specific warning C4350
 				cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
@@ -125,7 +127,7 @@ def setup(ARGUMENTS):
 					cpp_flags.append('/Od') # Disables optimization
 				else:
 					cpp_flags.append('/Ox') # Full optimization
-			elif (compiler == 'mingw'):
+			elif (buildOptions['compiler'] == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
 					cpp_flags.append('-O0') # optimization level 0

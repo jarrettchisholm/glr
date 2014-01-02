@@ -209,7 +209,7 @@ if buildFlags['beautify']:
 ### Compile our client for CEF
 if (buildFlags['useCef']):
 	print("Compiling CEF Client")
-	exitOnError( compileCefClient(compiler) )
+	exitOnError( compileCefClient(buildOptions['compiler']) )
 	print("")
 
 
@@ -245,7 +245,7 @@ source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders
 setupDependencies()
 
 ### Create our environment
-env = Environment(ENV = os.environ, TOOLS = [compiler])
+env = Environment(ENV = os.environ, TOOLS = [buildOptions['compiler']])
 setupEnvironment(env)
 
 print("Build type: " + buildFlags['buildType'])
