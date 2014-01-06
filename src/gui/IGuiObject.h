@@ -1,10 +1,3 @@
-/*
- * IGuiObject.h
- *
- *  Created on: 2012-12-30
- *      Author: jarrett
- */
-
 #ifndef IGUIOBJECT_H_
 #define IGUIOBJECT_H_
 
@@ -15,6 +8,7 @@
 
 namespace glr {
 namespace gui {
+
 class IGuiObject {
 public:
 	virtual ~IGuiObject()
@@ -51,6 +45,7 @@ public:
 	virtual void addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function) = 0;
 	virtual void addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function) = 0;
 };
+
 }
 }
 #endif /* IGUIOBJECT_H_ */

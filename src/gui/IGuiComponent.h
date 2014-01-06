@@ -1,10 +1,3 @@
-/*
- * IGuiComponent.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IGUICOMPONENT_H_
 #define IGUICOMPONENT_H_
 

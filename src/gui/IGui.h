@@ -1,10 +1,3 @@
-/*
- * IGui.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IGUI_H_
 #define IGUI_H_
 
