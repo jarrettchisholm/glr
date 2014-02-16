@@ -24,6 +24,10 @@ namespace glr {
 
 BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
+	// NOTE: The scene manager will not call this constructor.  This is available for a 3rd party to be able to create scene nodes.
+	id_ = 0;
+	
+	name_ = std::string();
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
 
@@ -33,7 +37,19 @@ BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string& name, glw::IOpenGlDevice* openGlDevice) : name_(name), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice) : id_(id), openGlDevice_(openGlDevice)
+{
+	name_ = std::string();
+	setPosition(0, 0, 0);
+	setScale(1, 1, 1);
+
+	active_ = true;
+
+	model_ = nullptr;
+	shaderProgram_ = nullptr;
+}
+
+BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, const std::string& name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(name), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -44,8 +60,8 @@ BasicSceneNode::BasicSceneNode(const std::string& name, glw::IOpenGlDevice* open
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
-	 : name_(name), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
+	 : id_(id), name_(name), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
 	rotate(orientation);
@@ -76,51 +92,17 @@ void BasicSceneNode::attach(shaders::IShaderProgram* shaderProgram)
 	shaderProgram_ = shaderProgram;
 }
 
-/*
-ISceneNode* BasicSceneNode::createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt)
+glm::detail::uint32 BasicSceneNode::getId()
 {
-	ISceneNode* node = sceneManager_->createSceneNode(name);
-
-	node->setPosition(position);
-	node->setLookAt(lookAt);
-
-	if ( node != nullptr )
-		children_[node->getName()] = node;
-
-	return node;
+	return id_;
 }
 
-void BasicSceneNode::addChild(ISceneNode* node)
+void BasicSceneNode::setId(glm::detail::uint32 id)
 {
-	children_[node->getName()] = node;
+	id_ = id;
 }
 
-ISceneNode* BasicSceneNode::getChild(const std::string& name)
-{
-	if ( children_.find(name) != children_.end())
-		return children_[name];
-
-	return nullptr;
-}
-
-void BasicSceneNode::removeChild(ISceneNode* node)
-{
-	if ( children_.find(node->getName()) != children_.end())
-		children_.erase(node->getName());
-}
-
-void BasicSceneNode::removeAllChildren()
-{
-	children_.clear();
-}
-
-glmd::uint32 BasicSceneNode::getNumChildren()
-{
-	return children_.size();
-}
-*/
-
-std::string BasicSceneNode::getName()
+const std::string& BasicSceneNode::getName()
 {
 	return name_;
 }

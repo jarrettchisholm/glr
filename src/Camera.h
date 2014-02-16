@@ -16,11 +16,12 @@
 
 //#include "IInputListener.h"
 
-namespace glr {
+namespace glr
+{
+
 class Camera : public virtual ICamera, public BasicSceneNode {
 public:
 	Camera(glw::IOpenGlDevice* openGlDevice);
-	Camera(const std::string name, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Camera();
 
 	// inherited from ICamera
@@ -49,5 +50,7 @@ private:
 
 	void initialize();
 };
+
 }
+
 #endif /* GLR_CAMERA_H_ */

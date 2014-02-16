@@ -14,14 +14,15 @@
 #include "ILight.h"
 #include "BasicSceneNode.h"
 
-namespace glr {
+namespace glr
+{
 
 class Light : public virtual ILight, public BasicSceneNode {
 public:
 	Light(glw::IOpenGlDevice* openGlDevice);
-	Light(const std::string name, glw::IOpenGlDevice* openGlDevice);
+	Light(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);
+	Light(glm::detail::uint32 id, const std::string name, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Light();
-
 
 	// inherited from ILight
 	virtual void render();
@@ -39,4 +40,5 @@ private:
 };
 
 }
+
 #endif /* LIGHT_H_ */

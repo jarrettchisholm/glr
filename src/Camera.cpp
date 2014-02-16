@@ -23,17 +23,10 @@
 
 #include <iostream>
 
-namespace glr {
+namespace glr
+{
 
 Camera::Camera(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
-{
-	setPosition(0.0f, 0.0f, 0.0f);
-	setScale(1.0f, 1.0f, 1.0f);
-
-	initialize();
-}
-
-Camera::Camera(const std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(name, openGlDevice)
 {
 	setPosition(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);

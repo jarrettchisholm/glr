@@ -17,24 +17,23 @@
 
 #include "ISceneManager.h"
 
-namespace glr {
+// Forward declaration (so we can set it as a friend class below)
+class BasicSceneManager;
+
+namespace glr
+{
+
 class BasicSceneNode : public virtual ISceneNode {
 public:
 	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string& name, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(glm::detail::uint32 id, const std::string& name, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(glm::detail::uint32 id, const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
-	/*
-	virtual ISceneNode* createChild(const std::string name, glm::vec3& position, glm::vec3& lookAt);
-	virtual void addChild(ISceneNode* node);
-	virtual ISceneNode* getChild(const std::string& name);
-	virtual void removeChild(ISceneNode* node);
-	virtual void removeAllChildren();
-	virtual glmd::uint32 getNumChildren();
-	*/
-
-	virtual std::string getName();
+	virtual glm::detail::uint32 getId();
+	virtual void setId(glm::detail::uint32 id);
+	virtual const std::string& getName();
 
 	virtual glm::vec3& getPosition();
 	virtual void setPosition(glm::vec3& newPos);
@@ -68,13 +67,15 @@ protected:
 	ISceneManager* sceneManager_;
 	glw::IOpenGlDevice* openGlDevice_;
 
+	glm::detail::uint32 id_;
 	std::string name_;
-	std::map<std::string, ISceneNode*> children_;
 	glm::quat orientationQuaternion_;
 	glm::vec3 pos_;
 	glm::vec3 scale_;
 
-	bool active_;
+	bool active_;	
 };
+
 }
+
 #endif /* BASICSCENENODE_H_ */

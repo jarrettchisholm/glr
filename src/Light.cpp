@@ -33,7 +33,15 @@ Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 	initialize();
 }
 
-Light::Light(const std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(name, openGlDevice)
+Light::Light(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, openGlDevice)
+{
+	setPosition(0, 0, 0);
+	setScale(1, 1, 1);
+
+	initialize();
+}
+
+Light::Light(glm::detail::uint32 id, const std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, name, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

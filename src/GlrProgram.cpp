@@ -137,7 +137,7 @@ void GlrProgram::setSceneManager(std::shared_ptr<ISceneManager> sceneManager)
 	LOG_DEBUG( "Set OpenGL matrices." );
 	// Set our opengl matrices
 	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
-	ICamera* camera = sMgr_->getActiveCamera();
+	ICamera* camera = sMgr_->getCamera();
 	if (camera != nullptr)
 	{
 		openGlDevice_->setViewMatrix( camera->getViewMatrix() );
@@ -165,7 +165,7 @@ void GlrProgram::render()
 
 	// Set our opengl matrices
 	openGlDevice_->setModelMatrix( sMgr_->getModelMatrix() );
-	ICamera* camera = sMgr_->getActiveCamera();
+	ICamera* camera = sMgr_->getCamera();
 	if (camera != nullptr)
 	{
 		openGlDevice_->setViewMatrix( camera->getViewMatrix() );
@@ -242,7 +242,7 @@ void GlrProgram::bindUniformBufferObjects(shaders::IShaderProgram* shader)
 	glm::mat4 modelMatrix = sMgr_->getModelMatrix();
 	glm::mat4 projectionMatrix = window_->getProjectionMatrix();
 
-	ICamera* camera = sMgr_->getActiveCamera();
+	ICamera* camera = sMgr_->getCamera();
 	if ( camera != nullptr )
 	{
 		const glm::mat4 viewMatrix = camera->getViewMatrix();

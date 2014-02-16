@@ -1,4 +1,4 @@
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64) || defined(__WIN64__) || defined(WIN64)
 #define OS_WINDOWS 1
 #elif defined(linux) || defined(freebsd) || defined(__linux__)
 #define OS_LINUX 1
