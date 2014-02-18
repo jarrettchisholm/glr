@@ -121,6 +121,9 @@ struct BoneData {
 	std::vector< Bone > boneTransform;
 };
 
+/**
+ * Represents a Mesh which can be rendered in the scene.
+ */
 class IMesh : public IGraphicsObject {
 public:
 	virtual ~IMesh()
@@ -128,8 +131,14 @@ public:
 	}
 	;
 
+	/**
+	 * Will render this mesh in the scene.
+	 */
 	virtual void render() = 0;
 	
+	/**
+	 * Returns a reference to the bone data.
+	 */
 	virtual BoneData& getBoneData() = 0;
 };
 

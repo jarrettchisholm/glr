@@ -233,6 +233,16 @@ BoneData& Mesh::getBoneData()
 	return boneData_;
 }
 
+const std::string& Mesh::getName() const
+{
+	return name_;
+}
+
+void Mesh::setName(const std::string& name)
+{
+	name_ = name;
+}
+
 }
 }
 

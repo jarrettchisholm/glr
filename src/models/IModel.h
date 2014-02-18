@@ -1,10 +1,3 @@
-/*
- * IModel.h
- *
- *  Created on: 2012-10-20
- *      Author: jarrett
- */
-
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
@@ -17,10 +10,13 @@
 #include "../glw/IMesh.h"
 #include "../glw/ITexture.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 	
-struct MeshData {
+struct MeshData
+{
 	std::string name;
 	std::vector< glm::vec3 > vertices;
 	std::vector< glm::vec3 > normals;
@@ -29,7 +25,8 @@ struct MeshData {
 	std::vector< glw::VertexBoneData > bones;
 };
 
-struct MaterialData {
+struct MaterialData
+{
 	std::string name;
 	GLenum fill_mode;
 	glm::vec4 ambient;
@@ -40,7 +37,8 @@ struct MaterialData {
 	glm::detail::float32 strength;
 };
 
-struct TextureData {
+struct TextureData
+{
 	std::string filename;
 	glw::TextureSettings settings;
 };
@@ -53,7 +51,8 @@ struct TextureData {
 // Animation information
 // Note: BoneNode struct is kept in IAnimation.h
 
-struct AnimatedBoneNode {
+struct AnimatedBoneNode
+{
 	std::string name;
 	std::vector< glm::detail::float64 > positionTimes;
 	std::vector< glm::detail::float64 > rotationTimes;
@@ -63,7 +62,8 @@ struct AnimatedBoneNode {
 	std::vector< glm::vec3 > scalings;
 };
 
-struct AnimationData {
+struct AnimationData
+{
 	std::string name;
 	glm::detail::float64 duration;
 	glm::detail::float64 ticksPerSecond;
@@ -71,7 +71,8 @@ struct AnimationData {
 	std::map< std::string, AnimatedBoneNode > animatedBoneNodes;
 };
 
-struct AnimationSet {
+struct AnimationSet
+{
 	std::string name;
 	
 	glw::BoneNode rootBoneNode;
@@ -81,7 +82,8 @@ struct AnimationSet {
 
 
 // Model information
-struct ModelData {
+struct ModelData
+{
 	MeshData meshData;
 	MaterialData materialData;
 	TextureData textureData;
@@ -89,7 +91,10 @@ struct ModelData {
 	AnimationSet animationSet;
 	glm::mat4 globalInverseTransformation;
 };
-	
+
+/**
+ * 
+ */
 class IModel {
 public:
 	virtual ~IModel()
@@ -97,12 +102,41 @@ public:
 	}
 	;
 
+	/**
+	 * Returns the animation with the given name.
+	 * 
+	 * @param name
+	 * 
+	 * @return A pointer to the animation with the given name, and nullptr if the animation was not found.
+	 */
 	virtual IAnimation* getAnimation(const std::string& name) = 0;
+
+	/**
+	 * Returns the current animation that affects this model.
+	 * 
+	 * @return A pointer to the current animation that affects this model, or nullptr if there is no current animation.
+	 */
 	virtual IAnimation* getCurrentAnimation() = 0;
+
+	/**
+	 * Sets the current animation.  If nullptr is sent in as the animation, then no animation will be used when rendering
+	 * this model.
+	 * 
+	 * @param animation The animation to use as the current animation.
+	 */
 	virtual void setCurrentAnimation(IAnimation* animation) = 0;
-	
+
+	/**
+	 * Render the model to the scene, using the provided shader.
+	 * 
+	 * TODO: Should we do it like this, with the shader being passed in?
+	 * 
+	 * @param shader The shader to use to render this model to the scene.
+	 */
 	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
+
 }
 }
+
 #endif /* IMODEL_H_ */

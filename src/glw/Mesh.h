@@ -63,7 +63,23 @@ public:
 	virtual void freeVideoMemory();
 	virtual void allocateVideoMemory();
 	
-	GETSET(std::string, name_, Name)
+	const std::string& getName() const;
+	void setName(const std::string& name);
+	
+	/*
+	void setVertices(std::vector< glm::vec3 > vertices);
+	void setNormals(std::vector< glm::vec3 > normals);
+	void setTextureCoordinates(std::vector< glm::vec2 > textureCoordinates);
+	void setColors(std::vector< glm::vec4 > colors);
+	void setBones(std::vector< VertexBoneData > bones);
+	
+	std::vector< glm::vec3 >& getVertices();
+	std::vector< glm::vec3 >& getNormals();
+	std::vector< glm::vec2 >& getTextureCoordinates();
+	std::vector< glm::vec4 >& getColors();
+	std::vector< VertexBoneData >& getBones();
+	*/
+	
 protected:
 	std::string name_;
 	IOpenGlDevice* openGlDevice_;
