@@ -53,14 +53,16 @@ GLuint Texture2DArray::getBindPoint()
 	return bindPoint_;
 }
 
-void Texture2DArray::setData(std::vector<utilities::Image*> images)
+void Texture2DArray::setData(const std::vector<utilities::Image*>& images)
 {
 	images_ = std::vector<utilities::Image>();
-	
+	/*
 	for ( auto image : images )
 	{
-		images_.push_back( *image );
+		utilities::Image img = utilities::Image(*image);
+		images_.push_back( img );
 	}
+	*/
 }
 
 std::vector<utilities::Image>& Texture2DArray::getData()

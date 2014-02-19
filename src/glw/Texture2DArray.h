@@ -29,7 +29,7 @@ public:
 	GLuint getBufferId();
 	GLuint getBindPoint();
 	
-	void setData(std::vector<utilities::Image*> images);
+	void setData(const std::vector<utilities::Image*>& images);
 	std::vector<utilities::Image>& getData();
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
