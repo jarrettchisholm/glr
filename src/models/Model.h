@@ -79,9 +79,6 @@ public:
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
-#define aisgl_min(x, y) (x < y ? x : y)
-#define aisgl_max(x, y) (y > x ? y : x)
-
 	glw::IOpenGlDevice* openGlDevice_;
 
 	std::vector<glw::IMesh*> meshes_;

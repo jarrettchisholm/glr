@@ -20,6 +20,9 @@ namespace glw {
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
 {
+	vertexBoneData_ = std::vector< VertexBoneData >();
+	boneData_ = BoneData();
+	
 	vaoId_ = 0;
 }
 
@@ -29,9 +32,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
-		std::vector<VertexBoneData > bones,
+		std::vector<VertexBoneData > vertexBoneData,
 		BoneData boneData)
-	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), bones_(bones), boneData_(boneData)
+	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), vertexBoneData_(vertexBoneData), boneData_(boneData)
 {
 	vaoId_ = 0;
 	
@@ -48,7 +51,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	)
 	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors)
 {
-	bones_ = std::vector< VertexBoneData >();
+	vertexBoneData_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
 	vaoId_ = 0;
 	
@@ -86,21 +89,21 @@ void Mesh::pushToVideoMemory()
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, colors_.size() * sizeof(glm::vec4), &colors_[0]);
 	
-	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
+	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << vertexBoneData_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
 	// TODO: We might want to not load any bone data (if there is none) and use a different shader?  Not sure best way to handle this.....?
 	// Deal with not having any bones
-	if (bones_.size() == 0)
+	if (vertexBoneData_.size() == 0)
 	{
-		bones_.resize( vertices_.size() );
-		for (auto& b : bones_)
+		vertexBoneData_.resize( vertices_.size() );
+		for (auto& b : vertexBoneData_)
 		{
 			b.weights = glm::vec4(0.25f);
 		}
 	}
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, bones_.size() * sizeof(VertexBoneData), &bones_[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBoneData_.size() * sizeof(VertexBoneData), &vertexBoneData_[0]);
 	
 	glBindVertexArray(0);
 	
@@ -128,7 +131,7 @@ void Mesh::freeLocalData()
 	normals_ = std::vector< glm::vec3 >();
 	textureCoordinates_ = std::vector< glm::vec2 >();
 	colors_ = std::vector< glm::vec4 >();
-	bones_ = std::vector< VertexBoneData >();
+	vertexBoneData_ = std::vector< VertexBoneData >();
 }
 
 void Mesh::freeVideoMemory()
@@ -181,21 +184,21 @@ void Mesh::allocateVideoMemory()
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	
-	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << bones_.size() << " " << sizeof(VertexBoneData) << std::endl;
+	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << vertexBoneData_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
 	// TODO: We might want to not load any bone data (if there is none) and use a different shader?  Not sure best way to handle this.....?
 	// Deal with not having any bones
-	if (bones_.size() == 0)
+	if (vertexBoneData_.size() == 0)
 	{
-		bones_.resize( vertices_.size() );
-		for (auto& b : bones_)
+		vertexBoneData_.resize( vertices_.size() );
+		for (auto& b : vertexBoneData_)
 		{
 			b.weights = glm::vec4(0.25f);
 		}
 	}
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
-	glBufferData(GL_ARRAY_BUFFER, bones_.size() * sizeof(VertexBoneData), nullptr, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertexBoneData_.size() * sizeof(VertexBoneData), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(4);
 	glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
 	glEnableVertexAttribArray(5);
@@ -242,6 +245,57 @@ void Mesh::setName(const std::string& name)
 {
 	name_ = name;
 }
+
+void Mesh::setVertices(std::vector< glm::vec3 > vertices)
+{
+	vertices_ = vertices;
+}
+
+void Mesh::setNormals(std::vector< glm::vec3 > normals)
+{
+	normals_ = normals;
+}
+
+void Mesh::setTextureCoordinates(std::vector< glm::vec2 > textureCoordinates)
+{
+	textureCoordinates_ = textureCoordinates;
+}
+
+void Mesh::setColors(std::vector< glm::vec4 > colors)
+{
+	colors_ = colors;
+}
+
+void Mesh::setVertexBoneData(std::vector< VertexBoneData > vertexBoneData)
+{
+	vertexBoneData_ = vertexBoneData;
+}
+
+std::vector< glm::vec3 >& Mesh::getVertices()
+{
+	return vertices_;
+}
+
+std::vector< glm::vec3 >& Mesh::getNormals()
+{
+	return normals_;
+}
+
+std::vector< glm::vec2 >& Mesh::getTextureCoordinates()
+{
+	return textureCoordinates_;
+}
+
+std::vector< glm::vec4 >& Mesh::getColors()
+{
+	return colors_;
+}
+
+std::vector< VertexBoneData >& Mesh::getVertexBoneData()
+{
+	return vertexBoneData_;
+}
+
 
 }
 }
