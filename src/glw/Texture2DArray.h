@@ -21,7 +21,7 @@ class IOpenGlDevice;
 class Texture2DArray : public ITexture {
 public:
 	Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings = TextureSettings());
-	Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings = TextureSettings());
+	Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings = TextureSettings());
 	virtual ~Texture2DArray();
 
 	virtual void bind(GLuint texturePosition = 0);

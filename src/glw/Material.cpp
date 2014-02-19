@@ -18,9 +18,14 @@
 namespace glr {
 namespace glw {
 
+Material::Material(IOpenGlDevice* openGlDevice, const std::string& name)
+	: openGlDevice_(openGlDevice), name_(name), bufferId_(0)
+{	
+}
+
 Material::Material(
 		IOpenGlDevice* openGlDevice,
-		const std::string name,
+		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -32,7 +37,8 @@ Material::Material(
 {
 	LOG_DEBUG( "loading material..." );
 	
-	loadIntoVideoMemory();
+	allocateVideoMemory();
+	pushToVideoMemory();
 	
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
@@ -50,8 +56,10 @@ Material::Material(
 	}
 }
 
-void Material::loadIntoVideoMemory()
+void Material::pushToVideoMemory()
 {
+	LOG_DEBUG( "loading material '" + name_ +"' into video memory." );
+	
 	MaterialData md = MaterialData();
 	md.ambient = ambient_;
 	md.diffuse = diffuse_;
@@ -61,11 +69,50 @@ void Material::loadIntoVideoMemory()
 	//md.strength = strength_;
 	
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{		
+		std::string msg = std::string( "Error while push data for material '" + name_ + "' to video memory in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		LOG_DEBUG( "Successfully pushed data for material '" + name_ + "' to video memory." );
+	}
+}
+
+void Material::pullFromVideoMemory()
+{
+	// TODO: Implement
+}
+
+void Material::freeLocalData()
+{
+}
+
+void Material::freeVideoMemory()
+{
+	if (bufferId_ == 0)
+	{
+		LOG_WARN( "Cannot free video memory - buffer does not exist for material." );
+		return;
+	}
+	
+	openGlDevice_->releaseBufferObject( bufferId_ );
+	
+	bufferId_ = 0;
+}
+
+void Material::allocateVideoMemory()
+{
+	// TODO: Implement
 }
 
 Material::~Material()
 {
-	openGlDevice_->releaseBufferObject( bufferId_ );
+	freeVideoMemory();
 }
 
 void Material::bind()
@@ -97,6 +144,36 @@ GLuint Material::getBufferId()
 GLuint Material::getBindPoint()
 {
 	return bindPoint_;
+}
+
+void Material::setAmbient(const glm::vec4& ambient)
+{
+	ambient_ = ambient;
+}
+
+void Material::setDiffuse(const glm::vec4& diffuse)
+{
+	diffuse_ = diffuse;
+}
+
+void Material::setSpecular(const glm::vec4& specular)
+{
+	specular_ = specular;
+}
+
+void Material::setEmission(const glm::vec4& emission)
+{
+	emission_ = emission;
+}
+
+void Material::setShininess(glm::detail::float32 shininess)
+{
+	shininess_ = shininess;
+}
+
+void Material::setStrength(glm::detail::float32 strength)
+{
+	strength_ = strength;
 }
 
 }

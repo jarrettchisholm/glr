@@ -24,9 +24,10 @@ public:
 	}
 	;
 
-	virtual Material* getMaterial(const std::string name) = 0;
+	virtual Material* getMaterial(const std::string& name) = 0;
+	virtual Material* addMaterial(const std::string& name) = 0;
 	virtual Material* addMaterial(
-		const std::string name,
+		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,

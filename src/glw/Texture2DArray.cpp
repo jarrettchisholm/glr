@@ -11,9 +11,10 @@ namespace glw {
 	
 Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
+	bufferId_ = 0;
 }
 
-Texture2DArray::Texture2DArray(std::vector<utilities::Image*> images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
+Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
 	bufferId_ = 0;
 	
@@ -136,9 +137,8 @@ void Texture2DArray::freeVideoMemory()
 {
 	if (bufferId_ == 0)
 	{
-		std::string msg = std::string( "Cannot free video memory - buffer does not exist for texture.");
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
+		LOG_WARN( "Cannot free video memory - buffer does not exist for texture." );
+		return;
 	}
 	
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);

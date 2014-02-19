@@ -23,7 +23,7 @@ MeshManager::~MeshManager()
 {
 }
 
-Mesh* MeshManager::getMesh(const std::string name)
+Mesh* MeshManager::getMesh(const std::string& name)
 {
 	if ( meshes_.find(name) != meshes_.end() )
 	{
@@ -36,8 +36,24 @@ Mesh* MeshManager::getMesh(const std::string name)
 	return nullptr;
 }
 
+Mesh* MeshManager::addMesh(const std::string& name)
+{
+	LOG_DEBUG( "Loading mesh..." );
+
+	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
+	{
+		LOG_DEBUG( "Mesh already exists." );
+		return meshes_[name].get();
+	}
+
+	LOG_DEBUG( "Creating Mesh." );
+	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name));
+
+	return meshes_[name].get();
+}
+
 Mesh* MeshManager::addMesh(
-		const std::string name, 
+		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -61,7 +77,7 @@ Mesh* MeshManager::addMesh(
 }
 
 Mesh* MeshManager::addMesh(
-		const std::string name, 
+		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,

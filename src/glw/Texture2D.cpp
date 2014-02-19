@@ -9,14 +9,12 @@
 namespace glr {
 namespace glw {
 	
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 }
 
-Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN)
+Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
-	bufferId_ = 0;
-	
 	if ( image != nullptr )
 	{
 		// Copy image data
@@ -119,9 +117,8 @@ void Texture2D::freeVideoMemory()
 {
 	if (bufferId_ == 0)
 	{
-		std::string msg = std::string( "Cannot free video memory - buffer does not exist for texture.");
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
+		LOG_WARN( "Cannot free video memory - buffer does not exist for texture." );
+		return;
 	}
 	
 	glBindTexture(GL_TEXTURE_2D, 0);

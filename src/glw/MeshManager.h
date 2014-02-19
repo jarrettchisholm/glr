@@ -26,9 +26,10 @@ public:
 	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
 
-	virtual Mesh* getMesh(const std::string path);
+	virtual Mesh* getMesh(const std::string& name);
+	virtual Mesh* addMesh(const std::string& name);
 	virtual Mesh* addMesh(
-		const std::string path, 
+		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -37,7 +38,7 @@ public:
 		BoneData boneData
 	);
 	virtual Mesh* addMesh(
-		const std::string path, 
+		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,

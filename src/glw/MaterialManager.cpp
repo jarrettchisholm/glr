@@ -22,7 +22,7 @@ MaterialManager::~MaterialManager()
 {
 }
 
-Material* MaterialManager::getMaterial(const std::string name)
+Material* MaterialManager::getMaterial(const std::string& name)
 {
 	if ( materials_.find(name) != materials_.end() )
 	{
@@ -35,8 +35,23 @@ Material* MaterialManager::getMaterial(const std::string name)
 	return nullptr;
 }
 
+Material* MaterialManager::addMaterial(const std::string& name)
+{
+	LOG_DEBUG( "Loading material '" + name + "'." );
+
+	if ( materials_.find(name) != materials_.end() && materials_[name].get() != nullptr )
+	{
+		LOG_DEBUG( "Material '" + name + "' already exists." );
+		return materials_[name].get();
+	}
+
+	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name));
+
+	return materials_[name].get();
+}
+
 Material* MaterialManager::addMaterial(
-		const std::string name,
+		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -57,5 +72,6 @@ Material* MaterialManager::addMaterial(
 
 	return materials_[name].get();
 }
+
 }
 }
