@@ -1,18 +1,11 @@
-/*
- * FpsCamera.cpp
- *
- *  Created on: 2013-06-19
- *      Author: jarrett
- */
-
-#include <boost/log/trivial.hpp>
-
 #include "FpsCamera.h"
 
-namespace glr {
-namespace extras {
+namespace glr
+{
+namespace extras
+{
 	
-FpsCamera::FpsCamera(const std::string name, glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(name, openGlDevice), speed_(speed)
+FpsCamera::FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(openGlDevice), speed_(speed)
 {
 	initialize();
 }
@@ -51,14 +44,14 @@ void FpsCamera::moveRight()
 	this->move( glm::vec3(speed_, 0.0f, 0.0f) );
 }
 
-void FpsCamera::rotate(const glm::detail::float32& radians, const glm::vec3& axis)
+void FpsCamera::rotate(const glm::detail::float32& degrees, const glm::vec3& axis)
 {
-	Camera::rotate(radians, axis);
+	if ( axis == glm::vec3(0.0f, 1.0f, 0.0f) )
+		Camera::rotate(degrees, axis, TransformSpace::TS_LOCAL);
+	else
+		Camera::rotate(degrees, axis, TransformSpace::TS_WORLD);
 }
 
-/**
- *
- */
 void FpsCamera::tick(glm::detail::float32 time)
 {
 	Camera::tick(time);

@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
     
     glr::ISceneManager* smgr = p->getSceneManager();
 	
-	std::shared_ptr< glr::extras::FpsCamera > camera = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera("camera", p->getOpenGlDevice(), 0.020f) );
+	std::shared_ptr< glr::extras::FpsCamera > camera = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
 	camera->setPosition(0, 0, 0);
 	
 	glm::vec3 pos = camera->getPosition();

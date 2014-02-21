@@ -8,6 +8,7 @@
 #include <exception>
 
 #include "glm/glm.hpp"
+#include <glm/gtx/string_cast.hpp>
 
 #include "GlrInclude.h"
 
@@ -16,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(sceneNode)
 
 BOOST_AUTO_TEST_CASE(createDeleteSceneNodes)
 {
-    glr::GlrProgram* p = new glr::GlrProgram();
+    auto p = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram() );
     
     p->createWindow();
     
@@ -74,13 +75,11 @@ BOOST_AUTO_TEST_CASE(createDeleteSceneNodes)
 	smgr->destroyAllSceneNodes();
 	
 	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0 );
-	
-    delete p;    
 }
 
 BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 {
-    glr::GlrProgram* p = new glr::GlrProgram();
+    auto p = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram() );
     
     p->createWindow();
     
@@ -125,16 +124,20 @@ BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 	
 	
 	// Rotation test
-	node->rotate( glm::vec3(90.0f, 90.0f, 90.0f) );
-	glm::vec3 rotation = node->getRotation();
+	float errorMargin = 0.000025f;
+	node->rotate( 90.0f, glm::vec3(1.0f, 0.0f, 0.0f) );
+	node->rotate( 90.0f, glm::vec3(0.0f, 1.0f, 0.0f) );
+	node->rotate( 90.0f, glm::vec3(0.0f, 0.0f, 1.0f) );
 	
-	BOOST_CHECK_EQUAL( rotation.x, 90.0f );
-	BOOST_CHECK_EQUAL( rotation.y, 90.0f );
-	BOOST_CHECK_EQUAL( rotation.z, 90.0f );
+	glm::quat expectedQuat = glm::quat(0.707107f, 0.0f, 0.707107f, 0.0f);
+	auto quat = node->getOrientation();
+	
+	BOOST_CHECK_CLOSE( quat.w, expectedQuat.w, errorMargin );
+	BOOST_CHECK_CLOSE( quat.x, expectedQuat.x, errorMargin );
+	BOOST_CHECK_CLOSE( quat.y, expectedQuat.y, errorMargin );
+	BOOST_CHECK_CLOSE( quat.z, expectedQuat.z, errorMargin );
 	
 	// TODO: think of more tests?
-	
-    delete p;    
 }
 
 BOOST_AUTO_TEST_SUITE_END()

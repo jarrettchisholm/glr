@@ -51,6 +51,10 @@ public:
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z, TransformSpace relativeTo = TS_LOCAL) = 0;
 
 	virtual const glm::quat& getOrientation() = 0;
+	/**
+	 * Rotates the scene node around the axis 'axis' the specified number of degrees.  This rotation is relative to the transform space specified
+	 * by 'relativeTo'.
+	 */
 	virtual void rotate(const glm::detail::float32 degrees, const glm::vec3& axis, TransformSpace relativeTo = TS_LOCAL) = 0;
 	virtual void rotate(const glm::quat& quaternion, TransformSpace relativeTo = TS_LOCAL) = 0;
 	
