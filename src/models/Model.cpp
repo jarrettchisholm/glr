@@ -22,14 +22,14 @@ Model::Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDe
 	initialize(modelData);
 }
 
-Model::Model(glw::Mesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+Model::Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	meshManager_ = openGlDevice_->getMeshManager();
 	materialManager_ = openGlDevice_->getMaterialManager();
 	textureManager_ = openGlDevice_->getTextureManager();
 	animationManager_ = openGlDevice_->getAnimationManager();
 	
-	meshes_.push_back( static_cast<glw::Mesh*>(mesh) );
+	meshes_.push_back( mesh );
 	textures_.push_back( nullptr );
 	materials_.push_back( nullptr );
 	

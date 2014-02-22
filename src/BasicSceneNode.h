@@ -31,9 +31,10 @@ public:
 	BasicSceneNode(glm::detail::uint32 id, const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneNode();
 
-	virtual glm::detail::uint32 getId();
+	virtual glm::detail::uint32 getId() const;
 	virtual void setId(glm::detail::uint32 id);
-	virtual const std::string& getName();
+	virtual void setName(const std::string& name);
+	virtual const std::string& getName() const;
 
 	virtual glm::vec3& getPosition();
 	virtual void setPosition(glm::vec3& newPos);

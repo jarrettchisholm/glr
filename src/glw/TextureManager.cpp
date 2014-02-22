@@ -132,7 +132,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 
 Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const TextureSettings settings)
 {
-	LOG_DEBUG( "Loading texture 2d array '" + name + "' from images." );
+	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
 	auto it = textures2DArray_.find(name);
 

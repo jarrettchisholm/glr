@@ -92,7 +92,7 @@ void BasicSceneNode::attach(shaders::IShaderProgram* shaderProgram)
 	shaderProgram_ = shaderProgram;
 }
 
-glm::detail::uint32 BasicSceneNode::getId()
+glm::detail::uint32 BasicSceneNode::getId() const
 {
 	return id_;
 }
@@ -102,7 +102,12 @@ void BasicSceneNode::setId(glm::detail::uint32 id)
 	id_ = id;
 }
 
-const std::string& BasicSceneNode::getName()
+void BasicSceneNode::setName(const std::string& name)
+{
+	name_ = name;
+}
+
+const std::string& BasicSceneNode::getName() const
 {
 	return name_;
 }

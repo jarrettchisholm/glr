@@ -77,7 +77,7 @@ public:
 	virtual void freeVideoMemory();
 	virtual void allocateVideoMemory();
 	
-	const std::string& getName() const;
+	virtual const std::string& getName() const;
 	void setName(const std::string& name);
 	
 	void setVertices(std::vector< glm::vec3 > vertices);

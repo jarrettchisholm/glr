@@ -140,6 +140,8 @@ public:
 	 * Returns a reference to the bone data.
 	 */
 	virtual BoneData& getBoneData() = 0;
+	
+	virtual const std::string& getName() const = 0;
 };
 
 }

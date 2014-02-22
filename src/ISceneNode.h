@@ -34,10 +34,11 @@ public:
 	
 	static const glm::detail::uint32 INVALID_ID = -1;
 
-	virtual glm::detail::uint32 getId() = 0;
+	virtual glm::detail::uint32 getId() const = 0;
 	// TODO: Find some way to make this inaccessible to 3rd party code
 	virtual void setId(glm::detail::uint32 id) = 0;
-	virtual const std::string& getName() = 0;
+	virtual void setName(const std::string& name) = 0;
+	virtual const std::string& getName() const = 0;
 
 	virtual glm::vec3& getPosition() = 0;
 	virtual void setPosition(glm::vec3& newPos) = 0;

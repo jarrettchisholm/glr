@@ -8,12 +8,12 @@
 
 namespace glr {
 namespace glw {
-	
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 }
 
-Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 	if ( image != nullptr )
 	{

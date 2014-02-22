@@ -9,12 +9,12 @@
 namespace glr {
 namespace glw {
 	
-Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
+Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
 	bufferId_ = 0;
 }
 
-Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, const std::string name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
+Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
 {
 	bufferId_ = 0;
 	
@@ -40,7 +40,7 @@ void Texture2DArray::bind(GLuint texturePosition)
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "texture: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 	// to unbind, we use the following
-	 //glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	//glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
 GLuint Texture2DArray::getBufferId()
@@ -56,13 +56,12 @@ GLuint Texture2DArray::getBindPoint()
 void Texture2DArray::setData(const std::vector<utilities::Image*>& images)
 {
 	images_ = std::vector<utilities::Image>();
-	/*
+
 	for ( auto image : images )
 	{
 		utilities::Image img = utilities::Image(*image);
 		images_.push_back( img );
 	}
-	*/
 }
 
 std::vector<utilities::Image>& Texture2DArray::getData()
@@ -160,8 +159,9 @@ void Texture2DArray::allocateVideoMemory()
 	
 	if (images_.size() == 0)
 	{
-		std::string msg = std::string( "Allocating video memory, but there is no data.");
-		LOG_WARN( msg );
+		std::string msg = std::string( "Cannot allocate video memory - there is no data.");
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
 	}
 	
 	if (!areImagesSameFormat())
