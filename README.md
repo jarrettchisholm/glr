@@ -1,6 +1,8 @@
 Graphics Language Renderer
 ==========================
 
+[![Build Status](https://travis-ci.org/jarrettchisholm/glr.png)](https://travis-ci.org/jarrettchisholm/glr)
+
 Overview
 --------
 A graphics rendering engine written in C++ (using C++11) and OpenGL (targetting 3.2 and above).
