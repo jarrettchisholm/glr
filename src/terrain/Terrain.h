@@ -1,10 +1,3 @@
-/*
- * Terrain.h
- *
- *  Created on: 2013-06-05
- *      Author: jarrett
- */
-
 #ifndef TERRAIN_H_
 #define TERRAIN_H_
 

@@ -1,10 +1,3 @@
-/*
- * Terrain.cpp
- *
- *  Created on: 2013-06-05
- *      Author: jarrett
- */
-
 #include <iostream>
 
 #ifdef _WIN32
