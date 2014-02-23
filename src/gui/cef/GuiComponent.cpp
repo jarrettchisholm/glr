@@ -333,7 +333,7 @@ void GuiComponent::load()
 	LOG_DEBUG( "Creating CEF Browser object." );
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
 	// We just want the render process created at this point so that we can do our bindings.
-	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings);
+	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings, nullptr);
 	
 	if (browser_.get() == nullptr)
 	{

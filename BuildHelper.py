@@ -116,8 +116,11 @@ def setup(ARGUMENTS):
 		cpp_paths.append(dependenciesDirectory + 'assimp/include')
 		
 		if (buildFlags['useCef']):
-			# For installations of cef3 to '/usr/local/include/cef3'
-			cpp_paths.append('/usr/local/include/cef3')
+			# For cef_client compilation
+			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
+			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
+			# For glr compilation
+			cpp_paths.append(dependenciesDirectory + 'cef3/')
 			cpp_paths.append(dependenciesDirectory + 'cef3/include')
 	else:
 		if isWindows:
