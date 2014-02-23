@@ -37,7 +37,10 @@ def setupDependencies():
 	cefDllWrapperLib = 'cef_dll_wrapper'
 	boostLogLib = 'boost_log'
 	boostLogSetupLib = 'boost_log_setup'
+	boostDateTimeLib = 'boost_date_time'
+	boostChronoLib = 'boost_chrono'
 	boostSystemLib = 'boost_system'
+	boostFilesystemLib = 'boost_filesystem'
 	boostThreadLib = 'boost_thread'
 	
 	if (isWindows):
@@ -45,7 +48,10 @@ def setupDependencies():
 		cefDllWrapperLib = 'libcef_dll_wrapper'
 		boostLogLib = 'libboost_log-vc120-mt-1_55'
 		boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
+		boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
+		boostChronoLib = 'libboost_chrono-vc120-mt-1_55'
 		boostSystemLib = 'libboost_system-vc120-mt-1_55'
+		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
 		boostThreadLib = 'libboost_thread-vc120-mt-1_55'
 
 
@@ -54,10 +60,18 @@ def setupDependencies():
 	libraries.append(cefDllWrapperLib)
 	libraries.append(boostLogLib)
 	libraries.append(boostLogSetupLib)
+	libraries.append(boostDateTimeLib)
+	libraries.append(boostChronoLib)
 	libraries.append(boostSystemLib);
+	libraries.append(boostFilesystemLib)
 	libraries.append(boostThreadLib);
 	
 	### Set our library paths
+	library_paths.append('../' + dependenciesDirectory + 'assimp/lib')
+	library_paths.append('../' + dependenciesDirectory + 'boost/lib')
+	library_paths.append('../' + dependenciesDirectory + 'freeimage/lib')
+	library_paths.append('../' + dependenciesDirectory + 'cef3/Release')
+
 	library_paths.append('../lib')
 	#library_paths.append('../lib_d')
 

@@ -107,19 +107,25 @@ def setup(ARGUMENTS):
 		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
 		
-		# TODO: Properly include glr header files
-		cpp_paths.append('../../src')
-		cpp_paths.append('../src')
+		# TODO: Properly include header files
 		
+		# For cef_client compilation
+		cpp_paths.append('../../src')
+		cpp_paths.append('../' + dependenciesDirectory + 'freeimage/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'assimp/include')
+		
+		if (buildFlags['useCef']):
+			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
+			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
+		
+		# For glr compilation
+		cpp_paths.append('../src')
 		cpp_paths.append(dependenciesDirectory + 'freeimage/include')
 		cpp_paths.append(dependenciesDirectory + 'boost/include')
 		cpp_paths.append(dependenciesDirectory + 'assimp/include')
 		
 		if (buildFlags['useCef']):
-			# For cef_client compilation
-			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
-			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
-			# For glr compilation
 			cpp_paths.append(dependenciesDirectory + 'cef3/')
 			cpp_paths.append(dependenciesDirectory + 'cef3/include')
 	else:

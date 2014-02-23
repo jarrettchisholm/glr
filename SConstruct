@@ -27,6 +27,7 @@ def setupDependencies():
 	boostLogLib = 'boost_log'
 	boostLogSetupLib = 'boost_log_setup'
 	boostDateTimeLib = 'boost_date_time'
+	boostChronoLib = 'boost_chrono'
 	boostThreadLib = 'boost_thread'
 	boostWaveLib = 'boost_wave'
 	boostRegexLib = 'boost_regex'
@@ -42,6 +43,7 @@ def setupDependencies():
 		boostLogLib = 'libboost_log-vc120-mt-1_55'
 		boostLogSetupLib = 'libboost_log_setup-vc120-mt-1_55'
 		boostDateTimeLib = 'libboost_date_time-vc120-mt-1_55'
+		boostChronoLib = 'libboost_chrono-vc120-mt-1_55'
 		boostThreadLib = 'libboost_thread-vc120-mt-1_55'
 		boostWaveLib = 'libboost_wave-vc120-mt-1_55'
 		boostRegexLib = 'libboost_regex-vc120-mt-1_55'
@@ -61,6 +63,7 @@ def setupDependencies():
 	libraries.append(boostLogLib)
 	libraries.append(boostLogSetupLib)
 	libraries.append(boostDateTimeLib)
+	libraries.append(boostChronoLib)
 	libraries.append(boostThreadLib)
 	libraries.append(boostWaveLib)
 	libraries.append(boostRegexLib)
