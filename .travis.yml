@@ -2,6 +2,8 @@ language: cpp
 compiler:
   - gcc
   - clang
+env:
+  - SCONS_NUM_JOBS=2
 before_install:
   - if test $CC = gcc; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
   - sudo apt-get update -qq

@@ -20,6 +20,7 @@ buildFlags['useCef'] = True
 buildFlags['beautify'] = False
 buildFlags['clean'] = False
 buildFlags['buildType'] = 'debug'
+buildFlags['num_jobs'] = multiprocessing.cpu_count()
 
 dependenciesDirectory = 'deps/'
 
@@ -55,6 +56,13 @@ def setup(ARGUMENTS):
 		buildFlags['beautify'] = True
 	if (GetOption('clean') is True):
 		buildFlags['clean'] = True
+	# TODO: num_jobs seems to default to 1 - how can I know if the user is actually setting this value?
+	if (GetOption('num_jobs') > 1):
+		buildFlags['num_jobs'] = GetOption('num_jobs')
+	
+	# Override - useful for limiting the number of cpus used for CI builds (i.e. travis ci)
+	if (os.environ.get('SCONS_NUM_JOBS')):
+		buildFlags['num_jobs'] = os.environ.get('SCONS_NUM_JOBS')
 	
 	if (buildFlags['buildType'] is None or buildFlags['buildType'] == ''):
 		buildFlags['buildType'] = 'debug'

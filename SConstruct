@@ -8,7 +8,6 @@ import json
 import shutil
 import shlex
 import argparse
-import multiprocessing
 
 from colorizer import colorizer
 from BuildHelper import *
@@ -93,8 +92,8 @@ def setupEnvironment(env):
 	env.Append( CPPPATH = cpp_paths )
 	env.Append( LINKFLAGS = link_flags )
 	
-	#env.SetOption('num_jobs', multiprocessing.cpu_count())
-	
+	env.SetOption('num_jobs', buildFlags['num_jobs'])
+	print(buildFlags['num_jobs'])
 	if isLinux:
 		# Set our runtime library locations
 		env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', '.')))
