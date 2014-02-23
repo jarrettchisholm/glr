@@ -1,7 +1,6 @@
 language: cpp
 compiler:
   - gcc
-  - clang
 env:
   - SCONS_NUM_JOBS=2
 before_install:
