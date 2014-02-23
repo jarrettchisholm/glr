@@ -118,12 +118,20 @@ def setup(ARGUMENTS):
 		# TODO: Properly include header files
 		
 		# For cef_client compilation
-		cpp_paths.append('../../src')
 		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
 		
 		if (buildFlags['useCef']):
 			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
 			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
+		
+		# For glr tests compilation
+		cpp_paths.append('../' + dependenciesDirectory + 'freeimage/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'assimp/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'glm/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'glew/include')
+		cpp_paths.append('../' + dependenciesDirectory + 'sfml/include')
+		
 		
 		# For glr compilation
 		cpp_paths.append('../src')

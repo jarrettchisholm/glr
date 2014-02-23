@@ -470,7 +470,7 @@ data createCefBrowserTest()
 	
 	d.client = new Client();
 	
-	d.browser = CefBrowserHost::CreateBrowserSync(windowInfo, d.client, std::string("http://www.google.com"), browserSettings);
+	d.browser = CefBrowserHost::CreateBrowserSync(windowInfo, d.client, std::string("http://www.google.com"), browserSettings, nullptr);
 	
 	return d;
 }
