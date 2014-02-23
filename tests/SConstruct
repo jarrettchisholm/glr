@@ -76,6 +76,7 @@ def setupDependencies():
 	library_paths.append('../' + dependenciesDirectory + 'freeimage/lib')
 	library_paths.append('../' + dependenciesDirectory + 'cef3/Release')
 	library_paths.append('../' + dependenciesDirectory + 'sfml/lib')
+	library_paths.append('../' + dependenciesDirectory + 'glew/lib')
 
 	library_paths.append('../lib')
 	library_paths.append('../build')
@@ -161,6 +162,12 @@ def copyResources():
 		pass
 	try:
 		for filename in glob.glob(os.path.join('../' + dependenciesDirectory + 'boost/lib/', '*.*')):
+			shutil.copy(filename, './build/')
+	except:
+		#print('Failed to copy cef wrapper!')
+		pass
+	try:
+		for filename in glob.glob(os.path.join('../' + dependenciesDirectory + 'glew/lib/', '*.*')):
 			shutil.copy(filename, './build/')
 	except:
 		#print('Failed to copy cef wrapper!')
