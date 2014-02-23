@@ -72,12 +72,13 @@ def setupDependencies():
 		libraries.append( 'Xi' )
 	
 	### Set our library paths
-	library_paths.append('../glr/build')
+	library_paths.append(dependenciesDirectory + 'assimp/lib')
+	library_paths.append(dependenciesDirectory + 'boost/lib')
+	library_paths.append(dependenciesDirectory + 'freeimage/lib')
+	library_paths.append(dependenciesDirectory + 'cef3/Release')
+	
 	library_paths.append('./lib')
 	#library_paths.append('./lib_d')
-
-	cpp_defines.append( ('PACKAGE_VERSION', '\\"0.0.1\\"' ) )
-	cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
 
 def setupEnvironment(env):
 	col = colorizer()

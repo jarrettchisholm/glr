@@ -24,6 +24,10 @@
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 
+// Need to include this before other wave/phoenix includes
+// @see https://groups.google.com/forum/#!msg/boost-list/3xZDWUyTJG0/IEF2wTy1EIsJ
+#include <boost/phoenix/core/limits.hpp>
+
 #include <boost/wave/token_ids.hpp>
 #include <boost/wave/util/macro_helpers.hpp>
 #include <boost/wave/preprocessing_hooks.hpp>
