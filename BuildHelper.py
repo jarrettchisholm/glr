@@ -111,9 +111,7 @@ def setup(ARGUMENTS):
 		
 		# For cef_client compilation
 		cpp_paths.append('../../src')
-		cpp_paths.append('../' + dependenciesDirectory + 'freeimage/include')
 		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'assimp/include')
 		
 		if (buildFlags['useCef']):
 			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
@@ -124,6 +122,9 @@ def setup(ARGUMENTS):
 		cpp_paths.append(dependenciesDirectory + 'freeimage/include')
 		cpp_paths.append(dependenciesDirectory + 'boost/include')
 		cpp_paths.append(dependenciesDirectory + 'assimp/include')
+		cpp_paths.append(dependenciesDirectory + 'glm/include')
+		cpp_paths.append(dependenciesDirectory + 'glew/include')
+		cpp_paths.append(dependenciesDirectory + 'sfml/include')
 		
 		if (buildFlags['useCef']):
 			cpp_paths.append(dependenciesDirectory + 'cef3/')

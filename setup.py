@@ -7,10 +7,18 @@ import shutil
 
 
 files = dict()
+# Format
+# Note: The only reason for the 'Regex for Dir' is because I can't delete from bintray at the moment, so I can't rename the directory in the zipped file and reupload.
+#
+# [Display Name]			= [URL, 																				Save Filename,		Regex for Dir, 	New Name for Dir]
 files['Boost 1.55'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/boost_1.55_x64.tar.gz', 				'boost.tar.gz', 	'boost', 		'boost']
 files['FreeImage 3.15.1'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/freeimage_3.15.1_linux_x64.tar.gz', 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
 files['AssImp 3.0.1270'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/assimp_3.0.1270_linux_x64.tar.gz', 	'assimp.tar.gz', 	'assimp', 		'assimp']
 files['CEF3 3.1650.1562'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/cef3_3.1650.1562_linux_x64.tar.gz', 	'cef3.tar.gz', 		'cef', 			'cef3']
+files['GLM 0.9.5.2'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glm_0.9.5.2.tar.gz', 					'glm.tar.gz', 		'glm', 			'glm']
+files['GLEW 1.10.0'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glew_1.10.0_linux_x64.tar.gz', 		'glew.tar.gz', 		'glew', 		'glew']
+files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/sfml_2.1_linux_x64.tar.gz', 			'sfml.tar.gz', 		'sfml', 		'sfml']
+# TODO: glm, sfml, glew
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
 
@@ -57,7 +65,6 @@ def extract():
 			folders = [f for f in glob.glob(dependenciesDirectory + files[k][2] + '*') if os.path.isdir(f)]
 			for f in folders:
 				os.rename(f, dependenciesDirectory+files[k][3])
-	print("\n")
 
 def build():
 	"""Build any dependencies"""
