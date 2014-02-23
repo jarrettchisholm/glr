@@ -12,5 +12,6 @@ before_install:
   - if test $CC = gcc; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 20; fi
   - if test $CC = gcc; then sudo update-alternatives --config gcc; fi
   - if test $CC = gcc; then sudo update-alternatives --config g++; fi
+install:
   - python setup.py
-script: scons
+script: build_and_test.py

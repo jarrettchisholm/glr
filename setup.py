@@ -1,3 +1,5 @@
+#! /bin/python
+
 import urllib2
 import tarfile
 import sys, os

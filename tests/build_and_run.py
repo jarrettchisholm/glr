@@ -3,7 +3,7 @@ import shlex
 
 args = ''
 for arg in sys.argv:
-	if (arg != 'build_and_run.py'):
+	if (arg != 'tests/build_and_run.py' and arg != 'build_and_run.py'):
 		args += ' ' + arg
 
 subprocess.call( 'scons ' + args, shell=True)
