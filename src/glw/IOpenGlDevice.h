@@ -1,10 +1,3 @@
-/*
- * IOpenGlDevice.h
- *
- *  Created on: 2011-05-06
- *      Author: jarrett
- */
-
 #ifndef IOPENGLDEVICE_H_
 #define IOPENGLDEVICE_H_
 
@@ -12,6 +5,7 @@
 
 #include <GL/glew.h>
 
+#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 
 #include "shaders/IShaderProgramManager.h"
@@ -23,8 +17,10 @@
 
 #include "Constants.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class IMeshManager;
 class IAnimationManager;
@@ -45,7 +41,8 @@ struct GlError
 /**
  * Used to pass in OpenGlDeviceSettings settings (so we don't have to have a method with a whole ton of parameters).
  */
-struct OpenGlDeviceSettings {
+struct OpenGlDeviceSettings
+{
 	OpenGlDeviceSettings() : defaultTextureDir(glr::glw::Constants::MODEL_DIRECTORY)
 	{
 	}
@@ -56,7 +53,8 @@ struct OpenGlDeviceSettings {
 /**
  * 
  */
-class IOpenGlDevice {
+class IOpenGlDevice
+{
 public:
 	virtual ~IOpenGlDevice()
 	{
@@ -108,4 +106,5 @@ public:
 
 }
 }
+
 #endif /* IOPENGLDEVICE_H_ */

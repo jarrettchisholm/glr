@@ -1,7 +1,8 @@
 #ifndef IGUICOMPONENT_H_
 #define IGUICOMPONENT_H_
 
-#include "glm/glm.hpp"
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
 
 #include "IGuiObject.h"
 

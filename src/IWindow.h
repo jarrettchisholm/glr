@@ -1,10 +1,3 @@
-/*
- * IWindow.h
- *
- *  Created on: 2011-05-06
- *      Author: jarrett
- */
-
 #ifndef IWINDOW_H_
 #define IWINDOW_H_
 
@@ -18,11 +11,14 @@
 #include <windows.h>
 #endif
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-namespace glr {
+namespace glr
+{
 
-class IWindow {
+class IWindow
+{
 public:
 	virtual ~IWindow()
 	{

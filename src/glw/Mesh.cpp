@@ -1,10 +1,3 @@
-/*
- * Mesh.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #include <sstream>
 
 #include "Mesh.h"
@@ -15,8 +8,10 @@
 
 #include "../exceptions/GlException.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
 {
@@ -299,4 +294,3 @@ std::vector< VertexBoneData >& Mesh::getVertexBoneData()
 
 }
 }
-

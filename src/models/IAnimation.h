@@ -8,6 +8,7 @@
 #ifndef IMODELANIMATION_H_
 #define IMODELANIMATION_H_
 
+#define GLM_FORCE_RADIANS
 #include "glm/gtc/quaternion.hpp"
 
 #include "../glw/shaders/IShaderProgram.h"

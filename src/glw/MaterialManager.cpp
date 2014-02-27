@@ -1,10 +1,3 @@
-/*
- * MaterialManager.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -12,8 +5,11 @@
 #include "MaterialManager.h"
 
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
+
 MaterialManager::MaterialManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 }

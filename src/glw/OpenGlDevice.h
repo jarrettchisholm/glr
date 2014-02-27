@@ -1,12 +1,3 @@
-/*
- * OpenGlDevice.h
- * 
- * A wrapper around OpenGL.
- *
- *  Created on: 2013-04-01
- *      Author: jarrett
- */
-
 #ifndef OPENGLDEVICE_H_
 #define OPENGLDEVICE_H_
 
@@ -24,10 +15,13 @@
 
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
-class OpenGlDevice : public IOpenGlDevice {
+class OpenGlDevice : public IOpenGlDevice
+{
 public:
 	OpenGlDevice(OpenGlDeviceSettings settings);
 	virtual ~OpenGlDevice();
@@ -97,4 +91,5 @@ private:
 
 }
 }
+
 #endif /* OPENGLDEVICE_H_ */

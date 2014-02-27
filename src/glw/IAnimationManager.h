@@ -1,10 +1,3 @@
-/*
- * IAnimationManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IANIMATIONMANAGER_H_
 #define IANIMATIONMANAGER_H_
 
@@ -12,8 +5,10 @@
 
 #include "Animation.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class Animation;
 

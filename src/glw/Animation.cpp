@@ -1,12 +1,6 @@
-/*
- * Animation.cpp
- *
- *  Created on: 2012-05-08
- *	  Author: jarrett
- */
-
 #include <sstream>
 
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 

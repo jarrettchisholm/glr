@@ -1,10 +1,3 @@
-/*
- * ISceneManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef ISCENEMANAGER_H_
 #define ISCENEMANAGER_H_
 

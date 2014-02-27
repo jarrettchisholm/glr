@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "common/logger/Logger.h"
@@ -180,11 +181,11 @@ void BasicSceneNode::rotate(const glm::detail::float32 degrees, const glm::vec3&
 	switch( relativeTo )
 	{
 		case TransformSpace::TS_LOCAL:
-			orientationQuaternion_ = glm::normalize( glm::angleAxis(degrees, axis) ) * orientationQuaternion_;
+			orientationQuaternion_ = glm::normalize( glm::angleAxis(glm::radians(degrees), axis) ) * orientationQuaternion_;
 			break;
 		
 		case TransformSpace::TS_WORLD:
-			orientationQuaternion_ =  orientationQuaternion_ * glm::normalize( glm::angleAxis(degrees, axis) );
+			orientationQuaternion_ =  orientationQuaternion_ * glm::normalize( glm::angleAxis(glm::radians(degrees), axis) );
 			break;
 			
 		default:
@@ -231,9 +232,9 @@ void BasicSceneNode::render()
 			
 			newModel = newModel * glm::mat4_cast( orientationQuaternion_ );
 			
-			//newModel = glm::rotate(newModel, rotation_.x, glm::vec3(1.0f, 0.0f, 0.0f));
-			//newModel = glm::rotate(newModel, rotation_.y, glm::vec3(0.0f, 1.0f, 0.0f));
-			//newModel = glm::rotate(newModel, rotation_.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			//newModel = glm::rotate(newModel, glm::radians(rotation_.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			//newModel = glm::rotate(newModel, glm::radians(rotation_.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			//newModel = glm::rotate(newModel, glm::radians(rotation_.z), glm::vec3(0.0f, 0.0f, 1.0f));
 			newModel = glm::scale(newModel, scale_);
 			
 			

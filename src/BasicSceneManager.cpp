@@ -1,13 +1,8 @@
-/*
- * BasicSceneManager.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
 #include <sstream>
 #include <algorithm>
 #include <functional>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,7 +14,9 @@
 #include "models/ModelManager.h"
 #include "exceptions/RuntimeException.h"
 
-namespace glr {
+namespace glr
+{
+
 BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice) 
 	: shaderProgramManager_(shaderProgramManager), openGlDevice_(openGlDevice)
 {
@@ -318,4 +315,5 @@ ISceneNode* BasicSceneManager::getRootSceneNode()
 {
 	return rootSceneNode_.get();
 }
+
 }

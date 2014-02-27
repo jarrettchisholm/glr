@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "IGraphicsObject.h"
@@ -12,13 +13,16 @@
 #include "../common/logger/Logger.h"
 #include "../common/utilities/ImageLoader.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 /**
  * Used to pass in TextureSettings settings (so we don't have to have a method with a whole ton of parameters).
  */
-struct TextureSettings {
+struct TextureSettings
+{
 	TextureSettings() : textureWrapS(GL_CLAMP_TO_EDGE), textureWrapT(GL_CLAMP_TO_EDGE)
 	{
 	}
@@ -27,7 +31,8 @@ struct TextureSettings {
 	GLint textureWrapT;
 };
 
-class ITexture : public IGraphicsObject {
+class ITexture : public IGraphicsObject
+{
 public:
 	virtual ~ITexture()
 	{

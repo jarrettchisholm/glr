@@ -1,10 +1,3 @@
-/*
- * TextureManager.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -16,8 +9,10 @@
 #include "../exceptions/Exception.h"
 
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 TextureManager::TextureManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {

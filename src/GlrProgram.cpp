@@ -1,10 +1,3 @@
-/*
- * GlrProgram.cpp
- *
- *  Created on: 2013-04-01
- *      Author: jarrett
- */
-
 #include <algorithm>
 
 #include <GL/glew.h>
@@ -21,7 +14,8 @@
 
 #include "gui/cef/Gui.h"
 
-namespace glr {
+namespace glr
+{
 
 GlrProgram::GlrProgram(ProgramSettings settings)
 {

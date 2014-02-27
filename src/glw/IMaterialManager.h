@@ -1,10 +1,3 @@
-/*
- * IMaterialManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IMATERIALMANAGER_H_
 #define IMATERIALMANAGER_H_
 
@@ -12,12 +5,15 @@
 
 #include "Material.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class Material;
 
-class IMaterialManager {
+class IMaterialManager
+{
 public:
 	virtual ~IMaterialManager()
 	{
@@ -39,4 +35,5 @@ public:
 
 }
 }
+
 #endif /* IMATERIALMANAGER_H_ */

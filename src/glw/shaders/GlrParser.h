@@ -18,6 +18,7 @@
 #include <boost/fusion/adapted.hpp>
 #include <map>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace qi = boost::spirit::qi;

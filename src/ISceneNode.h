@@ -1,15 +1,9 @@
-/*
- * ISceneNode.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef ISCENENODE_H_
 #define ISCENENODE_H_
 
 #include <vector>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 

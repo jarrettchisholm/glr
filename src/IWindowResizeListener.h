@@ -2,6 +2,8 @@
 #define IWINDOWRESIZELISTENER_H_
 
 #include <string>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 namespace glr {

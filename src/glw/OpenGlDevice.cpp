@@ -1,10 +1,3 @@
-/*
- * OpenGlDevice.cpp
- *
- *  Created on: 2013-04-01
- *      Author: jarrett
- */
-
 #include <algorithm>
 
 #include <GL/glew.h>
@@ -23,8 +16,10 @@
 #include "MeshManager.h"
 #include "AnimationManager.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 OpenGlDevice::OpenGlDevice(OpenGlDeviceSettings settings)
 {

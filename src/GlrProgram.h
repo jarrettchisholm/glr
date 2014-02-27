@@ -1,10 +1,3 @@
-/*
- * GlrProgram.h
- *
- *  Created on: 2013-04-01
- *      Author: jarrett
- */
-
 #ifndef GLRPROGRAM_H_
 #define GLRPROGRAM_H_
 
@@ -29,7 +22,8 @@
 #include "glw/shaders/IShaderProgramBindListener.h"
 
 
-namespace glr {
+namespace glr
+{
 
 /**
  * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).

@@ -1,13 +1,3 @@
-/*
- * Mesh.h
- * 
- * A class that contains mesh data, and can load this data into OpenGL, as well as render that data
- * once it has been transferred.
- * 
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef MESH_H_
 #define MESH_H_
 
@@ -27,12 +17,19 @@
 #include "../common/utilities/Macros.h"
 
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 class IOpenGlDevice;
-	
-class Mesh : public IMesh {
+
+/**
+ * A class that contains mesh data, and can load this data into OpenGL, as well as render that data
+ * once it has been transferred.
+ */
+class Mesh : public IMesh
+{
 public:
 	/**
 	 * Basic constructor.  The creator of the Mesh will have to set the data, and then call
@@ -111,4 +108,5 @@ protected:
 
 }
 }
+
 #endif /* MESH_H_ */

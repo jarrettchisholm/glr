@@ -1,14 +1,15 @@
-
-
 #ifndef GLR_GLW_CONSTANTS_H_
 #define GLR_GLW_CONSTANTS_H_
 
 #include <string>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 namespace glmd = glm::detail;
 
@@ -23,4 +24,5 @@ public:
 
 }
 }
+
 #endif /* GLR_GLW_CONSTANTS_H_ */

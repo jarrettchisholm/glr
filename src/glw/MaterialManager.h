@@ -1,10 +1,3 @@
-/*
- * MaterialManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef MATERIALMANAGER_H_
 #define MATERIALMANAGER_H_
 
@@ -20,9 +13,12 @@
 
 #include "Material.h"
 
-namespace glr {
-namespace glw {
-class MaterialManager : public IMaterialManager {
+namespace glr
+{
+namespace glw
+{
+class MaterialManager : public IMaterialManager
+{
 public:
 	MaterialManager(IOpenGlDevice* openGlDevice);
 	virtual ~MaterialManager();
@@ -43,6 +39,8 @@ private:
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;
 };
+
 }
 }
+
 #endif /* MATERIALMANAGER_H_ */

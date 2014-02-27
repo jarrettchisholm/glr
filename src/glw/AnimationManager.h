@@ -1,10 +1,3 @@
-/*
- * AnimationManager.h
- *
- *  Created on: 2013-05-13
- *      Author: jarrett
- */
-
 #ifndef ANIMATIONMANAGER_H_
 #define ANIMATIONMANAGER_H_
 
@@ -16,8 +9,10 @@
 
 #include "IOpenGlDevice.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class Animation;
 
@@ -38,4 +33,5 @@ private:
 
 }
 }
+
 #endif /* ANIMATIONMANAGER_H_ */

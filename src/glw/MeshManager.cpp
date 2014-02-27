@@ -1,10 +1,3 @@
-/*
- * MeshManager.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -12,8 +5,10 @@
 #include "MeshManager.h"
 
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 MeshManager::MeshManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {

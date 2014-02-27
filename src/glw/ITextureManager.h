@@ -1,10 +1,3 @@
-/*
- * ITextureManager.h
- *
- *  Created on: 2013-04-13
- *      Author: jarrett
- */
-
 #ifndef ITEXTUREMANAGER_H_
 #define ITEXTUREMANAGER_H_
 
@@ -17,13 +10,16 @@
 
 #include "../common/utilities/ImageLoader.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 class Texture2D;
 class Texture2DArray;
 	
-class ITextureManager {
+class ITextureManager
+{
 public:
 	virtual ~ITextureManager()
 	{
@@ -53,4 +49,5 @@ public:
 
 }
 }
+
 #endif /* ITEXTUREMANAGER_H_ */

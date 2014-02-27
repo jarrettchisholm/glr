@@ -1,10 +1,3 @@
-/*
- * Material.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 
@@ -14,6 +7,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "IOpenGlDevice.h"
@@ -23,8 +17,10 @@
 
 #include "../common/utilities/Macros.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 class IOpenGlDevice;
 	
@@ -38,7 +34,8 @@ struct MaterialData
 	//glm::detail::float32 strength;
 };
 	
-class Material : public IMaterial {
+class Material : public IMaterial
+{
 public:
 	Material(IOpenGlDevice* openGlDevice, const std::string& name);
 	Material(
@@ -96,4 +93,5 @@ private:
 
 }
 }
+
 #endif /* MATERIAL_H_ */

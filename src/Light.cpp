@@ -1,10 +1,3 @@
-/*
- * Light.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #include <iostream>
 
 #ifdef _WIN32
@@ -13,9 +6,9 @@
 
 #include <GL/glew.h>
 
+#define GLM_FORCE_RADIANS
 #include "glm/gtc/type_ptr.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "glm/gtc/quaternion.hpp"
 
 #include "Light.h"
 
@@ -23,7 +16,8 @@
 
 #include "common/math/Math.h"
 
-namespace glr {
+namespace glr
+{
 
 Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 {

@@ -1,10 +1,3 @@
-/*
- * MeshManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef MESHMANAGER_H_
 #define MESHMANAGER_H_
 
@@ -18,10 +11,13 @@
 
 #include "Mesh.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
-class MeshManager : public IMeshManager {
+class MeshManager : public IMeshManager
+{
 public:
 	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
@@ -53,4 +49,5 @@ private:
 
 }
 }
+
 #endif /* MESHMANAGER_H_ */

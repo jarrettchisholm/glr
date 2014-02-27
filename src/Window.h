@@ -1,10 +1,3 @@
-/*
- * Window.h
- *
- *  Created on: 2011-05-06
- *      Author: jarrett
- */
-
 #ifndef GLWINDOW_H_
 #define GLWINDOW_H_
 
@@ -14,7 +7,8 @@
 
 #include "IWindow.h"
 
-namespace glr {
+namespace glr
+{
 
 namespace glmd = glm::detail;
 
@@ -55,4 +49,5 @@ private:
 };
 
 }
+
 #endif /* GLWINDOW_H_ */

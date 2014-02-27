@@ -12,6 +12,7 @@
 
 #include <SFML/OpenGL.hpp>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -21,7 +22,8 @@
 
 #include "exceptions/Exception.h"
 
-namespace glr {
+namespace glr
+{
 
 Window::Window(int width, int height, std::string title): width_(width), height_(height)
 {

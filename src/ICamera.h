@@ -1,17 +1,12 @@
-/*
- * ICamera.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef ICAMERA_H_
 #define ICAMERA_H_
 
 #include "ISceneNode.h"
 
-namespace glr {
-class ICamera : public virtual ISceneNode {
+namespace glr
+{
+class ICamera : public virtual ISceneNode 
+{
 public:
 	virtual ~ICamera()
 	{
@@ -26,5 +21,7 @@ public:
 
 	virtual const glm::mat4& getViewMatrix() = 0;
 };
+
 }
+
 #endif /* ICAMERA_H_ */

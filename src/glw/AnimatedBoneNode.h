@@ -1,21 +1,17 @@
-/*
- * AnimatedBoneNode.h
- *
- *  Created on: 2012-05-08
- *      Author: jarrett
- */
-
 #ifndef ANIMATEDBONENODE_H_
 #define ANIMATEDBONENODE_H_
 
 #include <string>
 #include <vector>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class AnimatedBoneNode {
 public:

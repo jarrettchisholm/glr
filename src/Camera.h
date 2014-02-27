@@ -1,15 +1,5 @@
-/*
- * Camera.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef GLR_CAMERA_H_
 #define GLR_CAMERA_H_
-
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
 
 #include "ICamera.h"
 #include "BasicSceneNode.h"

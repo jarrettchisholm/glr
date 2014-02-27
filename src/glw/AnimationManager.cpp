@@ -1,10 +1,3 @@
-/*
- * AnimationManager.cpp
- *
- *  Created on: 2013-05-13
- *      Author: jarrett
- */
-
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -12,8 +5,10 @@
 #include "AnimationManager.h"
 
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 	
 AnimationManager::AnimationManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {

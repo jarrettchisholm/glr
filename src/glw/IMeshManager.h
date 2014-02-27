@@ -1,10 +1,3 @@
-/*
- * IMeshManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IMESHMANAGER_H_
 #define IMESHMANAGER_H_
 
@@ -12,12 +5,15 @@
 
 #include "Mesh.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class Mesh;
 
-class IMeshManager {
+class IMeshManager
+{
 public:
 	virtual ~IMeshManager()
 	{
@@ -47,4 +43,5 @@ public:
 
 }
 }
+
 #endif /* IMESHMANAGER_H_ */

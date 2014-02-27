@@ -1,12 +1,6 @@
-/*
- * Material.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #include <sstream>
 
+#define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../common/utilities/AssImpUtilities.h"
@@ -15,8 +9,10 @@
 
 #include "Material.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 Material::Material(IOpenGlDevice* openGlDevice, const std::string& name)
 	: openGlDevice_(openGlDevice), name_(name), bufferId_(0)

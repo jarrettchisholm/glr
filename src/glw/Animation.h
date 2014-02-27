@@ -1,10 +1,3 @@
-/*
- * Animation.h
- *
- *  Created on: 2012-05-08
- *      Author: jarrett
- */
-
 #ifndef ANIMATION_H_
 #define ANIMATION_H_
 
@@ -13,6 +6,7 @@
 
 #include <GL/glew.h>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "IAnimation.h"
@@ -24,8 +18,10 @@
 
 #include "../common/utilities/Macros.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 namespace glmd = glm::detail;
 

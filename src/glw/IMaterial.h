@@ -1,8 +1,10 @@
 #ifndef IMATERIAL_H_
 #define IMATERIAL_H_
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 class IMaterial {
 public:

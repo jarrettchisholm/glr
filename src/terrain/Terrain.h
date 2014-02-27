@@ -1,9 +1,6 @@
 #ifndef TERRAIN_H_
 #define TERRAIN_H_
 
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
-
 #include "ITerrain.h"
 #include "BasicSceneNode.h"
 

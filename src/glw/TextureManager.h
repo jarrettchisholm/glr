@@ -1,10 +1,3 @@
-/*
- * TextureManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef TEXTUREMANAGER_H_
 #define TEXTUREMANAGER_H_
 
@@ -16,10 +9,13 @@
 
 #include "ITextureManager.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
-class TextureManager : public ITextureManager {
+class TextureManager : public ITextureManager
+{
 public:
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
@@ -43,4 +39,5 @@ private:
 
 }
 }
+
 #endif /* TEXTUREMANAGER_H_ */

@@ -123,9 +123,9 @@ def copyResources():
 	if buildFlags['useCef']:
 		try:
 			if (not os.path.exists('./build/locales')):
-				shutil.copytree('../cef_locales/locales', 'build/locales')
-				shutil.copyfile('../cef_locales/cef.pak', 'build/cef.pak')
-				shutil.copyfile('../cef_locales/devtools_resources.pak', 'build/devtools_resources.pak')
+				shutil.copytree('../' + dependenciesDirectory + 'cef3/Resources/locales', 'build/locales')
+				shutil.copyfile('../' + dependenciesDirectory + 'cef3/Resources/cef.pak', 'build/cef.pak')
+				shutil.copyfile('../' + dependenciesDirectory + 'cef3/Resources/devtools_resources.pak', 'build/devtools_resources.pak')
 				os.chmod('build/', 0755)
 				print("Copied CEF locale data");
 		except:

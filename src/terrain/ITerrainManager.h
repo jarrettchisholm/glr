@@ -10,8 +10,6 @@
 
 #include <string>
 
-#include <glm/glm.hpp>
-
 #include "ITerrain.h"
 
 namespace glr {

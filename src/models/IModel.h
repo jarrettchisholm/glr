@@ -1,8 +1,6 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-#include "glm/gtc/quaternion.hpp"
-
 #include "IAnimation.h"
 
 #include "../glw/shaders/IShaderProgram.h"

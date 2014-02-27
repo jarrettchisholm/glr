@@ -1,15 +1,9 @@
-/*
- * GraphicsEngine.cpp
- *
- *  Created on: 2011-05-06
- *      Author: jarrett
- */
-
 #include "GraphicsEngine.h"
 
 #include "Window.h"
 
-namespace glr {
+namespace glr
+{
 /**
  *
  */
@@ -24,4 +18,5 @@ std::unique_ptr<GlrProgram> GraphicsEngine::createProgram(ProgramSettings settin
 
 	return program;
 }
+
 }

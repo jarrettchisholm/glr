@@ -5,16 +5,20 @@
 
 #include "../common/utilities/Macros.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
-struct BoneNode {
+struct BoneNode
+{
 	std::string name;
 	glm::mat4 transformation;
 	std::vector< BoneNode > children;
 };
 
-class IAnimation {
+class IAnimation
+{
 public:
 	virtual ~IAnimation()
 	{

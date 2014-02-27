@@ -5,14 +5,17 @@
 #include <iostream>
 #include <sstream>
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "IGraphicsObject.h"
 
 #include "../common/logger/Logger.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 struct VertexBoneData
 {
@@ -109,13 +112,15 @@ struct VertexBoneData
 };
 
 // Bone information
-struct Bone {
+struct Bone
+{
 	std::string name;
 	glm::mat4 boneOffset;
 	glm::mat4 finalTransformation;
 };
 
-struct BoneData {
+struct BoneData
+{
 	std::string name;
 	std::map< std::string, glm::detail::uint32 > boneIndexMap;
 	std::vector< Bone > boneTransform;
@@ -124,7 +129,8 @@ struct BoneData {
 /**
  * Represents a Mesh which can be rendered in the scene.
  */
-class IMesh : public IGraphicsObject {
+class IMesh : public IGraphicsObject
+{
 public:
 	virtual ~IMesh()
 	{
