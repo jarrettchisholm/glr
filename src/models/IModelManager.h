@@ -1,10 +1,3 @@
-/*
- * IModelManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef IMODELMANAGER_H_
 #define IMODELMANAGER_H_
 
@@ -14,10 +7,13 @@
 
 #include "../glw/Mesh.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
-class IModelManager {
+class IModelManager
+{
 public:
 	virtual ~IModelManager()
 	{
@@ -48,4 +44,5 @@ public:
 
 }
 }
+
 #endif /* IMODELMANAGER_H_ */

@@ -1,14 +1,9 @@
-/*
- * FpsCamera.cpp
- *
- *  Created on: 2013-06-19
- *      Author: jarrett
- */
-
 #include "FpsCamera.h"
 
-namespace glr {
-namespace extras {
+namespace glr
+{
+namespace extras
+{
 	
 FpsCamera::FpsCamera(const std::string name, glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(name, openGlDevice), speed_(speed)
 {

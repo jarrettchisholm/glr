@@ -1,4 +1,6 @@
-#ifdef _WIN32
+#include "../Configure.h"
+
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 

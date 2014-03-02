@@ -4,12 +4,11 @@
 #include "ICamera.h"
 #include "BasicSceneNode.h"
 
-//#include "IInputListener.h"
-
 namespace glr
 {
 
-class Camera : public virtual ICamera, public BasicSceneNode {
+class Camera : public virtual ICamera, public BasicSceneNode
+{
 public:
 	Camera(glw::IOpenGlDevice* openGlDevice);
 	virtual ~Camera();

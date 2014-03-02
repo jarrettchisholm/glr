@@ -5,9 +5,10 @@
 #include "../exceptions/GlException.h"
 #include "../exceptions/FormatException.h"
 
-
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {

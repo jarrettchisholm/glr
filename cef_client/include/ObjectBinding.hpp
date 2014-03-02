@@ -1,20 +1,15 @@
-/*
- * ObjectBinding.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
-#include "FunctionBinding.h"
-#include "AttributeBinding.h"
-
-#include "ExceptionList.h"
-
 #ifndef OBJECTBINDING_H_
 #define OBJECTBINDING_H_
 
-namespace glr {
-namespace cef_client {
+#include "FunctionBinding.hpp"
+#include "AttributeBinding.hpp"
+
+#include "ExceptionList.hpp"
+
+namespace glr
+{
+namespace cef_client
+{
 
 class ObjectBinding : public CefV8Handler
 {

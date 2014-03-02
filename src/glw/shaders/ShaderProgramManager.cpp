@@ -1,10 +1,3 @@
-/*
- * ShaderProgramManager.cpp
- *
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #include <sstream>
 #include <algorithm>
 #include <boost/regex.hpp>
@@ -12,7 +5,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../exceptions/FormatException.h"
 
@@ -21,10 +14,13 @@
 #include "ShaderData.h"
 #include "Constants.h"
 
+namespace glr
+{
+namespace shaders
+{
+
 namespace alg = boost::algorithm;
 
-namespace glr {
-namespace shaders {
 ShaderProgramManager::ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, bool autoLoad, std::vector<IShaderProgramBindListener*> defaultBindListeners) : openGlDevice_(openGlDevice)
 {
 	defaultBindListeners_ = defaultBindListeners;
@@ -55,12 +51,12 @@ void ShaderProgramManager::reloadShaders()
 		load( dir );
 }
 
-IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string name)
+IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string& name)
 {
 	return glslProgramMap_[ name ].get();
 }
 
-void ShaderProgramManager::loadShaderPrograms(const std::string directory)
+void ShaderProgramManager::loadShaderPrograms(const std::string& directory)
 {
 	loadedShaderDirectories_.push_back( directory );
 	load(directory);
@@ -96,7 +92,7 @@ void ShaderProgramManager::removeAllDefaultBindListeners()
 	defaultBindListeners_.clear();
 }
 
-void ShaderProgramManager::load(const std::string directory)
+void ShaderProgramManager::load(const std::string& directory)
 {
 	return load( fs::path(directory), directory );
 }
@@ -315,7 +311,6 @@ bool ShaderProgramManager::isMisc(std::string s)
 
 	return(boost::regex_match(s, includeRegex));
 }
-
 
 }
 }

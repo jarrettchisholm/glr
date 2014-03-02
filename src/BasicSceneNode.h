@@ -1,10 +1,3 @@
-/*
- * BasicSceneNode.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef BASICSCENENODE_H_
 #define BASICSCENENODE_H_
 
@@ -23,7 +16,8 @@ class BasicSceneManager;
 namespace glr
 {
 
-class BasicSceneNode : public virtual ISceneNode {
+class BasicSceneNode : public virtual ISceneNode
+{
 public:
 	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
 	BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);

@@ -1,10 +1,3 @@
-/*
- * Main.cpp
- *
- *  Created on: 2013-04-04
- *      Author: jarrett
- */
-
 #include "Main.h"
 
 Main::Main()
@@ -73,4 +66,3 @@ int main()
 
 	return 0;
 }
-

@@ -1,20 +1,15 @@
-/*
- * GlrShader.cpp
- *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- *
- */
-
 #include <boost/regex.hpp>
 
 #include "GlrShader.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "GlrPreProcessor.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 GlrShader::GlrShader(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
 {
@@ -91,5 +86,6 @@ bool GlrShader::containsPreProcessorCommands()
 	// TODO: implement
 	return true;
 }
+
 }
 }

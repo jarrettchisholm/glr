@@ -10,8 +10,8 @@
 
 #include "IGraphicsObject.h"
 
-#include "../common/logger/Logger.h"
-#include "../common/utilities/ImageLoader.h"
+#include "../common/logger/Logger.hpp"
+#include "../common/utilities/ImageLoader.hpp"
 
 namespace glr
 {

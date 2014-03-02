@@ -93,7 +93,8 @@ struct ModelData
 /**
  * 
  */
-class IModel {
+class IModel
+{
 public:
 	virtual ~IModel()
 	{

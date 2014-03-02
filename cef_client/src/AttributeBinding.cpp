@@ -1,7 +1,9 @@
-#include "AttributeBinding.h"
+#include "AttributeBinding.hpp"
 
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 	
 AttributeBinding::AttributeBinding(std::wstring name) : name_(name)
 {
@@ -34,10 +36,6 @@ AttributeBinding::AttributeBinding(std::wstring name, float valueFloat) : name_(
 AttributeBinding::AttributeBinding(std::wstring name, double valueDouble) : name_(name), valueDouble_(valueDouble), isDouble_(true)
 {
 }
-
-//AttributeBinding::AttributeBinding(std::wstring name, ObjectBinding* valueObject) : name_(name), valueObject_(valueObject), isObject_(true)
-//{
-//}
 
 AttributeBinding::AttributeBinding(std::wstring name, CefRefPtr<CefV8Value> valueV8) : name_(name), valueV8_(valueV8), isV8_(true)
 {

@@ -1,10 +1,3 @@
-/*
- * TerrainManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef TERRAINMANAGER_H_
 #define TERRAINMANAGER_H_
 
@@ -18,17 +11,16 @@
 
 #include "Terrain.h"
 
-namespace glr {
+namespace glr
+{
 	
-class TerrainManager : public ITerrainManager {
+class TerrainManager : public ITerrainManager
+{
 public:
 	TerrainManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~TerrainManager();
 
 	ITerrain* loadTerrain(const std::string path);
-
-	//void testLoadTexture();
-	//void testDrawTest1();
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
@@ -37,4 +29,5 @@ private:
 };
 
 }
+
 #endif /* TERRAINMANAGER_H_ */

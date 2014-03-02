@@ -1,21 +1,17 @@
-/*
- * ModelManager.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
+#include "../Configure.h"
 
-#ifdef _WIN32
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
 #include "ModelManager.h"
 
-#include "../common/utilities/ImageLoader.h"
+#include "../common/utilities/ImageLoader.hpp"
 
-
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
 ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {

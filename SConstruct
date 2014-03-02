@@ -227,24 +227,23 @@ parseShadersIntoHeader()
 VariantDir('build', 'src', duplicate=0)
 
 ### Set our source files
-source_files = Glob('build/*.cpp', 'build/*.h')
+source_files = Glob('build/*.cpp')
 
-source_files = source_files + Glob('build/common/compatibility/*.cpp', 'build/common/compatibility/*.h')
-source_files = source_files + Glob('build/common/math/*.cpp', 'build/common/math/*.h')
-source_files = source_files + Glob('build/common/logger/*.cpp', 'build/common/logger/*.h')
-source_files = source_files + Glob('build/common/utilities/*.cpp', 'build/common/utilities/*.h')
-source_files = source_files + Glob('build/common/io/*.cpp', 'build/common/io/*.h')
-#source_files = source_files + Glob('build/vmath/*.cpp', 'build/vmath/*.h')
+source_files = source_files + Glob('build/common/compatibility/*.cpp')
+source_files = source_files + Glob('build/common/math/*.cpp')
+source_files = source_files + Glob('build/common/logger/*.cpp')
+source_files = source_files + Glob('build/common/utilities/*.cpp')
+source_files = source_files + Glob('build/common/io/*.cpp')
 
-source_files = source_files + Glob('build/*.cpp', 'build/*.h')
-source_files = source_files + Glob('build/exceptions/*.cpp', 'build/exceptions/*.h')
-source_files = source_files + Glob('build/gui/*.cpp', 'build/gui/*.h')
-source_files = source_files + Glob('build/gui/cef/*.cpp', 'build/gui/cef/*.h')
-source_files = source_files + Glob('build/models/*.cpp', 'build/models/*.h')
+source_files = source_files + Glob('build/*.cpp')
+source_files = source_files + Glob('build/exceptions/*.cpp')
+source_files = source_files + Glob('build/gui/*.cpp')
+source_files = source_files + Glob('build/gui/cef/*.cpp')
+source_files = source_files + Glob('build/models/*.cpp')
 
 # OpenGL Wrapper stuff
-source_files = source_files + Glob('build/glw/*.cpp', 'build/glw/*.h')
-source_files = source_files + Glob('build/glw/shaders/*.cpp', 'build/glw/shaders/*.h')
+source_files = source_files + Glob('build/glw/*.cpp')
+source_files = source_files + Glob('build/glw/shaders/*.cpp')
 
 setupDependencies()
 

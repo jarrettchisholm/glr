@@ -2,9 +2,7 @@
 
 #include "Mesh.h"
 
-#include "../common/logger/Logger.h"
-
-#include "../common/utilities/AssImpUtilities.h"
+#include "../common/logger/Logger.hpp"
 
 #include "../exceptions/GlException.h"
 
@@ -290,7 +288,6 @@ std::vector< VertexBoneData >& Mesh::getVertexBoneData()
 {
 	return vertexBoneData_;
 }
-
 
 }
 }

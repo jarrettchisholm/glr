@@ -7,7 +7,8 @@
 namespace glr
 {
 
-class Light : public virtual ILight, public BasicSceneNode {
+class Light : public virtual ILight, public BasicSceneNode
+{
 public:
 	Light(glw::IOpenGlDevice* openGlDevice);
 	Light(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);

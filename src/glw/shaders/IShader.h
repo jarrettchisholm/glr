@@ -1,13 +1,7 @@
-/*
- * IShader.h
- *
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #ifndef ISHADER_H_
 #define ISHADER_H_
 
+#include <utility>
 #include <string>
 #include <vector>
 #include <map>
@@ -21,8 +15,10 @@
 
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 // Reserved vertex attribute locations
 const static std::vector< std::pair< std::string, glmd::uint32> > reservedVertexAttribLocations = {
@@ -34,7 +30,8 @@ const static std::vector< std::pair< std::string, glmd::uint32> > reservedVertex
 	std::pair< std::string, glmd::uint32>( std::string("in_BoneWeights"), 	5)
 };
 
-class IShader {
+class IShader
+{
 public:
 	/**
 	 * The different types of shaders available.
@@ -166,6 +163,8 @@ public:
 	 */
 	virtual BindingsMap getBindings() = 0;
 };
+
 }
 }
+
 #endif /* ISHADER_H_ */

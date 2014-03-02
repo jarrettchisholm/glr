@@ -1,10 +1,3 @@
-/*
- * GlrParser.cpp
- *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- *
- */
-
 #include <cstdlib>
 
 #include <GL/glew.h>
@@ -14,10 +7,12 @@
 #include "../../exceptions/Exception.h"
 #include "../../exceptions/GlException.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 GlrParser::GlrParser(std::string source) : source_(source)
 {

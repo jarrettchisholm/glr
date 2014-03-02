@@ -1,21 +1,23 @@
+#include <iostream>
+
+#include <GL/glew.h>
+
 #define GLM_FORCE_RADIANS
 #include "glm/gtc/type_ptr.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#ifdef _WIN32
+#include "Configure.h"
+
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
 #include "Camera.h"
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
-#include "common/math/Math.h"
-
-#include <GL/glew.h>
-
-#include <iostream>
+#include "common/math/Math.hpp"
 
 namespace glr
 {

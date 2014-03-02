@@ -1,10 +1,3 @@
-/*
- * ModelManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef MODELMANAGER_H_
 #define MODELMANAGER_H_
 
@@ -27,10 +20,13 @@
 
 #include "Model.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
-class ModelManager : public IModelManager {
+class ModelManager : public IModelManager
+{
 public:
 	ModelManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelManager();
@@ -54,4 +50,5 @@ private:
 
 }
 }
+
 #endif /* MODELMANAGER_H_ */

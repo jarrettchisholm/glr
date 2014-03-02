@@ -10,7 +10,8 @@
 namespace glr
 {
 
-class BasicSceneManager : public ISceneManager {
+class BasicSceneManager : public ISceneManager
+{
 public:
 	BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice);
 	virtual ~BasicSceneManager();

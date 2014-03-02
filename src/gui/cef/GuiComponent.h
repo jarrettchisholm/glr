@@ -1,10 +1,3 @@
-/*
- * GuiComponent.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #ifndef GUICOMPONENT_H_
@@ -29,9 +22,12 @@
 
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 
 class RenderHandler : public CefRenderHandler
 {
@@ -216,4 +212,4 @@ public:
 
 #endif /* GUICOMPONENT_H_ */
 
-#endif
+#endif /* USE_CEF */

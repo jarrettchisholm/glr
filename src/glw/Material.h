@@ -15,7 +15,7 @@
 
 #include "IMaterial.h"
 
-#include "../common/utilities/Macros.h"
+#include "../common/utilities/Macros.hpp"
 
 namespace glr
 {
@@ -88,7 +88,7 @@ private:
 	glm::detail::int32 two_sided_;
 	glm::detail::int32 two_sided_true_;
 	glm::detail::int32 wireframe_;
-	glm::detail::uint32 max_;               // changed: to unsigned
+	glm::detail::uint32 max_;
 };
 
 }

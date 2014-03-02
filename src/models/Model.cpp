@@ -1,16 +1,11 @@
-/*
- * Model.cpp
- *
- *  Created on: 2012-09-20
- *      Author: jarrett
- */
-
 #include "Model.h"
 
 #include "../glw/TextureManager.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
 Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
@@ -531,5 +526,3 @@ glw::BoneNode Model::copyBoneNode( BoneNode& n )
 
 }
 }
-
-

@@ -1,19 +1,16 @@
-/*
- * GlrShaderProgram.cpp
- *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- *
- */
 #include "GlrShaderProgram.h"
 
 #include "GlrPreProcessor.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../exceptions/GlException.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
+
 GlrShaderProgram::GlrShaderProgram(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
 {
 }
@@ -79,5 +76,6 @@ std::vector< std::shared_ptr<GlrShader> > GlrShaderProgram::getShaders()
 {
 	return shaders_;
 }
+
 }
 }

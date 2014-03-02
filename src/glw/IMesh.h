@@ -10,7 +10,7 @@
 
 #include "IGraphicsObject.h"
 
-#include "../common/logger/Logger.h"
+#include "../common/logger/Logger.hpp"
 
 namespace glr
 {

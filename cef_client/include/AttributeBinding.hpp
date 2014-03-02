@@ -1,21 +1,16 @@
-/*
- * AttributeBinding.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
+#ifndef ATTRIBUTEBINDING_H_
+#define ATTRIBUTEBINDING_H_
 
 #include <string>
 
 #include <cef_app.h>
 
-#include "Macros.h"
+#include "Macros.hpp"
 
-#ifndef ATTRIBUTEBINDING_H_
-#define ATTRIBUTEBINDING_H_
-
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 
 class AttributeBinding
 {
@@ -28,11 +23,11 @@ public:
 	AttributeBinding(std::wstring name, bool valueBool);
 	AttributeBinding(std::wstring name, float valueFloat);
 	AttributeBinding(std::wstring name, double valueDouble);
-	//AttributeBinding(std::wstring name, ObjectBinding* valueObject);
 	AttributeBinding(std::wstring name, CefRefPtr<CefV8Value> valueV8);
 	
 	virtual ~AttributeBinding();
 
+	// TODO: Get rid of macros for getters and setters
 	GETSET(std::wstring, name_, Name)
 	
 	GETSET(std::wstring, valueWstring_, ValueWstring)
@@ -42,7 +37,6 @@ public:
 	GETSET(bool, valueBool_, ValueBool)
 	GETSET(float, valueFloat_, ValueFloat)
 	GETSET(double, valueDouble_, ValueDouble)
-	//GETSET(ObjectBinding*, valueObject_, ValueObject)
 	GETSET(CefRefPtr<CefV8Value>, valueV8_, ValueV8)
 	
 	GETSET(bool, isWstring_, IsWstring)
@@ -52,7 +46,6 @@ public:
 	GETSET(bool, isBool_, IsBool)
 	GETSET(bool, isFloat_, IsFloat)
 	GETSET(bool, isDouble_, IsDouble)
-	//GETSET(bool, isObject_, IsObject)
 	GETSET(bool, isV8_, IsV8)
 
 private:
@@ -65,7 +58,6 @@ private:
 	bool valueBool_;
 	float valueFloat_;
 	double valueDouble_;
-	//ObjectBinding* valueObject_;
 	CefRefPtr<CefV8Value> valueV8_;
 	
 	bool isWstring_;
@@ -75,7 +67,6 @@ private:
 	bool isBool_;
 	bool isFloat_;
 	bool isDouble_;
-	//bool isObject_;
 	bool isV8_;
 	
 };

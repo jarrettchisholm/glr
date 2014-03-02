@@ -1,10 +1,3 @@
-/*
- * Gui.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #ifndef GUI_H_
@@ -20,11 +13,15 @@
 #include "../../glw/shaders/IShaderProgramManager.h"
 #include "../../glw/IOpenGlDevice.h"
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 
-class Gui : public IGui {
+class Gui : public IGui
+{
 public:
 	Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height);
 	virtual ~Gui();
@@ -63,4 +60,4 @@ private:
 
 #endif /* GUI_H_ */
 
-#endif
+#endif /* USE_CEF */

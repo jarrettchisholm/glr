@@ -1,10 +1,3 @@
-/*
- * IAnimation.h
- *
- *  Created on: 2012-10-20
- *      Author: jarrett
- */
-
 #ifndef IMODELANIMATION_H_
 #define IMODELANIMATION_H_
 
@@ -15,13 +8,16 @@
 
 #include "../glw/IAnimation.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
 /**
  * Class to wrap around the glw::IAnimation class.
  */
-class IAnimation  : public glw::IAnimation {
+class IAnimation  : public glw::IAnimation
+{
 public:
 	virtual ~IAnimation()
 	{
@@ -32,6 +28,8 @@ public:
 
 	
 };
+
 }
 }
+
 #endif /* IMODELANIMATION_H_ */

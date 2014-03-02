@@ -1,12 +1,6 @@
-/*
- * Main.h
- *
- *  Created on: 2013-04-04
- *      Author: jarrett
- */
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
 
-
-#include "glm/glm.hpp"
 #include <SFML/Window.hpp>
 
 #include "GlrInclude.h"
@@ -15,7 +9,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-class Main {
+class Main
+{
 public:
 	Main();
 	virtual ~Main();
@@ -33,4 +28,5 @@ private:
 	void tick();
 	void destroy();
 };
+
 #endif /* MAIN_H */

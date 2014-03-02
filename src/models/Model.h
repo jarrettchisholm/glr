@@ -1,10 +1,3 @@
-/*
- * Model.h
- *
- *  Created on: 2012-09-20
- *      Author: jarrett
- */
-
 #ifndef MODEL_H_
 #define MODEL_H_
 
@@ -31,10 +24,13 @@
 #include "../glw/IMaterial.h"
 #include "../glw/IAnimation.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
-class Model : public IModel {
+class Model : public IModel
+{
 public:
 	Model(glw::IOpenGlDevice* openGlDevice);
 	Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDevice* openGlDevice);
@@ -117,4 +113,5 @@ private:
 
 }
 }
+
 #endif /* MODEL_H_ */

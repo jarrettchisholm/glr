@@ -1,5 +1,5 @@
 #! /bin/python
-# cef_client SConstruct file
+
 import subprocess, sys, os
 import glob
 import multiprocessing
@@ -75,9 +75,6 @@ def setupDependencies():
 	library_paths.append('../lib')
 	#library_paths.append('../lib_d')
 
-	cpp_defines.append( ('PACKAGE_VERSION', '\\"0.0.1\\"' ) )
-	cpp_defines.append( ('PACKAGE_BUGREPORT', '\\"https://github.com/jarrettchisholm/glr/issues\\"') )
-
 def setupEnvironment(env):
 	col = colorizer()
 	col.colorize(env)
@@ -122,8 +119,11 @@ print("Compiling cef_client")
 VariantDir('build', 'src', duplicate=0)
 
 ### Set our source files
-source_files = Glob('build/*.cpp', 'build/*.h')
-source_files += Glob('build/common/logger/*.cpp', 'build/common/logger/*.h')
+source_files = Glob('build/*.cpp')
+source_files += Glob('build/common/logger/*.cpp')
+
+# For glr/cef_client include files
+cpp_paths.append('include')
 
 setupDependencies()
 

@@ -1,17 +1,12 @@
-/*
- * FunctionList.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
-#include <string>
-
 #ifndef FUNCTIONLIST_H_
 #define FUNCTIONLIST_H_
 
-namespace glr {
-namespace cef_client {
+#include <string>
+
+namespace glr
+{
+namespace cef_client
+{
 /*
 enum Function
 {

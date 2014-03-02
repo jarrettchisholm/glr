@@ -1,10 +1,13 @@
 #ifndef IBINDABLE_H_
 #define IBINDABLE_H_
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
-class IBindable {
+class IBindable
+{
 public:
 	virtual ~IBindable()
 	{

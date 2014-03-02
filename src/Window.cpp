@@ -1,10 +1,3 @@
-/*
- * Window.cpp
- *
- *  Created on: 2011-05-06
- *      Author: jarrett
- */
-
 #include <iostream>
 #include <vector>
 
@@ -18,7 +11,7 @@
 
 #include "Window.h"
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
 #include "exceptions/Exception.h"
 

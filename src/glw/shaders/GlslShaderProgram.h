@@ -1,10 +1,3 @@
-/*
- * GlslShaderProgram.h
- * 
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #ifndef GLSLSHADERPROGRAM_H_
 #define GLSLSHADERPROGRAM_H_
 
@@ -20,13 +13,16 @@
 
 #include "GlslShader.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 /**
  * Class representing a 'glsl' shader program.  This is a shader program that holds all of the processed shader source required for this shader program.
  */
-class GlslShaderProgram : public IShaderProgram {
+class GlslShaderProgram : public IShaderProgram
+{
 public:
 	GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice);
 	virtual ~GlslShaderProgram();
@@ -66,4 +62,5 @@ private:
 
 }
 }
+
 #endif /* GLSLSHADERPROGRAM_H_ */

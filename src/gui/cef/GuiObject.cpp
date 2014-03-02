@@ -1,21 +1,17 @@
-/*
- * GuiObject.cpp
- *
- *  Created on: 2012-12-30
- *      Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #include <sstream>
 
 #include "GuiObject.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 
 GuiObject::GuiObject(std::wstring name) : name_(name)
 {
@@ -343,9 +339,8 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 	return variant;
 }
 
-
 }
 }
 }
 
-#endif
+#endif /* USE_CEF */

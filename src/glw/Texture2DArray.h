@@ -2,14 +2,16 @@
 #define TEXTURE2DARRAY_H_
 
 #include <GL/glew.h>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "shaders/IShaderProgram.h"
 #include "IOpenGlDevice.h"
 #include "ITexture.h"
 
-#include "../common/utilities/ImageLoader.h"
-#include "../common/utilities/Macros.h"
+#include "../common/utilities/ImageLoader.hpp"
+#include "../common/utilities/Macros.hpp"
 
 namespace glr {
 namespace glw {

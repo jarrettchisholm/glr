@@ -1,11 +1,6 @@
-/*
- * BasicSceneNode.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
+#include "Configure.h"
 
-#ifdef _WIN32
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
@@ -14,14 +9,14 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
 #include "BasicSceneNode.h"
 
 #include "glw/shaders/GlslShaderProgram.h"
 
-
-namespace glr {
+namespace glr
+{
 
 BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {

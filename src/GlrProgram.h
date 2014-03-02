@@ -6,7 +6,7 @@
 
 #include "Configure.h"
 
-#if defined(OS_WINDOWS)
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
@@ -21,14 +21,14 @@
 #include "glw/shaders/IShaderProgramManager.h"
 #include "glw/shaders/IShaderProgramBindListener.h"
 
-
 namespace glr
 {
 
 /**
  * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).
  */
-struct ProgramSettings {
+struct ProgramSettings
+{
 	ProgramSettings() : defaultTextureDir("")
 	{
 	}
@@ -39,7 +39,8 @@ struct ProgramSettings {
 /**
  * 
  */
-class GlrProgram : public shaders::IShaderProgramBindListener {
+class GlrProgram : public shaders::IShaderProgramBindListener
+{
 public:
 	GlrProgram(ProgramSettings properties = ProgramSettings());
 	virtual ~GlrProgram();
@@ -87,5 +88,7 @@ private:
 	void initialize(ProgramSettings settings);
 	void initializeProperties(ProgramSettings settings);
 };
+
 }
+
 #endif /* GLRPROGRAM_H_ */

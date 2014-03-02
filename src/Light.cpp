@@ -1,6 +1,8 @@
 #include <iostream>
 
-#ifdef _WIN32
+#include "Configure.h"
+
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
@@ -12,9 +14,9 @@
 
 #include "Light.h"
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
-#include "common/math/Math.h"
+#include "common/math/Math.hpp"
 
 namespace glr
 {

@@ -2,22 +2,27 @@
 #define TEXTURE2D_H_
 
 #include <GL/glew.h>
+
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include "shaders/IShaderProgram.h"
 #include "IOpenGlDevice.h"
 #include "ITexture.h"
 
-#include "../common/utilities/Macros.h"
+#include "../common/utilities/Macros.hpp"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 namespace glmd = glm::detail;
 
 class IOpenGlDevice;
 
-class Texture2D : public ITexture {
+class Texture2D : public ITexture
+{
 public:
 	Texture2D(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings = TextureSettings());
 	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings = TextureSettings());
@@ -63,4 +68,5 @@ private:
 
 }
 }
+
 #endif /* TEXTURE2D_H_ */

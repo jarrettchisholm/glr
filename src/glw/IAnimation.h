@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../common/utilities/Macros.h"
+#include "../common/utilities/Macros.hpp"
 
 namespace glr
 {

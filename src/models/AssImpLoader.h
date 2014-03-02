@@ -1,10 +1,3 @@
-/*
- * AssImpLoader.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef ASSIMPLOADER_H_
 #define ASSIMPLOADER_H_
 
@@ -12,10 +5,13 @@
 
 #include "IModel.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
-class AssImpLoader {
+class AssImpLoader
+{
 public:
 	AssImpLoader()
 	{
@@ -32,4 +28,5 @@ public:
 
 }
 }
+
 #endif /* ASSIMPLOADER_H_ */

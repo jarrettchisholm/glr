@@ -26,4 +26,5 @@ public:
 
 }
 }
+
 #endif /* IANIMATIONMANAGER_H_ */

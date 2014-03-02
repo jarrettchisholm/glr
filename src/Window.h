@@ -12,7 +12,8 @@ namespace glr
 
 namespace glmd = glm::detail;
 
-class Window : public IWindow {
+class Window : public IWindow
+{
 public:
 	Window(int width, int height, std::string title);
 	virtual ~Window();

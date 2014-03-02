@@ -1,10 +1,3 @@
-/*
- * GuiObject.h
- *
- *  Created on: 2012-12-30
- *	  Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #ifndef GUIOBJECT_H_
@@ -14,11 +7,15 @@
 
 #include "../IGuiObject.h"
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 	
-class GuiObject : public IGuiObject {
+class GuiObject : public IGuiObject
+{
 public:
 	GuiObject(std::wstring name);
 	virtual ~GuiObject();
@@ -50,7 +47,8 @@ public:
 	boost::any processCallback(std::wstring name, std::vector< boost::any > params);
 
 private:
-	enum FunctionTypes {
+	enum FunctionTypes
+	{
 		TYPE_VOID = 0,
 		TYPE_INT,
 		TYPE_UNSIGNED_INT,
@@ -102,4 +100,4 @@ private:
 
 #endif /* GUIOBJECT_H_ */
 
-#endif
+#endif /* USE_CEF */

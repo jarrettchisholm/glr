@@ -5,6 +5,7 @@
 
 namespace glr
 {
+	
 class ICamera : public virtual ISceneNode 
 {
 public:

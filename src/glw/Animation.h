@@ -16,8 +16,6 @@
 
 #include "IOpenGlDevice.h"
 
-#include "../common/utilities/Macros.h"
-
 namespace glr
 {
 namespace glw
@@ -113,4 +111,5 @@ private:
 
 }
 }
+
 #endif /* ANIMATION_H_ */

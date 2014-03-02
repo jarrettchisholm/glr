@@ -1,16 +1,17 @@
 #include <iostream>
 
-#include "ObjectBinding.h"
+#include "ObjectBinding.hpp"
 
-#include "DuplicateFunctionException.h"
-#include "DuplicateAttributeException.h"
+#include "DuplicateFunctionException.hpp"
+#include "DuplicateAttributeException.hpp"
+#include "FunctionList.hpp"
 
-#include "FunctionList.h"
+#include "common/logger/Logger.hpp"
 
-#include "common/logger/Logger.h"
-
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 
 ObjectBinding::ObjectBinding()
 {

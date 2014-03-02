@@ -1,10 +1,3 @@
-/*
- * GlslShader.h
- * 
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #ifndef GLSLSHADER_H_
 #define GLSLSHADER_H_
 
@@ -17,13 +10,16 @@
 
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 /**
  * Class representing a 'glsl' shader.  This is a shader that contains the final, processed shader source.
  */
-class GlslShader : public IShader {
+class GlslShader : public IShader
+{
 public:
 	GlslShader(std::string source, Type type);
 	GlslShader(std::string name, std::string source, Type type, std::vector< std::pair<std::string, std::string> > bindings, std::vector< std::pair<glmd::int32, std::string> > locationBindings);
@@ -50,4 +46,5 @@ private:
 
 }
 }
+
 #endif /* GLSLSHADER_H_ */

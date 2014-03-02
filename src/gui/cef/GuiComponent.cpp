@@ -15,15 +15,15 @@
 
 #include "GuiObject.h"
 
-#include "../../common/utilities/ImageLoader.h"
-#include "../../common/utilities/BoostAnyUtilities.h"
+#include "../../common/utilities/ImageLoader.hpp"
+#include "../../common/utilities/BoostAnyUtilities.hpp"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../exceptions/ExceptionInclude.h"
 
-#include "../../../cef_client/src/FunctionList.h"
-#include "../../../cef_client/src/ExceptionList.h"
+#include "../../../cef_client/include/FunctionList.hpp"
+#include "../../../cef_client/include/ExceptionList.hpp"
 
 namespace glr {
 namespace gui {

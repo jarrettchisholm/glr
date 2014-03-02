@@ -6,13 +6,16 @@
 
 #include "IGuiObject.h"
 
-namespace glr {
-namespace gui {
+namespace glr
+{
+namespace gui
+{
 
 /**
  * 
  */
-class IGuiComponent {
+class IGuiComponent
+{
 public:
 	virtual ~IGuiComponent()
 	{
@@ -61,4 +64,5 @@ public:
 
 }
 }
+
 #endif /* IGUICOMPONENT_H_ */

@@ -5,11 +5,11 @@
 
 #include "ISceneNode.h"
 
-
 namespace glr
 {
 
-struct LightData {
+struct LightData
+{
 	glm::vec4 ambient;
 	glm::vec4 diffuse;
 	glm::vec4 specular;
@@ -17,7 +17,8 @@ struct LightData {
 	glm::vec4 direction;
 };
 
-class ILight : public virtual ISceneNode {
+class ILight : public virtual ISceneNode
+{
 public:
 	virtual ~ILight()
 	{

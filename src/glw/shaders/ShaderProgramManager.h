@@ -22,18 +22,21 @@
 #include "GlrShader.h"
 
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 namespace fs = boost::filesystem;
 
-class ShaderProgramManager : public IShaderProgramManager {
+class ShaderProgramManager : public IShaderProgramManager
+{
 public:
 	ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, bool autoLoad = true, std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>());
 	virtual ~ShaderProgramManager();
 
-	virtual IShaderProgram* getShaderProgram(const std::string name);
+	virtual IShaderProgram* getShaderProgram(const std::string& name);
 
-	virtual void loadShaderPrograms(const std::string directory);
+	virtual void loadShaderPrograms(const std::string& directory);
 	
 	virtual void addDefaultBindListener(IShaderProgramBindListener* bindListener);
 	virtual void removeDefaultBindListener(IShaderProgramBindListener* bindListener);
@@ -49,7 +52,7 @@ public:
 	 */
 	virtual void reloadShaders();
 
-	void load(const std::string directory);
+	void load(const std::string& directory);
 	void load(fs::path directory, std::string baseDirectory = std::string());
 	void load(std::vector<std::string> filenames, std::string baseDirectory = std::string());
 	void load(std::vector<fs::path> filePaths, std::string baseDirectory = std::string());
@@ -78,6 +81,8 @@ private:
 	static std::string prepend_;
 	static std::string append_;
 };
+
 }
 }
+
 #endif /* SHADERPROGRAMMANAGER_H_ */

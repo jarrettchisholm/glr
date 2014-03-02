@@ -13,7 +13,8 @@ namespace glr
 namespace glw
 {
 
-class AnimatedBoneNode {
+class AnimatedBoneNode
+{
 public:
 	AnimatedBoneNode()
 	{}

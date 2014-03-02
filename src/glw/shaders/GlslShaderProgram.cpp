@@ -1,20 +1,15 @@
-/*
- * GlslShaderProgram.cpp
- *
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #include <algorithm>
 
 #include "GlslShaderProgram.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../exceptions/GlException.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice) : name_(name), shaders_(shaders), openGlDevice_(openGlDevice)
 {

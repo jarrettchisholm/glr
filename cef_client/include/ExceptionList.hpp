@@ -1,15 +1,10 @@
-/*
- * ExceptionList.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef EXCEPTIONLIST_H_
 #define EXCEPTIONLIST_H_
 
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 
 /**
  * Exceptions available:

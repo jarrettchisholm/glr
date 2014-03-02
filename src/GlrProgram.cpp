@@ -10,7 +10,7 @@
 
 #include "GlrProgram.h"
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
 #include "gui/cef/Gui.h"
 

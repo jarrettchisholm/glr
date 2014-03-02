@@ -7,10 +7,13 @@
 
 #include "../IWindowResizeListener.h"
 
-namespace glr {
-namespace gui {
+namespace glr
+{
+namespace gui
+{
 
-class IGui: public IWindowResizeListener {
+class IGui: public IWindowResizeListener
+{
 public:
 	virtual ~IGui()
 	{

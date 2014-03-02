@@ -1,13 +1,7 @@
-/*
- * IShaderProgram.h
- *
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #ifndef ISHADERPROGRAM_H_
 #define ISHADERPROGRAM_H_
 
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
 #include <GL/glew.h>
@@ -15,15 +9,18 @@
 #include "IShader.h"
 #include "IShaderProgramBindListener.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 namespace glmd = glm::detail;
 
 // Forward declaration due to circular dependency IShaderProgramBindListener
 class IShaderProgramBindListener;
 	
-class IShaderProgram {
+class IShaderProgram
+{
 public:
 	virtual ~IShaderProgram()
 	{
@@ -106,6 +103,8 @@ public:
 	 */
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener) = 0;
 };
+
 }
 }
+
 #endif /* ISHADERPROGRAM_H_ */

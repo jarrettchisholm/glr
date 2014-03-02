@@ -1,11 +1,3 @@
-/*
- * GlrParser.h
- *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- *
- */
-
-
 #ifndef GLRPARSER_H
 #define GLRPARSER_H
 
@@ -13,10 +5,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/adapted.hpp>
-#include <map>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -24,10 +16,13 @@
 namespace qi = boost::spirit::qi;
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
-class GlrParser {
+class GlrParser
+{
 	typedef std::vector< std::pair<std::string, std::string> > Map;
 
 public:
@@ -269,4 +264,5 @@ private:
 
 }
 }
+
 #endif /* GLRPARSER_H */

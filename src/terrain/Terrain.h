@@ -4,13 +4,15 @@
 #include "ITerrain.h"
 #include "BasicSceneNode.h"
 
-namespace glr {
-class Terrain : public virtual ITerrain, public BasicSceneNode {
+namespace glr
+{
+
+class Terrain : public virtual ITerrain, public BasicSceneNode
+{
 public:
 	Terrain(glw::IOpenGlDevice* openGlDevice);
 	Terrain(const std::string name, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Terrain();
-
 
 	// inherited from ITerrain
 	virtual void render();
@@ -26,5 +28,7 @@ private:
 
 	void initialize();
 };
+
 }
+
 #endif /* TERRAIN_H_ */

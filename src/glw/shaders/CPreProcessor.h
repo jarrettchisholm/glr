@@ -1,11 +1,3 @@
-/*
- * CPreProccessor.h
- * 
- * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- * Date: 2013
- *
- */
-
 #ifndef CPREPROCESSOR_H
 #define CPREPROCESSOR_H
 
@@ -47,15 +39,18 @@
 namespace wave = boost::wave;
 namespace alg = boost::algorithm;
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 /**
  * This class is a generic pre processor for C like code.  It will be used to parse our shader source files.  With it, we will be able to
  * use pre-processor directives in our shader sources files, such as #IFDEF, #DEFINE, and #include.  We will also be able to define and use
  * Macros.
  */
-class CPreProcessor : public wave::context_policies::default_preprocessing_hooks {
+class CPreProcessor : public wave::context_policies::default_preprocessing_hooks
+{
 public:
 	CPreProcessor(std::string source, std::string baseDirectory = std::string());
 	virtual ~CPreProcessor();
@@ -200,4 +195,5 @@ private:
 }
 
 #endif // !defined(BOOST_WAVE_ADVANCED_PREPROCESSING_HOOKS_INCLUDED)
+
 #endif /* CPREPROCESSOR_H */

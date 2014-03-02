@@ -9,11 +9,11 @@
 
 #include "models/IModel.h"
 
-
 namespace glr
 {
 
-class ISceneNode {
+class ISceneNode
+{
 public:
 	virtual ~ISceneNode()
 	{

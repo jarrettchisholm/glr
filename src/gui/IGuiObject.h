@@ -6,10 +6,13 @@
 
 #include <boost/any.hpp>
 
-namespace glr {
-namespace gui {
+namespace glr
+{
+namespace gui
+{
 
-class IGuiObject {
+class IGuiObject
+{
 public:
 	virtual ~IGuiObject()
 	{
@@ -48,4 +51,5 @@ public:
 
 }
 }
+
 #endif /* IGUIOBJECT_H_ */

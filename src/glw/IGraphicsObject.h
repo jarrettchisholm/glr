@@ -1,10 +1,13 @@
 #ifndef IGRAPHICSOBJECT_H_
 #define IGRAPHICSOBJECT_H_
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
-class IGraphicsObject {
+class IGraphicsObject
+{
 public:
 	virtual ~IGraphicsObject()
 	{

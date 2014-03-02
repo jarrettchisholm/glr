@@ -1,23 +1,18 @@
-/*
- * ClientApp.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
+#ifndef CLIENTAPP_H_
+#define CLIENTAPP_H_
 
 #include <iostream>
 #include <algorithm>
 #include <mutex>
 
-#include "ObjectBinding.h"
-#include "FunctionList.h"
-#include "ExceptionList.h"
+#include "ObjectBinding.hpp"
+#include "FunctionList.hpp"
+#include "ExceptionList.hpp"
 
-#ifndef CLIENTAPP_H_
-#define CLIENTAPP_H_
-
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 
 class ClientApp : public CefApp, public CefRenderProcessHandler, public CefV8Handler
 {

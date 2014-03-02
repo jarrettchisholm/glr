@@ -1,12 +1,3 @@
-/*
- * GlrShader.h
- * 
- * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- * Date: 2013
- *
- */
-
-
 #ifndef GLRSHADER_H
 #define GLRSHADER_H
 
@@ -18,8 +9,10 @@
 
 #include "GlrParser.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 /**
  * Class representing a 'glr' shader.  This is a shader that contains the 'raw' shader source (i.e. before it has been processed).
@@ -39,7 +32,8 @@ namespace shaders {
  * 
  * You can use this class to then process the 'raw' shader source into something more amenable to an opengl shader.
  */
-class GlrShader {
+class GlrShader
+{
 public:
 	GlrShader(std::string source, std::string baseDirectory = std::string());
 	GlrShader(std::string name, std::string source, std::string baseDirectory = std::string());
@@ -70,4 +64,5 @@ private:
 
 }
 }
+
 #endif /* GLRSHADER_H */

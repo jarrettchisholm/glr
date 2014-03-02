@@ -6,9 +6,11 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-namespace glr {
+namespace glr
+{
 
-class IWindowResizeListener {
+class IWindowResizeListener
+{
 public:
 	virtual ~IWindowResizeListener()
 	{

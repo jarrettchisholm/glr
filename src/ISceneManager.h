@@ -12,7 +12,8 @@ namespace glr
 
 namespace glmd = glm::detail;
 
-class ISceneManager {
+class ISceneManager
+{
 public:
 	virtual ~ISceneManager()
 	{

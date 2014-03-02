@@ -1,16 +1,15 @@
-/*
- * ModelLoader.cpp
- *
- *  Created on: 2011-05-08
- *	  Author: jarrett
- */
+#include "../Configure.h"
 
-#ifdef _WIN32
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
 #include <iostream>
 #include <fstream>
+
+// C++ importer interface
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,14 +17,14 @@
 
 #include "ModelLoader.h"
 
-#include "../common/utilities/ImageLoader.h"
-#include "../common/utilities/AssImpUtilities.h"
+#include "../common/utilities/AssImpUtilities.hpp"
 #include "../exceptions/GlException.h"
 
+namespace glr
+{
+namespace models
+{
 
-namespace glr {
-namespace models {
-	
 ModelLoader::ModelLoader()
 {
 	// get a handle to the predefined STDOUT log stream and attach
@@ -44,14 +43,6 @@ ModelLoader::~ModelLoader()
 	aiDetachAllLogStreams();
 }
 
-/**
- * Loads model data from the file specified by filename.
- * 
- * @param filename The file we want to load
- * 
- * @returns A vector of ModelData objects (as shared pointers).  We do this so as not to have to copy the
- * model data when we return from this method.
- */
 std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string& filename)
 {
 	return loadModel(filename, filename);
@@ -121,18 +112,6 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	return modelData;
 }
 
-
-/**
- * Load the vertex, normal, texture, and color data for the given mesh.
- * 
- * Note: We only support models that have faces with 3 points (i.e. triangles)
- * 
- * @param filename The file being loaded
- * @param index The current index of the mesh being loaded
- * @param mesh The AssImp mesh data structure to load data from.  Must not be null.
- * @param boneIndexMap A map associating an AssImp bone name with a bone index (of type uint32).  Note that this variable is NOT const - this is
- * only so that we can access elements in the map using the operator[] operator.
- */
 MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap)
 {
 	MeshData data = MeshData();
@@ -244,7 +223,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 				data.textureCoordinates[currentIndex + i] = glm::vec2(mesh->mTextureCoords[0][vertexIndex].x, mesh->mTextureCoords[0][vertexIndex].y);
 			}
 
-			//utilities::AssImpUtilities::color4_to_vec4(&mesh->mColors[0][vertexIndex], data.colors[data.colors.size() + i]);
+			//utilities::color4ToVec4(&mesh->mColors[0][vertexIndex], data.colors[data.colors.size() + i]);
 			if ( mesh->mColors[0] != 0 )
 			{
 				data.colors[currentIndex + i] = glm::vec4(
@@ -328,13 +307,6 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 	return data;
 }
 
-/**
- * Load the texture filename for the given material.
- * 
- * @param filename The file being loaded
- * @param index The current index of the texture being loaded
- * @param mesh The AssImp material data structure to load data from.  Must not be null.
- */
 TextureData ModelLoader::loadTexture(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMaterial* material)
 {
 	assert( material != nullptr );
@@ -371,13 +343,6 @@ TextureData ModelLoader::loadTexture(const std::string& name, const std::string&
 	return data;
 }
 
-/**
- * Load the material data for the given material.
- * 
- * @param filename The file being loaded
- * @param index The current index of the material being loaded
- * @param material The AssImp material data structure to load data from.  Must not be null.
- */
 MaterialData ModelLoader::loadMaterial(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMaterial* material)
 {	
 	assert( material != nullptr );
@@ -396,45 +361,38 @@ MaterialData ModelLoader::loadMaterial(const std::string& name, const std::strin
 	data.diffuse[1] = 0.8f;
 	data.diffuse[2] = 0.8f;
 	data.diffuse[3] = 1.0f;
-	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &c))
-		utilities::AssImpUtilities::color4_to_vec4(&c, data.diffuse);
+	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &c) )
+		utilities::color4ToVec4(&c, data.diffuse);
 
-	//utilities::AssImpUtilities::set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+	//utilities::setFloat4(c, 0.0f, 0.0f, 0.0f, 1.0f);
 	data.specular[0] = 0.0f;
 	data.specular[1] = 0.0f;
 	data.specular[2] = 0.0f;
 	data.specular[3] = 1.0f;
-	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &c))
-		utilities::AssImpUtilities::color4_to_vec4(&c, data.specular);
+	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &c) )
+		utilities::color4ToVec4(&c, data.specular);
 
-	//utilities::AssImpUtilities::set_float4(c, 0.2f, 0.2f, 0.2f, 1.0f);
+	//utilities::setFloat4(c, 0.2f, 0.2f, 0.2f, 1.0f);
 	data.ambient[0] = 0.2f;
 	data.ambient[1] = 0.2f;
 	data.ambient[2] = 0.2f;
 	data.ambient[3] = 1.0f;
-	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &c))
-		utilities::AssImpUtilities::color4_to_vec4(&c, data.ambient);
+	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &c) )
+		utilities::color4ToVec4(&c, data.ambient);
 
-	//utilities::AssImpUtilities::set_float4(c, 0.0f, 0.0f, 0.0f, 1.0f);
+	//utilities::setFloat4(c, 0.0f, 0.0f, 0.0f, 1.0f);
 	data.emission[0] = 0.0f;
 	data.emission[1] = 0.0f;
 	data.emission[2] = 0.0f;
 	data.emission[3] = 1.0f;
-	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &c))
-		utilities::AssImpUtilities::color4_to_vec4(&c, data.emission);
+	if ( AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &c) )
+		utilities::color4ToVec4(&c, data.emission);
 	
 	LOG_DEBUG( "done loading material." );
 	
 	return data;
 }
 
-/**
- * Will load the bone data for the given AssImp mesh.
- * 
- * @param filename The file being loaded
- * @param index The current index of the mesh being loaded
- * @param mesh The AssImp mesh data structure to load data from.  Must not be null.
- */
 glw::BoneData ModelLoader::loadBones(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMesh* mesh)
 {
 	assert( mesh != nullptr );
@@ -478,12 +436,6 @@ glw::BoneData ModelLoader::loadBones(const std::string& name, const std::string&
 	return boneData;
 }
 
-/**
- * Will load the animations for the given scene.
- * 
- * @param filename The file being loaded
- * @param scene The AssImp scene data structure to load animation data from.  Must not be null.
- */
 AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::string& filename, const aiScene* scene)
 {
 	assert( scene != nullptr );
@@ -587,13 +539,6 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 	return animationSet;
 }
 
-/**
- * Helper method - recursively loads bone node information from the AssImp node.
- * 
- * @param node An AssImp Node.
- * 
- * @return The BoneNode containing the bone information from the given AssImp node.
- */
 glw::BoneNode ModelLoader::loadBoneNode( const aiNode* node )
 {
 	glw::BoneNode boneNode = glw::BoneNode();
@@ -608,13 +553,6 @@ glw::BoneNode ModelLoader::loadBoneNode( const aiNode* node )
 	return boneNode;
 }
 
-/**
- * Helper method - converts an AssImp 4x4 matrix into a glm 4x4 matrix.
- * 
- * @param m A 4x4 AssImp matrix
- * 
- * @return A 4x4 glm matrix
- */
 glm::mat4 ModelLoader::convertAssImpMatrix(const aiMatrix4x4* m)
 {
 	return glm::mat4(

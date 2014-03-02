@@ -14,9 +14,6 @@
 #include "shaders/IShaderProgram.h"
 #include "IOpenGlDevice.h"
 
-#include "../common/utilities/Macros.h"
-
-
 namespace glr
 {
 namespace glw

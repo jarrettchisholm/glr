@@ -1,11 +1,13 @@
-#include "ClientApp.h"
+#include "ClientApp.hpp"
 
-#include "FunctionList.h"
+#include "FunctionList.hpp"
 
-#include "common/logger/Logger.h"
+#include "common/logger/Logger.hpp"
 
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 	
 ClientApp::ClientApp()
 {

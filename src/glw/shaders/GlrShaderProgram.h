@@ -1,12 +1,3 @@
-/*
- * GlrShaderProgram.h
- * 
- * Author: Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- * Date: 2013
- *
- */
-
-
 #ifndef GLRSHADERPROGRAM_H
 #define GLRSHADERPROGRAM_H
 
@@ -14,8 +5,10 @@
 
 #include "GlrShader.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 	
 /**
  * Class representing a 'glr' shader program.  This is source data that contains #defines, #includes, etc.  However, unlike actual shader source files,
@@ -31,7 +24,8 @@ namespace shaders {
  * you will need to convert it into a GlslShaderProgram immediately after.  Otherwise, the processing you have done using the GlrShader objects
  * may be lost once they are reused in processing of another GlrShaderProgram.
  */
-class GlrShaderProgram {
+class GlrShaderProgram
+{
 public:
 	GlrShaderProgram(std::string source, std::string baseDirectory = std::string());
 	GlrShaderProgram(std::string name, std::string source, std::string baseDirectory = std::string());

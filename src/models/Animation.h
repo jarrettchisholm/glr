@@ -1,10 +1,3 @@
-/*
- * Animation.h
- *
- *  Created on: 2012-09-20
- *      Author: jarrett
- */
-
 #ifndef MODELANIMATION_H_
 #define MODELANIMATION_H_
 
@@ -23,8 +16,10 @@
 
 namespace glmd = glm::detail;
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
 
 /**
@@ -37,7 +32,8 @@ namespace models {
  * will be able to run through the animations at different speeds (as each animation will have
  * its own animation running time).
  */	
-class Animation : public IAnimation {
+class Animation : public IAnimation
+{
 public:
 	Animation(glw::Animation* animation, glw::IOpenGlDevice* openGlDevice);
 	Animation(const Animation& other);
@@ -76,6 +72,8 @@ private:
 	void destroy();
 
 };
+
 }
 }
+
 #endif /* MODELANIMATION_H_ */

@@ -1,7 +1,6 @@
 #ifndef MACROS_H_
 #define MACROS_H_
 
-
 #define GETSET(Type, MemberName, FaceName) \
 	Type get##FaceName() const { \
 		return MemberName; \

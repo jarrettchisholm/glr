@@ -1,10 +1,3 @@
-/*
- * Gui.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #include <iostream>
@@ -12,13 +5,16 @@
 
 #include "Gui.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../glw/shaders/GlslShaderProgram.h"
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 
 Gui::Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
 {
@@ -185,4 +181,4 @@ void Gui::windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height
 }
 }
 
-#endif
+#endif /* USE_CEF */

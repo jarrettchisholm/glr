@@ -8,7 +8,7 @@
 
 #include "ITexture.h"
 
-#include "../common/utilities/ImageLoader.h"
+#include "../common/utilities/ImageLoader.hpp"
 
 namespace glr
 {

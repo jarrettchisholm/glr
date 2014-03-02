@@ -3,8 +3,6 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../common/utilities/AssImpUtilities.h"
-
 #include "../exceptions/GlException.h"
 
 #include "Material.h"
@@ -14,8 +12,7 @@ namespace glr
 namespace glw
 {
 
-Material::Material(IOpenGlDevice* openGlDevice, const std::string& name)
-	: openGlDevice_(openGlDevice), name_(name), bufferId_(0)
+Material::Material(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name), bufferId_(0)
 {	
 }
 

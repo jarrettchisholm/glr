@@ -1,12 +1,13 @@
-
-
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 	
-class Constants {
+class Constants
+{
 public:
 	static const std::string MODEL_DIRECTORY;
 };
@@ -15,4 +16,5 @@ const std::string Constants::MODEL_DIRECTORY = std::string("/home/jarrett/projec
 
 }
 }
+
 #endif /* CONSTANTS_H_ */

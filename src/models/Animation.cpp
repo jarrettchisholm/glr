@@ -1,14 +1,9 @@
-/*
- * Animation.cpp
- *
- *  Created on: 2013-09-13
- *      Author: jarrett
- */
-
 #include "Animation.h"
 
-namespace glr {
-namespace models {
+namespace glr
+{
+namespace models
+{
 
 Animation::Animation(glw::Animation* animation, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
@@ -98,5 +93,3 @@ std::vector<glmd::uint32>& Animation::getIndexCache()
 
 }
 }
-
-

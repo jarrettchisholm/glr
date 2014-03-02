@@ -1,10 +1,3 @@
-/*
- * ITerrainManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef ITERRAINMANAGER_H_
 #define ITERRAINMANAGER_H_
 
@@ -12,11 +5,13 @@
 
 #include "ITerrain.h"
 
-namespace glr {
+namespace glr
+{
 	
 namespace glmd = glm::detail;
 
-class ITerrainManager {
+class ITerrainManager
+{
 public:
 	virtual ~ITerrainManager()
 	{
@@ -28,4 +23,5 @@ public:
 };
 
 }
+
 #endif /* ITERRAINMANAGER_H_ */

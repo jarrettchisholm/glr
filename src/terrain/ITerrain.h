@@ -1,10 +1,3 @@
-/*
- * ITerrain.h
- *
- *  Created on: 2013-06-05
- *      Author: jarrett
- */
-
 #ifndef ITERRAIN_H_
 #define ITERRAIN_H_
 
@@ -16,9 +9,11 @@
 
 #include "ISceneNode.h"
 
+namespace glr
+{
 
-namespace glr {
-struct TerrainData {
+struct TerrainData
+{
 	glm::vec4 ambient;
 	glm::vec4 diffuse;
 	glm::vec4 specular;
@@ -26,7 +21,8 @@ struct TerrainData {
 	glm::vec4 direction;
 };
 
-class ITerrain : public virtual ISceneNode {
+class ITerrain : public virtual ISceneNode
+{
 public:
 	virtual ~ITerrain()
 	{
@@ -37,5 +33,7 @@ public:
 
 	virtual const TerrainData& getTerrainData() = 0;
 };
+
 }
+
 #endif /* ITERRAIN_H_ */

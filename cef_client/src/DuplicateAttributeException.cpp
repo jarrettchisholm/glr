@@ -1,7 +1,9 @@
-#include "DuplicateAttributeException.h"
+#include "DuplicateAttributeException.hpp"
 
-namespace glr {
-namespace cef_client {
+namespace glr
+{
+namespace cef_client
+{
 	
 DuplicateAttributeException::DuplicateAttributeException(std::wstring attrName) : std::runtime_error("Attribute with name already exists.")
 {

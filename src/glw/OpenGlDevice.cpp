@@ -7,7 +7,7 @@
 
 #include "OpenGlDevice.h"
 
-#include "../common/logger/Logger.h"
+#include "../common/logger/Logger.hpp"
 
 #include "../exceptions/GlException.h"
 

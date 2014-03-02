@@ -6,8 +6,10 @@
 #include "GlrProgram.h"
 
 namespace glr
-{	
-class GraphicsEngine {
+{
+	
+class GraphicsEngine
+{
 public:
 	static std::unique_ptr<GlrProgram> createProgram();
 	static std::unique_ptr<GlrProgram> createProgram(ProgramSettings settings);

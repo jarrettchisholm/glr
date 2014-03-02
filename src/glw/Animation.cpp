@@ -10,8 +10,10 @@
 
 #include "../exceptions/GlException.h"
 
-namespace glr {
-namespace glw {
+namespace glr
+{
+namespace glw
+{
 
 Animation::Animation(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
 {
@@ -496,4 +498,3 @@ void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
 
 }
 }
-

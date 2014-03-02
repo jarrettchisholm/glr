@@ -1,22 +1,17 @@
-/*
- * GlslShader.cpp
- *
- *  Created on: 2013-01-04
- *      Author: jarrett
- */
-
 #include <sstream>
 
 #include <GL/glew.h>
 
 #include "GlslShader.h"
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
 #include "../../exceptions/GlException.h"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(type)
 {

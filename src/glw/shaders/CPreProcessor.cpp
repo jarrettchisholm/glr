@@ -1,11 +1,3 @@
-/*
- * CPreProcessor.cpp
- *
- * Copyright 2013 Jarrett Chisholm <j.chisholm@chisholmsoft.com>
- *
- */
-
-
 #include "CPreProcessor.h"
 
 #include <vector>
@@ -23,10 +15,12 @@
 #include <boost/wave/cpplexer/cpp_lex_token.hpp>    // token class
 #include <boost/wave/cpplexer/cpp_lex_iterator.hpp> // lexer class
 
-#include "../../common/logger/Logger.h"
+#include "../../common/logger/Logger.hpp"
 
-namespace glr {
-namespace shaders {
+namespace glr
+{
+namespace shaders
+{
 
 std::map<std::string, std::string> CPreProcessor::files_ = std::map<std::string, std::string>();
 

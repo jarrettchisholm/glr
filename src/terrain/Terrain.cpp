@@ -1,22 +1,27 @@
 #include <iostream>
 
-#ifdef _WIN32
+#include "../Configure.h"
+
+#ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
 #include <GL/glew.h>
 
+#define GLM_FORCE_RADIANS
 #include "glm/gtc/type_ptr.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtc/quaternion.hpp"
 
 #include "Terrain.h"
 
-#include "../common/logger/Logger.h"
+#include "../common/logger/Logger.hpp"
 
-#include "../common/math/Math.h"
+#include "../common/math/Math.hpp"
 
-namespace glr {
+namespace glr
+{
+
 Terrain::Terrain(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 {
 	setPosition(0, 0, 0);
@@ -75,4 +80,5 @@ const TerrainData& Terrain::getTerrainData()
 {
 	return lightData_;
 }
+
 }
