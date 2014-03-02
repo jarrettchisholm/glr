@@ -3,7 +3,6 @@
 
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
 
 #include "GlrInclude.h"
 
@@ -15,7 +14,7 @@ namespace extras
 class FpsCamera : public Camera
 {
 public:
-	FpsCamera(const std::string name, glw::IOpenGlDevice* openGlDevice, glmd::float32 speed);
+	FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed);
 	virtual ~FpsCamera();
 
 	bool isActive();
@@ -27,6 +26,9 @@ public:
 	
 	virtual void rotate(const glm::detail::float32& degrees, const glm::vec3& axis);
 
+	/**
+	 * 
+	 */
 	void tick(glmd::float32 time);
 
 private:

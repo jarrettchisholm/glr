@@ -7,7 +7,7 @@ Main::Main()
 	smgr_ = glrProgram_->getSceneManager();
 	
 	// Create FPS camera
-	camera_ = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera("camera", glrProgram_->getOpenGlDevice(), 0.020f) );
+	camera_ = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(glrProgram_->getOpenGlDevice(), 0.020f) );
 	camera_->setPosition(0, 0, 0.5);
 	smgr_->addCamera(camera_);
 

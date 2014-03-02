@@ -1,24 +1,20 @@
-/*
- * FpsCamera.h
- *
- *  Created on: 2013-06-19
- *      Author: jarrett
- */
-
 #ifndef FPSCAMERA_H_
 #define FPSCAMERA_H_
 
+#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
 
 #include "GlrInclude.h"
 
-namespace glr {
-namespace extras {
+namespace glr
+{
+namespace extras
+{
 
-class FpsCamera : public Camera {
+class FpsCamera : public Camera
+{
 public:
-	FpsCamera(const std::string name, glw::IOpenGlDevice* openGlDevice, glmd::float32 speed);
+	FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed);
 	virtual ~FpsCamera();
 
 	bool isActive();
@@ -28,8 +24,11 @@ public:
 	void moveLeft();
 	void moveRight();
 	
-	virtual void rotate(const glm::detail::float32& radians, const glm::vec3& axis);
+	virtual void rotate(const glm::detail::float32& degrees, const glm::vec3& axis);
 
+	/**
+	 * 
+	 */
 	void tick(glmd::float32 time);
 
 private:
@@ -40,4 +39,5 @@ private:
 
 }
 }
+
 #endif /* FPSCAMERA_H_ */

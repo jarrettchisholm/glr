@@ -124,27 +124,34 @@ def setup(ARGUMENTS):
 			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
 			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
 		
-		# For glr tests compilation
-		cpp_paths.append('../' + dependenciesDirectory + 'freeimage/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'assimp/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'glm/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'glew/include')
-		cpp_paths.append('../' + dependenciesDirectory + 'sfml/include')
-		
+		includeDirectories = []
+		includeDirectories.append('freeimage/include')
+		includeDirectories.append('boost/include')
+		includeDirectories.append('assimp/include')
+		includeDirectories.append('glm/include')
+		includeDirectories.append('glew/include')
+		includeDirectories.append('sfml/include')
 		
 		# For glr compilation
 		cpp_paths.append('../src')
-		cpp_paths.append(dependenciesDirectory + 'freeimage/include')
-		cpp_paths.append(dependenciesDirectory + 'boost/include')
-		cpp_paths.append(dependenciesDirectory + 'assimp/include')
-		cpp_paths.append(dependenciesDirectory + 'glm/include')
-		cpp_paths.append(dependenciesDirectory + 'glew/include')
-		cpp_paths.append(dependenciesDirectory + 'sfml/include')
-		
+		relativeDirectory = ''
+		for d in includeDirectories:
+			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
+
 		if (buildFlags['useCef']):
 			cpp_paths.append(dependenciesDirectory + 'cef3/')
 			cpp_paths.append(dependenciesDirectory + 'cef3/include')
+		
+		# For glr tests compilation
+		relativeDirectory = '../'
+		for d in includeDirectories:
+			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
+		
+		# For glr samples compilation
+		cpp_paths.append('../../src')
+		relativeDirectory = '../../'
+		for d in includeDirectories:
+			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
 	else:
 		if isWindows:
 			if (buildOptions['compiler'] == 'default'):

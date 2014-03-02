@@ -5,7 +5,7 @@ namespace glr
 namespace extras
 {
 	
-FpsCamera::FpsCamera(const std::string name, glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(name, openGlDevice), speed_(speed)
+FpsCamera::FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(openGlDevice), speed_(speed)
 {
 	initialize();
 }
@@ -52,9 +52,6 @@ void FpsCamera::rotate(const glm::detail::float32& degrees, const glm::vec3& axi
 		Camera::rotate(degrees, axis, TransformSpace::TS_WORLD);
 }
 
-/**
- *
- */
 void FpsCamera::tick(glm::detail::float32 time)
 {
 	Camera::tick(time);
