@@ -20,7 +20,7 @@ namespace glr
 
 Window::Window(int width, int height, std::string title): width_(width), height_(height)
 {
-	sf::ContextSettings settings;
+	auto settings = sf::ContextSettings();
 
 	settings.depthBits = 32;
 	settings.stencilBits = 8;
@@ -76,7 +76,7 @@ void Window::resize(glm::detail::uint32 width, glm::detail::uint32 height)
 	height_ = height;
 	
 	std::cout << width_ << " " << height_ << std::endl;
-	projectionMatrix_ = glm::perspective(60.0f, (glmd::float32)width / (glmd::float32)height, 0.1f, 500.f);
+	projectionMatrix_ = glm::perspective(glm::radians(60.0f), (glmd::float32)width / (glmd::float32)height, 0.1f, 500.f);
 	
 	for ( auto it : windowResizeListeners_ )
 	{
