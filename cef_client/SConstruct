@@ -128,12 +128,12 @@ cpp_paths.append('include')
 setupDependencies()
 
 ### Create our environment
-env = Environment(ENV = os.environ, TOOLS = [buildOptions['compiler']])
+env = Environment(ENV = os.environ, TOOLS = [buildFlags['compiler']])
 setupEnvironment(env)
 #env['ENV']['TERM'] = os.environ['TERM']
 #env["CXX"] = "clang++"
 
-print("Build type: " + buildFlags['buildType'])
+print("Build type: " + buildFlags['build'])
 
 # Tell SCons to build
 env.Program('build/cef3_client', source_files, LIBS = libraries, LIBPATH = library_paths)

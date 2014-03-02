@@ -10,16 +10,13 @@ isLinux = platform.system() == 'Linux'
 isWindows = os.name == 'nt'
 isMac = platform.system() == 'Darwin'
 
-### Compiler
-buildOptions = {}
-buildOptions['compiler'] = 'default'
-
 buildFlags = {}
 buildFlags['debug'] = True # True by default (at least for now)
 buildFlags['useCef'] = True
 buildFlags['beautify'] = False
 buildFlags['clean'] = False
-buildFlags['buildType'] = 'debug'
+buildFlags['build'] = 'debug'
+buildFlags['compiler'] = 'default'
 buildFlags['num_jobs'] = multiprocessing.cpu_count()
 
 dependenciesDirectory = 'deps/'
@@ -39,15 +36,12 @@ def setup(ARGUMENTS):
 		print("Sorry, but it appears your platform is not recognized.")
 		sys.exit(1)
 	
-	AddOption('--beautify', dest='beautify', action='store_true', help='will \'beautify\' the source code using uncrustify')
-	AddOption('--without-cef', dest='without-cef', action='store_true', help='will compile glr without using Chromium Embedded Framework as the html gui system')
+	AddOption('--beautify', dest='beautify', action='store_true', help='Will \'beautify\' the source code using uncrustify.')
+	AddOption('--without-cef', dest='without-cef', action='store_true', help='Will compile glr without using Chromium Embedded Framework as the html gui system.')
+	AddOption('--build', dest='build', type='string', nargs=1, action='store', help='Set the build to compile:  release, debug (default)')
+	AddOption('--compiler', dest='compiler', type='string', nargs=1, action='store', help='Set the compiler to use.')
 	
 	global buildFlags
-	global buildOptions
-	
-	### Get our arguments
-	buildOptions['compiler'] = ARGUMENTS.get('compiler')
-	buildFlags['buildType'] = ARGUMENTS.get('buildType')
 	
 	### Set and error check our build flags
 	if (GetOption('without-cef') is True):
@@ -56,6 +50,17 @@ def setup(ARGUMENTS):
 		buildFlags['beautify'] = True
 	if (GetOption('clean') is True):
 		buildFlags['clean'] = True
+	if (GetOption('build') is not None):
+		buildFlags['build'] = GetOption('build')
+		if (buildFlags['build'] != 'release' and buildFlags['build'] != 'debug'):
+			print( "Invalid build: '{0}'".format(buildFlags['build']) )
+			sys.exit(1)
+	if (GetOption('compiler') is not None):
+		buildFlags['compiler'] = GetOption('compiler')
+	# TODO: num_jobs seems to default to 1 - how can I know if the user is actually setting this value?
+	if (GetOption('num_jobs') > 1):
+		buildFlags['num_jobs'] = GetOption('num_jobs')
+	
 	# TODO: num_jobs seems to default to 1 - how can I know if the user is actually setting this value?
 	if (GetOption('num_jobs') > 1):
 		buildFlags['num_jobs'] = GetOption('num_jobs')
@@ -64,38 +69,26 @@ def setup(ARGUMENTS):
 	if (os.environ.get('SCONS_NUM_JOBS')):
 		buildFlags['num_jobs'] = os.environ.get('SCONS_NUM_JOBS')
 	
-	if (buildFlags['buildType'] is None or buildFlags['buildType'] == ''):
-		buildFlags['buildType'] = 'debug'
-	
-	if ( buildFlags['buildType'] == 'debug' ):
-		buildFlags['debug'] = True
-	elif ( buildFlags['buildType'] == 'release' ):
-		buildFlags['debug'] = False
-	else:
-		print( "Invalid build type!" )
-		print( "Valid types are 'debug' or 'release'." )
-		sys.exit(1)
-	
 	if (buildFlags['useCef']):
 		cpp_defines.append('USE_CEF')
-	if (buildFlags['debug']):
+	if (buildFlags['build'] == 'debug'):
 		cpp_defines.append('DEBUG')
 	
-	if (buildOptions['compiler'] is None or buildOptions['compiler'] == ''):
-		buildOptions['compiler'] = 'default'
-	if (buildOptions['compiler'] == 'gcc' and isWindows):
-		buildOptions['compiler'] = 'mingw'
-	if (buildOptions['compiler'] == 'msvc' and isWindows):
-		buildOptions['compiler'] = 'default'
+	if (buildFlags['compiler'] is None or buildFlags['compiler'] == ''):
+		buildFlags['compiler'] = 'default'
+	if (buildFlags['compiler'] == 'gcc' and isWindows):
+		buildFlags['compiler'] = 'mingw'
+	if (buildFlags['compiler'] == 'msvc' and isWindows):
+		buildFlags['compiler'] = 'default'
 	
 	### Error check compiler
-	if (buildOptions['compiler'] == 'msvc' and not isWindows):
+	if (buildFlags['compiler'] == 'msvc' and not isWindows):
 		print( "Cannot use msvc in this environment!" )
 		sys.exit(1)
 	
 	### Set our OS specific compiler variables
 	if (not isWindows):
-		if (buildOptions['compiler'] == 'gcc' or (buildOptions['compiler'] == 'default' and isLinux)):
+		if (buildFlags['compiler'] == 'gcc' or (buildFlags['compiler'] == 'default' and isLinux)):
 			if (buildFlags['debug']):
 				cpp_flags.append('-g')
 				cpp_flags.append('-O0') # optimization level 0
@@ -154,7 +147,7 @@ def setup(ARGUMENTS):
 			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
 	else:
 		if isWindows:
-			if (buildOptions['compiler'] == 'default'):
+			if (buildFlags['compiler'] == 'default'):
 				cpp_flags.append('/w') # disables warnings (Windows)
 				cpp_flags.append('/wd4350') # disables the specific warning C4350
 				cpp_flags.append('/EHsc') # Enable 'unwind semantics' for exception handling (Windows)
@@ -167,7 +160,7 @@ def setup(ARGUMENTS):
 					cpp_flags.append('/Od') # Disables optimization
 				else:
 					cpp_flags.append('/Ox') # Full optimization
-			elif (buildOptions['compiler'] == 'mingw'):
+			elif (buildFlags['compiler'] == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
 					cpp_flags.append('-O0') # optimization level 0

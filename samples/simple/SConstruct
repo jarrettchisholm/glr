@@ -120,7 +120,7 @@ source_files = Glob('build/*.cpp')
 setupDependencies()
 
 ### Create our environment
-env = Environment(ENV = os.environ, TOOLS = [buildOptions['compiler']])
+env = Environment(ENV = os.environ, TOOLS = [buildFlags['compiler']])
 setupEnvironment(env)
 
 # Tell SCons the program to build

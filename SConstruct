@@ -181,10 +181,10 @@ def compileCefClient(compiler):
 	os.chdir( 'cef_client' )
 	buildCommand = 'scons'
 	if (compiler):
-		buildCommand = buildCommand + " compiler="+compiler
+		buildCommand = buildCommand + " --compiler="+compiler
 	if (buildFlags['clean']):
 		buildCommand = buildCommand + " --clean"
-	buildCommand = buildCommand + " buildType=" + buildFlags['buildType']
+	buildCommand = buildCommand + " --build=" + buildFlags['build']
 	
 	result = subprocess.call( buildCommand, shell=True )
 	os.chdir( '..' )
@@ -213,7 +213,7 @@ if buildFlags['beautify']:
 ### Compile our client for CEF
 if (buildFlags['useCef']):
 	print("Compiling CEF Client")
-	exitOnError( compileCefClient(buildOptions['compiler']) )
+	exitOnError( compileCefClient(buildFlags['compiler']) )
 	print("")
 
 
@@ -248,10 +248,10 @@ source_files = source_files + Glob('build/glw/shaders/*.cpp')
 setupDependencies()
 
 ### Create our environment
-env = Environment(ENV = os.environ, TOOLS = [buildOptions['compiler']])
+env = Environment(ENV = os.environ, TOOLS = [buildFlags['compiler']])
 setupEnvironment(env)
 
-print("Build type: " + buildFlags['buildType'])
+print("Build type: " + buildFlags['build'])
 
 ### Tell SCons the library to build
 env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
