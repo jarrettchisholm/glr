@@ -20,7 +20,7 @@ Furthermore, the goals for the code are for it to be:
 
 Compile
 -------
-To compile, run 'scons' from the command line.
+To compile, run `scons` from the command line.
 
 **Note**: You must have a 'lib' directory with the files:
 
