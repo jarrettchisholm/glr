@@ -13,10 +13,10 @@
 
 #include <boost/any.hpp>
 
-#include "../../cef_client/src/FunctionList.h"
-#include "../../cef_client/src/ExceptionList.h"
+#include "../../cef_client/include/FunctionList.hpp"
+#include "../../cef_client/include/ExceptionList.hpp"
 
-#include "../../src/common/utilities/StringUtilities.h"
+#include "../../src/common/utilities/StringUtilities.hpp"
 
 bool isEmpty(const boost::any& operand)
 {
