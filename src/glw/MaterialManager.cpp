@@ -1,10 +1,10 @@
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
-#include "MaterialManager.h"
+#include "glw/MaterialManager.hpp"
 
 
 namespace glr

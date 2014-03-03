@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
@@ -12,7 +12,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Light.h"
+#include "Light.hpp"
 
 #include "common/logger/Logger.hpp"
 

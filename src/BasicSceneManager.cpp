@@ -6,13 +6,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "BasicSceneManager.h"
+#include "BasicSceneManager.hpp"
 
-#include "Camera.h"
-#include "BasicSceneNode.h"
-#include "Light.h"
-#include "models/ModelManager.h"
-#include "exceptions/RuntimeException.h"
+#include "Camera.hpp"
+#include "BasicSceneNode.hpp"
+#include "Light.hpp"
+#include "models/ModelManager.hpp"
+#include "exceptions/RuntimeException.hpp"
 
 namespace glr
 {

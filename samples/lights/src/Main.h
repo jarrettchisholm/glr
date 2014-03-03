@@ -1,15 +1,7 @@
-/*
- * Main.h
- *
- *  Created on: 2013-04-04
- *      Author: jarrett
- */
-
-
 #include "glm/glm.hpp"
 #include <SFML/Window.hpp>
 
-#include "GlrInclude.h"
+#include "GlrInclude.hpp"
 #include "extras/FpsCamera.cpp"
 
 #ifndef MAIN_H

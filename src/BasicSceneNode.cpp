@@ -1,4 +1,4 @@
-#include "Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
@@ -11,9 +11,9 @@
 
 #include "common/logger/Logger.hpp"
 
-#include "BasicSceneNode.h"
+#include "BasicSceneNode.hpp"
 
-#include "glw/shaders/GlslShaderProgram.h"
+#include "glw/shaders/GlslShaderProgram.hpp"
 
 namespace glr
 {

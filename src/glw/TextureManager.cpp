@@ -1,4 +1,4 @@
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
@@ -6,9 +6,9 @@
 
 #include <sstream>
 
-#include "TextureManager.h"
+#include "glw/TextureManager.hpp"
 
-#include "../exceptions/Exception.h"
+#include "exceptions/Exception.hpp"
 
 
 namespace glr

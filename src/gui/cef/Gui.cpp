@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string.h>
 
-#include "Gui.h"
+#include "gui/cef/Gui.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../../glw/shaders/GlslShaderProgram.h"
+#include "glw/shaders/GlslShaderProgram.hpp"
 
 namespace glr
 {

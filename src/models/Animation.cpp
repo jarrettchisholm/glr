@@ -1,4 +1,4 @@
-#include "Animation.h"
+#include "models/Animation.hpp"
 
 namespace glr
 {

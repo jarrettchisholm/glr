@@ -1,9 +1,9 @@
 #include <sstream>
 
-#include "Texture2DArray.h"
+#include "glw/Texture2DArray.hpp"
 
-#include "../exceptions/GlException.h"
-#include "../exceptions/FormatException.h"
+#include "exceptions/GlException.hpp"
+#include "exceptions/FormatException.hpp"
 
 
 namespace glr {

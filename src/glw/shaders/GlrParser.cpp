@@ -2,12 +2,12 @@
 
 #include <GL/glew.h>
 
-#include "GlrParser.h"
+#include "glw/shaders/GlrParser.hpp"
 
-#include "../../exceptions/Exception.h"
-#include "../../exceptions/GlException.h"
+#include "exceptions/Exception.hpp"
+#include "exceptions/GlException.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
 namespace glr
 {

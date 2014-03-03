@@ -1,10 +1,10 @@
-#include "GlrShaderProgram.h"
+#include "glw/shaders/GlrShaderProgram.hpp"
 
-#include "GlrPreProcessor.h"
+#include "glw/shaders/GlrPreProcessor.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {

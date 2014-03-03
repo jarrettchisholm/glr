@@ -4,7 +4,7 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
-#include "GlrInclude.h"
+#include "GlrInclude.hpp"
 
 BOOST_AUTO_TEST_SUITE(glrProgram)
 

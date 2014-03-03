@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
@@ -13,11 +13,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-#include "Terrain.h"
+#include "Terrain.hpp"
 
-#include "../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../common/math/Math.hpp"
+#include "common/math/Math.hpp"
 
 namespace glr
 {

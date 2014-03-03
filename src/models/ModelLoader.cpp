@@ -1,4 +1,4 @@
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
@@ -15,10 +15,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "ModelLoader.h"
+#include "models/ModelLoader.hpp"
 
-#include "../common/utilities/AssImpUtilities.hpp"
-#include "../exceptions/GlException.h"
+#include "common/utilities/AssImpUtilities.hpp"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {

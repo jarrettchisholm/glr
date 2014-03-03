@@ -5,14 +5,14 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../../exceptions/FormatException.h"
+#include "exceptions/FormatException.hpp"
 
-#include "ShaderProgramManager.h"
+#include "glw/shaders/ShaderProgramManager.hpp"
 
-#include "ShaderData.h"
-#include "Constants.h"
+#include "glw/shaders/ShaderData.hpp"
+#include "glw/shaders/Constants.hpp"
 
 namespace glr
 {

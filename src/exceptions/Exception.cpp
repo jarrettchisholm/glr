@@ -1,14 +1,9 @@
-/*
- * Exception.cpp
- *
- *  Created on: 2013-01-16
- *      Author: jarrett
- */
+#include "exceptions/Exception.hpp"
 
-#include "Exception.h"
-
-namespace glr {
-namespace exception {
+namespace glr
+{
+namespace exception
+{
 
 Exception::Exception(const std::string message) : message_(message)
 {

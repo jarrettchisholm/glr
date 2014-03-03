@@ -126,7 +126,8 @@ def setup(ARGUMENTS):
 		includeDirectories.append('sfml/include')
 		
 		# For glr compilation
-		cpp_paths.append('../src')
+		cpp_paths.append('include')
+		cpp_paths.append('src') # Need 'src' for submodules
 		relativeDirectory = ''
 		for d in includeDirectories:
 			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
@@ -137,12 +138,15 @@ def setup(ARGUMENTS):
 		
 		# For glr tests compilation
 		relativeDirectory = '../'
+		cpp_paths.append(relativeDirectory + 'include')
+		cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
 		for d in includeDirectories:
 			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
 		
 		# For glr samples compilation
-		cpp_paths.append('../../src')
 		relativeDirectory = '../../'
+		cpp_paths.append(relativeDirectory + 'include')
+		cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
 		for d in includeDirectories:
 			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
 	else:

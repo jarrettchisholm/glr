@@ -1,6 +1,6 @@
-#include "GlrPreProcessor.h"
+#include "glw/shaders/GlrPreProcessor.hpp"
 
-#include "ShaderData.h"
+#include "glw/shaders/ShaderData.hpp"
 
 namespace glr
 {

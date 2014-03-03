@@ -4,11 +4,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "Animation.h"
+#include "glw/Animation.hpp"
 
-#include "Constants.h"
+#include "glw/Constants.hpp"
 
-#include "../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {

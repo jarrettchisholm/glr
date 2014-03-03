@@ -1,6 +1,6 @@
-#include "Model.h"
+#include "models/Model.hpp"
 
-#include "../glw/TextureManager.h"
+#include "glw/TextureManager.hpp"
 
 namespace glr
 {

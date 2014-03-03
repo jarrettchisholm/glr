@@ -1,10 +1,10 @@
 #include <sstream>
 
-#include "Mesh.h"
+#include "glw/Mesh.hpp"
 
-#include "../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {

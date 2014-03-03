@@ -2,17 +2,17 @@
 
 #include <GL/glew.h>
 
-#include "Window.h"
+#include "Window.hpp"
 
-#include "glw/shaders/ShaderProgramManager.h"
-#include "glw/shaders/IShader.h"
-#include "exceptions/GlException.h"
+#include "glw/shaders/ShaderProgramManager.hpp"
+#include "glw/shaders/IShader.hpp"
+#include "exceptions/GlException.hpp"
 
-#include "GlrProgram.h"
+#include "GlrProgram.hpp"
 
 #include "common/logger/Logger.hpp"
 
-#include "gui/cef/Gui.h"
+#include "gui/cef/Gui.hpp"
 
 namespace glr
 {

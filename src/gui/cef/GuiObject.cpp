@@ -2,9 +2,9 @@
 
 #include <sstream>
 
-#include "GuiObject.h"
+#include "gui/cef/GuiObject.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
 namespace glr
 {

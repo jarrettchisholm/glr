@@ -7,13 +7,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
-#include "Camera.h"
+#include "Camera.hpp"
 
 #include "common/logger/Logger.hpp"
 

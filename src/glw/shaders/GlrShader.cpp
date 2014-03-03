@@ -1,10 +1,10 @@
 #include <boost/regex.hpp>
 
-#include "GlrShader.h"
+#include "glw/shaders/GlrShader.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "GlrPreProcessor.h"
+#include "glw/shaders/GlrPreProcessor.hpp"
 
 namespace glr
 {

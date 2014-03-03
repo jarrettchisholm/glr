@@ -1,4 +1,4 @@
-#include "FpsCamera.h"
+#include "FpsCamera.hpp"
 
 namespace glr
 {

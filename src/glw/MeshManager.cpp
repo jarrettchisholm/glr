@@ -1,10 +1,10 @@
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
-#include "MeshManager.h"
+#include "glw/MeshManager.hpp"
 
 
 namespace glr

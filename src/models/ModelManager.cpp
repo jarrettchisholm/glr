@@ -1,12 +1,12 @@
-#include "../Configure.h"
+#include "Configure.hpp"
 
 #ifdef OS_WINDOWS
 #include <windows.h>
 #endif
 
-#include "ModelManager.h"
+#include "models/ModelManager.hpp"
 
-#include "../common/utilities/ImageLoader.hpp"
+#include "common/utilities/ImageLoader.hpp"
 
 namespace glr
 {

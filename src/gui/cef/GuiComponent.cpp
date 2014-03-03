@@ -1,33 +1,29 @@
-/*
- * GuiComponent.cpp
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifdef USE_CEF
 
 #include <iostream>
 #include <string.h>
 #include <cstring>
 
-#include "GuiComponent.h"
+#include "gui/cef/GuiComponent.hpp"
 
-#include "GuiObject.h"
+#include "gui/cef/GuiObject.hpp"
 
-#include "../../common/utilities/ImageLoader.hpp"
-#include "../../common/utilities/BoostAnyUtilities.hpp"
+#include "common/utilities/ImageLoader.hpp"
+#include "common/utilities/BoostAnyUtilities.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../../exceptions/ExceptionInclude.h"
+#include "exceptions/ExceptionInclude.hpp"
 
 #include "../../../cef_client/include/FunctionList.hpp"
 #include "../../../cef_client/include/ExceptionList.hpp"
 
-namespace glr {
-namespace gui {
-namespace cef {
+namespace glr
+{
+namespace gui
+{
+namespace cef
+{
 
 GuiComponent::GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), width_(width), height_(height)
 {

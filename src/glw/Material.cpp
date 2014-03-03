@@ -3,9 +3,9 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
-#include "Material.h"
+#include "glw/Material.hpp"
 
 namespace glr
 {

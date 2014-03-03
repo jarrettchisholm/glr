@@ -2,19 +2,19 @@
 
 #include <GL/glew.h>
 
-#include "shaders/ShaderProgramManager.h"
-#include "shaders/IShader.h"
+#include "glw/shaders/ShaderProgramManager.hpp"
+#include "glw/shaders/IShader.hpp"
 
-#include "OpenGlDevice.h"
+#include "glw/OpenGlDevice.hpp"
 
-#include "../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
-#include "MaterialManager.h"
-#include "TextureManager.h"
-#include "MeshManager.h"
-#include "AnimationManager.h"
+#include "glw/MaterialManager.hpp"
+#include "glw/TextureManager.hpp"
+#include "glw/MeshManager.hpp"
+#include "glw/AnimationManager.hpp"
 
 namespace glr
 {

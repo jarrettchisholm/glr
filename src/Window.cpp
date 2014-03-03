@@ -9,11 +9,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Window.h"
+#include "Window.hpp"
 
 #include "common/logger/Logger.hpp"
 
-#include "exceptions/Exception.h"
+#include "exceptions/Exception.hpp"
 
 namespace glr
 {

@@ -11,7 +11,7 @@
 #include "glm/glm.hpp"
 #include <glm/gtx/string_cast.hpp>
 
-#include "GlrInclude.h"
+#include "GlrInclude.hpp"
 
 
 BOOST_AUTO_TEST_SUITE(sceneNode)

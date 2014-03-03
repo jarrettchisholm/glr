@@ -1,10 +1,10 @@
 #include <algorithm>
 
-#include "GlslShaderProgram.h"
+#include "glw/shaders/GlslShaderProgram.hpp"
 
-#include "../../common/logger/Logger.hpp"
+#include "common/logger/Logger.hpp"
 
-#include "../../exceptions/GlException.h"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {
@@ -47,7 +47,7 @@ void GlslShaderProgram::compile()
 	
 	generateBindings();
 
-	// Note: reservedVertexAttribLocations is defined in IShader.h
+	// Note: reservedVertexAttribLocations is defined in IShader.hpp
 	for ( auto& it : reservedVertexAttribLocations )
 	{
 		glBindAttribLocation(programId_, it.second, it.first.c_str());
