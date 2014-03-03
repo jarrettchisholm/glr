@@ -2,7 +2,7 @@
 
 Main::Main()
 {
-	glrProgram_ = glr::GraphicsEngine::createProgram();
+	glrProgram_ = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram() );
 	window_ = glrProgram_->createWindow("Test Name", "Simple Glr Project", 800, 600, 32, false, false);
 	smgr_ = glrProgram_->getSceneManager();
 	

@@ -13,7 +13,7 @@ Main::Main()
 	std::string modelsDir = "../../data/";
 	glr::ProgramSettings settings = glr::ProgramSettings();
 	settings.defaultTextureDir = std::string( modelsDir );
-	glrProgram_ = glr::GraphicsEngine::createProgram( settings );
+	glrProgram_ = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram(settings) );
 	
 	window_ = glrProgram_->createWindow("Test Name", "Simple Lights Test", 800, 600, 32, false, false);
 	smgr_ = glrProgram_->getSceneManager();

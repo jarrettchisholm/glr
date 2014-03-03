@@ -5,7 +5,7 @@
 #include <config.h>
 #endif
 
-#include "GraphicsEngine.h"
+#include "GlrProgram.h"
 #include "IWindow.h"
 #include "ISceneManager.h"
 #include "ISceneNode.h"
