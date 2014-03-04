@@ -3,10 +3,25 @@
 import urllib2
 import tarfile
 import sys, os
+import platform
 import glob
 import subprocess
 import shutil
 
+### Establish our system
+isLinux = platform.system() == 'Linux'
+isWindows = os.name == 'nt'
+isMac = platform.system() == 'Darwin'
+
+# Handling libudev.so.0 missing (happens in newer linux distros)
+# Easy way:
+# 	64 bit:
+# 		sudo ln -sf /lib/x86_64-linux-gnu/libudev.so.1 /lib/x86_64-linux-gnu/libudev.so.0
+# 	32 bit:
+# 		sudo ln -sf /lib/i386-linux-gnu/libudev.so.1 /lib/i386-linux-gnu/libudev.so.0
+#
+# Hard way:
+# 	Unfortunately, I couldn't figure out where to put the libudev.so.0 sym link locally.
 
 files = dict()
 # Format
@@ -20,10 +35,26 @@ files['CEF3 3.1650.1562'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/cef
 files['GLM 0.9.5.2'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glm_0.9.5.2.tar.gz', 					'glm.tar.gz', 		'glm', 			'glm']
 files['GLEW 1.10.0'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glew_1.10.0_linux_x64.tar.gz', 		'glew.tar.gz', 		'glew', 		'glew']
 files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/sfml_2.1_linux_x64.tar.gz', 			'sfml.tar.gz', 		'sfml', 		'sfml']
-# TODO: glm, sfml, glew
+
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
 
+def checkSystemDependencies():
+	"""Check for required system dependencies, and if they are not present, inform the user and quit"""
+	
+	if isLinux:
+		packages = ['build-essential', 'libgtk2.0-dev', 'libgtkglext1-dev']
+		
+		for p in packages:
+			devNull = open(os.devnull, "w")
+			retVal = subprocess.call(["dpkg", "-s", p], stdout = devNull, stderr = subprocess.STDOUT)
+			devNull.close()
+			
+			if (retVal != 0):
+				print("Required package '{0}' is not installed.  You will need to install it before you can run setup.py.".format(p))
+				sys.exit(1)
+
+# TODO: Implement this?
 def installSystemDependencies():
 	"""Install any system libraries we require"""
 	pass
@@ -105,6 +136,7 @@ def install():
 		pass
 
 
+checkSystemDependencies()
 installSystemDependencies()
 download()
 extract()
