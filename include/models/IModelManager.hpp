@@ -25,12 +25,17 @@ public:
 	 * @return The raw pointer to a Model object.  The caller does not own the pointer - it is managed by
 	 * the ModelManager.
 	 */
-	virtual IModel* getModel(const std::string& name) = 0;
+	virtual IModel* getModelTemplate(glm::detail::uint32 id) = 0;
+	virtual IModel* getModelTemplate(const std::string& name) = 0;
 	
 	/**
 	 * Loads the model from the given filename.
 	 */
-	virtual void loadModel(const std::string& name, const std::string& filename) = 0;
+	virtual void loadModelTemplate(const std::string& name, const std::string& filename) = 0;
+	
+	virtual void destroyModelTemplate(glm::detail::uint32 id) = 0;
+	virtual void destroyModelTemplate(const std::string& name) = 0;
+	virtual void destroyModelTemplate(IModel* model) = 0;
 	
 	/**
 	 * Creates an instance of the model with name 'name'.  This model can have animations and animation
@@ -39,7 +44,14 @@ public:
 	 * @return A unique pointer to a model object.  The model is a copy of the model that was previously loaded
 	 * with the specified name.
 	 */
-	virtual std::unique_ptr<IModel> createInstance(const std::string& name) = 0;
+	virtual IModel* createModelInstance(const std::string& name) = 0;
+	
+	virtual destroyModelInstance(glm::detail::uint32 id) = 0;
+	virtual destroyModelInstance(const std::string& name) = 0;
+	virtual destroyModelInstance(IModel* model) = 0;
+	
+	virtual getModelInstance(glm::detail::uint32 id) = 0;
+	virtual getModelInstance(const std::string& name) = 0;
 };
 
 }
