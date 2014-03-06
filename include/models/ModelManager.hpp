@@ -20,6 +20,8 @@
 
 #include "models/Model.hpp"
 
+#include "IdManager.hpp"
+
 namespace glr
 {
 namespace models
@@ -72,6 +74,8 @@ private:
 	std::vector< std::unique_ptr<IModel> > modelInstances_;
 	
 	std::unique_ptr<ModelLoader> modelLoader_;
+	
+	IdManager idManager_;
 };
 
 }

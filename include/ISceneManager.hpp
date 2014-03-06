@@ -5,6 +5,7 @@
 #include "ICamera.hpp"
 #include "ILight.hpp"
 #include "models/IModelManager.hpp"
+#include "models/IBillboardManager.hpp"
 #include "glw/shaders/IShaderProgramManager.hpp"
 
 namespace glr

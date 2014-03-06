@@ -22,10 +22,11 @@ MaterialManager::~MaterialManager()
 
 Material* MaterialManager::getMaterial(const std::string& name)
 {
-	if ( materials_.find(name) != materials_.end() )
+	auto it = materials_.find(name);
+	if ( it != materials_.end() )
 	{
 		LOG_DEBUG( "Material '" + name + "' found." );
-		return materials_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Material '" + name + "' not found." );
@@ -37,10 +38,12 @@ Material* MaterialManager::addMaterial(const std::string& name)
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
-	if ( materials_.find(name) != materials_.end() && materials_[name].get() != nullptr )
+	auto it = materials_.find(name);
+
+	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Material '" + name + "' already exists." );
-		return materials_[name].get();
+		return it->second.get();
 	}
 
 	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name));
@@ -60,10 +63,12 @@ Material* MaterialManager::addMaterial(
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
-	if ( materials_.find(name) != materials_.end() && materials_[name].get() != nullptr )
+	auto it = materials_.find(name);
+
+	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Material '" + name + "' already exists." );
-		return materials_[name].get();
+		return it->second.get();
 	}
 
 	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength));

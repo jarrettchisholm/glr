@@ -54,6 +54,7 @@ public:
 	virtual const glm::mat4& getModelMatrix();
 	
 	virtual models::IModelManager* getModelManager();
+	virtual models::IBillboardManager* getBillboardManager();
 	virtual shaders::IShaderProgramManager* getShaderProgramManager();
 
 protected:
@@ -66,6 +67,7 @@ protected:
 	glmd::uint32 nextLightSceneNodeId_;
 
 	std::unique_ptr<models::IModelManager> modelManager_;
+	std::unique_ptr<models::IBillboardManager> billboardManager_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	glw::IOpenGlDevice* openGlDevice_;

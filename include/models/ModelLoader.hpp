@@ -12,6 +12,8 @@
 
 #include "models/Model.hpp"
 
+#include "IdManager.hpp"
+
 namespace glmd = glm::detail;
 
 namespace glr
@@ -25,17 +27,18 @@ public:
 	ModelLoader(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelLoader();
 
-	std::unique_ptr<Model> loadModel(const std::string& name, const std::string& filename);
+	std::unique_ptr<Model> loadModel(const std::string& name, const std::string& filename, IdManager& idManager);
 	
 	/**
 	 * Loads model data from the file specified by filename.
 	 * 
 	 * @param filename The file we want to load
+	 * @param idManager
 	 * 
 	 * @returns A vector of ModelData objects (as shared pointers).  We do this so as not to have to copy the
 	 * model data when we return from this method.
 	 */
-	std::unique_ptr<Model> loadModel(const std::string& filename);
+	std::unique_ptr<Model> loadModel(const std::string& filename, IdManager& idManager);
 	
 private:
 	aiLogStream stream;
@@ -48,8 +51,9 @@ private:
 	 * @param modelData The data to use to initialize this model.  Each element of the modelData vector corresponds to a new
 	 * mesh/material/texture/animation set.
 	 * @param animationSet The set of animations to be associated with the model.
+	 * @param idManager
 	 */
-	std::unique_ptr<Model> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet);
+	std::unique_ptr<Model> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager);
 
 	/**
 	 * Load the vertex, normal, texture, and color data for the given mesh.

@@ -12,6 +12,8 @@
 #include "models/IModel.hpp"
 #include "models/Animation.hpp"
 
+#include "Id.hpp"
+
 #include "glw/IOpenGlDevice.hpp"
 
 #include "glw/IMaterialManager.hpp"
@@ -33,10 +35,7 @@ class Model : public IModel
 {
 public:
 	Model(glw::IOpenGlDevice* openGlDevice);
-	Model(const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
-	
-	// TESTING
-	Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice);	
+	Model(Id id, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(const Model& other);
 	virtual ~Model();
 
@@ -76,6 +75,8 @@ public:
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
+	Id id_;
+
 	glw::IOpenGlDevice* openGlDevice_;
 
 	std::vector<glw::IMesh*> meshes_;

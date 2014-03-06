@@ -12,8 +12,8 @@ Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 	initialize();
 }
 
-Model::Model(const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
-	: meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
+Model::Model(Id id, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
+	: id_(id), meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
 {
 	// Error check - Make sure meshes, textures, and materials vectors are the same length
 	if (meshes_.size() != textures_.size() || meshes_.size() != materials_.size() || materials_.size() != textures_.size())
@@ -32,28 +32,6 @@ Model::Model(const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITex
 		auto a = static_cast<glw::Animation*>(animation);
 		animations_[ animation->getName() ] = std::unique_ptr<models::Animation>( new models::Animation(a, openGlDevice_) );
 	}
-}
-
-Model::Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
-{
-	meshManager_ = openGlDevice_->getMeshManager();
-	materialManager_ = openGlDevice_->getMaterialManager();
-	textureManager_ = openGlDevice_->getTextureManager();
-	animationManager_ = openGlDevice_->getAnimationManager();
-	
-	meshes_.push_back( mesh );
-	textures_.push_back( nullptr );
-	materials_.push_back( nullptr );
-	
-	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
-	
-	rootBoneNode_ = glw::BoneNode();
-	
-	currentAnimation_ = nullptr;
-	
-	// NOTE: the below is prime for a memory leak
-	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
-	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 
 /**

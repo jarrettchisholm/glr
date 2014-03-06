@@ -12,6 +12,7 @@
 #include "BasicSceneNode.hpp"
 #include "Light.hpp"
 #include "models/ModelManager.hpp"
+#include "models/BillboardManager.hpp"
 #include "exceptions/RuntimeException.hpp"
 
 namespace glr
@@ -23,6 +24,7 @@ BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgr
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 	
 	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager(openGlDevice_));
+	billboardManager_ = std::unique_ptr<models::IBillboardManager>(new models::BillboardManager(openGlDevice_));
 	
 	rootSceneNode_ = std::shared_ptr<ISceneNode>(new BasicSceneNode(openGlDevice_));
 
@@ -146,6 +148,11 @@ shaders::IShaderProgram* BasicSceneManager::getDefaultShaderProgram()
 const glm::mat4& BasicSceneManager::getModelMatrix()
 {
 	return modelMatrix_;
+}
+
+models::IBillboardManager* BasicSceneManager::getBillboardManager()
+{
+	return billboardManager_.get();
 }
 
 models::IModelManager* BasicSceneManager::getModelManager()
