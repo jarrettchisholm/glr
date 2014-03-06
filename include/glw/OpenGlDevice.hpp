@@ -25,7 +25,7 @@ namespace glw
 class OpenGlDevice : public IOpenGlDevice
 {
 public:
-	OpenGlDevice(OpenGlDeviceSettings settings);
+	OpenGlDevice(const OpenGlDeviceSettings& settings);
 	virtual ~OpenGlDevice();
 	
 	/* Implementation of IOpenGlDevice methods */
@@ -86,8 +86,8 @@ private:
 	void releaseLightUbo(std::string name);
 	void bindUniformBufferObjects(shaders::IShaderProgram* shader);
 
-	void initialize(OpenGlDeviceSettings settings);
-	void initializeSettings(OpenGlDeviceSettings settings);
+	void initialize(const OpenGlDeviceSettings& settings);
+	void initializeSettings(const OpenGlDeviceSettings& settings);
 	void destroy();
 };
 

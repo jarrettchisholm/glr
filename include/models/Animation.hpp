@@ -9,7 +9,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "IAnimation.hpp"
+#include "models/IAnimation.hpp"
 #include "glw/IOpenGlDevice.hpp"
 
 #include "glw/Animation.hpp"

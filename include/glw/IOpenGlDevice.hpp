@@ -10,12 +10,12 @@
 
 #include "shaders/IShaderProgramManager.hpp"
 
-#include "IMaterialManager.hpp"
-#include "ITextureManager.hpp"
-#include "IMeshManager.hpp"
-#include "IAnimationManager.hpp"
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+#include "glw/IMeshManager.hpp"
+#include "glw/IAnimationManager.hpp"
 
-#include "Constants.hpp"
+#include "glw/Constants.hpp"
 
 namespace glr
 {
@@ -23,6 +23,8 @@ namespace glw
 {
 
 class IMeshManager;
+class ITextureManager;
+class IMaterialManager;
 class IAnimationManager;
 
 struct GlError

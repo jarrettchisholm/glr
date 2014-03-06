@@ -15,6 +15,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+#include "glw/IMeshManager.hpp"
+#include "glw/IAnimationManager.hpp"
+
+#include "glw/IMesh.hpp"
+#include "glw/ITexture.hpp"
+#include "glw/IMaterial.hpp"
+#include "glw/IAnimation.hpp"
+
 #include "models/ModelLoader.hpp"
 
 #include "common/utilities/AssImpUtilities.hpp"
@@ -25,7 +35,7 @@ namespace glr
 namespace models
 {
 
-ModelLoader::ModelLoader()
+ModelLoader::ModelLoader(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
@@ -43,12 +53,12 @@ ModelLoader::~ModelLoader()
 	aiDetachAllLogStreams();
 }
 
-std::unique_ptr<IModel> ModelLoader::loadModel(const std::string& filename)
+std::unique_ptr<Model> ModelLoader::loadModel(const std::string& filename)
 {
 	return loadModel(filename, filename);
 }
 
-std::unique_ptr<IModel> ModelLoader::loadModel(const std::string& name, const std::string& filename)
+std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std::string& filename)
 {
 	LOG_DEBUG( "Loading model '" + name + "' - " + filename + "." );
 
@@ -107,7 +117,7 @@ std::unique_ptr<IModel> ModelLoader::loadModel(const std::string& name, const st
 	return generateModel(modelData, animationSet);
 }
 
-std::unique_ptr<IModel> ModelLoader::generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet)
+std::unique_ptr<Model> ModelLoader::generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet)
 {
 	auto meshManager = openGlDevice_->getMeshManager();
 	auto materialManager = openGlDevice_->getMaterialManager();
@@ -117,7 +127,7 @@ std::unique_ptr<IModel> ModelLoader::generateModel(std::vector< std::shared_ptr<
 	auto meshes = std::vector<glw::IMesh*>();
 	auto textures = std::vector<glw::ITexture*>();
 	auto materials = std::vector<glw::IMaterial*>();
-	auto animations = std::map< std::string, std::unique_ptr<Animation> >();
+	auto animations = std::vector<glw::IAnimation*>();
 	
 	for ( auto& d : modelData)
 	{
@@ -183,13 +193,13 @@ std::unique_ptr<IModel> ModelLoader::generateModel(std::vector< std::shared_ptr<
 		
 		assert(animation != nullptr);
 		
-		animations[ animation->getName() ] = std::unique_ptr<Animation>( new Animation(animation, openGlDevice_) );
+		animations.push_back(animation);
 		
 		// TODO: add animations properly (i.e. with names specifying the animation i guess?)
 		std::cout << "anim: " << animation->getName() << std::endl;
 	}
 	
-	std::unique_ptr<IModel> model = std::unique_ptr<Model>( new Model(meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation) );
+	std::unique_ptr<Model> model = std::unique_ptr<Model>( new Model(meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation, openGlDevice_) );
 	
 	return std::move(model);
 }

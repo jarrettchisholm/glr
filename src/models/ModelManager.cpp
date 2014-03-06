@@ -15,9 +15,9 @@ namespace models
 
 ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
-	modelLoader_ = ModelLoader();
+	modelLoader_ = std::unique_ptr<ModelLoader>( new ModelLoader(openGlDevice_) );
 	
-	models_ = std::map< std::string, std::unique_ptr<IModel> >();
+	models_ = std::map< std::string, std::unique_ptr<Model> >();
 	modelInstances_ = std::vector< std::unique_ptr<IModel> >();
 	
 	// get a handle to the predefined STDOUT log stream and attach
@@ -42,16 +42,16 @@ void ModelManager::loadModel(const std::string& name, const std::string& filenam
 	std::cout << filename << std::endl;
 	LOG_DEBUG( "Loading model '" + filename + "'." );
 
-	if ( models_[name] != 0 )
+	auto it = models_.find(name);
+
+	if ( it != models_.end() )
 	{
 		LOG_DEBUG( "Model found...No need to load." );
-		//return models_[filename].get();
 	}
 
-	// Note: We allow the modelData shared pointer to die at the end of this method
-	auto model = modelLoader_.loadModel( name, filename );
+	auto model = modelLoader_->loadModel( name, filename );
 
-	models_[name] = std::move(model);
+	models_.insert( std::make_pair(name, std::move(model)) );
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
 }
@@ -64,10 +64,12 @@ IModel* ModelManager::getModelTemplate(const std::string& name)
 {
 	LOG_DEBUG( "Retrieving model '" + name + "'." );
 	
-	if ( models_.find(name) != models_.end() )
+	auto it = models_.find(name);
+	
+	if ( it != models_.end() )
 	{
 		LOG_DEBUG( "Model found." );
-		return models_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Model not found." );
@@ -118,6 +120,8 @@ void ModelManager::destroyInstance(IModel* model)
 
 IModel* ModelManager::getInstance(glm::detail::uint32 id)
 {
+	// TODO: Implement
+	return nullptr;
 }
 
 }

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "IModel.hpp"
+#include "models/IModel.hpp"
 
 #include "glw/Mesh.hpp"
 

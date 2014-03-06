@@ -12,13 +12,13 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "IModelManager.hpp"
+#include "models/IModelManager.hpp"
 
-#include "ModelLoader.hpp"
+#include "models/ModelLoader.hpp"
 
 #include "glw/IOpenGlDevice.hpp"
 
-#include "IModel.hpp"
+#include "models/Model.hpp"
 
 namespace glr
 {
@@ -68,10 +68,10 @@ private:
 
 	aiLogStream stream;
 
-	std::map< std::string, std::unique_ptr<IModel> > models_;
+	std::map< std::string, std::unique_ptr<Model> > models_;
 	std::vector< std::unique_ptr<IModel> > modelInstances_;
 	
-	ModelLoader modelLoader_;
+	std::unique_ptr<ModelLoader> modelLoader_;
 };
 
 }

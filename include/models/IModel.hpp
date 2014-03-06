@@ -1,7 +1,7 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-#include "IAnimation.hpp"
+#include "models/IAnimation.hpp"
 
 #include "glw/shaders/IShaderProgram.hpp"
 

@@ -8,7 +8,9 @@
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 
-#include "IModel.hpp"
+#include "glw/IOpenGlDevice.hpp"
+
+#include "models/Model.hpp"
 
 namespace glmd = glm::detail;
 
@@ -20,10 +22,10 @@ namespace models
 class ModelLoader
 {
 public:
-	ModelLoader();
+	ModelLoader(glw::IOpenGlDevice* openGlDevice);
 	virtual ~ModelLoader();
 
-	std::unique_ptr<IModel> loadModel(const std::string& name, const std::string& filename);
+	std::unique_ptr<Model> loadModel(const std::string& name, const std::string& filename);
 	
 	/**
 	 * Loads model data from the file specified by filename.
@@ -33,10 +35,12 @@ public:
 	 * @returns A vector of ModelData objects (as shared pointers).  We do this so as not to have to copy the
 	 * model data when we return from this method.
 	 */
-	std::unique_ptr<IModel> loadModel(const std::string& filename);
+	std::unique_ptr<Model> loadModel(const std::string& filename);
 	
 private:
 	aiLogStream stream;
+	
+	glw::IOpenGlDevice* openGlDevice_;
 	
 	/**
 	 * Will initialize a model with data given through the modelData object.
@@ -45,7 +49,7 @@ private:
 	 * mesh/material/texture/animation set.
 	 * @param animationSet The set of animations to be associated with the model.
 	 */
-	std::unique_ptr<IModel> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet);
+	std::unique_ptr<Model> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet);
 
 	/**
 	 * Load the vertex, normal, texture, and color data for the given mesh.

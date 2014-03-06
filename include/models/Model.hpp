@@ -9,8 +9,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "IModel.hpp"
-#include "Animation.hpp"
+#include "models/IModel.hpp"
+#include "models/Animation.hpp"
 
 #include "glw/IOpenGlDevice.hpp"
 
@@ -33,7 +33,8 @@ class Model : public IModel
 {
 public:
 	Model(glw::IOpenGlDevice* openGlDevice);
-	Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDevice* openGlDevice);
+	Model(const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
+	
 	// TESTING
 	Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice);	
 	Model(const Model& other);
@@ -106,7 +107,7 @@ protected:
 	glmd::int32 getIndexOf(glw::IMaterial* material);
 	
 private:
-	void initialize(std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >());
+	void initialize();
 	void destroy();
 
 };

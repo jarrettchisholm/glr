@@ -21,7 +21,7 @@ namespace glr
 namespace glw
 {
 	
-OpenGlDevice::OpenGlDevice(OpenGlDeviceSettings settings)
+OpenGlDevice::OpenGlDevice(const OpenGlDeviceSettings& settings)
 {
 	initialize( settings );
 }
@@ -34,7 +34,7 @@ OpenGlDevice::~OpenGlDevice()
  * 
  * @param properties Used to initialize the OpenGlDevice settings
  */
-void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
+void OpenGlDevice::initialize(const OpenGlDeviceSettings& settings)
 {	
 	initializeSettings( settings );
 	bufferIds_ = std::vector<GLuint>();
@@ -71,7 +71,7 @@ void OpenGlDevice::initialize(OpenGlDeviceSettings settings)
  * 
  * @param settings The settings used to override the OpenGlDevice settings
  */
-void OpenGlDevice::initializeSettings(OpenGlDeviceSettings settings)
+void OpenGlDevice::initializeSettings(const OpenGlDeviceSettings& settings)
 {
 	if ( !settings.defaultTextureDir.empty() )
 	{

@@ -1,6 +1,6 @@
 #include "models/Model.hpp"
 
-#include "glw/TextureManager.hpp"
+#include "exceptions/Exception.hpp"
 
 namespace glr
 {
@@ -12,9 +12,26 @@ Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 	initialize();
 }
 
-Model::Model(std::vector< std::shared_ptr<ModelData> > modelData, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
+Model::Model(const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
+	: meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
 {
-	initialize(modelData);
+	// Error check - Make sure meshes, textures, and materials vectors are the same length
+	if (meshes_.size() != textures_.size() || meshes_.size() != materials_.size() || materials_.size() != textures_.size())
+	{
+		std::string msg = std::string("Unable to create Model...Mesh, Texture and Material vectors are not the same size.");
+		LOG_ERROR( msg );
+		throw exception::Exception(msg);		
+	}
+	
+	initialize();
+	
+	// Wrap the animations
+	for (auto animation : animations)
+	{
+		// TODO: This is baddd!
+		auto a = static_cast<glw::Animation*>(animation);
+		animations_[ animation->getName() ] = std::unique_ptr<models::Animation>( new models::Animation(a, openGlDevice_) );
+	}
 }
 
 Model::Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
@@ -28,7 +45,7 @@ Model::Model(glw::IMesh* mesh, glw::IOpenGlDevice* openGlDevice) : openGlDevice_
 	textures_.push_back( nullptr );
 	materials_.push_back( nullptr );
 	
-	animations_ = std::map< std::string, std::unique_ptr<Animation>>();
+	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
 	
 	rootBoneNode_ = glw::BoneNode();
 	
@@ -56,12 +73,12 @@ Model::Model(const Model& other)
 	materials_ = other.materials_;
 	//animations_ = other.animations_;
 	
-	animations_ = std::map< std::string, std::unique_ptr<Animation>>();
+	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
 	
 	for ( auto& a : other.animations_)
 	{
 		std::cout << a.first << std::endl;
-		animations_[ a.first ] = std::unique_ptr<Animation>( new Animation(*a.second.get()) );
+		animations_[ a.first ] = std::unique_ptr<models::Animation>( new models::Animation(*a.second.get()) );
 	}
 	
 	// TODO: Do we want to actually do a copy on this each time?
@@ -90,8 +107,17 @@ Model::~Model()
 {
 }
 
-void Model::initialize(std::vector< std::shared_ptr<ModelData> > modelData)
-{	
+void Model::initialize()
+{
+	meshManager_ = openGlDevice_->getMeshManager();
+	materialManager_ = openGlDevice_->getMaterialManager();
+	textureManager_ = openGlDevice_->getTextureManager();
+	animationManager_ = openGlDevice_->getAnimationManager();
+	
+	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
+	
+	currentAnimation_ = nullptr;
+	
 	// TODO: make this not crappy
 	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
 	emptyAnimation_->generateIdentityBoneTransforms( 100 );
@@ -271,7 +297,7 @@ IAnimation* Model::getCurrentAnimation()
  * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
  * is associated with this model with the given name.
  */
-IAnimation* Model::getAnimation(const std::string& name)
+models::IAnimation* Model::getAnimation(const std::string& name)
 {	
 	if ( animations_.find(name) != animations_.end() )
 	{
@@ -304,9 +330,9 @@ glmd::uint32 Model::getNumberOfAnimations()
  * @param animation A pointer to the animation to use.  If nullptr is sent in, the current animation is set to nullptr (i.e. no current
  * animation)
  */
-void Model::setCurrentAnimation(IAnimation* animation)
+void Model::setCurrentAnimation(models::IAnimation* animation)
 {
-	currentAnimation_ = static_cast<Animation*>(animation);
+	currentAnimation_ = static_cast<models::Animation*>(animation);
 }
 
 glmd::int32 Model::getIndexOf(glw::IMesh* mesh)
