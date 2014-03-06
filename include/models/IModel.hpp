@@ -8,6 +8,8 @@
 #include "glw/IMesh.hpp"
 #include "glw/ITexture.hpp"
 
+#include "Id.hpp"
+
 namespace glr
 {
 namespace models
@@ -99,6 +101,9 @@ public:
 	{
 	}
 	;
+	
+	virtual const Id& getId() const = 0;
+	virtual const std::string& getName() const = 0;
 
 	/**
 	 * Returns the animation with the given name.

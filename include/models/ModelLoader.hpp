@@ -53,7 +53,7 @@ private:
 	 * @param animationSet The set of animations to be associated with the model.
 	 * @param idManager
 	 */
-	std::unique_ptr<Model> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager);
+	std::unique_ptr<Model> generateModel(const std::string& name, std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager);
 
 	/**
 	 * Load the vertex, normal, texture, and color data for the given mesh.

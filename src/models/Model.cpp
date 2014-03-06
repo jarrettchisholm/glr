@@ -7,20 +7,15 @@ namespace glr
 namespace models
 {
 
-Model::Model(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
-{
-	initialize();
-}
-
-Model::Model(Id id, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
-	: id_(id), meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
+Model::Model(Id id, const std::string& name, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
+	: id_(id), name_(name), meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
 {
 	// Error check - Make sure meshes, textures, and materials vectors are the same length
 	if (meshes_.size() != textures_.size() || meshes_.size() != materials_.size() || materials_.size() != textures_.size())
 	{
 		std::string msg = std::string("Unable to create Model...Mesh, Texture and Material vectors are not the same size.");
 		LOG_ERROR( msg );
-		throw exception::Exception(msg);		
+		throw exception::Exception(msg);
 	}
 	
 	initialize();
@@ -34,11 +29,29 @@ Model::Model(Id id, const std::vector<glw::IMesh*>& meshes, const std::vector<gl
 	}
 }
 
-/**
- * Copy constructor.
- */
 Model::Model(const Model& other)
 {
+	std::string msg = std::string("Unable to copy Model...In order to copy a Model, you must provide a new id for the copy.");
+	LOG_ERROR( msg );
+	throw exception::Exception(msg);
+}
+
+Model::Model(Id id, const Model& other)
+{
+	id_ = id;
+	
+	copy(other);
+}
+
+Model::~Model()
+{
+}
+
+void Model::copy(const Model& other)
+{
+	// TODO: How do we do a new id here?
+	name_ = other.name_;
+	
 	openGlDevice_ = other.openGlDevice_;
 	
 	meshManager_ = openGlDevice_->getMeshManager();
@@ -79,10 +92,6 @@ Model::Model(const Model& other)
 	// TODO: make this not crappy
 	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
 	emptyAnimation_->generateIdentityBoneTransforms( 100 );
-}
-
-Model::~Model()
-{
 }
 
 void Model::initialize()
@@ -253,6 +262,16 @@ void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
 glmd::uint32 Model::getNumberOfMaterials()
 {
 	return materials_.size();
+}
+
+const Id& Model::getId() const
+{
+	return id_;
+}
+
+const std::string& Model::getName() const
+{
+	return name_;
 }
 
 /**

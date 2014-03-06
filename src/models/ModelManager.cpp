@@ -15,7 +15,10 @@ namespace models
 
 ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
-	modelLoader_ = ModelLoader();
+	modelLoader_ = std::unique_ptr<ModelLoader>( new ModelLoader(openGlDevice_) );
+	
+	models_ = std::vector< std::unique_ptr<Model> >();
+	modelInstances_ = std::vector< std::unique_ptr<IModel> >();
 	
 	idManager_ = IdManager();
 	
@@ -35,60 +38,129 @@ ModelManager::~ModelManager()
 	aiDetachAllLogStreams();
 }
 
-IModel* ModelManager::getModel(const std::string& name)
+IModel* ModelManager::getModelTemplate(Id id) const
 {
-	LOG_DEBUG( "Retrieving model '" + name + "'." );
+	LOG_DEBUG( "Retrieving model template with id '" << id << "'." );
+
+	return getModel(id);
+}
+
+IModel* ModelManager::getModelTemplate(const std::string& name) const
+{
+	LOG_DEBUG( "Retrieving model template with name '" << name << "'." );
+
+	return getModel(name);
+}
+
+Model* ModelManager::getModel(Id id) const
+{
+	auto findFunction = [&id](const std::unique_ptr<Model>& node) { return node->getId() == id; };
+
+	auto it = std::find_if(models_.begin(), models_.end(), findFunction);
 	
-	if ( models_.find(name) != models_.end() )
+	if (it != models_.end())
 	{
-		LOG_DEBUG( "Model found." );
-		return models_[name].get();
+		LOG_DEBUG( "Model template found." );
+		return it->get();
 	}
 
-	LOG_DEBUG( "Model not found." );
+	LOG_DEBUG( "Model template not found." );
 	
 	return nullptr;
 }
 
+Model* ModelManager::getModel(const std::string& name) const
+{
+	auto findFunction = [&name](const std::unique_ptr<Model>& node) { return node->getName() == name; };
+
+	auto it = std::find_if(models_.begin(), models_.end(), findFunction);
+	
+	if (it != models_.end())
+	{
+		LOG_DEBUG( "Model template found." );
+		return it->get();
+	}
+
+	LOG_DEBUG( "Model template not found." );
+	
+	return nullptr;
+}
 
 void ModelManager::loadModel(const std::string& name, const std::string& filename)
 {
-	std::cout << name << std::endl;
-	std::cout << filename << std::endl;
 	LOG_DEBUG( "Loading model '" + filename + "'." );
 
-	if ( models_[name] != 0 )
+	auto model = getModelTemplate(name);
+
+	if ( model != nullptr )
 	{
 		LOG_DEBUG( "Model found...No need to load." );
-		//return models_[filename].get();
+		return;
 	}
 
-	auto model = modelLoader_->loadModel( name, filename, idManager_ );
-
-	models_[name] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
+	models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
-
-	//return models_[filename].get();
 }
 
-std::unique_ptr<IModel> ModelManager::createInstance(const std::string& name)
+void ModelManager::destroyModelTemplate(Id id)
 {
-	LOG_DEBUG( "Creating model '" + name + "'." );
+}
+
+void ModelManager::destroyModelTemplate(const std::string& name)
+{
+}
+
+void ModelManager::destroyModelTemplate(IModel* model)
+{
+}
+
+IModel* ModelManager::createInstance(const std::string& name)
+{
+	LOG_DEBUG( "Creating model instance from model template with name '" + name + "'." );
 	
-	auto it = models_.find(name);
+	auto model = getModel(name);
 	
-	if ( it != models_.end() )
+	if ( model != nullptr )
 	{
-		LOG_DEBUG( "Model found." );
+		LOG_DEBUG( "Model template found." );
 		
-		// Create a COPY of the model, and returns it wrapped in a unique pointer
-		return std::unique_ptr<IModel>( new Model(*it->second.get()) );
+		// Create a COPY of the model template
+		modelInstances_.push_back( std::unique_ptr<IModel>( new Model(idManager_.createId(), *model) ) );
+		
+		return modelInstances_.back().get();
 	}
 
-	LOG_DEBUG( "Model not found." );
+	LOG_DEBUG( "Model template not found." );
 	
-	return std::unique_ptr<IModel>( nullptr );
+	return nullptr;
+}
+
+void ModelManager::destroyInstance(Id id)
+{
+}
+
+void ModelManager::destroyInstance(IModel* model)
+{
+}
+
+IModel* ModelManager::getInstance(Id id) const
+{
+	LOG_DEBUG( "Retrieving model instance with id '" << id << "'." );
+
+	auto findFunction = [&id](const std::unique_ptr<IModel>& node) { return node->getId() == id; };
+	
+	auto it = std::find_if(modelInstances_.begin(), modelInstances_.end(), findFunction);
+	
+	if (it != modelInstances_.end())
+	{
+		LOG_DEBUG( "Model instance found." );
+		return it->get();
+	}
+
+	LOG_DEBUG( "Model instance not found." );
+	
+	return nullptr;
 }
 
 }

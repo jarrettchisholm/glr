@@ -34,9 +34,8 @@ namespace models
 class Model : public IModel
 {
 public:
-	Model(glw::IOpenGlDevice* openGlDevice);
-	Model(Id id, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
-	Model(const Model& other);
+	Model(Id id, const std::string& name, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
+	Model(Id id, const Model& other);
 	virtual ~Model();
 
 	glw::IMesh* getMesh(glmd::uint32 index);
@@ -64,6 +63,9 @@ public:
 	void addMaterial(glw::IMaterial* material, glw::Mesh* mesh);
 	glmd::uint32 getNumberOfMaterials();
 	
+	virtual const Id& getId() const;
+	virtual const std::string& getName() const;
+	
 	virtual IAnimation* getCurrentAnimation();
 	virtual IAnimation* getAnimation(const std::string& name);
 	void removeAnimation(const std::string& name);
@@ -76,6 +78,7 @@ public:
 
 protected:
 	Id id_;
+	std::string name_;
 
 	glw::IOpenGlDevice* openGlDevice_;
 
@@ -108,8 +111,13 @@ protected:
 	glmd::int32 getIndexOf(glw::IMaterial* material);
 	
 private:
+	// We don't copy straight up, since we need a new id for the copy
+	Model(const Model& other);
+	
 	void initialize();
 	void destroy();
+	
+	void copy(const Model& other);
 
 };
 

@@ -7,6 +7,8 @@
 
 #include "glw/Mesh.hpp"
 
+#include "Id.hpp"
+
 namespace glr
 {
 namespace models
@@ -32,7 +34,7 @@ public:
 	 * @return The raw pointer to an IModel object.  The caller does not own the pointer - it is managed by
 	 * the ModelManager.
 	 */
-	virtual IModel* getModelTemplate(glm::detail::uint32 id) = 0;
+	virtual IModel* getModelTemplate(Id id) const = 0;
 	
 	/**
 	 * Returns a pointer to an IModel object.  This object is the 'template' that is used when creating
@@ -43,7 +45,7 @@ public:
 	 * @return The raw pointer to an IModel object.  The caller does not own the pointer - it is managed by
 	 * the ModelManager.
 	 */
-	virtual IModel* getModelTemplate(const std::string& name) = 0;
+	virtual IModel* getModelTemplate(const std::string& name) const = 0;
 	
 	/**
 	 * Loads the model from the given filename, and gives it an alias 'name'.
@@ -65,7 +67,7 @@ public:
 	 * 
 	 * @param id The id of the IModel instance you want to destroy.
 	 */
-	virtual void destroyModelTemplate(glm::detail::uint32 id) = 0;
+	virtual void destroyModelTemplate(Id id) = 0;
 	
 	/**
 	 * Destroys the template of the IModel object with name 'name'.  Any pointers or references to this model will
@@ -110,7 +112,7 @@ public:
 	 * 
 	 * @param id The id of the IModel instance you want to destroy.
 	 */
-	virtual void destroyInstance(glm::detail::uint32 id) = 0;
+	virtual void destroyInstance(Id id) = 0;
 	
 	/**
 	 * Destroys the instance of the IModel 'model'.  Any pointers or references to this model will
@@ -131,7 +133,7 @@ public:
 	 * 
 	 * @return A pointer to the IModel instance, or nullptr if the model was not found.
 	 */
-	virtual IModel* getInstance(glm::detail::uint32 id) = 0;
+	virtual IModel* getInstance(Id id) const = 0;
 };
 
 }

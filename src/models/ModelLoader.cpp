@@ -114,10 +114,10 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
 
-	return generateModel(modelData, animationSet, idManager);
+	return generateModel(name, modelData, animationSet, idManager);
 }
 
-std::unique_ptr<Model> ModelLoader::generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager)
+std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager)
 {
 	auto meshManager = openGlDevice_->getMeshManager();
 	auto materialManager = openGlDevice_->getMaterialManager();
@@ -199,7 +199,7 @@ std::unique_ptr<Model> ModelLoader::generateModel(std::vector< std::shared_ptr<M
 		std::cout << "anim: " << animation->getName() << std::endl;
 	}
 	
-	std::unique_ptr<Model> model = std::unique_ptr<Model>( new Model(idManager.createId(), meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation, openGlDevice_) );
+	std::unique_ptr<Model> model = std::unique_ptr<Model>( new Model(idManager.createId(), name, meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation, openGlDevice_) );
 	
 	return std::move(model);
 }
