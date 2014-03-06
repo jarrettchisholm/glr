@@ -23,7 +23,7 @@ public:
 	ModelLoader();
 	virtual ~ModelLoader();
 
-	std::vector< std::shared_ptr<ModelData> > loadModel(const std::string& name, const std::string& filename);
+	std::unique_ptr<IModel> loadModel(const std::string& name, const std::string& filename);
 	
 	/**
 	 * Loads model data from the file specified by filename.
@@ -33,10 +33,19 @@ public:
 	 * @returns A vector of ModelData objects (as shared pointers).  We do this so as not to have to copy the
 	 * model data when we return from this method.
 	 */
-	std::vector< std::shared_ptr<ModelData> > loadModel(const std::string& filename);
+	std::unique_ptr<IModel> loadModel(const std::string& filename);
 	
 private:
 	aiLogStream stream;
+	
+	/**
+	 * Will initialize a model with data given through the modelData object.
+	 * 
+	 * @param modelData The data to use to initialize this model.  Each element of the modelData vector corresponds to a new
+	 * mesh/material/texture/animation set.
+	 * @param animationSet The set of animations to be associated with the model.
+	 */
+	std::unique_ptr<IModel> generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet);
 
 	/**
 	 * Load the vertex, normal, texture, and color data for the given mesh.

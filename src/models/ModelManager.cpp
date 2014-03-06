@@ -17,6 +17,9 @@ ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(ope
 {
 	modelLoader_ = ModelLoader();
 	
+	models_ = std::map< std::string, std::unique_ptr<IModel> >();
+	modelInstances_ = std::vector< std::unique_ptr<IModel> >();
+	
 	// get a handle to the predefined STDOUT log stream and attach
 	// it to the logging system. It remains active for all further
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
@@ -33,7 +36,31 @@ ModelManager::~ModelManager()
 	aiDetachAllLogStreams();
 }
 
-IModel* ModelManager::getModel(const std::string& name)
+void ModelManager::loadModel(const std::string& name, const std::string& filename)
+{
+	std::cout << name << std::endl;
+	std::cout << filename << std::endl;
+	LOG_DEBUG( "Loading model '" + filename + "'." );
+
+	if ( models_[name] != 0 )
+	{
+		LOG_DEBUG( "Model found...No need to load." );
+		//return models_[filename].get();
+	}
+
+	// Note: We allow the modelData shared pointer to die at the end of this method
+	auto model = modelLoader_.loadModel( name, filename );
+
+	models_[name] = std::move(model);
+
+	LOG_DEBUG( "Done loading model '" + filename + "'." );
+}
+
+IModel* ModelManager::getModelTemplate(glm::detail::uint32 id)
+{
+}
+
+IModel* ModelManager::getModelTemplate(const std::string& name)
 {
 	LOG_DEBUG( "Retrieving model '" + name + "'." );
 	
@@ -48,30 +75,19 @@ IModel* ModelManager::getModel(const std::string& name)
 	return nullptr;
 }
 
-
-void ModelManager::loadModel(const std::string& name, const std::string& filename)
+void ModelManager::destroyModelTemplate(glm::detail::uint32 id)
 {
-	std::cout << name << std::endl;
-	std::cout << filename << std::endl;
-	LOG_DEBUG( "Loading model '" + filename + "'." );
-
-	if ( models_[name] != 0 )
-	{
-		LOG_DEBUG( "Model found...No need to load." );
-		//return models_[filename].get();
-	}
-
-	// Note: We allow the modelData shared pointer to die at the end of this method
-	std::vector< std::shared_ptr<ModelData> > modelData = modelLoader_.loadModel( name, filename );
-
-	models_[name] = std::unique_ptr<Model>(new Model(modelData, openGlDevice_));
-
-	LOG_DEBUG( "Done loading model '" + filename + "'." );
-
-	//return models_[filename].get();
 }
 
-std::unique_ptr<IModel> ModelManager::createInstance(const std::string& name)
+void ModelManager::destroyModelTemplate(const std::string& name)
+{
+}
+
+void ModelManager::destroyModelTemplate(IModel* model)
+{
+}
+
+IModel* ModelManager::createInstance(const std::string& name)
 {
 	LOG_DEBUG( "Creating model '" + name + "'." );
 	
@@ -81,13 +97,27 @@ std::unique_ptr<IModel> ModelManager::createInstance(const std::string& name)
 	{
 		LOG_DEBUG( "Model found." );
 		
-		// Create a COPY of the model, and returns it wrapped in a unique pointer
-		return std::unique_ptr<IModel>( new Model(*it->second.get()) );
+		// Create a COPY of the model and returns a pointer
+		modelInstances_.push_back(std::unique_ptr<IModel>( new Model(*it->second.get()) ));
+		
+		return modelInstances_.back().get();
 	}
 
 	LOG_DEBUG( "Model not found." );
 	
-	return std::unique_ptr<IModel>( nullptr );
+	return nullptr;
+}
+
+void ModelManager::destroyInstance(glm::detail::uint32 id)
+{
+}
+
+void ModelManager::destroyInstance(IModel* model)
+{
+}
+
+IModel* ModelManager::getInstance(glm::detail::uint32 id)
+{
 }
 
 }

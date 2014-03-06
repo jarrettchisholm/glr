@@ -75,6 +75,7 @@ struct AnimationSet
 	
 	glw::BoneNode rootBoneNode;
 	std::map< std::string, AnimationData > animations;
+	glm::mat4 globalInverseTransformation;
 };
 
 
@@ -86,8 +87,6 @@ struct ModelData
 	MaterialData materialData;
 	TextureData textureData;
 	glw::BoneData boneData;
-	AnimationSet animationSet;
-	glm::mat4 globalInverseTransformation;
 };
 
 /**

@@ -31,7 +31,7 @@ public:
 	/**
 	 * Loads the model from the given filename.
 	 */
-	virtual void loadModelTemplate(const std::string& name, const std::string& filename) = 0;
+	virtual void loadModel(const std::string& name, const std::string& filename) = 0;
 	
 	virtual void destroyModelTemplate(glm::detail::uint32 id) = 0;
 	virtual void destroyModelTemplate(const std::string& name) = 0;
@@ -44,14 +44,12 @@ public:
 	 * @return A unique pointer to a model object.  The model is a copy of the model that was previously loaded
 	 * with the specified name.
 	 */
-	virtual IModel* createModelInstance(const std::string& name) = 0;
+	virtual IModel* createInstance(const std::string& name) = 0;
 	
-	virtual destroyModelInstance(glm::detail::uint32 id) = 0;
-	virtual destroyModelInstance(const std::string& name) = 0;
-	virtual destroyModelInstance(IModel* model) = 0;
+	virtual void destroyInstance(glm::detail::uint32 id) = 0;
+	virtual void destroyInstance(IModel* model) = 0;
 	
-	virtual getModelInstance(glm::detail::uint32 id) = 0;
-	virtual getModelInstance(const std::string& name) = 0;
+	virtual IModel* getInstance(glm::detail::uint32 id) = 0;
 };
 
 }

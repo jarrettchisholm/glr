@@ -43,16 +43,16 @@ ModelLoader::~ModelLoader()
 	aiDetachAllLogStreams();
 }
 
-std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string& filename)
+std::unique_ptr<IModel> ModelLoader::loadModel(const std::string& filename)
 {
 	return loadModel(filename, filename);
 }
 
-std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::string& name, const std::string& filename)
+std::unique_ptr<IModel> ModelLoader::loadModel(const std::string& name, const std::string& filename)
 {
 	LOG_DEBUG( "Loading model '" + name + "' - " + filename + "." );
 
-	std::vector< std::shared_ptr<ModelData> > modelData = std::vector< std::shared_ptr<ModelData> >();	
+	auto modelData = std::vector< std::shared_ptr<ModelData> >();	
 
 	// We don't currently support aiProcess_JoinIdenticalVertices or aiProcess_FindInvalidData
 	// aiProcess_JoinIdenticalVertices - doesn't work because we don't use vertex index lists (maybe we should?)
@@ -75,9 +75,6 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 	
 	modelData.resize( scene->mNumMeshes );
 	
-	glm::mat4 globalInverseTransformation = convertAssImpMatrix( &(scene->mRootNode->mTransformation) );
-	globalInverseTransformation = glm::inverse( globalInverseTransformation );
-	
 	AnimationSet animationSet = loadAnimations(name, filename, scene);
 	
 	std::stringstream msg;
@@ -93,8 +90,6 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 		modelData[i]->meshData = loadMesh( name, filename, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
 		modelData[i]->textureData = loadTexture( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
-		modelData[i]->animationSet = animationSet;
-		modelData[i]->globalInverseTransformation = globalInverseTransformation;
 		
 		std::cout << "NumVertices: " << NumVertices << std::endl;
 		NumVertices += scene->mMeshes[i]->mNumVertices;
@@ -109,7 +104,94 @@ std::vector< std::shared_ptr<ModelData> > ModelLoader::loadModel(const std::stri
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
 
-	return modelData;
+	return generateModel(modelData, animationSet);
+}
+
+std::unique_ptr<IModel> ModelLoader::generateModel(std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet)
+{
+	auto meshManager = openGlDevice_->getMeshManager();
+	auto materialManager = openGlDevice_->getMaterialManager();
+	auto textureManager = openGlDevice_->getTextureManager();
+	auto animationManager = openGlDevice_->getAnimationManager();
+	
+	auto meshes = std::vector<glw::IMesh*>();
+	auto textures = std::vector<glw::ITexture*>();
+	auto materials = std::vector<glw::IMaterial*>();
+	auto animations = std::map< std::string, std::unique_ptr<Animation> >();
+	
+	for ( auto& d : modelData)
+	{
+		auto mesh = meshManager->getMesh(d->meshData.name);
+		if (mesh == nullptr)
+			mesh = meshManager->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones, d->boneData);
+		
+		meshes.push_back( mesh );
+		
+		
+		if ( !d->textureData.filename.empty() )
+		{
+			auto texture = textureManager->getTexture2D(d->textureData.filename);
+			if (texture == nullptr)
+				texture = textureManager->addTexture2D(d->textureData.filename, d->textureData.filename, d->textureData.settings);
+			
+			textures.push_back( texture );
+		}
+		else
+		{
+			textures.push_back( nullptr );
+		}
+
+
+		auto material = materialManager->getMaterial(d->materialData.name);
+		if (material == nullptr)
+			material = materialManager->addMaterial(d->materialData.name, d->materialData.ambient, d->materialData.diffuse, d->materialData.specular, d->materialData.emission, d->materialData.shininess, d->materialData.strength);
+		
+		materials.push_back( material );
+	}
+	
+	// Create bone structure (tree structure)
+	auto rootBoneNode = animationSet.rootBoneNode;
+	
+	// Set the global inverse transformation
+	auto globalInverseTransformation = animationSet.globalInverseTransformation;
+	
+	// Load the animation information
+	for ( auto& kv : animationSet.animations)
+	{
+		auto animation = animationManager->getAnimation( kv.first );
+		
+		if (animation == nullptr)
+		{	
+			// Create animated bone node information
+			auto animatedBoneNodes = std::map< std::string, glw::AnimatedBoneNode >();
+			for ( auto& kvAnimatedBoneNode : kv.second.animatedBoneNodes )
+			{
+				animatedBoneNodes[ kvAnimatedBoneNode.first ] = glw::AnimatedBoneNode( 
+					kvAnimatedBoneNode.second.name, 
+					kvAnimatedBoneNode.second.positionTimes, 
+					kvAnimatedBoneNode.second.rotationTimes, 
+					kvAnimatedBoneNode.second.scalingTimes, 
+					kvAnimatedBoneNode.second.positions, 
+					kvAnimatedBoneNode.second.rotations, 
+					kvAnimatedBoneNode.second.scalings
+				);
+			}
+			
+			// Actually create the animation
+			animation = animationManager->addAnimation( kv.second.name, kv.second.duration, kv.second.ticksPerSecond, animatedBoneNodes );
+		}
+		
+		assert(animation != nullptr);
+		
+		animations[ animation->getName() ] = std::unique_ptr<Animation>( new Animation(animation, openGlDevice_) );
+		
+		// TODO: add animations properly (i.e. with names specifying the animation i guess?)
+		std::cout << "anim: " << animation->getName() << std::endl;
+	}
+	
+	std::unique_ptr<IModel> model = std::unique_ptr<Model>( new Model(meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation) );
+	
+	return std::move(model);
 }
 
 MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filename, glmd::uint32 index, const aiMesh* mesh, std::map< std::string, glmd::uint32 >& boneIndexMap)
@@ -445,6 +527,11 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 	std::stringstream msg;
 	msg << "loading " << scene->mNumAnimations << " animation(s).";
 	LOG_DEBUG( msg.str() );
+	
+	glm::mat4 globalInverseTransformation = convertAssImpMatrix( &(scene->mRootNode->mTransformation) );
+	globalInverseTransformation = glm::inverse( globalInverseTransformation );
+	
+	animationSet.globalInverseTransformation = globalInverseTransformation;
 	
 	// Load BoneNodes
 	const aiNode* assImpRootNode = scene->mRootNode;
