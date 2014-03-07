@@ -34,7 +34,7 @@ namespace models
 class Model : public IModel
 {
 public:
-	Model(Id id, const std::string& name, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
+	Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vector<glw::ITexture*> textures, std::vector<glw::IMaterial*> materials, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, const Model& other);
 	virtual ~Model();
 

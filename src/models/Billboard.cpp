@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "models/Billboard.hpp"
 
 namespace glr
@@ -5,8 +7,8 @@ namespace glr
 namespace models
 {
 
-Billboard::Billboard(Id id, const std::string& name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice)
-	: id_(id), name_(name), mesh_(mesh), texture_(texture), material_(material), openGlDevice_(openGlDevice)
+Billboard::Billboard(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice)
+	: id_(id), name_(std::move(name)), mesh_(mesh), texture_(texture), material_(material), openGlDevice_(openGlDevice)
 {
 }
 

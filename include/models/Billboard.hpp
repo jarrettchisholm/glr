@@ -20,7 +20,7 @@ namespace models
 class Billboard : public IBillboard
 {
 public:
-	Billboard(Id id, const std::string& name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice);
+	Billboard(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Billboard();
 
 	virtual const Id& getId() const;

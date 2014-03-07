@@ -60,7 +60,7 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& filename, IdMan
 
 std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std::string& filename, IdManager& idManager)
 {
-	LOG_DEBUG( "Loading model '" + name + "' - " + filename + "." );
+	LOG_DEBUG( "Loading model '" << name << "' - " << filename << "." );
 
 	auto modelData = std::vector< std::shared_ptr<ModelData> >();	
 
@@ -96,7 +96,7 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	{
 		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
 		
-		modelData[i]->boneData = loadBones(name, filename, i, scene->mMeshes[i]);
+		modelData[i]->boneData = loadBones( name, filename, i, scene->mMeshes[i] );
 		modelData[i]->meshData = loadMesh( name, filename, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
 		modelData[i]->textureData = loadTexture( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i]->materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
@@ -112,7 +112,7 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
 	aiReleaseImport(scene);
 
-	LOG_DEBUG( "Done loading model '" + filename + "'." );
+	LOG_DEBUG( "Done loading model '" << filename << "'." );
 
 	return generateModel(name, modelData, animationSet, idManager);
 }
@@ -208,14 +208,14 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 {
 	MeshData data = MeshData();
 	
-	LOG_DEBUG( "loading mesh '" + filename + "'." );
+	LOG_DEBUG( "loading mesh '" << filename << "'." );
 	
 	// Set the mesh name
 	if (mesh->mName.length > 0)
 		data.name = std::string( mesh->mName.C_Str() );
 	else
 		data.name = name + "_mesh_" + std::to_string(index);
-	LOG_DEBUG( "mesh name: " + data.name );
+	LOG_DEBUG( "mesh name: " << data.name );
 
 	// Load vertices, normals, texture coordinates, and colors
 	glm::detail::uint32 currentIndex = 0;
@@ -391,7 +391,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 	}
 	file.close();
 	*/
-	LOG_DEBUG( "done loading mesh '" + filename + "'." );
+	LOG_DEBUG( "done loading mesh '" << filename << "'." );
 
 	//materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
 	//textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
@@ -417,13 +417,11 @@ TextureData ModelLoader::loadTexture(const std::string& name, const std::string&
 		// Error check
 		if (texFound != AI_SUCCESS)
 		{
-			LOG_WARN( "Texture not found for model filename: " + filename );
+			LOG_WARN( "Texture not found for model filename: " << filename );
 			return data;
 		}
-		
-		std::stringstream msg;
-		msg << "Texture has filename: " << texPath.data;
-		LOG_DEBUG( msg.str() );
+
+		LOG_DEBUG( "Texture has filename: " << texPath.data );
 		
 		data.filename = texPath.data;
 		
@@ -447,7 +445,7 @@ MaterialData ModelLoader::loadMaterial(const std::string& name, const std::strin
 	// Set the material name
 	data.name = name + "_material_" + std::to_string(index);
 
-	LOG_DEBUG( "material name: " + data.name );
+	LOG_DEBUG( "material name: " << data.name );
 
 	data.diffuse[0] = 0.8f;
 	data.diffuse[1] = 0.8f;
@@ -503,7 +501,7 @@ glw::BoneData ModelLoader::loadBones(const std::string& name, const std::string&
 		else
 			data.name = std::string( name ) + "_bone_" + std::to_string(index);
 		
-		LOG_DEBUG( "bone name: " + data.name );
+		LOG_DEBUG( "bone name: " << data.name );
 		
 		if (boneData.boneIndexMap.find(data.name) == boneData.boneIndexMap.end()) {
 			boneIndex = boneData.boneIndexMap.size();
@@ -559,7 +557,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 			LOG_WARN( "Animations with no name are not allowed." );
 			
 			animation.name = name + "_animation_" + std::to_string(i);
-			LOG_WARN( "Setting animation name to: " + animation.name );
+			LOG_WARN( "Setting animation name to: " << animation.name );
 			// TODO: should we throw an exception?
 			//throw exception::Exception(msg);
 			
@@ -615,7 +613,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 			else 
 			{
 				// Warning - animated bone node already exists!
-				LOG_WARN( "Animated bone node with name '" + abn.name + "' already exists!" );
+				LOG_WARN( "Animated bone node with name '" << abn.name << "' already exists!" );
 			}
 		}
 		
@@ -627,7 +625,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 		else 
 		{
 			// Warning - animated bone node already exists!
-			LOG_WARN( "Animation with name '" + animation.name + "' already exists!" );
+			LOG_WARN( "Animation with name '" << animation.name << "' already exists!" );
 		}
 	}
 

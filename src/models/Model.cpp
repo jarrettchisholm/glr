@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "models/Model.hpp"
 
 #include "exceptions/Exception.hpp"
@@ -7,8 +9,8 @@ namespace glr
 namespace models
 {
 
-Model::Model(Id id, const std::string& name, const std::vector<glw::IMesh*>& meshes, const std::vector<glw::ITexture*>& textures, const std::vector<glw::IMaterial*>& materials, const std::vector<glw::IAnimation*>& animations, const glw::BoneNode& rootBoneNode, const glm::mat4& globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
-	: id_(id), name_(name), meshes_(meshes), textures_(textures), materials_(materials), rootBoneNode_(rootBoneNode), globalInverseTransformation_(globalInverseTransformation), openGlDevice_(openGlDevice)
+Model::Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vector<glw::ITexture*> textures, std::vector<glw::IMaterial*> materials, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
+	: id_(id), name_(std::move(name)), meshes_(std::move(meshes)), textures_(std::move(textures)), materials_(std::move(materials)), rootBoneNode_(std::move(rootBoneNode)), globalInverseTransformation_(std::move(globalInverseTransformation)), openGlDevice_(openGlDevice)
 {
 	// Error check - Make sure meshes, textures, and materials vectors are the same length
 	if (meshes_.size() != textures_.size() || meshes_.size() != materials_.size() || materials_.size() != textures_.size())
@@ -49,7 +51,6 @@ Model::~Model()
 
 void Model::copy(const Model& other)
 {
-	// TODO: How do we do a new id here?
 	name_ = other.name_;
 	
 	openGlDevice_ = other.openGlDevice_;
@@ -62,7 +63,6 @@ void Model::copy(const Model& other)
 	meshes_ = other.meshes_;
 	textures_ = other.textures_;
 	materials_ = other.materials_;
-	//animations_ = other.animations_;
 	
 	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
 	
