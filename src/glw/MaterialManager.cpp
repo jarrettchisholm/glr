@@ -20,7 +20,7 @@ MaterialManager::~MaterialManager()
 {
 }
 
-Material* MaterialManager::getMaterial(const std::string& name)
+Material* MaterialManager::getMaterial(const std::string& name) const
 {
 	auto it = materials_.find(name);
 	if ( it != materials_.end() )
@@ -39,7 +39,6 @@ Material* MaterialManager::addMaterial(const std::string& name)
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
 	auto it = materials_.find(name);
-
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Material '" + name + "' already exists." );
@@ -64,7 +63,6 @@ Material* MaterialManager::addMaterial(
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
 	auto it = materials_.find(name);
-
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Material '" + name + "' already exists." );

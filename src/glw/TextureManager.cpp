@@ -24,7 +24,7 @@ TextureManager::~TextureManager()
 {
 }
 
-Texture2D* TextureManager::getTexture2D(const std::string& name)
+Texture2D* TextureManager::getTexture2D(const std::string& name) const
 {
 	auto it = textures2D_.find(name);
 	if ( it != textures2D_.end() )
@@ -38,7 +38,7 @@ Texture2D* TextureManager::getTexture2D(const std::string& name)
 	return nullptr;
 }
 
-Texture2DArray* TextureManager::getTexture2DArray(const std::string& name)
+Texture2DArray* TextureManager::getTexture2DArray(const std::string& name) const
 {
 	auto it = textures2DArray_.find(name);
 	if ( it != textures2DArray_.end() )
@@ -57,7 +57,6 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSe
 	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
 
 	auto it = textures2D_.find(name);
-
 	if ( it != textures2D_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture already exists - returning already existing texture." );
@@ -75,7 +74,6 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const std::stri
 	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
 
 	auto it = textures2D_.find(name);
-
 	if ( it != textures2D_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture already exists - returning already existing texture." );
@@ -110,7 +108,6 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	}
 
 	auto it = textures2D_.find(name);
-
 	if ( it != textures2D_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture already exists - returning already existing texture." );
@@ -132,7 +129,6 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
 	auto it = textures2DArray_.find(name);
-
 	if ( it != textures2DArray_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture 2d array already exists - returning already existing texture 2d array." );
@@ -150,7 +146,6 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
 	auto it = textures2DArray_.find(name);
-
 	if ( it != textures2DArray_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture 2d array already exists - returning already existing texture 2d array." );
@@ -192,7 +187,6 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	LOG_DEBUG( "Loading texture 2d array '" + name + "' from images." );
 
 	auto it = textures2DArray_.find(name);
-
 	if ( it != textures2DArray_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Texture 2d array already exists - returning already existing texture 2d array." );

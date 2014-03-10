@@ -41,14 +41,14 @@ public:
 
 	void process(std::map< std::string, std::string > defineMap);
 
-	std::string getName();
-	IShader::Type getType();
-	std::string getProcessedSource();
-	std::string getSource();
+	const std::string& getName() const;
+	IShader::Type getType() const;
+	std::string getProcessedSource() const;
+	std::string getSource() const;
 	std::vector< std::pair<std::string, std::string> > getBindings();
 	std::vector< std::pair<glmd::int32, std::string> > getLocationBindings();
 
-	bool containsPreProcessorCommands();
+	bool containsPreProcessorCommands() const;
 
 private:
 	std::string name_;

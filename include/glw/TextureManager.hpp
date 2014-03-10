@@ -20,8 +20,8 @@ public:
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
-	virtual Texture2D* getTexture2D(const std::string& name);
-	virtual Texture2DArray* getTexture2DArray(const std::string& name);
+	virtual Texture2D* getTexture2D(const std::string& name) const;
+	virtual Texture2DArray* getTexture2DArray(const std::string& name) const;
 	
 	virtual Texture2D* addTexture2D(const std::string& name, const TextureSettings settings = TextureSettings());
 	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings = TextureSettings());

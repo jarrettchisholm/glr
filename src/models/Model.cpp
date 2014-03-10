@@ -133,7 +133,7 @@ void Model::destroy()
 {
 }
 
-glw::IMesh* Model::getMesh(glmd::uint32 index)
+glw::IMesh* Model::getMesh(glmd::uint32 index) const
 {
 	return meshes_[index];
 }
@@ -172,17 +172,17 @@ void Model::addMesh(glw::IMesh* mesh, glmd::uint32 index)
 	textures_.insert(textures_.begin() + index, nullptr);
 }
 
-glmd::uint32 Model::getNumberOfMeshes()
+glmd::uint32 Model::getNumberOfMeshes() const
 {
 	return meshes_.size();
 }
 
-glw::ITexture* Model::getTexture(glmd::uint32 index)
+glw::ITexture* Model::getTexture(glmd::uint32 index) const
 {
 	return textures_[index];
 }
 
-glw::ITexture* Model::getTexture(glw::IMesh* mesh)
+glw::ITexture* Model::getTexture(glw::IMesh* mesh) const
 {
 	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
@@ -225,17 +225,17 @@ void Model::addTexture(glw::ITexture* texture, glw::Mesh* mesh)
 		textures_[i] = texture;
 }
 
-glmd::uint32 Model::getNumberOfTextures()
+glmd::uint32 Model::getNumberOfTextures() const
 {
 	return textures_.size();
 }
 
-glw::IMaterial* Model::getMaterial(glmd::uint32 index)
+glw::IMaterial* Model::getMaterial(glmd::uint32 index) const
 {
 	return materials_[index];
 }
 
-glw::IMaterial* Model::getMaterial(glw::IMesh* mesh)
+glw::IMaterial* Model::getMaterial(glw::IMesh* mesh) const
 {
 	glmd::int32 i = getIndexOf(mesh);
 	if (i >= 0)
@@ -278,7 +278,7 @@ void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
 		materials_[i] = material;
 }
 
-glmd::uint32 Model::getNumberOfMaterials()
+glmd::uint32 Model::getNumberOfMaterials() const
 {
 	return materials_.size();
 }
@@ -299,7 +299,7 @@ const std::string& Model::getName() const
  * 
  * @return A pointer to the current IAnimation object, or nullptr if there is no current animation
  */
-IAnimation* Model::getCurrentAnimation()
+IAnimation* Model::getCurrentAnimation() const
 {
 	return currentAnimation_;
 }
@@ -313,11 +313,12 @@ IAnimation* Model::getCurrentAnimation()
  * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
  * is associated with this model with the given name.
  */
-models::IAnimation* Model::getAnimation(const std::string& name)
-{	
-	if ( animations_.find(name) != animations_.end() )
+models::IAnimation* Model::getAnimation(const std::string& name) const
+{
+	auto it = animations_.find(name);
+	if ( it != animations_.end() )
 	{
-		return animations_[name].get();
+		return it->second.get();
 	}
 	
 	return nullptr;
@@ -335,7 +336,7 @@ void Model::addAnimation(glw::IAnimation* animation)
 {
 }
 
-glmd::uint32 Model::getNumberOfAnimations()
+glmd::uint32 Model::getNumberOfAnimations() const
 {
 	return animations_.size();
 }
@@ -351,7 +352,7 @@ void Model::setCurrentAnimation(models::IAnimation* animation)
 	currentAnimation_ = static_cast<models::Animation*>(animation);
 }
 
-glmd::int32 Model::getIndexOf(glw::IMesh* mesh)
+glmd::int32 Model::getIndexOf(glw::IMesh* mesh) const
 {
 	for (glmd::uint32 i=0; i < meshes_.size(); i++)
 	{
@@ -362,7 +363,7 @@ glmd::int32 Model::getIndexOf(glw::IMesh* mesh)
 	return -1;
 }
 
-glmd::int32 Model::getIndexOf(glw::ITexture* texture)
+glmd::int32 Model::getIndexOf(glw::ITexture* texture) const
 {
 	for (glmd::uint32 i=0; i < textures_.size(); i++)
 	{
@@ -373,7 +374,7 @@ glmd::int32 Model::getIndexOf(glw::ITexture* texture)
 	return -1;
 }
 
-glmd::int32 Model::getIndexOf(glw::IMaterial* material)
+glmd::int32 Model::getIndexOf(glw::IMaterial* material) const
 {
 	for (glmd::uint32 i=0; i < materials_.size(); i++)
 	{
@@ -384,14 +385,6 @@ glmd::int32 Model::getIndexOf(glw::IMaterial* material)
 	return -1;
 }
 
-/**
- * Will render the model through OpenGL.
- * 
- * The model will render each mesh individually.  Each mesh may have a corresponding material, texture, and animation, all of which
- * will be bound to the shader for use when rendering the mesh.
- * 
- * @param shader The shader to use to render this model.
- */
 void Model::render(shaders::IShaderProgram* shader)
 {
 	assert(shader != nullptr);

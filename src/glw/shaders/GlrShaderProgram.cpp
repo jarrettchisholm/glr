@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "glw/shaders/GlrShaderProgram.hpp"
 
 #include "glw/shaders/GlrPreProcessor.hpp"
@@ -11,11 +13,11 @@ namespace glr
 namespace shaders
 {
 
-GlrShaderProgram::GlrShaderProgram(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
+GlrShaderProgram::GlrShaderProgram(std::string source, std::string baseDirectory) : source_(std::move(source)), baseDirectory_(std::move(baseDirectory))
 {
 }
 
-GlrShaderProgram::GlrShaderProgram(std::string name, std::string source, std::string baseDirectory) : name_(name), source_(source), baseDirectory_(baseDirectory)
+GlrShaderProgram::GlrShaderProgram(std::string name, std::string source, std::string baseDirectory) : name_(std::move(name)), source_(std::move(source)), baseDirectory_(std::move(baseDirectory))
 {
 }
 
@@ -42,20 +44,21 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 
 	for ( CPreProcessor::ShaderData s : shaders )
 	{
-		if ( glrShaderMap.find(s.name) != glrShaderMap.end())
+		auto it = glrShaderMap.find(s.name);
+		if ( it != glrShaderMap.end() )
 		{
 			// Found shader
 			//shaders_[s.name] = GlrShader( s.name, glrShaderMap[s.name].getSource(), s.defineMap );
 			//glrShaderMap[s.name].setType();
 
-			shaders_.push_back(glrShaderMap[s.name]);
+			shaders_.push_back(it->second);
 			shaders_.back()->process(s.defineMap);
 		}
 		else
 		{
 			LOG_ERROR( "Name requested: " + s.name );
 			LOG_ERROR( "Names available: " );
-			for ( auto s : glrShaderMap )
+			for ( auto& s : glrShaderMap )
 			{
 				LOG_ERROR( s.first );
 			}
@@ -67,7 +70,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 	}
 }
 
-std::string GlrShaderProgram::getName()
+const std::string& GlrShaderProgram::getName() const
 {
 	return name_;
 }

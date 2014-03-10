@@ -49,7 +49,7 @@ public:
 	 * 
 	 * @return The raw pointer to an IBillboard object, or nullptr if it was not found.
 	 */
-	virtual IBillboard* getBillboard(Id id) = 0;
+	virtual IBillboard* getBillboard(Id id) const = 0;
 	
 	/**
 	 * Returns a pointer to an IBillboard object that has name 'name'.  If an IBillboard object with name 'name' is not found, this
@@ -63,7 +63,7 @@ public:
 	 * 
 	 * @return The raw pointer to an IBillboard object, or nullptr if it was not found.
 	 */
-	virtual IBillboard* getBillboard(const std::string& name) = 0;
+	virtual IBillboard* getBillboard(const std::string& name) const = 0;
 	
 	/**
 	 * Destroys the IBillboard object with id 'id'.  Any pointers or references to this billboard will

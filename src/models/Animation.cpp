@@ -48,27 +48,27 @@ void Animation::destroy()
 {
 }
 
-glw::Animation* Animation::getAnimation()
+glw::Animation* Animation::getAnimation() const
 {
 	return animation_;
 }
 
-glm::detail::float32  Animation::getAnimationTime()
+glm::detail::float32  Animation::getAnimationTime() const
 {
 	return runningTime_;
 }
 
-glm::detail::uint32 Animation::getStartFrame()
+glm::detail::uint32 Animation::getStartFrame() const
 {
 	return startFrame_;
 }
 
-glm::detail::uint32 Animation::getEndFrame()
+glm::detail::uint32 Animation::getEndFrame() const
 {
 	return endFrame_;
 }
 
-const std::string& Animation::getName()
+const std::string& Animation::getName() const
 {
 	return animation_->getName();
 }

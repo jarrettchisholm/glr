@@ -23,8 +23,8 @@ public:
 
 	virtual IBillboard* createBillboard(const std::string& name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material);
 
-	virtual IBillboard* getBillboard(Id id);
-	virtual IBillboard* getBillboard(const std::string& name);
+	virtual IBillboard* getBillboard(Id id) const;
+	virtual IBillboard* getBillboard(const std::string& name) const;
 
 	virtual void destroyBillboard(Id id);
 	virtual void destroyBillboard(const std::string& name);

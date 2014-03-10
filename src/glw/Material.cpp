@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
@@ -12,13 +13,13 @@ namespace glr
 namespace glw
 {
 
-Material::Material(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name), bufferId_(0)
+Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
 {	
 }
 
 Material::Material(
 		IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -26,7 +27,7 @@ Material::Material(
 		glm::detail::float32 shininess,
 		glm::detail::float32 strength
 		)
-	: openGlDevice_(openGlDevice), name_(name), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
+	: openGlDevice_(openGlDevice), name_(std::move(name)), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
 {
 	LOG_DEBUG( "loading material..." );
 	
@@ -129,12 +130,12 @@ void Material::bind()
 	*/
 }
 
-GLuint Material::getBufferId()
+GLuint Material::getBufferId() const
 {
 	return bufferId_;
 }
 
-GLuint Material::getBindPoint()
+GLuint Material::getBindPoint() const
 {
 	return bindPoint_;
 }

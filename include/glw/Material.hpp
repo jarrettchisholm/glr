@@ -37,10 +37,10 @@ struct MaterialData
 class Material : public IMaterial
 {
 public:
-	Material(IOpenGlDevice* openGlDevice, const std::string& name);
+	Material(IOpenGlDevice* openGlDevice, std::string name);
 	Material(
 		IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,
 		glm::vec4 specular,
@@ -51,8 +51,8 @@ public:
 	virtual ~Material();
 
 	virtual void bind();
-	virtual GLuint getBufferId();
-	GLuint getBindPoint();
+	virtual GLuint getBufferId() const;
+	GLuint getBindPoint() const;
 
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();

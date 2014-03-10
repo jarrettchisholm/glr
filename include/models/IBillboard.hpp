@@ -6,6 +6,7 @@
 
 #include "Id.hpp"
 
+#include "IRenderable.hpp"
 #include "glw/shaders/IShaderProgram.hpp"
 
 #include "glw/IMesh.hpp"
@@ -20,7 +21,7 @@ namespace models
 /**
  * 
  */
-class IBillboard
+class IBillboard : public virtual IRenderable
 {
 public:
 	virtual ~IBillboard()
@@ -30,15 +31,6 @@ public:
 
 	virtual const Id& getId() const = 0;
 	virtual const std::string& getName() const = 0;
-
-	/**
-	 * Render the billboard to the scene, using the provided shader.
-	 * 
-	 * TODO: Should we do it like this, with the shader being passed in?
-	 * 
-	 * @param shader The shader to use to render this billboard to the scene.
-	 */
-	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
 
 }

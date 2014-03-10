@@ -20,7 +20,7 @@ public:
 	}
 	;
 
-	virtual Mesh* getMesh(const std::string& name) = 0;
+	virtual Mesh* getMesh(const std::string& name) const = 0;
 	virtual Mesh* addMesh(const std::string& name) = 0;
 	virtual Mesh* addMesh(
 		const std::string& name, 

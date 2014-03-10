@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #include <GL/glew.h>
 
@@ -13,14 +14,15 @@ namespace glr
 namespace shaders
 {
 
-GlslShader::GlslShader(std::string source, Type type) : source_(source), type_(type)
+GlslShader::GlslShader(std::string source, Type type) : source_(std::move(source)), type_(type)
 {
 	shaderId_ = -1;
 
 	//initialize();
 }
 
-GlslShader::GlslShader(std::string name, std::string source, Type type, std::vector< std::pair<std::string, std::string> > bindings, std::vector< std::pair<glmd::int32, std::string> > locationBindings) : name_(name), source_(source), type_(type)
+GlslShader::GlslShader(std::string name, std::string source, Type type, std::vector< std::pair<std::string, std::string> > bindings, std::vector< std::pair<glmd::int32, std::string> > locationBindings)
+	: name_(std::move(name)), source_(std::move(source)), type_(type)
 {
 	shaderId_ = -1;
 
@@ -162,12 +164,12 @@ void GlslShader::compile()
 	LOG_DEBUG( "Done initializing shader '" + name_ + "'." );
 }
 
-IShader::Type GlslShader::getType()
+IShader::Type GlslShader::getType() const
 {
 	return type_;
 }
 
-std::string GlslShader::getName()
+const std::string& GlslShader::getName() const
 {
 	return name_;
 }
@@ -177,7 +179,7 @@ IShader::BindingsMap GlslShader::getBindings()
 	return bindings_;
 }
 
-GLuint GlslShader::getGLShaderId()
+GLuint GlslShader::getGLShaderId() const
 {
 	return shaderId_;
 }

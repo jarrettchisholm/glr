@@ -25,7 +25,7 @@ public:
 	}
 	;
 
-	virtual const std::string& getName() = 0;
+	virtual const std::string& getName() const = 0;
 	virtual void setAnimationTime(glm::detail::float32 runningTime) = 0;
 };
 

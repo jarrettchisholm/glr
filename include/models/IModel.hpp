@@ -3,6 +3,7 @@
 
 #include "models/IAnimation.hpp"
 
+#include "IRenderable.hpp"
 #include "glw/shaders/IShaderProgram.hpp"
 
 #include "glw/IMesh.hpp"
@@ -94,7 +95,7 @@ struct ModelData
 /**
  * 
  */
-class IModel
+class IModel : public virtual IRenderable
 {
 public:
 	virtual ~IModel()
@@ -112,14 +113,14 @@ public:
 	 * 
 	 * @return A pointer to the animation with the given name, and nullptr if the animation was not found.
 	 */
-	virtual IAnimation* getAnimation(const std::string& name) = 0;
+	virtual IAnimation* getAnimation(const std::string& name) const = 0;
 
 	/**
 	 * Returns the current animation that affects this model.
 	 * 
 	 * @return A pointer to the current animation that affects this model, or nullptr if there is no current animation.
 	 */
-	virtual IAnimation* getCurrentAnimation() = 0;
+	virtual IAnimation* getCurrentAnimation() const = 0;
 
 	/**
 	 * Sets the current animation.  If nullptr is sent in as the animation, then no animation will be used when rendering
@@ -128,15 +129,6 @@ public:
 	 * @param animation The animation to use as the current animation.
 	 */
 	virtual void setCurrentAnimation(IAnimation* animation) = 0;
-
-	/**
-	 * Render the model to the scene, using the provided shader.
-	 * 
-	 * TODO: Should we do it like this, with the shader being passed in?
-	 * 
-	 * @param shader The shader to use to render this model to the scene.
-	 */
-	virtual void render(shaders::IShaderProgram* shader) = 0;
 };
 
 }

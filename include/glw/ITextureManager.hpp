@@ -31,8 +31,8 @@ public:
 	//virtual Texture1D* addTexture1D(const std::string name, const std::string filename) = 0;
 	//virtual Texture1DArray* addTexture1DArray(const std::string name, const std::string filename) = 0;
 
-	virtual Texture2D* getTexture2D(const std::string& name) = 0;
-	virtual Texture2DArray* getTexture2DArray(const std::string& name) = 0;
+	virtual Texture2D* getTexture2D(const std::string& name) const = 0;
+	virtual Texture2DArray* getTexture2DArray(const std::string& name) const = 0;
 	
 	virtual Texture2D* addTexture2D(const std::string& name, const TextureSettings settings = TextureSettings()) = 0;
 	virtual Texture2D* addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings = TextureSettings()) = 0;

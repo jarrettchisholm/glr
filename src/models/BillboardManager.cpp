@@ -27,14 +27,13 @@ IBillboard* BillboardManager::createBillboard(const std::string& name, glw::IMes
 	return billboards_.back().get();
 }
 
-IBillboard* BillboardManager::getBillboard(Id id)
+IBillboard* BillboardManager::getBillboard(Id id) const
 {
 	LOG_DEBUG( "Retrieving billboard with id '" << id << "'." );
 
 	auto findFunction = [id](const std::unique_ptr<IBillboard>& node) { return node->getId() == id; };
 	
 	auto it = std::find_if(billboards_.begin(), billboards_.end(), findFunction);
-	
 	if (it != billboards_.end())
 	{
 		LOG_DEBUG( "Billboard found." );
@@ -46,14 +45,13 @@ IBillboard* BillboardManager::getBillboard(Id id)
 	return nullptr;
 }
 
-IBillboard* BillboardManager::getBillboard(const std::string& name)
+IBillboard* BillboardManager::getBillboard(const std::string& name) const
 {
 	LOG_DEBUG( "Retrieving billboard with name '" << name << "'." );
 
 	auto findFunction = [&name](const std::unique_ptr<IBillboard>& node) { return node->getName() == name; };
 	
 	auto it = std::find_if(billboards_.begin(), billboards_.end(), findFunction);
-	
 	if (it != billboards_.end())
 	{
 		LOG_DEBUG( "Billboard found." );

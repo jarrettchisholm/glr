@@ -15,7 +15,7 @@ namespace glr
 namespace glw
 {
 
-Animation::Animation(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
+Animation::Animation(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	duration_ = 0.0f;
 	ticksPerSecond_ = 0.0f;
@@ -34,11 +34,11 @@ Animation::Animation(IOpenGlDevice* openGlDevice, const std::string& name) : ope
 
 Animation::Animation(
 		IOpenGlDevice* openGlDevice,
-		const std::string& name, 
+		std::string name, 
 		glm::detail::float64 duration, 
 		glm::detail::float64 ticksPerSecond, 
 		std::map< std::string, AnimatedBoneNode > animatedBoneNodes
-	) : openGlDevice_(openGlDevice), name_(name), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(animatedBoneNodes), runningTime_(0.0f)
+	) : openGlDevice_(openGlDevice), name_(std::move(name)), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(animatedBoneNodes), runningTime_(0.0f)
 {
 	// We probably shouldn't have an animation object at all if it has no animated bone nodes...
 	assert( animatedBoneNodes_.size() != 0 );
@@ -175,12 +175,12 @@ void Animation::bind(std::vector< glm::mat4 >& transformations)
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 }
 
-GLuint Animation::getBufferId()
+GLuint Animation::getBufferId() const
 {
 	return bufferId_;
 }
 
-GLuint Animation::getBindPoint()
+GLuint Animation::getBindPoint() const
 {
 	return bindPoint_;
 }
@@ -199,7 +199,7 @@ void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::u
 	endFrame_ = endFrame;
 }
 
-const std::string& Animation::getName()
+const std::string& Animation::getName() const
 {
 	return name_;
 }

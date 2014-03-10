@@ -22,7 +22,7 @@ public:
 	}
 	;
 
-	virtual IShaderProgram* getShaderProgram(const std::string& filename) = 0;
+	virtual IShaderProgram* getShaderProgram(const std::string& filename) const = 0;
 
 	virtual void loadShaderPrograms(const std::string& directory) = 0;
 	virtual void reloadShaders() = 0;

@@ -28,16 +28,16 @@ public:
 	virtual ~GlslShaderProgram();
 
 	virtual void bind();
-	virtual GLuint getGLShaderProgramId();
+	virtual GLuint getGLShaderProgramId() const;
 	virtual IShader::BindingsMap getBindings();
 	void compile();
 
-	virtual GLint getBindPointByVariableName(const std::string& varName);
-	virtual GLint getBindPointByBindingName(IShader::BindType bindType);
+	virtual GLint getBindPointByVariableName(const std::string& varName) const;
+	virtual GLint getBindPointByBindingName(IShader::BindType bindType) const;
 	
-	virtual GLint getVertexAttributeLocationByName(const std::string& varName);
+	virtual GLint getVertexAttributeLocationByName(const std::string& varName) const;
 	
-	const std::string& getName();
+	const std::string& getName() const;
 	
 	virtual void addBindListener(IShaderProgramBindListener* bindListener);
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener);

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <utility>
 
 #include "glw/shaders/GlslShaderProgram.hpp"
 
@@ -11,7 +12,8 @@ namespace glr
 namespace shaders
 {
 
-GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice) : name_(name), shaders_(shaders), openGlDevice_(openGlDevice)
+GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice)
+	: name_(std::move(name)), shaders_(shaders), openGlDevice_(openGlDevice)
 {
 	programId_ = -1;
 }
@@ -99,7 +101,7 @@ void GlslShaderProgram::compile()
 	LOG_DEBUG( "Done initializing shader program '" + name_ + "'." );
 }
 
-GLuint GlslShaderProgram::getGLShaderProgramId()
+GLuint GlslShaderProgram::getGLShaderProgramId() const
 {
 	return programId_;
 }
@@ -135,7 +137,7 @@ void GlslShaderProgram::bind()
 		bindListener->shaderBindCallback( this );
 }
 
-GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
+GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType) const
 {
 	for ( auto& b : bindings_ )
 	{
@@ -150,7 +152,7 @@ GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType)
 	return -1;
 }
 
-GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName)
+GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName) const
 {
 	for ( auto& b : bindings_ )
 	{
@@ -166,7 +168,7 @@ GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName)
 	return -1;
 }
 
-GLint GlslShaderProgram::getVertexAttributeLocationByName(const std::string& varName)
+GLint GlslShaderProgram::getVertexAttributeLocationByName(const std::string& varName) const
 {
 	GLint pos = glGetAttribLocation(programId_, varName.c_str());
 	
@@ -202,7 +204,7 @@ void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GL
 }
 */
 
-const std::string& GlslShaderProgram::getName()
+const std::string& GlslShaderProgram::getName() const
 {
 	return name_;
 }

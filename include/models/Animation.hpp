@@ -39,14 +39,14 @@ public:
 	Animation(const Animation& other);
 	virtual ~Animation();
 	
-	glw::Animation* getAnimation();
-	glm::detail::float32 getAnimationTime();
+	glw::Animation* getAnimation() const;
+	glm::detail::float32 getAnimationTime() const;
 	
-	glm::detail::uint32 getStartFrame();
-	glm::detail::uint32 getEndFrame();
+	glm::detail::uint32 getStartFrame() const;
+	glm::detail::uint32 getEndFrame() const;
 	
 	// From glw::IAnimation
-	virtual const std::string& getName();
+	virtual const std::string& getName() const;
 	virtual void setAnimationTime(glm::detail::float32 runningTime);
 	
 	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame); 

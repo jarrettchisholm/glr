@@ -39,42 +39,50 @@ public:
 	Model(Id id, const Model& other);
 	virtual ~Model();
 
-	glw::IMesh* getMesh(glmd::uint32 index);
+	glw::IMesh* getMesh(glmd::uint32 index) const;
 	void removeMesh(glmd::uint32 index);
 	void removeMesh(glw::IMesh* mesh);
 	void addMesh(glw::IMesh* mesh);
 	void addMesh(glw::IMesh* mesh, glmd::uint32 index);
-	glmd::uint32 getNumberOfMeshes();
+	glmd::uint32 getNumberOfMeshes() const;
 	
-	glw::ITexture* getTexture(glmd::uint32 index);
-	glw::ITexture* getTexture(glw::IMesh* mesh);
+	glw::ITexture* getTexture(glmd::uint32 index) const;
+	glw::ITexture* getTexture(glw::IMesh* mesh) const;
 	void removeTexture(glmd::uint32 index);
 	void removeTexture(glw::ITexture* texture);
 	void removeTexture(glw::IMesh* mesh);
 	void addTexture(glw::ITexture* texture, glmd::uint32 index);
 	void addTexture(glw::ITexture* texture, glw::Mesh* mesh);
-	glmd::uint32 getNumberOfTextures();
+	glmd::uint32 getNumberOfTextures() const;
 	
-	glw::IMaterial* getMaterial(glmd::uint32 index);
-	glw::IMaterial* getMaterial(glw::IMesh* mesh);
+	glw::IMaterial* getMaterial(glmd::uint32 index) const;
+	glw::IMaterial* getMaterial(glw::IMesh* mesh) const;
 	void removeMaterial(glmd::uint32 index);
 	void removeMaterial(glw::IMaterial* material);
 	void removeMaterial(glw::IMesh* mesh);
 	void addMaterial(glw::IMaterial* material, glmd::uint32 index);
 	void addMaterial(glw::IMaterial* material, glw::Mesh* mesh);
-	glmd::uint32 getNumberOfMaterials();
+	glmd::uint32 getNumberOfMaterials() const;
 	
 	virtual const Id& getId() const;
 	virtual const std::string& getName() const;
 	
-	virtual IAnimation* getCurrentAnimation();
-	virtual IAnimation* getAnimation(const std::string& name);
+	virtual IAnimation* getCurrentAnimation() const;
+	virtual IAnimation* getAnimation(const std::string& name) const;
 	void removeAnimation(const std::string& name);
 	void removeAnimation(glw::IAnimation* animation);
 	void addAnimation(glw::IAnimation* animation);
-	glmd::uint32 getNumberOfAnimations();
+	glmd::uint32 getNumberOfAnimations() const;
 	virtual void setCurrentAnimation(IAnimation* animation);
 
+	/**
+	 * Will render the model through OpenGL.
+	 * 
+	 * The model will render each mesh individually.  Each mesh may have a corresponding material, texture, and animation, all of which
+	 * will be bound to the shader for use when rendering the mesh.
+	 * 
+	 * @param shader The shader to use to render this model.
+	 */
 	virtual void render(shaders::IShaderProgram* shader);
 
 protected:
@@ -107,9 +115,9 @@ protected:
 	void loadMaterials(const aiScene* scene);
 	void loadAnimations(const aiScene* scene);
 	
-	glmd::int32 getIndexOf(glw::IMesh* mesh);
-	glmd::int32 getIndexOf(glw::ITexture* texture);
-	glmd::int32 getIndexOf(glw::IMaterial* material);
+	glmd::int32 getIndexOf(glw::IMesh* mesh) const;
+	glmd::int32 getIndexOf(glw::ITexture* texture) const;
+	glmd::int32 getIndexOf(glw::IMaterial* material) const;
 	
 private:
 	// We don't copy straight up, since we need a new id for the copy

@@ -25,15 +25,15 @@ namespace glmd = glm::detail;
 
 class Animation : public IAnimation {
 public:
-	Animation(IOpenGlDevice* openGlDevice, const std::string& name);
-	Animation(IOpenGlDevice* openGlDevice, const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
+	Animation(IOpenGlDevice* openGlDevice, std::string name);
+	Animation(IOpenGlDevice* openGlDevice, std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	Animation(const Animation& other);
 	virtual ~Animation();
 	
 	void bind();
 	void bind(std::vector< glm::mat4 >& transformations);
-	GLuint getBufferId();
-	GLuint getBindPoint();
+	GLuint getBufferId() const;
+	GLuint getBindPoint() const;
 	
 	/**
 	 * Will set the animation time to runningTime.
@@ -68,7 +68,7 @@ public:
 	
 	void generateIdentityBoneTransforms(glmd::uint32 numBones);
 	
-	virtual const std::string& getName();
+	virtual const std::string& getName() const;
 	
 private:
 	GLuint bufferId_;

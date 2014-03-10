@@ -15,7 +15,7 @@ public:
 
 	virtual void bind() = 0;
 	
-	virtual GLuint getBufferId() = 0;
+	virtual GLuint getBufferId() const = 0;
 };
 
 }

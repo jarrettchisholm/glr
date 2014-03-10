@@ -51,9 +51,15 @@ void ShaderProgramManager::reloadShaders()
 		load( dir );
 }
 
-IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string& name)
+IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string& name) const
 {
-	return glslProgramMap_[ name ].get();
+	auto it = glslProgramMap_.find(name);
+	if (it != glslProgramMap_.end())
+	{
+		return it->second.get();
+	}
+	
+	return nullptr;
 }
 
 void ShaderProgramManager::loadShaderPrograms(const std::string& directory)
@@ -220,7 +226,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std:
 	//}
 
 	// Process each glr shader program
-	for ( auto entry : glrProgramMap_ )
+	for ( auto& entry : glrProgramMap_ )
 	{
 		entry.second->process(glrShaderMap_);
 		LOG_DEBUG( "entry.second->getName(): " + entry.second->getName() );
@@ -228,7 +234,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std:
 	}
 
 	// Compile each glsl shader program and add the default set of bind listeners
-	for ( auto entry : glslProgramMap_ )
+	for ( auto& entry : glslProgramMap_ )
 	{
 		entry.second->compile();
 
@@ -279,7 +285,7 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 std::string ShaderProgramManager::prepend_ = std::string(".*\\#type(\\s+)");
 std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s*\\n+.*)");
 
-bool ShaderProgramManager::isShader(std::string s)
+bool ShaderProgramManager::isShader(std::string s) const
 {
 	
 	
@@ -298,14 +304,14 @@ bool ShaderProgramManager::isShader(std::string s)
 	//return !isProgram(s);
 }
 
-bool ShaderProgramManager::isProgram(std::string s)
+bool ShaderProgramManager::isProgram(std::string s) const
 {	
 	boost::regex shaderRegex(ShaderProgramManager::prepend_ + "program" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
 	return(boost::regex_match(s, shaderRegex));
 }
 
-bool ShaderProgramManager::isMisc(std::string s)
+bool ShaderProgramManager::isMisc(std::string s) const
 {	
 	boost::regex includeRegex(ShaderProgramManager::prepend_ + "na" + ShaderProgramManager::append_, boost::regex_constants::icase);
 

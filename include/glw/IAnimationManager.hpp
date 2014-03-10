@@ -19,7 +19,7 @@ public:
 	}
 	;
 
-	virtual Animation* getAnimation(const std::string& name) = 0;
+	virtual Animation* getAnimation(const std::string& name) const = 0;
 	virtual Animation* addAnimation(const std::string& name) = 0;
 	virtual Animation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes) = 0;
 };

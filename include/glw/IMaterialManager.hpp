@@ -20,7 +20,7 @@ public:
 	}
 	;
 
-	virtual Material* getMaterial(const std::string& name) = 0;
+	virtual Material* getMaterial(const std::string& name) const = 0;
 	virtual Material* addMaterial(const std::string& name) = 0;
 	virtual Material* addMaterial(
 		const std::string& name,

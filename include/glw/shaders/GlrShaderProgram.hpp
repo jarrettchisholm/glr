@@ -39,7 +39,7 @@ public:
 	 */
 	void process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap);
 
-	virtual std::string getName();
+	virtual const std::string& getName() const;
 
 	std::vector< std::shared_ptr<GlrShader> > getShaders();
 

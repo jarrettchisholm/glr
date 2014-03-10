@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <boost/regex.hpp>
 
 #include "glw/shaders/GlrShader.hpp"
@@ -11,11 +13,11 @@ namespace glr
 namespace shaders
 {
 
-GlrShader::GlrShader(std::string source, std::string baseDirectory) : source_(source), baseDirectory_(baseDirectory)
+GlrShader::GlrShader(std::string source, std::string baseDirectory) : source_(std::move(source)), baseDirectory_(std::move(baseDirectory))
 {
 }
 
-GlrShader::GlrShader(std::string name, std::string source, std::string baseDirectory) : name_(name), source_(source), baseDirectory_(baseDirectory)
+GlrShader::GlrShader(std::string name, std::string source, std::string baseDirectory) : name_(std::move(name)), source_(std::move(source)), baseDirectory_(std::move(baseDirectory))
 {
 }
 
@@ -51,22 +53,22 @@ void GlrShader::process(std::map< std::string, std::string > defineMap)
 	//std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
-std::string GlrShader::getName()
+const std::string& GlrShader::getName() const
 {
 	return name_;
 }
 
-IShader::Type GlrShader::getType()
+IShader::Type GlrShader::getType() const
 {
 	return type_;
 }
 
-std::string GlrShader::getProcessedSource()
+std::string GlrShader::getProcessedSource() const
 {
 	return processedSource_;
 }
 
-std::string GlrShader::getSource()
+std::string GlrShader::getSource() const
 {
 	return source_;
 }
@@ -81,7 +83,7 @@ std::vector< std::pair<glmd::int32, std::string> > GlrShader::getLocationBinding
 	return locationBindings_;
 }
 
-bool GlrShader::containsPreProcessorCommands()
+bool GlrShader::containsPreProcessorCommands() const
 {
 	// TODO: implement
 	return true;

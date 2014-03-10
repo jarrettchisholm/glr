@@ -1,10 +1,3 @@
-/*
- * ShaderProgramManager.h
- *
- *  Created on: 2011-05-08
- *      Author: jarrett
- */
-
 #ifndef SHADERPROGRAMMANAGER_H_
 #define SHADERPROGRAMMANAGER_H_
 
@@ -34,7 +27,7 @@ public:
 	ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, bool autoLoad = true, std::vector<IShaderProgramBindListener*> defaultBindListeners = std::vector<IShaderProgramBindListener*>());
 	virtual ~ShaderProgramManager();
 
-	virtual IShaderProgram* getShaderProgram(const std::string& name);
+	virtual IShaderProgram* getShaderProgram(const std::string& name) const;
 
 	virtual void loadShaderPrograms(const std::string& directory);
 	
@@ -73,9 +66,9 @@ private:
 	// A list of all of the directories that have had their shaders loaded
 	std::vector< std::string > loadedShaderDirectories_;
 
-	bool isShader(std::string s);
-	bool isProgram(std::string s);
-	bool isMisc(std::string s);
+	bool isShader(std::string s) const;
+	bool isProgram(std::string s) const;
+	bool isMisc(std::string s) const;
 	
 	// Used for searching for the 'type' of a shader / shader program file
 	static std::string prepend_;

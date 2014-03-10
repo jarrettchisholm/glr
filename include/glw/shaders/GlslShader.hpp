@@ -26,13 +26,13 @@ public:
 	virtual ~GlslShader();
 
 	virtual void bind();
-	virtual IShader::Type getType();
-	virtual GLuint getGLShaderId();
+	virtual IShader::Type getType() const;
+	virtual GLuint getGLShaderId() const;
 	virtual IShader::BindingsMap getBindings();
 
 	void compile();
 
-	std::string getName();
+	const std::string& getName() const;
 
 private:
 	GLuint shaderId_;

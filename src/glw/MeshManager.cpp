@@ -20,12 +20,13 @@ MeshManager::~MeshManager()
 {
 }
 
-Mesh* MeshManager::getMesh(const std::string& name)
+Mesh* MeshManager::getMesh(const std::string& name) const
 {
-	if ( meshes_.find(name) != meshes_.end() )
+	auto it = meshes_.find(name);
+	if ( it != meshes_.end() )
 	{
 		LOG_DEBUG( "Mesh '" + name + "' found." );
-		return meshes_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Mesh '" + name + "' not found." );
@@ -37,10 +38,11 @@ Mesh* MeshManager::addMesh(const std::string& name)
 {
 	LOG_DEBUG( "Loading mesh..." );
 
-	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
+	auto it = meshes_.find(name);
+	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Mesh already exists." );
-		return meshes_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
@@ -61,10 +63,11 @@ Mesh* MeshManager::addMesh(
 {
 	LOG_DEBUG( "Loading mesh..." );
 
-	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
+	auto it = meshes_.find(name);
+	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Mesh already exists." );
-		return meshes_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
@@ -83,10 +86,11 @@ Mesh* MeshManager::addMesh(
 {
 	LOG_DEBUG( "Loading mesh..." );
 
-	if ( meshes_.find(name) != meshes_.end() && meshes_[name].get() != nullptr )
+	auto it = meshes_.find(name);
+	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Mesh already exists." );
-		return meshes_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Creating Mesh." );

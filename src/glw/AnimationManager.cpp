@@ -22,12 +22,13 @@ AnimationManager::~AnimationManager()
 {
 }
 
-Animation* AnimationManager::getAnimation(const std::string& name)
+Animation* AnimationManager::getAnimation(const std::string& name) const
 {
-	if ( animations_.find(name) != animations_.end() )
+	auto it = animations_.find(name);
+	if ( it != animations_.end() )
 	{
 		LOG_DEBUG( "Animation found." );
-		return animations_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Animation not found." );
@@ -39,10 +40,11 @@ Animation* AnimationManager::addAnimation(const std::string& name)
 {
 	LOG_DEBUG( "Loading animation..." );
 
-	if ( animations_.find(name) != animations_.end() && animations_[name].get() != nullptr )
+	auto it = animations_.find(name);
+	if ( it != animations_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Animation already exists." );
-		return animations_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Creating Animation." );
@@ -55,10 +57,11 @@ Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::
 {
 	LOG_DEBUG( "Loading animation..." );
 
-	if ( animations_.find(name) != animations_.end() && animations_[name].get() != nullptr )
+	auto it = animations_.find(name);
+	if ( it != animations_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Animation already exists." );
-		return animations_[name].get();
+		return it->second.get();
 	}
 
 	LOG_DEBUG( "Creating Animation." );

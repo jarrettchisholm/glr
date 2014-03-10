@@ -33,7 +33,7 @@ public:
 	 */
 	virtual void bind() = 0;
 
-	virtual GLuint getGLShaderProgramId() = 0;
+	virtual GLuint getGLShaderProgramId() const = 0;
 
 	/**
 	 * Returns the bindings for this shader program.  Bindings are described in the IShader.hpp file.
@@ -42,7 +42,7 @@ public:
 	 */
 	virtual IShader::BindingsMap getBindings() = 0;
 	
-	virtual const std::string& getName() = 0;
+	virtual const std::string& getName() const = 0;
 	
 	/**
 	 * Bind the shader variable with name varName to the given bindPoint.
@@ -68,7 +68,7 @@ public:
 	 * 
 	 * If no binding exists for the variable with name varName, -1 is returned.
 	 */
-	virtual GLint getBindPointByVariableName(const std::string& varName) = 0;
+	virtual GLint getBindPointByVariableName(const std::string& varName) const = 0;
 	
 	/**
 	 * Get the OpenGL shader bind point for the variable with bind type bindType.
@@ -78,7 +78,7 @@ public:
 	 * 
 	 * If no binding exists for the variable with bind type bindType, -1 is returned.
 	 */
-	virtual GLint getBindPointByBindingName(IShader::BindType bindType) = 0;
+	virtual GLint getBindPointByBindingName(IShader::BindType bindType) const = 0;
 	
 	/**
 	 * Get the OpenGL shader vertex attribute location for the variable with the given name varName.
@@ -88,7 +88,7 @@ public:
 	 * 
 	 * If no active vertex attribute exists with name varName, -1 is returned.
 	 */
-	virtual GLint getVertexAttributeLocationByName(const std::string& varName) = 0;
+	virtual GLint getVertexAttributeLocationByName(const std::string& varName) const = 0;
 	
 	/**
 	 * Add a listener, which will be notified when this shader gets bound.
