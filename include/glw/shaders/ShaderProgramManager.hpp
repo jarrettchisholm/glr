@@ -46,10 +46,10 @@ public:
 	virtual void reloadShaders();
 
 	void load(const std::string& directory);
-	void load(fs::path directory, std::string baseDirectory = std::string());
-	void load(std::vector<std::string> filenames, std::string baseDirectory = std::string());
-	void load(std::vector<fs::path> filePaths, std::string baseDirectory = std::string());
-	void load(std::map<std::string, std::string> dataMap, std::string baseDirectory = std::string());
+	void load(fs::path directory, const std::string& baseDirectory = std::string());
+	void load(std::vector<std::string> filenames, const std::string& baseDirectory = std::string());
+	void load(std::vector<fs::path> filePaths, const std::string& baseDirectory = std::string());
+	void load(std::map<std::string, std::string> dataMap, const std::string& baseDirectory = std::string());
 
 private:
 	std::map< std::string, std::shared_ptr<GlrShaderProgram> >				glrProgramMap_;
@@ -66,9 +66,9 @@ private:
 	// A list of all of the directories that have had their shaders loaded
 	std::vector< std::string > loadedShaderDirectories_;
 
-	bool isShader(std::string s) const;
-	bool isProgram(std::string s) const;
-	bool isMisc(std::string s) const;
+	bool isShader(const std::string& s) const;
+	bool isProgram(const std::string& s) const;
+	bool isMisc(const std::string& s) const;
 	
 	// Used for searching for the 'type' of a shader / shader program file
 	static std::string prepend_;

@@ -103,7 +103,7 @@ void ShaderProgramManager::load(const std::string& directory)
 	return load( fs::path(directory), directory );
 }
 
-void ShaderProgramManager::load(fs::path directory, std::string baseDirectory)
+void ShaderProgramManager::load(fs::path directory, const std::string& baseDirectory)
 {
 	std::vector<std::string> filenames;
 
@@ -124,7 +124,7 @@ void ShaderProgramManager::load(fs::path directory, std::string baseDirectory)
 	return load( filenames, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::vector<std::string> filenames, std::string baseDirectory)
+void ShaderProgramManager::load(std::vector<std::string> filenames, const std::string& baseDirectory)
 {
 	std::vector<fs::path> filePaths;
 
@@ -139,7 +139,7 @@ void ShaderProgramManager::load(std::vector<std::string> filenames, std::string 
 	return load( filePaths, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::vector<fs::path> filePaths, std::string baseDirectory)
+void ShaderProgramManager::load(std::vector<fs::path> filePaths, const std::string& baseDirectory)
 {
 	LOG_DEBUG( "Reading shader programs from disk." );
 
@@ -176,7 +176,7 @@ void ShaderProgramManager::load(std::vector<fs::path> filePaths, std::string bas
 	load( dataMap, baseDirectory );
 }
 
-void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, std::string baseDirectory)
+void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, const std::string& baseDirectory)
 {
 	LOG_DEBUG( "Loading shader programs." );
 
@@ -285,7 +285,7 @@ std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlsl
 std::string ShaderProgramManager::prepend_ = std::string(".*\\#type(\\s+)");
 std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s*\\n+.*)");
 
-bool ShaderProgramManager::isShader(std::string s) const
+bool ShaderProgramManager::isShader(const std::string& s) const
 {
 	
 	
@@ -304,14 +304,14 @@ bool ShaderProgramManager::isShader(std::string s) const
 	//return !isProgram(s);
 }
 
-bool ShaderProgramManager::isProgram(std::string s) const
+bool ShaderProgramManager::isProgram(const std::string& s) const
 {	
 	boost::regex shaderRegex(ShaderProgramManager::prepend_ + "program" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
 	return(boost::regex_match(s, shaderRegex));
 }
 
-bool ShaderProgramManager::isMisc(std::string s) const
+bool ShaderProgramManager::isMisc(const std::string& s) const
 {	
 	boost::regex includeRegex(ShaderProgramManager::prepend_ + "na" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
