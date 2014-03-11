@@ -34,7 +34,7 @@ namespace models
 class Model : public IModel
 {
 public:
-	Model(Id id, std::string name, glw::IMesh* meshe, glw::ITexture* texture, glw::IMaterial* material, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
+	Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vector<glw::ITexture*> textures, std::vector<glw::IMaterial*> materials, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, const Model& other);
 	virtual ~Model();
@@ -89,22 +89,23 @@ protected:
 	Id id_;
 	std::string name_;
 
-	glw::IOpenGlDevice* openGlDevice_;
-
 	std::vector<glw::IMesh*> meshes_;
 	std::vector<glw::ITexture*> textures_;
 	std::vector<glw::IMaterial*> materials_;
-	std::map< std::string, std::unique_ptr<Animation>> animations_;
-	
-	Animation* currentAnimation_;
-	glw::Animation* emptyAnimation_;
-	
+
 	/* 	All meshes in this model use this bone node tree for animations.
 		Any animations that manipulate bone nodes will be manipulating bones in this bone node tree. */
 	glw::BoneNode rootBoneNode_;
 	
 	glm::mat4 globalInverseTransformation_;
+
+	glw::IOpenGlDevice* openGlDevice_;
 	
+	std::map< std::string, std::unique_ptr<Animation>> animations_;
+	
+	Animation* currentAnimation_;
+	glw::Animation* emptyAnimation_;
+
 	glw::IMeshManager* meshManager_;
 	glw::IMaterialManager* materialManager_;
 	glw::ITextureManager* textureManager_;

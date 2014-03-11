@@ -233,7 +233,6 @@ source_files = source_files + Glob('build/common/compatibility/*.cpp')
 source_files = source_files + Glob('build/common/math/*.cpp')
 source_files = source_files + Glob('build/common/logger/*.cpp')
 source_files = source_files + Glob('build/common/utilities/*.cpp')
-source_files = source_files + Glob('build/common/io/*.cpp')
 
 source_files = source_files + Glob('build/*.cpp')
 source_files = source_files + Glob('build/exceptions/*.cpp')

@@ -10,6 +10,7 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <utility>
 
 #include <boost/algorithm/string.hpp>
 
@@ -179,16 +180,16 @@ public:
 		std::string instring;
 	};
 
-protected:
-	static std::map<std::string, std::string> files_;
-	std::string baseDirectory_;
-
 private:
 	std::string name_;
 	std::string type_;
 	std::vector<ShaderData> shaderData_;
 	std::string source_;
 	std::string processedSource_;
+
+protected:
+	static std::map<std::string, std::string> files_;
+	std::string baseDirectory_;
 };
 
 }

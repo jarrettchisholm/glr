@@ -258,7 +258,6 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
 	{
 		const aiFace* face = &mesh->mFaces[t];
-		GLenum face_mode;
 
 		switch ( face->mNumIndices )
 		{
@@ -272,8 +271,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 	
-			case 3: 
-				face_mode = GL_TRIANGLES; 
+			case 3:
 				break;
 	
 			case 4:

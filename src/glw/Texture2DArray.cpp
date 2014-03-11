@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #include "glw/Texture2DArray.hpp"
 
@@ -6,15 +7,17 @@
 #include "exceptions/FormatException.hpp"
 
 
-namespace glr {
-namespace glw {
-	
-Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
+namespace glr
+{
+namespace glw
+{
+
+Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
 }
 
-Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings)
+Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
 	

@@ -49,10 +49,9 @@ private:
 	GLuint programId_;
 
 	std::string name_;
-
+	std::vector< std::shared_ptr<GlslShader> > shaders_;
 	glw::IOpenGlDevice* openGlDevice_;
 
-	std::vector< std::shared_ptr<GlslShader> > shaders_;
 	IShader::BindingsMap bindings_;
 	
 	std::vector<IShaderProgramBindListener*> bindListeners_;

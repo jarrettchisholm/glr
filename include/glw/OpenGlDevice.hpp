@@ -63,7 +63,7 @@ private:
 	std::vector<GLuint> bufferIds_;
 	std::vector<GLuint> bindPoints_;
 	std::unordered_map<GLuint, GLuint> boundBuffers_;
-	GLint maxNumBindPoints_;
+	GLuint maxNumBindPoints_;
 	glmd::uint32 currentBindPoint_;
 	//std::vector< glmd::int32 > bindings_;
 	

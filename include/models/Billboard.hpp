@@ -32,11 +32,11 @@ private:
 	Id id_;
 	std::string name_;
 	
-	glw::IOpenGlDevice* openGlDevice_;
-	
 	glw::IMesh* mesh_;
 	glw::ITexture* texture_;
 	glw::IMaterial* material_;
+	
+	glw::IOpenGlDevice* openGlDevice_;
 };
 
 }

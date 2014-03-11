@@ -46,9 +46,9 @@ public:
 private:
 	std::string name_;
 	std::string source_;
+	std::string baseDirectory_;
 
 	std::vector< std::shared_ptr<GlrShader> > shaders_;
-	std::string baseDirectory_;
 };
 
 }

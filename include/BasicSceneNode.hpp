@@ -60,13 +60,13 @@ protected:
 	shaders::IShaderProgram* shaderProgram_;
 
 	ISceneManager* sceneManager_;
-	glw::IOpenGlDevice* openGlDevice_;
 
 	glm::detail::uint32 id_;
 	std::string name_;
-	glm::quat orientationQuaternion_;
 	glm::vec3 pos_;
+	glm::quat orientationQuaternion_;
 	glm::vec3 scale_;
+	glw::IOpenGlDevice* openGlDevice_;
 
 	bool active_;	
 };

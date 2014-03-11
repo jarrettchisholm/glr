@@ -45,13 +45,12 @@ public:
 
 private:
 	std::vector< std::unique_ptr<GuiComponent> > views_;
-	
-	shaders::IShaderProgramManager* shaderProgramManager_;
-	
+
 	glw::IOpenGlDevice* openGlDevice_;
-	
-	// Width and height of our window.
-	glmd::uint32 width_, height_;
+	shaders::IShaderProgramManager* shaderProgramManager_;
+
+	glmd::uint32 width_;
+	glmd::uint32 height_;
 };
 
 }

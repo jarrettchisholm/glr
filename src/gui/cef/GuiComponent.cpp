@@ -466,9 +466,10 @@ void GuiComponent::textEvent(const wchar_t* evt, size_t evtLength)
 	//std::cout << "TEXT EVENT: " << evt << std::endl;
 	//std::cout << "HERE 1 " << (char*)evt << std::endl;
 	//window_->focus();
-	wchar_t outchars[2];
-	outchars[0] = evt[0];
-	outchars[1] = 0;
+	
+	//wchar_t outchars[2];
+	//outchars[0] = evt[0];
+	//outchars[1] = 0;
 	//std::cout << "HERE 2 " << outchars[0] << std::endl;
 	//window_->textEvent(outchars, 1);
 }

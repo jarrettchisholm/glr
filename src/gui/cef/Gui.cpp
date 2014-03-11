@@ -3,6 +3,9 @@
 #include <iostream>
 #include <string.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 #include "gui/cef/Gui.hpp"
 
 #include "common/logger/Logger.hpp"
@@ -36,7 +39,7 @@ void Gui::destroy()
 
 void Gui::update()
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 			views_.at(i).get()->executeScript(L"update();");
@@ -47,22 +50,22 @@ void Gui::render()
 {
 	CefDoMessageLoopWork();
 	
-	shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
+	//shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
 
 	//shader->bind();
 	
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 			views_.at(i).get()->render(nullptr);
 	}
 	
-	shaders::GlslShaderProgram::unbindAll();
+	//shaders::GlslShaderProgram::unbindAll();
 }
 
 void Gui::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
@@ -73,7 +76,7 @@ void Gui::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 
 void Gui::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
@@ -84,7 +87,7 @@ void Gui::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm
 
 void Gui::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
@@ -95,7 +98,7 @@ void Gui::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 
 void Gui::textEvent(const wchar_t* evt, size_t evtLength)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
@@ -106,7 +109,7 @@ void Gui::textEvent(const wchar_t* evt, size_t evtLength)
 
 void Gui::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
@@ -160,7 +163,7 @@ IGuiComponent* Gui::loadFromData(std::string data)
 
 void Gui::release(IGuiComponent* comp)
 {
-	for ( int i = 0; i < views_.size(); i++ )
+	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get() == comp )
 		{

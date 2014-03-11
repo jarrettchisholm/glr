@@ -32,14 +32,14 @@ public:
 	 * Basic constructor.  The creator of the Mesh will have to set the data, and then call
 	 * 'allocateVideoMemory()' and 'pushToVideoMemory()' before this mesh will render properly.
 	 */
-	Mesh(IOpenGlDevice* openGlDevice, const std::string& name);
+	Mesh(IOpenGlDevice* openGlDevice, std::string name);
 	
 	/**
 	 * Standard constructor.  Once called, the Mesh will be ready for rendering (with no further action
 	 * required by the creator).
 	 */
 	Mesh(IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -53,7 +53,7 @@ public:
 	 * required by the creator).  This type of Mesh does not have any bone data set by default.
 	 */
 	Mesh(IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
@@ -72,7 +72,7 @@ public:
 	virtual void allocateVideoMemory();
 	
 	virtual const std::string& getName() const;
-	void setName(const std::string& name);
+	void setName(std::string name);
 	
 	void setVertices(std::vector< glm::vec3 > vertices);
 	void setNormals(std::vector< glm::vec3 > normals);
@@ -87,18 +87,18 @@ public:
 	std::vector< VertexBoneData >& getVertexBoneData();
 	
 protected:
-	std::string name_;
 	IOpenGlDevice* openGlDevice_;
-	glm::detail::uint32 vaoId_;
-	glm::detail::uint32 vboIds_[5];
-
+	std::string name_;
 	std::vector< glm::vec3 > vertices_;
 	std::vector< glm::vec3 > normals_;
 	std::vector< glm::vec2 > textureCoordinates_;
 	std::vector< glm::vec4 > colors_;
 	std::vector< VertexBoneData > vertexBoneData_;
 
-	BoneData boneData_;
+	BoneData boneData_;	
+
+	glm::detail::uint32 vaoId_;
+	glm::detail::uint32 vboIds_[5];
 
 	std::string textureFileName_;
 };

@@ -68,20 +68,21 @@ public:
 	void setStrength(glm::detail::float32 strength);
 
 	GETSET(std::string, name_, Name)
-private:
-	std::string name_;
-	
+private:	
 	IOpenGlDevice* openGlDevice_;
+	std::string name_;
+	glm::vec4 ambient_;
+	glm::vec4 diffuse_;
+	glm::vec4 specular_;
+	glm::vec4 emission_;
+	glm::detail::float32 shininess_;
+	glm::detail::float32 strength_;
+	
 	GLuint bufferId_;
 	GLuint bindPoint_;
 
 	GLenum fill_mode_;
 	glm::detail::int32 ret1_, ret2_;
-	glm::vec4 ambient_;
-	glm::vec4 diffuse_;
-	glm::vec4 specular_;
-	glm::vec4 emission_;
-	glm::detail::float32 shininess_, strength_;
 	
 	MaterialData materialData_;
 	

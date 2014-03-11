@@ -49,7 +49,20 @@ void OpenGlDevice::initialize(const OpenGlDeviceSettings& settings)
 	projectionMatrix_ = glm::mat4();
 	
 	// Find and set the number of bind points available
-	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints_);
+	GLint maxNumBindPoints = 0;
+	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &maxNumBindPoints);
+	
+	if (maxNumBindPoints > 0)
+	{
+		maxNumBindPoints_ = (GLuint) maxNumBindPoints;
+	}
+	else
+	{
+		std::stringstream ss;
+		ss << std::string("No bind points available in this OpenGL implementation.");
+		LOG_ERROR( ss.str() );
+		throw exception::GlException( ss.str() );
+	}
 	
 	for (GLuint i=0; i < maxNumBindPoints_; i++)
 	{
