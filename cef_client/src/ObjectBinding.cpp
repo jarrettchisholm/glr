@@ -49,7 +49,7 @@ bool ObjectBinding::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
 		message->GetArgumentList()->SetInt( 2, arguments.size() );
 		
 		// Encode function parameters
-		for ( int i = 0; i < arguments.size(); i++ )
+		for ( unsigned int i = 0; i < arguments.size(); i++ )
 		{
 			if ( arguments[i]->IsString() )
 				message->GetArgumentList()->SetString( i+2, arguments[i]->GetStringValue() );
