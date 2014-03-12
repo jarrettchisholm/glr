@@ -12,8 +12,8 @@ namespace glr
 namespace shaders
 {
 
-GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice)
-	: name_(std::move(name)), shaders_(shaders), openGlDevice_(openGlDevice)
+GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::unique_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice)
+	: name_(std::move(name)), shaders_(std::move(shaders)), openGlDevice_(openGlDevice)
 {
 	programId_ = -1;
 }
@@ -35,14 +35,14 @@ void GlslShaderProgram::compile()
 	}
 
 	// Compile all shaders
-	for ( auto s : shaders_ )
+	for ( auto& s : shaders_ )
 	{
 		s->compile();
 	}
 
 	programId_ = glCreateProgram();
 
-	for ( auto s : shaders_ )
+	for ( auto& s : shaders_ )
 	{
 		glAttachShader(programId_, s->getGLShaderId());
 	}
@@ -88,7 +88,7 @@ void GlslShaderProgram::compile()
 		delete[] strInfoLog;
 		
 		// Cleanup
-		for ( auto s : shaders_ )
+		for ( auto& s : shaders_ )
 		{
 			glDetachShader(programId_, s->getGLShaderId());
 		}
@@ -125,7 +125,9 @@ void GlslShaderProgram::bind()
 
 		GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  b.variableName.c_str());
 		if ( uniformBlockIndex != GL_INVALID_INDEX )
+		{
 			glUniformBlockBinding(programId_, uniformBlockIndex, b.bindPoint);
+		}
 		else
 		{
 			LOG_WARN( std::string("Unable to find block index for variable '" + b.variableName + "' in shader program '" + name_ + "'.") );
@@ -213,7 +215,7 @@ void GlslShaderProgram::generateBindings()
 {
 	bindings_ = IShader::BindingsMap();
 
-	for ( auto s : shaders_ )
+	for ( auto& s : shaders_ )
 	{
 		IShader::BindingsMap b = s->getBindings();
 		for ( auto e : b )

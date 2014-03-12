@@ -28,7 +28,7 @@ public:
 	virtual void setLightData(LightData data) = 0;
 	// TODO: add 'set' methods for each piece of light data
 
-	virtual const LightData& getLightData() = 0;
+	virtual const LightData& getLightData() const = 0;
 	// TODO: add 'get' methods for each piece of light data
 };
 

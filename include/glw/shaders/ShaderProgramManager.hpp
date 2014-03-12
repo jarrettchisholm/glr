@@ -52,23 +52,22 @@ public:
 	void load(std::map<std::string, std::string> dataMap, const std::string& baseDirectory = std::string());
 
 private:
-	std::map< std::string, std::shared_ptr<GlrShaderProgram> >				glrProgramMap_;
-	std::map< std::string, std::shared_ptr<GlrShader> >                     glrShaderMap_;
-	std::map< std::string, std::shared_ptr<GlslShaderProgram> >             glslProgramMap_;
-	std::map< std::string, std::shared_ptr<GlslShader> >                    glslShaderMap_;
+	std::map< std::string, std::unique_ptr<GlrShaderProgram> >				glrProgramMap_;
+	std::map< std::string, std::unique_ptr<GlrShader> >                     glrShaderMap_;
+	std::map< std::string, std::unique_ptr<GlslShaderProgram> >             glslProgramMap_;
 	
 	glw::IOpenGlDevice* openGlDevice_;
 	
 	std::vector<IShaderProgramBindListener*> defaultBindListeners_;
 
-	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram);
+	std::unique_ptr<GlslShaderProgram> convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram) const;
 
 	// A list of all of the directories that have had their shaders loaded
 	std::vector< std::string > loadedShaderDirectories_;
 
-	bool isShader(const std::string& s) const;
-	bool isProgram(const std::string& s) const;
-	bool isMisc(const std::string& s) const;
+	bool isShader(const std::string& source) const;
+	bool isProgram(const std::string& source) const;
+	bool isMisc(const std::string& source) const;
 	
 	// Used for searching for the 'type' of a shader / shader program file
 	static std::string prepend_;

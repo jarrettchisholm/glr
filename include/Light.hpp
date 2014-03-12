@@ -12,7 +12,7 @@ class Light : public virtual ILight, public BasicSceneNode
 public:
 	Light(glw::IOpenGlDevice* openGlDevice);
 	Light(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);
-	Light(glm::detail::uint32 id, const std::string name, glw::IOpenGlDevice* openGlDevice);
+	Light(glm::detail::uint32 id, std::string name, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Light();
 
 	// inherited from ILight
@@ -22,7 +22,7 @@ public:
 
 	virtual void setLightData(LightData data);
 
-	virtual const LightData& getLightData();
+	virtual const LightData& getLightData() const;
 
 private:
 	LightData lightData_;

@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <exception>
+#include <utility>
 
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
@@ -25,7 +26,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
     
     glr::ISceneManager* smgr = p->getSceneManager();
 	
-	std::shared_ptr< glr::extras::FpsCamera > camera = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
+	std::unique_ptr< glr::extras::FpsCamera > camera = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
 	camera->setPosition(0, 0, 0);
 	
 	glm::vec3 pos = camera->getPosition();
@@ -33,7 +34,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	BOOST_CHECK_EQUAL( pos.y, 0.0f );
 	BOOST_CHECK_EQUAL( pos.z, 0.0f );
 	
-	smgr->addCamera(camera);
+	smgr->addCamera( std::move(camera) );
        
     delete p;
     

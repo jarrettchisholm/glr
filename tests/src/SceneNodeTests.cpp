@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <exception>
+#include <utility>
 
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"

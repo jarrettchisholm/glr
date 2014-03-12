@@ -37,18 +37,18 @@ public:
 	 * 
 	 * @param glrShaderMap A map that maps a shader filename (as a string) to the GlrShader object.
 	 */
-	void process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap);
+	void process(const std::map< std::string, std::unique_ptr<GlrShader> >& glrShaderMap);
 
 	virtual const std::string& getName() const;
 
-	std::vector< std::shared_ptr<GlrShader> > getShaders();
+	std::vector< GlrShader* > getShaders();
 
 private:
 	std::string name_;
 	std::string source_;
 	std::string baseDirectory_;
 
-	std::vector< std::shared_ptr<GlrShader> > shaders_;
+	std::vector< GlrShader* > shaders_;
 };
 
 }

@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 #include <algorithm>
 #include <boost/regex.hpp>
 
@@ -43,7 +44,6 @@ void ShaderProgramManager::reloadShaders()
 	glrProgramMap_.clear();
 	glrShaderMap_.clear();
 	glslProgramMap_.clear();
-	glslShaderMap_.clear();
 	
 	loadStandardShaderPrograms();
 	//loadShaderPrograms(constants::SHADER_DIRECTORY);
@@ -73,7 +73,7 @@ void ShaderProgramManager::addDefaultBindListener(IShaderProgramBindListener* bi
 	defaultBindListeners_.push_back(bindListener);
 	
 	// Add the new bind listener to all glsl programs
-	for ( auto entry : glslProgramMap_ )
+	for ( auto& entry : glslProgramMap_ )
 	{
 		entry.second->addBindListener( bindListener );
 	}
@@ -87,7 +87,7 @@ void ShaderProgramManager::removeDefaultBindListener(IShaderProgramBindListener*
 		defaultBindListeners_.erase(it);
 		
 	// Remove the bind listener from all glsl programs
-	for ( auto entry : glslProgramMap_ )
+	for ( auto& entry : glslProgramMap_ )
 	{
 		entry.second->removeBindListener( bindListener );
 	}
@@ -181,7 +181,7 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 	LOG_DEBUG( "Loading shader programs." );
 
 	// Add all shaders and shader programs to the maps
-	for ( auto entry : dataMap )
+	for ( auto& entry : dataMap )
 	{
 		bool isShader = this->isShader(entry.second);
 		bool isMisc = this->isMisc(entry.second);
@@ -192,18 +192,12 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 				type = std::string("Shader include");
 
 			LOG_DEBUG( type + " found: " + entry.first);
-			std::shared_ptr<GlrShader> s = std::shared_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
-			glrShaderMap_[entry.first] = s;
-			// Add shader to glsl shader map if it doesn't have any preprocessor commands
-			//if (!glrShaderMap_[entry.first]->containsPreProcessorCommands()) {
-			//	glslShaderMap_[entry.first] = std::shared_ptr<GlslShader>( new GlslShader(entry.second) );
-			//}
+			glrShaderMap_[entry.first] = std::unique_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
 		}
 		else if ( isProgram(entry.second) )
 		{
 			LOG_DEBUG( "Shader program found: " + entry.first );
-			std::shared_ptr<GlrShaderProgram> sp = std::shared_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
-			glrProgramMap_[entry.first] = sp;
+			glrProgramMap_[entry.first] = std::unique_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
 		}
 		else
 		{
@@ -220,17 +214,12 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 		}
 	}
 
-	// Compile all glsl shaders
-	//for (auto entry : glslShaderMap_) {
-	//	entry.second->compile();
-	//}
-
 	// Process each glr shader program
 	for ( auto& entry : glrProgramMap_ )
 	{
 		entry.second->process(glrShaderMap_);
 		LOG_DEBUG( "entry.second->getName(): " + entry.second->getName() );
-		glslProgramMap_[entry.second->getName()] = convertGlrProgramToGlslProgram(entry.second.get());
+		glslProgramMap_[ entry.second->getName() ] = convertGlrProgramToGlslProgram(entry.second.get());
 	}
 
 	// Compile each glsl shader program and add the default set of bind listeners
@@ -247,75 +236,63 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 	glrShaderMap_.clear();
 }
 
-std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram)
+std::unique_ptr<GlslShaderProgram> ShaderProgramManager::convertGlrProgramToGlslProgram(GlrShaderProgram* glrProgram) const
 {
 	auto glrShaders = glrProgram->getShaders();
 
-	std::vector< std::shared_ptr<GlslShader> > glslShaders;
+	std::vector< std::unique_ptr<GlslShader> > glslShaders;
 
 	for ( auto s : glrShaders )
 	{
-		if ( glslShaderMap_.find(s->getName()) == glslShaderMap_.end())
-		{
-			// If GlslShader doesn't exist in the map, create it specifically for this shader program
-			glslShaders.push_back(
-				std::shared_ptr<GlslShader>(
-					new GlslShader(
-						s->getName(),
-						s->getProcessedSource(),
-						s->getType(),
-						s->getBindings(),
-						s->getLocationBindings()
-						)
-					)
-				);
-		}
-		else
-		{
-			// Otherwise, use the already existing shader
-			glslShaders.push_back( glslShaderMap_[s->getName()] );
-		}
+		glslShaders.push_back(
+			std::unique_ptr<GlslShader>(
+				new GlslShader(
+					s->getName(),
+					s->getProcessedSource(),
+					s->getType(),
+					s->getBindings(),
+					s->getLocationBindings()
+				)
+			)
+		);
 	}
 
-	return std::unique_ptr<GlslShaderProgram>(new GlslShaderProgram(glrProgram->getName(), glslShaders, openGlDevice_));
+	return std::unique_ptr<GlslShaderProgram>(new GlslShaderProgram(glrProgram->getName(), std::move(glslShaders), openGlDevice_));
 }
 
-//std::string ShaderProgramManager::prepend_ = std::string(".*(\\s+)\\#type(\\s+)");
-//std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s+\\n+.*)");
 std::string ShaderProgramManager::prepend_ = std::string(".*\\#type(\\s+)");
 std::string ShaderProgramManager::append_ = std::string("(\\s*|\\s*\\n+.*)");
 
-bool ShaderProgramManager::isShader(const std::string& s) const
+bool ShaderProgramManager::isShader(const std::string& source) const
 {
-	
-	
+
+
 	boost::regex vertexShaderRegex(ShaderProgramManager::prepend_ + "vertex" + ShaderProgramManager::append_, boost::regex_constants::icase);
 	boost::regex fragmentShaderRegex(ShaderProgramManager::prepend_ + "fragment" + ShaderProgramManager::append_, boost::regex_constants::icase);
 	boost::regex tessellationShaderRegex(ShaderProgramManager::prepend_ + "tessellation" + ShaderProgramManager::append_, boost::regex_constants::icase);
 	boost::regex geometryShaderRegex(ShaderProgramManager::prepend_ + "geometry" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
-	bool matches = boost::regex_match(s, vertexShaderRegex) 
-					|| boost::regex_match(s, fragmentShaderRegex) 
-					|| boost::regex_match(s, tessellationShaderRegex) 
-					|| boost::regex_match(s, geometryShaderRegex)
+	bool matches = boost::regex_match(source, vertexShaderRegex) 
+					|| boost::regex_match(source, fragmentShaderRegex) 
+					|| boost::regex_match(source, tessellationShaderRegex) 
+					|| boost::regex_match(source, geometryShaderRegex)
 	;
 
 	return matches;
-	//return !isProgram(s);
 }
 
-bool ShaderProgramManager::isProgram(const std::string& s) const
-{	
+bool ShaderProgramManager::isProgram(const std::string& source) const
+{
 	boost::regex shaderRegex(ShaderProgramManager::prepend_ + "program" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
-	return(boost::regex_match(s, shaderRegex));
+	return(boost::regex_match(source, shaderRegex));
 }
 
-bool ShaderProgramManager::isMisc(const std::string& s) const
-{	
+bool ShaderProgramManager::isMisc(const std::string& source) const
+{
 	boost::regex includeRegex(ShaderProgramManager::prepend_ + "na" + ShaderProgramManager::append_, boost::regex_constants::icase);
 
-	return(boost::regex_match(s, includeRegex));
+	return(boost::regex_match(source, includeRegex));
 }
 
 }

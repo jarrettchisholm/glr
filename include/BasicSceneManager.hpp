@@ -20,16 +20,16 @@ public:
 	virtual ICamera* createCamera(glm::detail::uint32 speed = 1, glm::detail::uint32 rotationSpeed = 5);
 	virtual ILight* createLight(const std::string& name = std::string());
 	
-	virtual void addCamera(std::shared_ptr<ICamera> camera);
-	virtual void addSceneNode(std::shared_ptr<ISceneNode> sceneNode);
+	virtual void addCamera(std::unique_ptr<ICamera> camera);
+	virtual void addSceneNode(std::unique_ptr<ISceneNode> sceneNode);
 	
 	virtual void drawAll();
 	
-	virtual ISceneNode* getSceneNode(glm::detail::uint32 id);
-	virtual ISceneNode* getSceneNode(const std::string& name);
-	virtual ICamera* getCamera();
-	virtual ILight* getLight(glm::detail::uint32 id);
-	virtual ILight* getLight(const std::string& name);
+	virtual ISceneNode* getSceneNode(glm::detail::uint32 id) const;
+	virtual ISceneNode* getSceneNode(const std::string& name) const;
+	virtual ICamera* getCamera() const;
+	virtual ILight* getLight(glm::detail::uint32 id) const;
+	virtual ILight* getLight(const std::string& name) const;
 
 	virtual void destroySceneNode(glm::detail::uint32 id);
 	virtual void destroySceneNode(const std::string& name);
@@ -41,27 +41,27 @@ public:
 	virtual void destroyLight(ILight* node);
 	virtual void destroyAllLights();
 
-	virtual glmd::uint32 getNumSceneNodes();
-	virtual glmd::uint32 getNumLights();
+	virtual glmd::uint32 getNumSceneNodes() const;
+	virtual glmd::uint32 getNumLights() const;
 
-	virtual ISceneNode* getRootSceneNode();
+	virtual ISceneNode* getRootSceneNode() const;
 
 	virtual const std::vector<LightData>& getLightData();
 
 	virtual void setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram);
-	shaders::IShaderProgram* getDefaultShaderProgram();
+	shaders::IShaderProgram* getDefaultShaderProgram() const;
 
-	virtual const glm::mat4& getModelMatrix();
+	virtual const glm::mat4& getModelMatrix() const;
 	
-	virtual models::IModelManager* getModelManager();
-	virtual models::IBillboardManager* getBillboardManager();
-	virtual shaders::IShaderProgramManager* getShaderProgramManager();
+	virtual models::IModelManager* getModelManager() const;
+	virtual models::IBillboardManager* getBillboardManager() const;
+	virtual shaders::IShaderProgramManager* getShaderProgramManager() const;
 
 protected:
-	std::vector< std::shared_ptr<ISceneNode> > sceneNodes_;
-	std::shared_ptr<ISceneNode> rootSceneNode_;
-	std::vector< std::shared_ptr<ILight> > lights_;
-	std::shared_ptr<ICamera> camera_;
+	std::vector< std::unique_ptr<ISceneNode> > sceneNodes_;
+	std::unique_ptr<ISceneNode> rootSceneNode_;
+	std::vector< std::unique_ptr<ILight> > lights_;
+	std::unique_ptr<ICamera> camera_;
 	
 	glmd::uint32 nextSceneNodeId_;
 	glmd::uint32 nextLightSceneNodeId_;
