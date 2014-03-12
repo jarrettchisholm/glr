@@ -19,12 +19,11 @@ BOOST_AUTO_TEST_SUITE(fpsCamera)
 
 BOOST_AUTO_TEST_CASE(createFpsCamera)
 {
+	std::unique_ptr<glr::GlrProgram> p = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram() );
 	
-    glr::GlrProgram* p = new glr::GlrProgram();
-    
-    p->createWindow();
-    
-    glr::ISceneManager* smgr = p->getSceneManager();
+	p->createWindow();
+	
+	glr::ISceneManager* smgr = p->getSceneManager();
 	
 	std::unique_ptr< glr::extras::FpsCamera > camera = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
 	camera->setPosition(0, 0, 0);
@@ -35,9 +34,6 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	BOOST_CHECK_EQUAL( pos.z, 0.0f );
 	
 	smgr->addCamera( std::move(camera) );
-       
-    delete p;
-    
 }
 
 BOOST_AUTO_TEST_SUITE_END()
