@@ -27,15 +27,18 @@ public:
 	virtual const glm::mat4& getViewMatrix() const;
 
 private:
-	glm::detail::int32 prevX_, prevY_;
+	glm::detail::int32 prevX_;
+	glm::detail::int32 prevY_;
 
 	glm::mat4 viewMatrix_;
 	glm::vec3 direction_;
 
 	glm::vec3 movementBuffer_;
-	glm::detail::float32 moveSpeed_, rotSpeed_;
+	glm::detail::float32 moveSpeed_;
+	glm::detail::float32 rotSpeed_;
 	void clearMovementBuffer();
-	glm::detail::float32 xRot_, yRot_;
+	glm::detail::float32 xRot_;
+	glm::detail::float32 yRot_;
 
 	void initialize();
 };

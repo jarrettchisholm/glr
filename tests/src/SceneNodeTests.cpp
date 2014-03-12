@@ -30,17 +30,17 @@ BOOST_AUTO_TEST_CASE(createDeleteSceneNodes)
 	glr::ISceneNode* node = smgr->createSceneNode( std::string("test") );
 
 	BOOST_REQUIRE( node != nullptr ); 
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 1 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 1u );
 	
 	smgr->destroySceneNode( node );
 	
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0u );
 	
 	// Make sure node was actually deleted
 	node = smgr->getSceneNode( std::string("test") );
 	
 	BOOST_REQUIRE( node == nullptr );
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0u );
 	
 	
 	// Create/destroy multiple scene nodes
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(createDeleteSceneNodes)
 		smgr->createSceneNode(  ss.str() );
 	}
 	
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 30 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 30u );
 	
 	// Make sure we can get all of the scene nodes by name
 	for ( int i=0; i < 30; i++ )
@@ -71,12 +71,12 @@ BOOST_AUTO_TEST_CASE(createDeleteSceneNodes)
 	node = smgr->getSceneNode( std::string("test_node_4") );
 	BOOST_REQUIRE( node == nullptr );
 	
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 29 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 29u );
 	
 	// Test destroying the remaining nodes
 	smgr->destroyAllSceneNodes();
 	
-	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0 );
+	BOOST_CHECK_EQUAL( smgr->getNumSceneNodes(), 0u );
 }
 
 BOOST_AUTO_TEST_CASE(sceneNodeMovement)
