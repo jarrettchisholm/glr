@@ -24,7 +24,7 @@ namespace shaders
 class GlslShaderProgram : public IShaderProgram
 {
 public:
-	GlslShaderProgram(std::string name, std::vector< std::shared_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice);
+	GlslShaderProgram(std::string name, std::vector< std::unique_ptr<GlslShader> > shaders, glw::IOpenGlDevice* openGlDevice);
 	virtual ~GlslShaderProgram();
 
 	virtual void bind();
@@ -52,7 +52,7 @@ private:
 
 	glw::IOpenGlDevice* openGlDevice_;
 
-	std::vector< std::shared_ptr<GlslShader> > shaders_;
+	std::vector< std::unique_ptr<GlslShader> > shaders_;
 	IShader::BindingsMap bindings_;
 	
 	std::vector<IShaderProgramBindListener*> bindListeners_;

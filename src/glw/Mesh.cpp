@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #include "glw/Mesh.hpp"
 
@@ -11,7 +12,7 @@ namespace glr
 namespace glw
 {
 
-Mesh::Mesh(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_(openGlDevice), name_(name)
+Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	vertexBoneData_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
@@ -20,14 +21,14 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice, const std::string& name) : openGlDevice_
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector<VertexBoneData > vertexBoneData,
 		BoneData boneData)
-	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors), vertexBoneData_(vertexBoneData), boneData_(boneData)
+	: openGlDevice_(openGlDevice), name_(std::move(name)), vertices_(std::move(vertices)), normals_(std::move(normals)), textureCoordinates_(std::move(textureCoordinates)), colors_(std::move(colors)), vertexBoneData_(std::move(vertexBoneData)), boneData_(std::move(boneData))
 {
 	vaoId_ = 0;
 	
@@ -36,13 +37,13 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
-		const std::string& name,
+		std::string name,
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors
 	)
-	: openGlDevice_(openGlDevice), name_(name), vertices_(vertices), normals_(normals), textureCoordinates_(textureCoordinates), colors_(colors)
+	: openGlDevice_(openGlDevice), name_(std::move(name)), vertices_(std::move(vertices)), normals_(std::move(normals)), textureCoordinates_(std::move(textureCoordinates)), colors_(std::move(colors))
 {
 	vertexBoneData_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
@@ -234,9 +235,9 @@ const std::string& Mesh::getName() const
 	return name_;
 }
 
-void Mesh::setName(const std::string& name)
+void Mesh::setName(std::string name)
 {
-	name_ = name;
+	name_ = std::move(name);
 }
 
 void Mesh::setVertices(std::vector< glm::vec3 > vertices)

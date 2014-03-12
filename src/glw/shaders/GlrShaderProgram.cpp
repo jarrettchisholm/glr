@@ -26,7 +26,7 @@ GlrShaderProgram::~GlrShaderProgram()
 {
 }
 
-void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader> > glrShaderMap)
+void GlrShaderProgram::process(const std::map< std::string, std::unique_ptr<GlrShader> >& glrShaderMap)
 {
 	LOG_DEBUG( "Processing shader program '" + name_ + "'." );
 
@@ -51,7 +51,7 @@ void GlrShaderProgram::process(std::map< std::string, std::shared_ptr<GlrShader>
 			//shaders_[s.name] = GlrShader( s.name, glrShaderMap[s.name].getSource(), s.defineMap );
 			//glrShaderMap[s.name].setType();
 
-			shaders_.push_back(it->second);
+			shaders_.push_back(it->second.get());
 			shaders_.back()->process(s.defineMap);
 		}
 		else
@@ -75,7 +75,7 @@ const std::string& GlrShaderProgram::getName() const
 	return name_;
 }
 
-std::vector< std::shared_ptr<GlrShader> > GlrShaderProgram::getShaders()
+std::vector< GlrShader* > GlrShaderProgram::getShaders()
 {
 	return shaders_;
 }

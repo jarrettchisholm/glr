@@ -35,19 +35,19 @@ public:
 
 	typedef void* InternalWindow;
 
-	virtual WindowHandle getWindowHandle() = 0;
-	virtual InternalWindow getInternalWindowPointer() = 0;
+	virtual WindowHandle getWindowHandle() const = 0;
+	virtual InternalWindow getInternalWindowPointer() const = 0;
 
 	virtual void destroy() = 0;
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
 	virtual glm::detail::int32 handleEvents() = 0;
 	virtual void render() = 0;
 
-	virtual glm::detail::uint32 getWidth() = 0;
-	virtual glm::detail::uint32 getHeight() = 0;
-	virtual glm::vec2 getPosition() = 0;
-	virtual glm::detail::uint32 getDepth() = 0;
-	virtual const glm::mat4& getProjectionMatrix() = 0;
+	virtual glm::detail::uint32 getWidth() const = 0;
+	virtual glm::detail::uint32 getHeight() const = 0;
+	virtual glm::vec2 getPosition() const = 0;
+	virtual glm::detail::uint32 getDepth() const = 0;
+	virtual const glm::mat4& getProjectionMatrix() const = 0;
 	
 	virtual void addWindowResizeListener(IWindowResizeListener* listener) = 0;
 	virtual void removeWindowResizeListener(IWindowResizeListener* listener) = 0;

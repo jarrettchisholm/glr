@@ -30,7 +30,7 @@ Window::Window(int width, int height, std::string title): width_(width), height_
 
 	window_ = std::unique_ptr<sf::Window>(new sf::Window(
 											  sf::VideoMode(width, height, 32),
-											  title,
+											  std::move(title),
 											  sf::Style::Default,
 											  settings
 											  ));
@@ -47,14 +47,14 @@ Window::~Window()
 	destroy();
 }
 
-IWindow::WindowHandle Window::getWindowHandle()
+IWindow::WindowHandle Window::getWindowHandle() const
 {
 	sf::WindowHandle handle = window_->getSystemHandle();
 
 	return (IWindow::WindowHandle)handle;
 }
 
-IWindow::InternalWindow Window::getInternalWindowPointer()
+IWindow::InternalWindow Window::getInternalWindowPointer() const
 {
 	return window_.get();
 }
@@ -142,29 +142,29 @@ glm::detail::int32 Window::handleEvents()
 	return 0;
 }
 
-glm::detail::uint32 Window::getWidth()
+glm::detail::uint32 Window::getWidth() const
 {
 	return width_;
 }
 
-glm::detail::uint32 Window::getHeight()
+glm::detail::uint32 Window::getHeight() const
 {
 	return height_;
 }
 
-glm::vec2 Window::getPosition()
+glm::vec2 Window::getPosition() const
 {
 	const sf::Vector2i windowPosition = window_->getPosition();
 
 	return glm::vec2(windowPosition.x, windowPosition.y);
 }
 
-glm::detail::uint32 Window::getDepth()
+glm::detail::uint32 Window::getDepth() const
 {
 	return depth_;
 }
 
-const glm::mat4& Window::getProjectionMatrix()
+const glm::mat4& Window::getProjectionMatrix() const
 {
 	return projectionMatrix_;
 }

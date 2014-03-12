@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #include "glw/Texture2D.hpp"
 
@@ -10,11 +11,11 @@ namespace glr
 namespace glw
 {
 
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings ) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings ) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 }
 
-Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, const std::string& name, const TextureSettings settings) : openGlDevice_(openGlDevice), name_(name), settings_(settings), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 	if ( image != nullptr )
 	{

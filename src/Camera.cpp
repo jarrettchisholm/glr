@@ -67,12 +67,12 @@ void Camera::render()
 	}
 }
 
-const glm::mat4& Camera::getViewMatrix()
+const glm::mat4& Camera::getViewMatrix() const
 {
 	return viewMatrix_;
 }
 
-bool Camera::isActive()
+bool Camera::isActive() const
 {
 	return active_;
 }

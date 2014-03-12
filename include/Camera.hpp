@@ -14,7 +14,7 @@ public:
 	virtual ~Camera();
 
 	// inherited from ICamera
-	virtual bool isActive();
+	virtual bool isActive() const;
 
 	virtual void render();
 
@@ -24,7 +24,7 @@ public:
 
 	virtual void tick(glm::detail::float32 time);
 
-	virtual const glm::mat4& getViewMatrix();
+	virtual const glm::mat4& getViewMatrix() const;
 
 private:
 	glm::detail::int32 prevX_, prevY_;

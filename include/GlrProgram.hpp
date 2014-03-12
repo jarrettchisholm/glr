@@ -49,7 +49,7 @@ public:
 	void endRender();
 	virtual void render();
 
-	IWindow* createWindow(std::string name = "Window", std::string title = "Untitled Window", glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
+	IWindow* createWindow(std::string name = std::string("Window"), std::string title = std::string("Untitled Window"), glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
 						  bool fullscreen = false, bool vsync = false);
 
 	void setSceneManager(std::shared_ptr<ISceneManager> sceneManager);

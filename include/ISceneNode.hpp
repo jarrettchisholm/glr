@@ -31,7 +31,7 @@ public:
 	virtual glm::detail::uint32 getId() const = 0;
 	// TODO: Find some way to make this inaccessible to 3rd party code
 	virtual void setId(glm::detail::uint32 id) = 0;
-	virtual void setName(const std::string& name) = 0;
+	virtual void setName(std::string name) = 0;
 	virtual const std::string& getName() const = 0;
 
 	virtual glm::vec3& getPosition() = 0;
@@ -45,7 +45,7 @@ public:
 	virtual void translate(const glm::vec3& trans, TransformSpace relativeTo = TS_LOCAL) = 0;
 	virtual void translate(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z, TransformSpace relativeTo = TS_LOCAL) = 0;
 
-	virtual const glm::quat& getOrientation() = 0;
+	virtual const glm::quat& getOrientation() const = 0;
 	/**
 	 * Rotates the scene node around the axis 'axis' the specified number of degrees.  This rotation is relative to the transform space specified
 	 * by 'relativeTo'.
@@ -58,8 +58,8 @@ public:
 	virtual void attach(models::IModel* model) = 0;
 	virtual void attach(shaders::IShaderProgram* shaderProgram) = 0;
 	virtual void detach(models::IModel* model) = 0;
-	virtual models::IModel* getModel() = 0;
-	virtual shaders::IShaderProgram* getShaderProgram() = 0;
+	virtual models::IModel* getModel() const = 0;
+	virtual shaders::IShaderProgram* getShaderProgram() const = 0;
 	
 	virtual void render() = 0;
 	

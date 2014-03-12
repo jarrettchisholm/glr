@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Configure.hpp"
 
 #ifdef OS_WINDOWS
@@ -45,7 +47,7 @@ BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openG
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, const std::string& name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(name), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -56,8 +58,8 @@ BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, const std::string& name, 
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, const std::string& name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
-	 : id_(id), name_(name), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
+	 : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
 	rotate(orientation);
@@ -98,9 +100,9 @@ void BasicSceneNode::setId(glm::detail::uint32 id)
 	id_ = id;
 }
 
-void BasicSceneNode::setName(const std::string& name)
+void BasicSceneNode::setName(std::string name)
 {
-	name_ = name;
+	name_ = std::move(name);
 }
 
 const std::string& BasicSceneNode::getName() const
@@ -148,7 +150,7 @@ void BasicSceneNode::translate(glm::detail::float32 x, glm::detail::float32 y, g
 	pos_ += glm::vec3(x, y, z);
 }
 
-const glm::quat& BasicSceneNode::getOrientation()
+const glm::quat& BasicSceneNode::getOrientation() const
 {
 	return orientationQuaternion_;
 }
@@ -197,12 +199,12 @@ void BasicSceneNode::lookAt(const glm::vec3& lookAt)
 	orientationQuaternion_ =  glm::normalize( orientationQuaternion_ * glm::quat_cast( lookAtMatrix ) );
 }
 
-models::IModel* BasicSceneNode::getModel()
+models::IModel* BasicSceneNode::getModel() const
 {
 	return model_;
 }
 
-shaders::IShaderProgram* BasicSceneNode::getShaderProgram()
+shaders::IShaderProgram* BasicSceneNode::getShaderProgram() const
 {
 	return shaderProgram_;
 }
