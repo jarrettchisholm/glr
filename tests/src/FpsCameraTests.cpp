@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	
 	p->createWindow();
 	
-	glr::ISceneManager* smgr = p->getSceneManager();
+	//glr::ISceneManager* smgr = p->getSceneManager();
 	
 	auto camera = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
 	camera->setPosition(0, 0, 0);
