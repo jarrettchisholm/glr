@@ -13,6 +13,9 @@
 
 #include <boost/any.hpp>
 
+#define GLM_FORCE_RADIANS
+#include "glm/glm.hpp"
+
 #include "../../cef_client/include/FunctionList.hpp"
 #include "../../cef_client/include/ExceptionList.hpp"
 
@@ -30,7 +33,7 @@ bool isInt(const boost::any& operand)
 
 bool isUint(const boost::any& operand)
 {
-    return operand.type() == typeid(uint);
+    return operand.type() == typeid(glm::detail::uint32);
 }
 
 bool isFloat(const boost::any& operand)
@@ -66,7 +69,7 @@ struct GuiObject
 	
 };
 
-std::map< std::string, uint > messageIdMap;
+std::map< std::string, glm::detail::uint32 > messageIdMap;
 std::vector< std::shared_ptr<GuiObject> > guiObjects;
 
 void setupGuiObjects()
@@ -88,9 +91,9 @@ void setupGuiObjects()
 	guiObjects.push_back(obj);
 }
 
-uint sendTestBindings(CefRefPtr<CefBrowser> browser)
+glm::detail::uint32 sendTestBindings(CefRefPtr<CefBrowser> browser)
 {
-	uint numSent = 0;
+	glm::detail::uint32 numSent = 0;
 	
 	for ( auto& it : guiObjects )
 	{
@@ -148,7 +151,7 @@ uint sendTestBindings(CefRefPtr<CefBrowser> browser)
 			}
 			else if ( isUint(r) )
 			{
-				message->GetArgumentList()->SetInt( 3, boost::any_cast<uint>(r) );
+				message->GetArgumentList()->SetInt( 3, boost::any_cast<glm::detail::uint32>(r) );
 			}
 			else if ( isFloat(r) )
 			{
@@ -344,8 +347,8 @@ public:
 				}
 				else if ( utilities::isUint(r) )
 				{
-					message->GetArgumentList()->SetInt( 2, boost::any_cast<uint>(r) );
-					std::cout << "ExecuteFunction RESULT:" << boost::any_cast<uint>(r) << std::endl;
+					message->GetArgumentList()->SetInt( 2, boost::any_cast<glm::detail::uint32>(r) );
+					std::cout << "ExecuteFunction RESULT:" << boost::any_cast<glm::detail::uint32>(r) << std::endl;
 				}
 				else if ( utilities::isFloat(r) )
 				{
@@ -433,7 +436,7 @@ public:
 
 private:
 	CefRefPtr<CefRenderHandler> renderHandler_;
-	uint numSent_;
+	glm::detail::uint32 numSent_;
 	
 	bool allBindingsReceived_;
 
@@ -497,7 +500,7 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 		
 		// Allow cef_client time to process the messages
 		auto end = std::chrono::system_clock::now();
-		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5;
+		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5000;
 	}
 	
 	if ( !d.client->isAllBindingsReceived() )

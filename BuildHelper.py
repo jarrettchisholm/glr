@@ -86,6 +86,48 @@ def setup(ARGUMENTS):
 		print( "Cannot use msvc in this environment!" )
 		sys.exit(1)
 	
+	# TODO: Properly include header files
+		
+	# For cef_client compilation
+	cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
+	
+	if (buildFlags['useCef']):
+		cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
+		cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
+	
+	includeDirectories = []
+	includeDirectories.append('freeimage/include')
+	includeDirectories.append('boost/include')
+	includeDirectories.append('assimp/include')
+	includeDirectories.append('glm/include')
+	includeDirectories.append('glew/include')
+	includeDirectories.append('sfml/include')
+	
+	# For glr compilation
+	cpp_paths.append('include')
+	cpp_paths.append('src') # Need 'src' for submodules
+	relativeDirectory = ''
+	for d in includeDirectories:
+		cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
+
+	if (buildFlags['useCef']):
+		cpp_paths.append(dependenciesDirectory + 'cef3/')
+		cpp_paths.append(dependenciesDirectory + 'cef3/include')
+	
+	# For glr tests compilation
+	relativeDirectory = '../'
+	cpp_paths.append(relativeDirectory + 'include')
+	cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
+	for d in includeDirectories:
+		cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
+	
+	# For glr samples compilation
+	relativeDirectory = '../../'
+	cpp_paths.append(relativeDirectory + 'include')
+	cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
+	for d in includeDirectories:
+		cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
+	
 	### Set our OS specific compiler variables
 	if (not isWindows):
 		if (buildFlags['compiler'] == 'gcc' or (buildFlags['compiler'] == 'default' and isLinux)):
@@ -106,48 +148,6 @@ def setup(ARGUMENTS):
 		
 		# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 		cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
-		
-		# TODO: Properly include header files
-		
-		# For cef_client compilation
-		cpp_paths.append('../' + dependenciesDirectory + 'boost/include')
-		
-		if (buildFlags['useCef']):
-			cpp_paths.append('../' + dependenciesDirectory + 'cef3/')
-			cpp_paths.append('../' + dependenciesDirectory + 'cef3/include')
-		
-		includeDirectories = []
-		includeDirectories.append('freeimage/include')
-		includeDirectories.append('boost/include')
-		includeDirectories.append('assimp/include')
-		includeDirectories.append('glm/include')
-		includeDirectories.append('glew/include')
-		includeDirectories.append('sfml/include')
-		
-		# For glr compilation
-		cpp_paths.append('include')
-		cpp_paths.append('src') # Need 'src' for submodules
-		relativeDirectory = ''
-		for d in includeDirectories:
-			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
-
-		if (buildFlags['useCef']):
-			cpp_paths.append(dependenciesDirectory + 'cef3/')
-			cpp_paths.append(dependenciesDirectory + 'cef3/include')
-		
-		# For glr tests compilation
-		relativeDirectory = '../'
-		cpp_paths.append(relativeDirectory + 'include')
-		cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
-		for d in includeDirectories:
-			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
-		
-		# For glr samples compilation
-		relativeDirectory = '../../'
-		cpp_paths.append(relativeDirectory + 'include')
-		cpp_paths.append(relativeDirectory + 'src') # Need 'src' for submodules
-		for d in includeDirectories:
-			cpp_paths.append(relativeDirectory + dependenciesDirectory + d)
 	else:
 		if isWindows:
 			if (buildFlags['compiler'] == 'default'):
