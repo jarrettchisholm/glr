@@ -108,10 +108,10 @@ void BasicSceneManager::addCamera(std::unique_ptr<ICamera> camera)
 	}
 
 	camera->setId(0);
-	
+
 	camera_ = std::move(camera);
-	
-	camera->attach(defaultShaderProgram_);
+
+	camera_->attach(defaultShaderProgram_);
 }
 
 void BasicSceneManager::addSceneNode(std::unique_ptr<ISceneNode> sceneNode)
