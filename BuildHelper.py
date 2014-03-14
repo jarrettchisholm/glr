@@ -140,8 +140,8 @@ def setup(ARGUMENTS):
 			
 			cpp_flags.append('-std=c++11')
 			cpp_flags.append('-pedantic-errors')
-			cpp_flags.append('-Wall')
-			cpp_flags.append('-Werror')
+			#cpp_flags.append('-Wall')
+			#cpp_flags.append('-Werror')
 			
 		# Dynamically link to boost log
 		cpp_defines.append('BOOST_LOG_DYN_LINK')
@@ -173,8 +173,8 @@ def setup(ARGUMENTS):
 				
 				cpp_flags.append('-std=c++11')
 				cpp_flags.append('-pedantic-errors')
-				cpp_flags.append('-Wall')
-				cpp_flags.append('-Werror')
+				#cpp_flags.append('-Wall')
+				#cpp_flags.append('-Werror')
 			
 			# For some reason, on windows we need to use boost::phoenix version 3 with boost::log
 			cpp_defines.append('BOOST_SPIRIT_USE_PHOENIX_V3')
