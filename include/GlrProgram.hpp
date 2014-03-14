@@ -52,7 +52,7 @@ public:
 	IWindow* createWindow(std::string name = std::string("Window"), std::string title = std::string("Untitled Window"), glm::detail::uint32 width = 800, glm::detail::uint32 height = 600, glm::detail::uint32 depth = 24,
 						  bool fullscreen = false, bool vsync = false);
 
-	void setSceneManager(std::shared_ptr<ISceneManager> sceneManager);
+	void setSceneManager(std::unique_ptr<ISceneManager> sceneManager);
 
 	IWindow* getWindow();
 	ISceneManager* getSceneManager();
@@ -70,7 +70,7 @@ private:
 	std::map<std::string, std::vector<GLuint> > materialUbos_;
 
 	std::unique_ptr< glw::OpenGlDevice > openGlDevice_;
-	std::shared_ptr< ISceneManager > sMgr_;
+	std::unique_ptr< ISceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
 	
 	// Would it be better to use IGui instead of the cef Gui class here?
