@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	
 	p->createWindow();
 	
-	//glr::ISceneManager* smgr = p->getSceneManager();
+	glr::ISceneManager* smgr = p->getSceneManager();
 	
 	auto camera = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(p->getOpenGlDevice(), 0.020f) );
 	camera->setPosition(0, 0, 0);
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	BOOST_CHECK_EQUAL( pos.z, 0.0f );
 	
 	// TODO: This seems to be causing a memory access violation...not sure why.
-	//smgr->addCamera( std::move(camera) );
+	smgr->addCamera( std::move(camera) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
