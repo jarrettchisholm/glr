@@ -23,18 +23,40 @@ isMac = platform.system() == 'Darwin'
 # Hard way:
 # 	Unfortunately, I couldn't figure out where to put the libudev.so.0 sym link locally.
 
+sharedLibraryExt = 'so'
+staticLibraryExt = 'a'
+
+boostName = 'boost_1.55_x64.tar.gz'
+freeImageName = 'freeimage_3.15.1_linux_x64.tar.gz'
+assImpName = 'assimp_3.0.1270_linux_x64.tar.gz'
+cef3Name = 'cef3_3.1650.1562_linux_x64.tar.gz'
+glmName = 'glm_0.9.5.2.tar.gz'
+glewName = 'glew_1.10.0_linux_x64.tar.gz'
+sfmlName = 'sfml_2.1_linux_x64.tar.gz'
+
+if isWindows:
+	sharedLibraryExt = 'dll'
+	staticLibraryExt = 'lib'
+	
+	boostName = 'boost_1.55_win32.tar.gz'
+	freeImageName = 'freeimage_3.15.1_win32.tar.gz'
+	assImpName = 'assimp_3.0.1270_win32.tar.gz'
+	cef3Name = 'cef3_3.1650.1562_win32.tar.gz'
+	glewName = 'glew_1.10.0_win32.tar.gz'
+	sfmlName = 'sfml_2.1_win32.tar.gz'
+
 files = dict()
 # Format
 # Note: The only reason for the 'Regex for Dir' is because I can't delete from bintray at the moment, so I can't rename the directory in the zipped file and reupload.
 #
-# [Display Name]			= [URL, 																				Save Filename,		Regex for Dir, 	New Name for Dir]
-files['Boost 1.55'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/boost_1.55_x64.tar.gz', 				'boost.tar.gz', 	'boost', 		'boost']
-files['FreeImage 3.15.1'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/freeimage_3.15.1_linux_x64.tar.gz', 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
-files['AssImp 3.0.1270'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/assimp_3.0.1270_linux_x64.tar.gz', 	'assimp.tar.gz', 	'assimp', 		'assimp']
-files['CEF3 3.1650.1562'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/cef3_3.1650.1562_linux_x64.tar.gz', 	'cef3.tar.gz', 		'cef', 			'cef3']
-files['GLM 0.9.5.2'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glm_0.9.5.2.tar.gz', 					'glm.tar.gz', 		'glm', 			'glm']
-files['GLEW 1.10.0'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/glew_1.10.0_linux_x64.tar.gz', 		'glew.tar.gz', 		'glew', 		'glew']
-files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/sfml_2.1_linux_x64.tar.gz', 			'sfml.tar.gz', 		'sfml', 		'sfml']
+# [Display Name]			= [URL, 																		Save Filename,		Regex for Dir, 	New Name for Dir]
+files['Boost 1.55'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(boostName), 		'boost.tar.gz', 	'boost', 		'boost']
+files['FreeImage 3.15.1'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(freeImageName), 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
+files['AssImp 3.0.1270'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(assImpName), 		'assimp.tar.gz', 	'assimp', 		'assimp']
+files['CEF3 3.1650.1562'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
+files['GLM 0.9.5.2'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(glmName), 		'glm.tar.gz', 		'glm', 			'glm']
+files['GLEW 1.10.0'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(glewName), 		'glew.tar.gz', 		'glew', 		'glew']
+files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
 
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
@@ -102,7 +124,10 @@ def extract():
 def build():
 	"""Build any dependencies"""
 	print('Building the CEF3 wrapper dll')
+	
 	command = 'bash ./build_cef.sh'
+	if isWindows:
+		command = ''
 	subprocess.call( command, shell=True)
 
 def install():
