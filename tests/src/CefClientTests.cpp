@@ -500,7 +500,7 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 		
 		// Allow cef_client time to process the messages
 		auto end = std::chrono::system_clock::now();
-		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5000;
+		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5;
 	}
 	
 	if ( !d.client->isAllBindingsReceived() )
