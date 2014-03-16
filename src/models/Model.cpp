@@ -50,6 +50,19 @@ Model::Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vect
 	}
 }
 
+Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice)
+: id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
+{
+	rootBoneNode_ = glw::BoneNode();
+	globalInverseTransformation_ = glm::mat4();
+	
+	initialize();
+	
+	meshes_.push_back(mesh);
+	textures_.push_back(texture);
+	materials_.push_back(material);
+}
+
 Model::Model(const Model& other)
 {
 	std::string msg = std::string("Unable to copy Model...In order to copy a Model, you must provide a new id for the copy.");

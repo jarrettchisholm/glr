@@ -10,6 +10,7 @@
 #include "ISceneManager.hpp"
 #include "ISceneNode.hpp"
 #include "ICamera.hpp"
+#include "Id.hpp"
 
 #include "models/IModelManager.hpp"
 

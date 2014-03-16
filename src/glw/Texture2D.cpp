@@ -38,7 +38,7 @@ void Texture2D::bind(GLuint texturePosition)
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "texture: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 	// to unbind, we use the following
-	 //glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 GLuint Texture2D::getBufferId()

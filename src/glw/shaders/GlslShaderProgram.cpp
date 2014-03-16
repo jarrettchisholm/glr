@@ -28,7 +28,7 @@ void GlslShaderProgram::compile()
 	LOG_DEBUG( "Initializing shader program '" + name_ + "'." );
 
 	if ( programId_ < 0 )
-	{		
+	{
 		std::string msg = std::string( "Could not load shader program '" + name_ + "' - shader program already has an OpenGL id assigned to it." );
 		LOG_ERROR( msg );
 		throw exception::GlException(msg);

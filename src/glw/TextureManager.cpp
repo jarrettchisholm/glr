@@ -54,7 +54,7 @@ Texture2DArray* TextureManager::getTexture2DArray(const std::string& name) const
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSettings settings)
 {
-	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
+	LOG_DEBUG( "Loading texture 2d '" + name + "'." );
 
 	auto it = textures2D_.find(name);
 	if ( it != textures2D_.end() && it->second.get() != nullptr )
@@ -71,7 +71,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSe
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings)
 {
-	LOG_DEBUG( "Loading texture 2d'" + name + "'." );
+	LOG_DEBUG( "Loading texture 2d '" + name + "'." );
 
 	auto it = textures2D_.find(name);
 	if ( it != textures2D_.end() && it->second.get() != nullptr )

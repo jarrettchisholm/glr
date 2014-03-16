@@ -61,6 +61,20 @@ files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.form
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
 
+def copyFile(fromFile, toFile):
+	try:
+		shutil.copy(fromFile, toFile)
+	except:
+		#print('Failed to copy file!')
+		pass
+
+def copyDirectory(fromDirectory, toDirectory):
+	try:
+		shutil.copytree(fromDirectory, toDirectory)
+	except:
+		#print('Failed to copy directory!')
+		pass
+
 def checkSystemDependencies():
 	"""Check for required system dependencies, and if they are not present, inform the user and quit"""
 	
@@ -125,10 +139,11 @@ def build():
 	"""Build any dependencies"""
 	print('Building the CEF3 wrapper dll')
 	
-	command = 'bash ./build_cef.sh'
-	if isWindows:
-		command = ''
-	subprocess.call( command, shell=True)
+	if isLinux:
+		command = 'bash ./build_cef.sh'
+		subprocess.call( command, shell=True)
+	elif isWindows:
+		print('There is no automated CEF3 wrapper dll build script for Windows yet.  You will have to build it manually.')
 
 def install():
 	"""Install the downloaded libraries locally"""
@@ -136,29 +151,11 @@ def install():
 	if (not os.path.exists(librariesDirectory)):
 		os.makedirs(librariesDirectory)
 	
-	try:
-		shutil.copytree(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper', './{0}/libcef_dll_wrapper'.format(librariesDirectory))
-	except:
-		#print('Failed to copy cef wrapper!')
-		pass
-	
-	try:
-		shutil.copy(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper.a', './{0}/libcef_dll_wrapper.a'.format(librariesDirectory))
-	except:
-		#print('Failed to copy cef wrapper library!')
-		pass
-	
-	try:
-		shutil.copy(dependenciesDirectory + 'cef3/Release/libcef.so', './{0}/libcef.so'.format(librariesDirectory))
-	except:
-		#print('Failed to copy cef library!')
-		pass
-	
-	try:
-		shutil.copy(dependenciesDirectory + 'cef3/Release/libffmpegsumo.so', './{0}/libffmpegsumo.so'.format(librariesDirectory))
-	except:
-		#print('Failed to copy ffmpegsumo library!')
-		pass
+	copyDirectory(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper', './{0}/libcef_dll_wrapper'.format(librariesDirectory))	
+	copyFile(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper.a', './{0}/libcef_dll_wrapper.a'.format(librariesDirectory))
+	copyFile(dependenciesDirectory + 'cef3/Release/libcef.so', './{0}/libcef.so'.format(librariesDirectory))
+	copyFile(dependenciesDirectory + 'cef3/Release/libffmpegsumo.so', './{0}/libffmpegsumo.so'.format(librariesDirectory))
+
 
 
 checkSystemDependencies()

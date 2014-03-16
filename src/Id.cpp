@@ -3,6 +3,8 @@
 namespace glr
 {
 
+const Id Id::INVALID = Id();
+
 Id::Id() : id_(0)
 {
 }
@@ -11,11 +13,10 @@ Id::Id(glm::detail::uint32 id) : id_(id)
 {
 }
 
-
 Id::~Id()
 {
 }
-	
+
 glm::detail::uint32 Id::getId() const
 {
 	return id_;
