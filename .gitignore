@@ -9,6 +9,10 @@ build/
 cef_client/build/
 *.pyc
 
+# Windows debug files #
+#######################
+*.pdb
+
 # CEF lib directory #
 #####################
 lib
