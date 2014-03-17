@@ -42,6 +42,7 @@ if isWindows:
 	freeImageName = 'freeimage_3.15.1_win32.tar.gz'
 	assImpName = 'assimp_3.0.1270_win32.tar.gz'
 	cef3Name = 'cef3_3.1650.1562_win32.tar.gz'
+	glmName = 'glm_0.9.5.2_win.tar.gz'
 	glewName = 'glew_1.10.0_win32.tar.gz'
 	sfmlName = 'sfml_2.1_win32.tar.gz'
 
@@ -65,7 +66,6 @@ def copyFile(fromFile, toFile):
 	try:
 		shutil.copy(fromFile, toFile)
 	except:
-		#print('Failed to copy file!')
 		pass
 
 def copyDirectory(fromDirectory, toDirectory):
@@ -150,17 +150,29 @@ def install():
 	
 	if (not os.path.exists(librariesDirectory)):
 		os.makedirs(librariesDirectory)
+
+	cef3OutputDir = '{0}cef3/out/Release/obj.target/'.format(dependenciesDirectory)
+	if isWindows:
+		cef3OutputDir = '{0}cef3/lib/'.format(dependenciesDirectory)
+
+	copyDirectory('{0}/libcef_dll_wrapper'.format(cef3OutputDir), './{0}/libcef_dll_wrapper'.format(librariesDirectory))	
+	copyFile('{0}libcef_dll_wrapper.{1}'.format(cef3OutputDir, staticLibraryExt), './{0}/libcef_dll_wrapper.{1}'.format(librariesDirectory, staticLibraryExt))
+	copyFile('{0}libcef.{1}'.format(cef3OutputDir, sharedLibraryExt), './{0}/libcef.{1}'.format(librariesDirectory, sharedLibraryExt))
 	
-	copyDirectory(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper', './{0}/libcef_dll_wrapper'.format(librariesDirectory))	
-	copyFile(dependenciesDirectory + 'cef3/out/Release/obj.target/libcef_dll_wrapper.a', './{0}/libcef_dll_wrapper.a'.format(librariesDirectory))
-	copyFile(dependenciesDirectory + 'cef3/Release/libcef.so', './{0}/libcef.so'.format(librariesDirectory))
-	copyFile(dependenciesDirectory + 'cef3/Release/libffmpegsumo.so', './{0}/libffmpegsumo.so'.format(librariesDirectory))
+	ffmpegsumoLibraryName = 'libffmpegsumo'
+	if isWindows:
+		ffmpegsumoLibraryName = 'ffmpegsumo'
+
+	copyFile('{0}{1}.{2}'.format(cef3OutputDir, ffmpegsumoLibraryName, sharedLibraryExt), './{0}/libffmpegsumo.{1}'.format(librariesDirectory, sharedLibraryExt))
+	
+	if isWindows:
+		copyFile('{0}libcef.{1}'.format(cef3OutputDir, staticLibraryExt), './{0}/libcef.{1}'.format(librariesDirectory, staticLibraryExt))
 
 
 
-checkSystemDependencies()
-installSystemDependencies()
-download()
-extract()
+#checkSystemDependencies()
+#installSystemDependencies()
+#download()
+#extract()
 build()
 install()
