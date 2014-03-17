@@ -26,15 +26,12 @@ BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgr
 	
 	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager(openGlDevice_));
 	billboardManager_ = std::unique_ptr<models::IBillboardManager>(new models::BillboardManager(openGlDevice_));
-	
-	rootSceneNode_ = std::unique_ptr<ISceneNode>(new BasicSceneNode(openGlDevice_));
 
 	lightData_ = std::vector<LightData>();
 	
 	defaultShaderProgram_ = nullptr;
-	
-	nextSceneNodeId_ = 0;
-	nextLightSceneNodeId_ = 0;
+
+	idManager_ = IdManager();
 }
 
 BasicSceneManager::~BasicSceneManager()
@@ -43,12 +40,10 @@ BasicSceneManager::~BasicSceneManager()
 
 ISceneNode* BasicSceneManager::createSceneNode(const std::string& name)
 {
-	sceneNodes_.push_back( std::unique_ptr<ISceneNode>(new BasicSceneNode(nextSceneNodeId_, name, openGlDevice_)) );
+	sceneNodes_.push_back( std::unique_ptr<ISceneNode>(new BasicSceneNode(idManager_.createId(), name, openGlDevice_)) );
 	
 	auto node = sceneNodes_.back().get();
 	node->attach(defaultShaderProgram_);
-
-	nextSceneNodeId_++;
 
 	return node;
 }
@@ -63,7 +58,7 @@ ICamera* BasicSceneManager::createCamera(glm::detail::uint32 speed, glm::detail:
 		throw exception::RuntimeException(msg.str());
 	}
 	
-	camera_ = std::unique_ptr<ICamera>(new Camera(openGlDevice_));
+	camera_ = std::unique_ptr<ICamera>(new Camera(idManager_.createId(), openGlDevice_));
 
 	camera_->attach(defaultShaderProgram_);
 
@@ -72,11 +67,9 @@ ICamera* BasicSceneManager::createCamera(glm::detail::uint32 speed, glm::detail:
 
 ILight* BasicSceneManager::createLight(const std::string& name)
 {
-	lights_.push_back( std::unique_ptr<ILight>(new Light(nextLightSceneNodeId_, name, openGlDevice_)) );
+	lights_.push_back( std::unique_ptr<ILight>(new Light(idManager_.createId(), name, openGlDevice_)) );
 	
 	auto node = lights_.back().get();
-	
-	nextLightSceneNodeId_++;
 
 	return node;
 }
@@ -95,7 +88,7 @@ void BasicSceneManager::drawAll()
 		node->render();
 }
 
-void BasicSceneManager::addCamera(std::unique_ptr<ICamera> camera)
+void BasicSceneManager::setCamera(std::unique_ptr<ICamera> camera)
 {
 	assert(camera.get() != nullptr);
 	
@@ -107,34 +100,9 @@ void BasicSceneManager::addCamera(std::unique_ptr<ICamera> camera)
 		throw exception::RuntimeException(msg.str());
 	}
 
-	camera->setId(0);
-
 	camera_ = std::move(camera);
 
 	camera_->attach(defaultShaderProgram_);
-}
-
-void BasicSceneManager::addSceneNode(std::unique_ptr<ISceneNode> sceneNode)
-{
-	assert(sceneNode.get() != nullptr);
-	
-	// Error check
-	if (sceneNode->getId() != ISceneNode::INVALID_ID)
-	{
-		std::stringstream msg;
-		msg << "SceneNode already has an id: '" << sceneNode->getId() << "'.";
-		LOG_ERROR( msg.str() );
-		throw exception::RuntimeException(msg.str());
-	}
-
-	sceneNode->setId(nextSceneNodeId_);
-	
-	nextSceneNodeId_++;
-
-	sceneNodes_.push_back( std::move(sceneNode) );
-
-	// TODO: should we attach a default if no shader exists for scene node?
-	//sceneNode->attach(defaultShaderProgram_);
 }
 
 void BasicSceneManager::setDefaultShaderProgram(shaders::IShaderProgram* shaderProgram)
@@ -167,7 +135,7 @@ shaders::IShaderProgramManager* BasicSceneManager::getShaderProgramManager() con
 	return shaderProgramManager_;
 }
 
-ISceneNode* BasicSceneManager::getSceneNode(glm::detail::uint32 id) const
+ISceneNode* BasicSceneManager::getSceneNode(Id id) const
 {	
 	auto findFunction = [id](const std::unique_ptr<ISceneNode>& node) { return node->getId() == id; };
 	
@@ -196,7 +164,7 @@ ICamera* BasicSceneManager::getCamera() const
 	return camera_.get();
 }
 
-ILight* BasicSceneManager::getLight(glm::detail::uint32 id) const
+ILight* BasicSceneManager::getLight(Id id) const
 {
 	auto findFunction = [id](const std::unique_ptr<ILight>& node) { return node->getId() == id; };
 	
@@ -230,7 +198,7 @@ const std::vector<LightData>& BasicSceneManager::getLightData()
 	return lightData_;
 }
 
-void BasicSceneManager::destroySceneNode(glm::detail::uint32 id)
+void BasicSceneManager::destroySceneNode(Id id)
 {
 	auto findFunction = [id](const std::unique_ptr<ISceneNode>& node) { return node->getId() == id; };
 	
@@ -263,7 +231,6 @@ void BasicSceneManager::destroySceneNode(ISceneNode* node)
 void BasicSceneManager::destroyAllSceneNodes()
 {
 	sceneNodes_.clear();
-	nextSceneNodeId_ = 0;
 }
 
 void BasicSceneManager::destroyCamera()
@@ -271,7 +238,7 @@ void BasicSceneManager::destroyCamera()
 	camera_.reset();
 }
 
-void BasicSceneManager::destroyLight(glm::detail::uint32 id)
+void BasicSceneManager::destroyLight(Id id)
 {
 	auto findFunction = [id](const std::unique_ptr<ILight>& node) { return node->getId() == id; };
 	
@@ -304,7 +271,6 @@ void BasicSceneManager::destroyLight(ILight* node)
 void BasicSceneManager::destroyAllLights()
 {
 	lights_.clear();
-	nextLightSceneNodeId_ = 0;
 }
 
 glmd::uint32 BasicSceneManager::getNumSceneNodes() const
@@ -315,11 +281,6 @@ glmd::uint32 BasicSceneManager::getNumSceneNodes() const
 glmd::uint32 BasicSceneManager::getNumLights() const
 {
 	return lights_.size();
-}
-
-ISceneNode* BasicSceneManager::getRootSceneNode() const
-{
-	return rootSceneNode_.get();
 }
 
 }

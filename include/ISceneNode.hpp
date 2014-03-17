@@ -9,6 +9,8 @@
 
 #include "models/IModel.hpp"
 
+#include "Id.hpp"
+
 namespace glr
 {
 
@@ -25,12 +27,8 @@ public:
 		TS_LOCAL = 0,
 		TS_WORLD
 	};
-	
-	static const glm::detail::uint32 INVALID_ID = -1;
 
-	virtual glm::detail::uint32 getId() const = 0;
-	// TODO: Find some way to make this inaccessible to 3rd party code
-	virtual void setId(glm::detail::uint32 id) = 0;
+	virtual const Id& getId() const = 0;
 	virtual void setName(std::string name) = 0;
 	virtual const std::string& getName() const = 0;
 

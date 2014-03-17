@@ -20,7 +20,7 @@ public:
 	TerrainManager(glw::IOpenGlDevice* openGlDevice);
 	virtual ~TerrainManager();
 
-	ITerrain* loadTerrain(const std::string path);
+	ITerrain* loadTerrain(const std::string& path);
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;

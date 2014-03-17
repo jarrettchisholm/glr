@@ -5,7 +5,7 @@ namespace glr
 namespace extras
 {
 	
-FpsCamera::FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(openGlDevice), speed_(speed)
+FpsCamera::FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(Id::INVALID, openGlDevice), speed_(speed)
 {
 	initialize();
 }

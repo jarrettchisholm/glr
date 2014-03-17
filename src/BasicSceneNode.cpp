@@ -16,26 +16,12 @@
 #include "BasicSceneNode.hpp"
 
 #include "glw/shaders/GlslShaderProgram.hpp"
+#include "exceptions/Exception.hpp"
 
 namespace glr
 {
 
-BasicSceneNode::BasicSceneNode(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
-{
-	// NOTE: The scene manager will not call this constructor.  This is available for a 3rd party to be able to create scene nodes.
-	id_ = 0;
-	
-	name_ = std::string();
-	setPosition(0, 0, 0);
-	setScale(1, 1, 1);
-
-	active_ = true;
-
-	model_ = nullptr;
-	shaderProgram_ = nullptr;
-}
-
-BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice) : id_(id), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(Id id, glw::IOpenGlDevice* openGlDevice) : id_(id), openGlDevice_(openGlDevice)
 {
 	name_ = std::string();
 	setPosition(0, 0, 0);
@@ -47,7 +33,7 @@ BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openG
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
+BasicSceneNode::BasicSceneNode(Id id, std::string name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -58,7 +44,7 @@ BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glw::IO
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
+BasicSceneNode::BasicSceneNode(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
 	 : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
@@ -71,8 +57,36 @@ BasicSceneNode::BasicSceneNode(glm::detail::uint32 id, std::string name, glm::ve
 	shaderProgram_ = nullptr;
 }
 
+BasicSceneNode::BasicSceneNode(Id id, const BasicSceneNode& other) : id_(id)
+{
+	copy(other);
+}
+
+BasicSceneNode::BasicSceneNode(const BasicSceneNode& other)
+{
+	std::string msg = std::string("Unable to copy BasicSceneNode...In order to copy a BasicSceneNode, you must provide a new id for the copy.");
+	LOG_ERROR( msg );
+	throw exception::Exception(msg);
+}
+
 BasicSceneNode::~BasicSceneNode()
 {
+}
+
+void BasicSceneNode::copy(const BasicSceneNode& other)
+{
+	model_ = other.model_;
+	shaderProgram_ = other.shaderProgram_;
+
+	sceneManager_ = other.sceneManager_;
+
+	name_ = other.name_;
+	pos_ = other.pos_;
+	orientationQuaternion_ = other.orientationQuaternion_;
+	scale_ = other.scale_;
+	openGlDevice_ = other.openGlDevice_;
+
+	active_ = other.active_;
 }
 
 void BasicSceneNode::attach(models::IModel* model)
@@ -90,14 +104,9 @@ void BasicSceneNode::attach(shaders::IShaderProgram* shaderProgram)
 	shaderProgram_ = shaderProgram;
 }
 
-glm::detail::uint32 BasicSceneNode::getId() const
+const Id& BasicSceneNode::getId() const
 {
 	return id_;
-}
-
-void BasicSceneNode::setId(glm::detail::uint32 id)
-{
-	id_ = id;
 }
 
 void BasicSceneNode::setName(std::string name)

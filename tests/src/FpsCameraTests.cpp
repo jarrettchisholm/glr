@@ -33,8 +33,7 @@ BOOST_AUTO_TEST_CASE(createFpsCamera)
 	BOOST_CHECK_EQUAL( pos.y, 0.0f );
 	BOOST_CHECK_EQUAL( pos.z, 0.0f );
 	
-	// TODO: This seems to be causing a memory access violation...not sure why.
-	smgr->addCamera( std::move(camera) );
+	smgr->setCamera( std::move(camera) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

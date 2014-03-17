@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 
 #include "Configure.hpp"
 
@@ -30,7 +31,7 @@ Terrain::Terrain(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice
 	initialize();
 }
 
-Terrain::Terrain(const std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(name, openGlDevice)
+Terrain::Terrain(std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(std::move(name), openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

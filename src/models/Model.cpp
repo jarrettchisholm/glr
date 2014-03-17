@@ -70,10 +70,8 @@ Model::Model(const Model& other)
 	throw exception::Exception(msg);
 }
 
-Model::Model(Id id, const Model& other)
+Model::Model(Id id, const Model& other) : id_(id)
 {
-	id_ = id;
-	
 	copy(other);
 }
 

@@ -11,7 +11,7 @@ class Terrain : public virtual ITerrain, public BasicSceneNode
 {
 public:
 	Terrain(glw::IOpenGlDevice* openGlDevice);
-	Terrain(const std::string name, glw::IOpenGlDevice* openGlDevice);
+	Terrain(std::string name, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Terrain();
 
 	// inherited from ITerrain

@@ -40,7 +40,7 @@ public:
 
 	virtual void destroy() = 0;
 	virtual void resize(glm::detail::uint32 width, glm::detail::uint32 height) = 0;
-	virtual glm::detail::int32 handleEvents() = 0;
+	virtual void handleEvents() = 0;
 	virtual void render() = 0;
 
 	virtual glm::detail::uint32 getWidth() const = 0;

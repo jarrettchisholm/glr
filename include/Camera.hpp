@@ -10,7 +10,7 @@ namespace glr
 class Camera : public virtual ICamera, public BasicSceneNode
 {
 public:
-	Camera(glw::IOpenGlDevice* openGlDevice);
+	Camera(Id id, glw::IOpenGlDevice* openGlDevice);
 	virtual ~Camera();
 
 	// inherited from ICamera

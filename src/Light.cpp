@@ -21,7 +21,7 @@
 namespace glr
 {
 
-Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
+Light::Light(Id id, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);
@@ -29,15 +29,7 @@ Light::Light(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
 	initialize();
 }
 
-Light::Light(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, openGlDevice)
-{
-	setPosition(0, 0, 0);
-	setScale(1, 1, 1);
-
-	initialize();
-}
-
-Light::Light(glm::detail::uint32 id, std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, name, openGlDevice)
+Light::Light(Id id, std::string name, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, name, openGlDevice)
 {
 	setPosition(0, 0, 0);
 	setScale(1, 1, 1);

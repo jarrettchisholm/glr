@@ -22,7 +22,7 @@
 namespace glr
 {
 
-Camera::Camera(glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(openGlDevice)
+Camera::Camera(Id id, glw::IOpenGlDevice* openGlDevice) : BasicSceneNode(id, openGlDevice)
 {
 	setPosition(0.0f, 0.0f, 0.0f);
 	setScale(1.0f, 1.0f, 1.0f);

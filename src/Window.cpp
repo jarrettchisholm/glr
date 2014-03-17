@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <utility>
 
 #include <GL/glew.h>
 
@@ -115,7 +116,7 @@ void Window::destroy()
 {
 }
 
-glm::detail::int32 Window::handleEvents()
+void Window::handleEvents()
 {
 	sf::Event event;
 
@@ -138,8 +139,6 @@ glm::detail::int32 Window::handleEvents()
 			break;
 		}
 	}
-
-	return 0;
 }
 
 glm::detail::uint32 Window::getWidth() const

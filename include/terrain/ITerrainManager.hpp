@@ -18,7 +18,7 @@ public:
 	}
 	;
 
-	virtual void loadTerrain(const std::string path) = 0;
+	virtual void loadTerrain(const std::string& path) = 0;
 	virtual ITerrain* getTerrain(glmd::int32 x, glmd::int32 y) = 0;
 };
 

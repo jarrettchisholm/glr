@@ -19,14 +19,15 @@ namespace glr
 class BasicSceneNode : public virtual ISceneNode
 {
 public:
-	BasicSceneNode(glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(glm::detail::uint32 id, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(glm::detail::uint32 id, std::string name, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(glm::detail::uint32 id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(Id id, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(Id id, const BasicSceneNode& other);
 	virtual ~BasicSceneNode();
 
-	virtual glm::detail::uint32 getId() const;
-	virtual void setId(glm::detail::uint32 id);
+	void copy(const BasicSceneNode& other);
+
+	virtual const Id& getId() const;
 	virtual void setName(std::string name);
 	virtual const std::string& getName() const;
 
@@ -61,14 +62,18 @@ protected:
 
 	ISceneManager* sceneManager_;
 
-	glm::detail::uint32 id_;
+	Id id_;
 	std::string name_;
 	glm::vec3 pos_;
 	glm::quat orientationQuaternion_;
 	glm::vec3 scale_;
 	glw::IOpenGlDevice* openGlDevice_;
 
-	bool active_;	
+	bool active_;
+
+private:
+	// We don't copy straight up, since we need a new id for the copy
+	BasicSceneNode(const BasicSceneNode& other);
 };
 
 }
