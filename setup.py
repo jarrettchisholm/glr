@@ -170,9 +170,9 @@ def install():
 
 
 
-#checkSystemDependencies()
-#installSystemDependencies()
-#download()
-#extract()
+checkSystemDependencies()
+installSystemDependencies()
+download()
+extract()
 build()
 install()
