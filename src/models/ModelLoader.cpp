@@ -62,7 +62,7 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 {
 	LOG_DEBUG( "Loading model '" << name << "' - " << filename << "." );
 
-	auto modelData = std::vector< std::shared_ptr<ModelData> >();	
+	auto modelData = std::vector< ModelData >();
 
 	// We don't currently support aiProcess_JoinIdenticalVertices or aiProcess_FindInvalidData
 	// aiProcess_JoinIdenticalVertices - doesn't work because we don't use vertex index lists (maybe we should?)
@@ -94,12 +94,12 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	int NumVertices = 0;
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
-		modelData[i] = std::shared_ptr<ModelData>(new ModelData());
+		modelData[i] = ModelData();
 		
-		modelData[i]->boneData = loadBones( name, filename, i, scene->mMeshes[i] );
-		modelData[i]->meshData = loadMesh( name, filename, i, scene->mMeshes[i], modelData[i]->boneData.boneIndexMap );
-		modelData[i]->textureData = loadTexture( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
-		modelData[i]->materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
+		modelData[i].boneData = loadBones( name, filename, i, scene->mMeshes[i] );
+		modelData[i].meshData = loadMesh( name, filename, i, scene->mMeshes[i], modelData[i].boneData.boneIndexMap );
+		modelData[i].textureData = loadTexture( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
+		modelData[i].materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		
 		std::cout << "NumVertices: " << NumVertices << std::endl;
 		NumVertices += scene->mMeshes[i]->mNumVertices;
@@ -117,7 +117,7 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	return generateModel(name, modelData, animationSet, idManager);
 }
 
-std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, std::vector< std::shared_ptr<ModelData> > modelData, AnimationSet animationSet, IdManager& idManager)
+std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, const std::vector<ModelData>& modelData, const AnimationSet& animationSet, IdManager& idManager)
 {
 	auto meshManager = openGlDevice_->getMeshManager();
 	auto materialManager = openGlDevice_->getMaterialManager();
@@ -131,18 +131,18 @@ std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, std::
 	
 	for ( auto& d : modelData)
 	{
-		auto mesh = meshManager->getMesh(d->meshData.name);
+		auto mesh = meshManager->getMesh(d.meshData.name);
 		if (mesh == nullptr)
-			mesh = meshManager->addMesh(d->meshData.name, d->meshData.vertices, d->meshData.normals, d->meshData.textureCoordinates, d->meshData.colors, d->meshData.bones, d->boneData);
+			mesh = meshManager->addMesh(d.meshData.name, d.meshData.vertices, d.meshData.normals, d.meshData.textureCoordinates, d.meshData.colors, d.meshData.bones, d.boneData);
 		
 		meshes.push_back( mesh );
 		
 		
-		if ( !d->textureData.filename.empty() )
+		if ( !d.textureData.filename.empty() )
 		{
-			auto texture = textureManager->getTexture2D(d->textureData.filename);
+			auto texture = textureManager->getTexture2D(d.textureData.filename);
 			if (texture == nullptr)
-				texture = textureManager->addTexture2D(d->textureData.filename, d->textureData.filename, d->textureData.settings);
+				texture = textureManager->addTexture2D(d.textureData.filename, d.textureData.filename, d.textureData.settings);
 			
 			textures.push_back( texture );
 		}
@@ -152,9 +152,9 @@ std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, std::
 		}
 
 
-		auto material = materialManager->getMaterial(d->materialData.name);
+		auto material = materialManager->getMaterial(d.materialData.name);
 		if (material == nullptr)
-			material = materialManager->addMaterial(d->materialData.name, d->materialData.ambient, d->materialData.diffuse, d->materialData.specular, d->materialData.emission, d->materialData.shininess, d->materialData.strength);
+			material = materialManager->addMaterial(d.materialData.name, d.materialData.ambient, d.materialData.diffuse, d.materialData.specular, d.materialData.emission, d.materialData.shininess, d.materialData.strength);
 		
 		materials.push_back( material );
 	}
