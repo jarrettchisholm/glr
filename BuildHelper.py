@@ -73,6 +73,8 @@ def setup(ARGUMENTS):
 		cpp_defines.append('USE_CEF')
 	if (buildFlags['build'] == 'debug'):
 		cpp_defines.append('DEBUG')
+	else:
+		buildFlags['debug'] = False
 	
 	if (buildFlags['compiler'] is None or buildFlags['compiler'] == ''):
 		buildFlags['compiler'] = 'default'

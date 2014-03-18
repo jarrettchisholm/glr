@@ -110,18 +110,20 @@ def download():
 		
 		data = ''
 		chunk = 4096
-		while 1:
-			d = response.read(chunk)
-			if not d:
-				print("\n")
-				break
-			data += d
-			
-			sys.stdout.write( "\rRead {0} / {1} KB".format((len(data)/1000), int(contentLength)/1000) )
-			sys.stdout.flush()
-		
-		with open(dependenciesDirectory + files[k][1], 'w') as f:
-			f.write( bytearray(data) )
+		savedSize = 0
+		with open(dependenciesDirectory + files[k][1], 'wb+') as f:
+			while 1:
+				data = response.read(chunk)
+				if not data:
+					print("\n")
+					break
+
+				f.write( bytearray(data) )
+
+				savedSize += len(data)
+				sys.stdout.write( "\rRead {0} / {1} KB".format(((savedSize)/1000), int(contentLength)/1000) )
+				sys.stdout.flush()
+					
 
 def extract():
 	"""Extract external library files"""
@@ -143,7 +145,7 @@ def build():
 		command = 'bash ./build_cef.sh'
 		subprocess.call( command, shell=True)
 	elif isWindows:
-		print('There is no automated CEF3 wrapper dll build script for Windows yet.  You will have to build it manually.')
+		print('There is no automated CEF3 wrapper dll build script for Windows yet.  There is a pre-built library included in the CEF3 library download which will be used.')
 
 def install():
 	"""Install the downloaded libraries locally"""
