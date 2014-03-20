@@ -428,7 +428,7 @@ void Model::render(shaders::IShaderProgram* shader)
 			{
 				currentAnimation_->setAnimationTime( animationTime_ );
 				currentAnimation_->setFrameClampping( startFrame_, endFrame_ );
-				currentAnimation_->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), indexCache_);
+				currentAnimation_->calculate(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), indexCache_);
 				currentAnimation_->bind();
 				
 				openGlDevice_->bindBuffer( currentAnimation_->getBufferId(), bindPoint );
@@ -451,29 +451,6 @@ void Model::render(shaders::IShaderProgram* shader)
 		meshes_[i]->render();
 	}
 }
-
-/**
- * Helper method - will take the data in the BoneNode structure and create a glw::BoneNode object with it.
- * 
- * NOTE: I'm not sure this is the best place for this...
- * 
- * @param n The BoneNode structure to copy.
- * 
- * @return The glw::BoneNode object that contains a copy of the data in the BoneNode structure.
- */
-/*
-glw::BoneNode Model::copyBoneNode( BoneNode& n )
-{
-	glw::BoneNode n = glw::BoneNode( n.rootBoneNode.name, n.rootBoneNode.transformation );
-	
-	for ( auto& child : n.rootBoneNode.children )
-	{
-		n.addChild( copyBoneNode( child ) );
-	}
-	
-	return n;
-}
-*/
 
 }
 }

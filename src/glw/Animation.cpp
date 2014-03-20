@@ -115,7 +115,7 @@ void Animation::loadIntoVideoMemory()
 	loadIntoVideoMemory( currentTransforms_ );
 }
 
-void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
+void Animation::loadIntoVideoMemory(const std::vector< glm::mat4 >& transformations)
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
 	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
@@ -156,23 +156,14 @@ void Animation::loadIntoVideoMemory(std::vector< glm::mat4 >& transformations)
 	}
 }
 
-/**
- * Will stream the latest transformation matrices into opengl memory, and will then bind the data to a bind point.
- */
 void Animation::bind()
 {
 	loadIntoVideoMemory();
-	
-	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
-	
-	//std::cout << "animation: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 }
 
-void Animation::bind(std::vector< glm::mat4 >& transformations)
+void Animation::bind(const std::vector< glm::mat4 >& transformations)
 {
 	loadIntoVideoMemory(transformations);
-
-	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 }
 
 GLuint Animation::getBufferId() const
@@ -194,7 +185,7 @@ void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::u
 {
 	assert(startFrame >= 0);
 	assert(endFrame >= startFrame);
-	
+
 	startFrame_ = startFrame;
 	endFrame_ = endFrame;
 }
@@ -228,7 +219,7 @@ glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNo
 			return i;
 		}
 	}
-	
+
 	assert(0);
 
 	return 0;
@@ -311,8 +302,6 @@ void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animation
 	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->positionTimes_[nextPositionIndex] - animatedBoneNode->positionTimes_[positionIndex]);
 	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->positionTimes_[positionIndex]) / deltaTime;
 	
-	//std::cout << "calc pos: " << positionIndex << " " << nextPositionIndex << " " << deltaTime << " " << factor << std::endl;
-	
 	//assert(factor >= 0.0f && factor <= 1.0f);
 	const glm::vec3& start = animatedBoneNode->positions_[positionIndex];
 	const glm::vec3& end = animatedBoneNode->positions_[nextPositionIndex];
@@ -327,11 +316,9 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
 	if (animatedBoneNode->rotationTimes_.size() == 1)
 	{
 		out = animatedBoneNode->rotations_[0];
-		//std::cout << "HERE - rotationTimes_.size() == 1";
 		return;
 	}
-	
-	//std::cout << "HERE - calcInterpolatedRotation";
+
 	glmd::uint32 rotationIndex = findRotation(animationTime, animatedBoneNode);
 	glmd::uint32 nextRotationIndex = (rotationIndex + 1);
 	
@@ -341,14 +328,11 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
 	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->rotationTimes_[rotationIndex]) / deltaTime;
 	//assert(factor >= 0.0f && factor <= 1.0f);
 	const glm::quat& startRotationQuat = animatedBoneNode->rotations_[rotationIndex];
-	const glm::quat& endRotationQuat   = animatedBoneNode->rotations_[nextRotationIndex];	
-	//std::cout << "HERE - " << rotationIndex << " startRotationQuat: " << startRotationQuat.x << ", " << startRotationQuat.y << ", " << startRotationQuat.z << " factor: " << factor;
-	//std::cout << "HERE - " << nextRotationIndex << " endRotationQuat: " << endRotationQuat.x << ", " << endRotationQuat.y << ", " << endRotationQuat.z;
+	const glm::quat& endRotationQuat   = animatedBoneNode->rotations_[nextRotationIndex];
 	
 	out = glm::slerp(startRotationQuat, endRotationQuat, factor);
 	// TODO: I might not need to normalize the quaternion here...might already have been done in glm::mix??
 	out = glm::normalize( out );
-	//std::cout << "HERE - out: " << out.x << ", " << out.y << ", " << out.z << " factor: " << factor;
 }
 
 
@@ -374,20 +358,15 @@ void Animation::calcInterpolatedScaling(glm::vec3& out, glmd::float32 animationT
 	out = start + factor * delta;
 }
 
-void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& globalInverseTransform, BoneNode& rootBoneNode, BoneData& boneData, const glm::mat4& parentTransform)
+void Animation::readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glmd::float32 animationTime, const glm::mat4& globalInverseTransform, const BoneNode& rootBoneNode, const BoneData& boneData, const glm::mat4& parentTransform)
 {
-	//std::cout << "HERE - parentTransform: " << glm::to_string(parentTransform) << " time: " << animationTime;
-	
 	glm::mat4 nodeTransformation = glm::mat4( rootBoneNode.transformation );
-	//std::cout << "HERE - nodeTransformation1: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
-	
 	
 	{
 		auto it = animatedBoneNodes_.find( rootBoneNode.name );
 		
 		if ( it != animatedBoneNodes_.end() )
 		{
-			////std::cout << "Found animated bone node with name: " << rootBoneNode.name;
 			AnimatedBoneNode* animatedBoneNode = &(it->second);
 			
 			// Clamp animation time between start and end frame
@@ -397,42 +376,29 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 				glmd::float32 et = (glmd::float32)animatedBoneNode->positionTimes_[endFrame_];
 				
 				animationTime = fmod(animationTime, et) + st;
-				
-				//std::cout << "findPosition: " << startFrame_ << ", " << endFrame_ << " | " << st << ", " << et << " | " << animationTime << std::endl;			
 			}
 			
 			// Interpolate scaling and generate scaling transformation matrix
 			glm::vec3 Scaling;
 			calcInterpolatedScaling(Scaling, animationTime, animatedBoneNode);
 			glm::mat4 scalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
-			//std::cout << "HERE - Scaling: " << glm::to_string(Scaling) << " time: " << animationTime;
 			
 			// Interpolate rotation and generate rotation transformation matrix
 			glm::quat rotationQ;
 			calcInterpolatedRotation(rotationQ, animationTime, animatedBoneNode);
 			glm::mat4 rotationM = glm::mat4_cast(rotationQ);
-			//std::cout << "HERE - rotationQ: " << rotationQ.x << ", " << rotationQ.y << ", " << rotationQ.z << " time: " << animationTime;
-			//std::cout << "HERE - rotationM: " << glm::to_string(rotationM) << " time: " << animationTime;
 	
 			// Interpolate translation and generate translation transformation matrix
 			glm::vec3 translation;
 			calcInterpolatedPosition(translation, animationTime, animatedBoneNode);
-			//std::cout << "HERE - translation: " << glm::to_string(translation) << " time: " << animationTime;
 			glm::mat4 translationM = glm::translate( glm::mat4(1.0f), glm::vec3(translation.x, translation.y, translation.z) );
 			
 			// Combine the above transformations
 			nodeTransformation = translationM * rotationM * scalingM;
-			//std::cout << "HERE - nodeTransformation2: " << glm::to_string(nodeTransformation) << " time: " << animationTime;
 		}
-		//else
-		//{
-			// TODO: throw error?
-			//LOG_ERROR( "Error reading animation - unable to find animated bone node with name: " + rootBoneNode.name );
-		//}
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransformation;
-	//std::cout << "HERE - globalTransformation: " << glm::to_string(globalTransformation) << " time: " << animationTime;
 	
 	{
 		auto it = boneData.boneIndexMap.find( rootBoneNode.name );
@@ -440,50 +406,46 @@ void Animation::readNodeHeirarchy(glmd::float32 animationTime, glm::mat4& global
 		if ( it != boneData.boneIndexMap.end() )
 		{
 			glmd::uint32 boneIndex = it->second;
-			boneData.boneTransform[boneIndex].finalTransformation = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
-			//std::cout << name_ << " " << rootBoneNode.name << ": FOUND";// << glm::to_string( boneData.boneTransform[boneIndex].finalTransformation );
+			transformations[boneIndex] = globalInverseTransform * globalTransformation * boneData.boneTransform[boneIndex].boneOffset;
 		}
-		//else
-		//{
-			//std::cout << name_ << " " << rootBoneNode.name << ": Couldn't find.";
-		//}
 	}
 	
-	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++) {
-		readNodeHeirarchy(animationTime, globalInverseTransform, rootBoneNode.children[i], boneData, globalTransformation);
+	for (glmd::uint32 i = 0; i < rootBoneNode.children.size(); i++)
+	{
+		readNodeHeirarchy(transformations, animationTime, globalInverseTransform, rootBoneNode.children[i], boneData, globalTransformation);
 	}
 }
 
-void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData)
+void Animation::calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData)
 {
 	std::vector<glmd::uint32> indexCache = std::vector<glmd::uint32>( 3 );
-	generateBoneTransforms( globalInverseTransformation, rootBoneNode, boneData, indexCache);
+	calculate( globalInverseTransformation, rootBoneNode, boneData, indexCache);
 }
 
-void Animation::generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData, std::vector<glmd::uint32>& indexCache)
+void Animation::calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData, std::vector<glmd::uint32>& indexCache)
 {
+	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size(), glm::mat4() );
+
+	calculate( currentTransforms_, globalInverseTransformation, rootBoneNode, boneData, indexCache);
+}
+
+void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData)
+{
+	std::vector<glmd::uint32> indexCache = std::vector<glmd::uint32>( 3 );
+	calculate( transformations, globalInverseTransformation, rootBoneNode, boneData, indexCache );
+}
+
+void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData, std::vector<glmd::uint32>& indexCache)
+{
+	assert(transformations.size() >= boneData.boneTransform.size());
+	assert( indexCache.size() == 3 );
+
 	indexCache_ = indexCache;
-	
-	assert( indexCache_.size() == 3 );
-	
-	glm::mat4 identity = glm::mat4();
 	
 	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
 	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);
 	
-	//std::cout << "animationTime: " << animationTime << std::endl;
-
-	currentTransforms_ = std::vector< glm::mat4 >( boneData.boneTransform.size(), identity );
-
-	readNodeHeirarchy(animationTime, globalInverseTransformation, rootBoneNode, boneData, identity);
-	//currentTransforms_ = std::vector< glm::mat4 >( 100, identity );
-	
-	//std::cout << boneData.boneTransform.size() << " " << runningTime_ << " " << duration_ << " " << name_;
-	//std::cout << " | " << indexCache_[0] << ", " << indexCache_[1] << ", " << indexCache_[2] << " | " << startFrame_ << ", " << endFrame_ << std::endl;
-	
-	for (glmd::uint32 i = 0; i < boneData.boneTransform.size(); i++) {
-		currentTransforms_[i] = boneData.boneTransform[i].finalTransformation;
-	}		
+	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
 }
 
 // TODO: Testing this for now...I think maybe this isn't a good way to do it???  Not sure

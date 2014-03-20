@@ -35,6 +35,9 @@ public:
 
 	virtual const std::string& getName() const = 0;
 
+	/**
+	 * Will stream the latest transformation matrices into opengl memory, and will then bind the data to a bind point.
+	 */
 	virtual void bind() = 0;
 
 	// TODO: Should we have this in the interface?
@@ -48,14 +51,29 @@ public:
 	 * 
 	 * @param globalInverseTransformation - Not sure what this is...
 	 * @param rootBoneNode - Root node of the skeleton used for the current animation.
-	 * @param boneData - Data about the bones we are generating the animation on.  The method will use some of the boneData variables as a cache.
-	 * (TODO: Should I be using this as a cache?  We currently use finalTransformation...)
+	 * @param boneData - Data about the bones we are generating the animation on.
 	 * @param indexCache - If passed in, represents a cache of previous rotation, position, and scaling node search indices.  The algorithm to find
 	 * the correct indices for the animation will use the indexCache index values to determine where to begin the search for the next
 	 * rotation, position, and scaling index.
 	 */
-	virtual void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData) = 0;
-	virtual void generateBoneTransforms(glm::mat4& globalInverseTransformation, BoneNode& rootBoneNode, BoneData& boneData, std::vector<glm::detail::uint32>& indexCache) = 0;
+	virtual void calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData) = 0;
+	virtual void calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData, std::vector<glm::detail::uint32>& indexCache) = 0;
+	
+	/**
+	 * Will generate the transformation matrices to be used to animate the model with the given bone data.  It will store these transformations in the 'transformations' parameter.
+	 * 
+	 * This is useful for generating a set of animation transformations for later use (i.e. caching or pre-generating animation transformations).
+	 * 
+	 * @param transformations The container to store the animations transformations in.
+	 * @param globalInverseTransformation - Not sure what this is...
+	 * @param rootBoneNode - Root node of the skeleton used for the current animation.
+	 * @param boneData - Data about the bones we are generating the animation on.
+	 * @param indexCache - If passed in, represents a cache of previous rotation, position, and scaling node search indices.  The algorithm to find
+	 * the correct indices for the animation will use the indexCache index values to determine where to begin the search for the next
+	 * rotation, position, and scaling index.
+	 */
+	//virtual void calculate(std::vector< glm::mat4 >& transformations, const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData) = 0;
+	//virtual void calculate(std::vector< glm::mat4 >& transformations, const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData, std::vector<glm::detail::uint32>& indexCache) = 0;
 
 	/**
 	 * Will set the animation time to runningTime.
