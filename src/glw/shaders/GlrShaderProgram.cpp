@@ -42,7 +42,7 @@ void GlrShaderProgram::process(const std::map< std::string, std::unique_ptr<GlrS
 
 	LOG_DEBUG( "Initializing " << shaders.size() << " shaders." );
 
-	for ( CPreProcessor::ShaderData s : shaders )
+	for ( CPreProcessor::ShaderData& s : shaders )
 	{
 		auto it = glrShaderMap.find(s.name);
 		if ( it != glrShaderMap.end() )
