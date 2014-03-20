@@ -19,12 +19,10 @@ Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, 
 	textures_.push_back(texture);
 	materials_.push_back(material);
 	
-	// Wrap the animations
+	// Add animations to map
 	for (auto animation : animations)
 	{
-		// TODO: This is baddd!
-		auto a = static_cast<glw::Animation*>(animation);
-		animations_[ animation->getName() ] = std::unique_ptr<models::Animation>( new models::Animation(a, openGlDevice_) );
+		animations_[ animation->getName() ] = animation;
 	}
 }
 
@@ -41,12 +39,10 @@ Model::Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vect
 	
 	initialize();
 	
-	// Wrap the animations
+	// Add animations to map
 	for (auto animation : animations)
 	{
-		// TODO: This is baddd!
-		auto a = static_cast<glw::Animation*>(animation);
-		animations_[ animation->getName() ] = std::unique_ptr<models::Animation>( new models::Animation(a, openGlDevice_) );
+		animations_[ animation->getName() ] = animation;
 	}
 }
 
@@ -94,13 +90,7 @@ void Model::copy(const Model& other)
 	textures_ = other.textures_;
 	materials_ = other.materials_;
 	
-	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
-	
-	for ( auto& a : other.animations_)
-	{
-		std::cout << a.first << std::endl;
-		animations_[ a.first ] = std::unique_ptr<models::Animation>( new models::Animation(*a.second.get()) );
-	}
+	animations_ = other.animations_;
 	
 	// TODO: Do we want to actually do a copy on this each time?
 	rootBoneNode_ = other.rootBoneNode_;
@@ -108,19 +98,20 @@ void Model::copy(const Model& other)
 	globalInverseTransformation_ = other.globalInverseTransformation_;
 	
 	currentAnimation_ = nullptr;
+	
+	indexCache_ = other.indexCache_;
+	animationTime_ = other.animationTime_;
+	startFrame_ = other.startFrame_;
+	endFrame_ = other.endFrame_;
+	
 	// Set the current animation to our copied animation
 	if ( other.currentAnimation_ != nullptr )
 	{
-		std::cout << other.currentAnimation_->getName() << std::endl;
-		auto it = animations_.find( other.currentAnimation_->getName() );
-		if (it != animations_.end())
-		{
-			currentAnimation_ = it->second.get();
-		}
+		currentAnimation_ = other.currentAnimation_;
 	}
 	
 	// TODO: make this not crappy
-	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
+	emptyAnimation_ = new glw::Animation( openGlDevice_, std::string("EMPTY") );
 	emptyAnimation_->generateIdentityBoneTransforms( 100 );
 }
 
@@ -131,9 +122,13 @@ void Model::initialize()
 	textureManager_ = openGlDevice_->getTextureManager();
 	animationManager_ = openGlDevice_->getAnimationManager();
 	
-	animations_ = std::map< std::string, std::unique_ptr<models::Animation>>();
+	animations_ = std::map< std::string, glw::IAnimation* >();
 	
 	currentAnimation_ = nullptr;
+	animationTime_ = 0.0f;
+	startFrame_ = 0;
+	endFrame_ = 0;
+	indexCache_ = std::vector<glmd::uint32>( 3 );
 	
 	// TODO: make this not crappy
 	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
@@ -304,35 +299,43 @@ const std::string& Model::getName() const
 	return name_;
 }
 
-/**
- * Gets the animation that is currently active for this model.  If no animation is active, it will return
- * nullptr.
- * 
- * @return A pointer to the current IAnimation object, or nullptr if there is no current animation
- */
-IAnimation* Model::getCurrentAnimation() const
+
+void Model::playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop)
+{
+	currentAnimation_ = animation;
+	animationTime_ = animationTime;
+	startFrame_ = startFrame;
+	endFrame_ = endFrame;
+	
+	// TESTING (should we copy the index cache?)
+	indexCache_ = std::vector<glmd::uint32>( 3 );
+}
+
+void Model::setAnimationTime(glm::detail::float32 animationTime)
+{
+	animationTime_ = animationTime;
+}
+
+void Model::stopAnimation()
+{
+	currentAnimation_ = nullptr;
+}
+
+glw::IAnimation* Model::getPlayingAnimation() const
 {
 	return currentAnimation_;
 }
 
-/**
- * Will return the animation associated with this model with the given name.  Returns nullptr if no animation
- * is associated with this model with the given name.
- * 
- * @param name The name of the animation to retrieve.
- * 
- * @return A pointer to the animation associated with this model with the given name; nullptr if no animation
- * is associated with this model with the given name.
- */
-models::IAnimation* Model::getAnimation(const std::string& name) const
+std::vector<glw::IAnimation*> Model::getAnimations() const
 {
-	auto it = animations_.find(name);
-	if ( it != animations_.end() )
+	auto list = std::vector<glw::IAnimation*>();
+	
+	for ( auto& a : animations_ )
 	{
-		return it->second.get();
+		list.push_back(a.second);
 	}
 	
-	return nullptr;
+	return list;
 }
 
 void Model::removeAnimation(const std::string& name)
@@ -350,17 +353,6 @@ void Model::addAnimation(glw::IAnimation* animation)
 glmd::uint32 Model::getNumberOfAnimations() const
 {
 	return animations_.size();
-}
-
-/**
- * Sets the current animation.
- * 
- * @param animation A pointer to the animation to use.  If nullptr is sent in, the current animation is set to nullptr (i.e. no current
- * animation)
- */
-void Model::setCurrentAnimation(models::IAnimation* animation)
-{
-	currentAnimation_ = static_cast<models::Animation*>(animation);
 }
 
 glmd::int32 Model::getIndexOf(glw::IMesh* mesh) const
@@ -434,13 +426,12 @@ void Model::render(shaders::IShaderProgram* shader)
 			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
 			if (bindPoint >= 0)
 			{
-				glw::Animation* a = currentAnimation_->getAnimation();
-				a->setAnimationTime( currentAnimation_->getAnimationTime() );
-				a->setFrameClampping( currentAnimation_->getStartFrame(), currentAnimation_->getEndFrame() );
-				a->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), currentAnimation_->getIndexCache());
-				a->bind();
+				currentAnimation_->setAnimationTime( animationTime_ );
+				currentAnimation_->setFrameClampping( startFrame_, endFrame_ );
+				currentAnimation_->generateBoneTransforms(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), indexCache_);
+				currentAnimation_->bind();
 				
-				openGlDevice_->bindBuffer( a->getBufferId(), bindPoint );
+				openGlDevice_->bindBuffer( currentAnimation_->getBufferId(), bindPoint );
 			}
 		}
 		else

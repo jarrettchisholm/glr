@@ -64,17 +64,20 @@ public:
 	void addMaterial(glw::IMaterial* material, glmd::uint32 index);
 	void addMaterial(glw::IMaterial* material, glw::Mesh* mesh);
 	glmd::uint32 getNumberOfMaterials() const;
-	
-	virtual const Id& getId() const;
-	virtual const std::string& getName() const;
-	
-	virtual IAnimation* getCurrentAnimation() const;
-	virtual IAnimation* getAnimation(const std::string& name) const;
+
 	void removeAnimation(const std::string& name);
 	void removeAnimation(glw::IAnimation* animation);
 	void addAnimation(glw::IAnimation* animation);
 	glmd::uint32 getNumberOfAnimations() const;
-	virtual void setCurrentAnimation(IAnimation* animation);
+
+	virtual const Id& getId() const;
+	virtual const std::string& getName() const;
+
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop = true);
+	virtual void setAnimationTime(glm::detail::float32 animationTime);
+	virtual void stopAnimation();
+	virtual glw::IAnimation* getPlayingAnimation() const;
+	virtual std::vector<glw::IAnimation*> getAnimations() const;
 
 	/**
 	 * Will render the model through OpenGL.
@@ -102,9 +105,16 @@ protected:
 
 	glw::IOpenGlDevice* openGlDevice_;
 	
-	std::map< std::string, std::unique_ptr<Animation>> animations_;
+	std::map< std::string, glw::IAnimation* > animations_;
+
+	// Animation specific member variables
+	std::vector<glmd::uint32> indexCache_;
+	glm::detail::float32 animationTime_;
+	// Only play frames within this range
+	glmd::uint32 startFrame_;
+	glmd::uint32 endFrame_;
 	
-	Animation* currentAnimation_;
+	glw::IAnimation* currentAnimation_;
 	glw::Animation* emptyAnimation_;
 
 	glw::IMeshManager* meshManager_;

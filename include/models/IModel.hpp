@@ -1,13 +1,12 @@
 #ifndef IMODEL_H_
 #define IMODEL_H_
 
-#include "models/IAnimation.hpp"
-
 #include "IRenderable.hpp"
 #include "glw/shaders/IShaderProgram.hpp"
 
 #include "glw/IMesh.hpp"
 #include "glw/ITexture.hpp"
+#include "glw/IAnimation.hpp"
 
 #include "Id.hpp"
 
@@ -107,20 +106,20 @@ public:
 	virtual const std::string& getName() const = 0;
 
 	/**
-	 * Returns the animation with the given name.
+	 * Plays the given animation for this model.
 	 * 
-	 * @param name
-	 * 
-	 * @return A pointer to the animation with the given name, and nullptr if the animation was not found.
+	 * @param animation
 	 */
-	virtual IAnimation* getAnimation(const std::string& name) const = 0;
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop = true) = 0;
+	virtual void setAnimationTime(glm::detail::float32 animationTime) = 0;
+	virtual void stopAnimation() = 0;
 
 	/**
 	 * Returns the current animation that affects this model.
 	 * 
 	 * @return A pointer to the current animation that affects this model, or nullptr if there is no current animation.
 	 */
-	virtual IAnimation* getCurrentAnimation() const = 0;
+	virtual glw::IAnimation* getPlayingAnimation() const = 0;
 
 	/**
 	 * Sets the current animation.  If nullptr is sent in as the animation, then no animation will be used when rendering
@@ -128,7 +127,7 @@ public:
 	 * 
 	 * @param animation The animation to use as the current animation.
 	 */
-	virtual void setCurrentAnimation(IAnimation* animation) = 0;
+	virtual std::vector<glw::IAnimation*> getAnimations() const = 0;
 };
 
 }
