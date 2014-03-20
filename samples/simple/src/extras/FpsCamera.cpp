@@ -1,11 +1,11 @@
-#include "FpsCamera.h"
+#include "FpsCamera.hpp"
 
 namespace glr
 {
 namespace extras
 {
 	
-FpsCamera::FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed) : Camera(openGlDevice), speed_(speed)
+FpsCamera::FpsCamera(ICamera* camera, glmd::float32 speed) : camera_(camera), speed_(speed)
 {
 	initialize();
 }
@@ -16,7 +16,6 @@ FpsCamera::~FpsCamera()
 
 void FpsCamera::initialize()
 {
-
 }
 
 bool FpsCamera::isActive()
@@ -26,35 +25,40 @@ bool FpsCamera::isActive()
 
 void FpsCamera::moveForward()
 {
-	this->move( glm::vec3(0.0f, 0.0f, -speed_) );
+	camera_->move( glm::vec3(0.0f, 0.0f, -speed_) );
 }
 
 void FpsCamera::moveBack()
 {
-	this->move( glm::vec3(0.0f, 0.0f, speed_) );
+	camera_->move( glm::vec3(0.0f, 0.0f, speed_) );
 }
 
 void FpsCamera::moveLeft()
 {
-	this->move( glm::vec3(-speed_, 0.0f, 0.0f) );
+	camera_->move( glm::vec3(-speed_, 0.0f, 0.0f) );
 }
 
 void FpsCamera::moveRight()
 {
-	this->move( glm::vec3(speed_, 0.0f, 0.0f) );
+	camera_->move( glm::vec3(speed_, 0.0f, 0.0f) );
+}
+
+ICamera* FpsCamera::getCamera()
+{
+	return camera_;
 }
 
 void FpsCamera::rotate(const glm::detail::float32& degrees, const glm::vec3& axis)
 {
 	if ( axis == glm::vec3(0.0f, 1.0f, 0.0f) )
-		Camera::rotate(degrees, axis, TransformSpace::TS_LOCAL);
+		camera_->rotate(degrees, axis, ISceneNode::TransformSpace::TS_LOCAL);
 	else
-		Camera::rotate(degrees, axis, TransformSpace::TS_WORLD);
+		camera_->rotate(degrees, axis, ISceneNode::TransformSpace::TS_WORLD);
 }
 
 void FpsCamera::tick(glm::detail::float32 time)
 {
-	Camera::tick(time);
+	camera_->tick(time);
 }
 
 }

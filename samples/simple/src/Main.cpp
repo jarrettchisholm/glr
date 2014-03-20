@@ -1,4 +1,4 @@
-#include "Main.h"
+#include "Main.hpp"
 
 Main::Main()
 {
@@ -7,9 +7,9 @@ Main::Main()
 	smgr_ = glrProgram_->getSceneManager();
 	
 	// Create FPS camera
-	camera_ = std::shared_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(glrProgram_->getOpenGlDevice(), 0.020f) );
-	camera_->setPosition(0, 0, 0.5);
-	smgr_->addCamera(camera_);
+	glr::ICamera* camera = smgr_->createCamera();
+	camera->setPosition(0, 0, 0.5);
+	camera_ = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(camera, 0.020f) );
 
 	sfmlWindow_ = (sf::Window*)window_->getInternalWindowPointer();
 	sfmlWindow_->setKeyRepeatEnabled(false);

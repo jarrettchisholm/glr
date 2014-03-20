@@ -131,7 +131,7 @@ IModel* ModelManager::createInstance(const std::string& name)
 		return modelInstances_.back().get();
 	}
 
-	LOG_DEBUG( "Model template not found." );
+	LOG_WARN( "Model template not found." );
 	
 	return nullptr;
 }

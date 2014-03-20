@@ -116,6 +116,7 @@ VariantDir('build', 'src', duplicate=0)
 
 # Set our source files
 source_files = Glob('build/*.cpp')
+source_files += Glob('build/extras/*.cpp')
 
 setupDependencies()
 

@@ -1,6 +1,7 @@
 #ifndef FPSCAMERA_H_
 #define FPSCAMERA_H_
 
+#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 
 #include "GlrInclude.hpp"
@@ -10,10 +11,10 @@ namespace glr
 namespace extras
 {
 
-class FpsCamera : public Camera
+class FpsCamera
 {
 public:
-	FpsCamera(glw::IOpenGlDevice* openGlDevice, glmd::float32 speed);
+	FpsCamera(ICamera* camera, glmd::float32 speed);
 	virtual ~FpsCamera();
 
 	bool isActive();
@@ -23,7 +24,9 @@ public:
 	void moveLeft();
 	void moveRight();
 	
-	virtual void rotate(const glm::detail::float32& degrees, const glm::vec3& axis);
+	ICamera* getCamera();
+	
+	void rotate(const glm::detail::float32& degrees, const glm::vec3& axis);
 
 	/**
 	 * 
@@ -31,6 +34,7 @@ public:
 	void tick(glmd::float32 time);
 
 private:
+	ICamera* camera_;
 	glmd::float32 speed_;
 
 	void initialize();

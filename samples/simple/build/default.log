@@ -1,0 +1,67 @@
+[2013-Dec-21 21:26:05.355176] - debug: Creating window.
+[2013-Dec-21 21:26:05.587070] - debug: Initializing GLEW.
+[2013-Dec-21 21:26:05.595933] - debug: OpenGL setup.
+[2013-Dec-21 21:26:05.596075] - debug: Loading shader programs.
+[2013-Dec-21 21:26:05.596483] - debug: Shader include found: glr
+[2013-Dec-21 21:26:05.596659] - debug: Shader program found: glr_basic.program
+[2013-Dec-21 21:26:05.596817] - debug: Shader found: glr_gui.frag
+[2013-Dec-21 21:26:05.596979] - debug: Shader program found: glr_gui.program
+[2013-Dec-21 21:26:05.597129] - debug: Shader found: glr_gui.vert
+[2013-Dec-21 21:26:05.597271] - debug: Shader include found: light
+[2013-Dec-21 21:26:05.597415] - debug: Shader include found: material
+[2013-Dec-21 21:26:05.597585] - debug: Shader found: shader.frag
+[2013-Dec-21 21:26:05.597792] - debug: Shader found: shader.vert
+[2013-Dec-21 21:26:05.597959] - debug: Shader found: test.frag
+[2013-Dec-21 21:26:05.598119] - debug: Shader program found: test.program
+[2013-Dec-21 21:26:05.598177] - debug: Processing shader program 'glr_basic.program'.
+[2013-Dec-21 21:26:05.599710] - debug: 
+[2013-Dec-21 21:26:05.607719] - debug: 
+[2013-Dec-21 21:26:05.612494] - debug: name: glr_basic
+[2013-Dec-21 21:26:05.612542] - debug: Initializing 2 shaders.
+[2013-Dec-21 21:26:05.612588] - debug: Processing shader 'shader.vert'.
+[2013-Dec-21 21:26:05.625017] - debug: Processing shader 'shader.frag'.
+[2013-Dec-21 21:26:05.633157] - debug: entry.second->getName(): glr_basic
+[2013-Dec-21 21:26:05.633324] - debug: Processing shader program 'glr_gui.program'.
+[2013-Dec-21 21:26:05.634581] - debug: 
+[2013-Dec-21 21:26:05.636679] - debug: 
+[2013-Dec-21 21:26:05.637845] - debug: name: glr_gui
+[2013-Dec-21 21:26:05.637891] - debug: Initializing 2 shaders.
+[2013-Dec-21 21:26:05.637931] - debug: Processing shader 'glr_gui.vert'.
+[2013-Dec-21 21:26:05.642191] - debug: Processing shader 'glr_gui.frag'.
+[2013-Dec-21 21:26:05.645088] - debug: entry.second->getName(): glr_gui
+[2013-Dec-21 21:26:05.645181] - debug: Processing shader program 'test.program'.
+[2013-Dec-21 21:26:05.646426] - debug: 
+[2013-Dec-21 21:26:05.653815] - debug: 
+[2013-Dec-21 21:26:05.654838] - debug: name: test
+[2013-Dec-21 21:26:05.654887] - debug: Initializing 2 shaders.
+[2013-Dec-21 21:26:05.654930] - debug: Processing shader 'shader.vert'.
+[2013-Dec-21 21:26:05.667656] - debug: Processing shader 'test.frag'.
+[2013-Dec-21 21:26:05.670005] - debug: entry.second->getName(): test
+[2013-Dec-21 21:26:05.670113] - debug: Initializing shader program 'glr_basic'.
+[2013-Dec-21 21:26:05.670168] - debug: Compiling shader 'shader.vert'.
+[2013-Dec-21 21:26:05.670215] - debug: Shader is of type '1'.
+[2013-Dec-21 21:26:05.675207] - debug: Done initializing shader 'shader.vert'.
+[2013-Dec-21 21:26:05.675412] - debug: Compiling shader 'shader.frag'.
+[2013-Dec-21 21:26:05.675455] - debug: Shader is of type '2'.
+[2013-Dec-21 21:26:05.676189] - debug: Done initializing shader 'shader.frag'.
+[2013-Dec-21 21:26:05.690589] - debug: Done initializing shader program 'glr_basic'.
+[2013-Dec-21 21:26:05.690726] - debug: Initializing shader program 'glr_gui'.
+[2013-Dec-21 21:26:05.690768] - debug: Compiling shader 'glr_gui.vert'.
+[2013-Dec-21 21:26:05.690807] - debug: Shader is of type '1'.
+[2013-Dec-21 21:26:05.691350] - debug: Done initializing shader 'glr_gui.vert'.
+[2013-Dec-21 21:26:05.691407] - debug: Compiling shader 'glr_gui.frag'.
+[2013-Dec-21 21:26:05.691447] - debug: Shader is of type '2'.
+[2013-Dec-21 21:26:05.691675] - debug: Done initializing shader 'glr_gui.frag'.
+[2013-Dec-21 21:26:05.694943] - debug: Done initializing shader program 'glr_gui'.
+[2013-Dec-21 21:26:05.695106] - debug: Initializing shader program 'test'.
+[2013-Dec-21 21:26:05.695145] - debug: Compiling shader 'shader.vert'.
+[2013-Dec-21 21:26:05.695183] - debug: Shader is of type '1'.
+[2013-Dec-21 21:26:05.696138] - debug: Done initializing shader 'shader.vert'.
+[2013-Dec-21 21:26:05.696209] - debug: Compiling shader 'test.frag'.
+[2013-Dec-21 21:26:05.696246] - debug: Shader is of type '2'.
+[2013-Dec-21 21:26:05.696449] - debug: Done initializing shader 'test.frag'.
+[2013-Dec-21 21:26:05.707139] - debug: Done initializing shader program 'test'.
+[2013-Dec-21 21:26:05.707294] - debug: Initialize shader programs.
+[2013-Dec-21 21:26:05.707342] - debug: Create scene manager.
+[2013-Dec-21 21:26:05.707532] - debug: Set OpenGL matrices.
+[2013-Dec-21 21:26:05.707611] - debug: Camera initialized.

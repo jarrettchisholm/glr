@@ -29,7 +29,7 @@ BasicSceneNode::BasicSceneNode(Id id, glw::IOpenGlDevice* openGlDevice) : id_(id
 
 	active_ = true;
 
-	model_ = nullptr;
+	renderable_ = nullptr;
 	shaderProgram_ = nullptr;
 }
 
@@ -40,7 +40,7 @@ BasicSceneNode::BasicSceneNode(Id id, std::string name, glw::IOpenGlDevice* open
 
 	active_ = true;
 
-	model_ = nullptr;
+	renderable_ = nullptr;
 	shaderProgram_ = nullptr;
 }
 
@@ -53,7 +53,7 @@ BasicSceneNode::BasicSceneNode(Id id, std::string name, glm::vec3& position, con
 
 	active_ = true;
 
-	model_ = nullptr;
+	renderable_ = nullptr;
 	shaderProgram_ = nullptr;
 }
 
@@ -75,7 +75,7 @@ BasicSceneNode::~BasicSceneNode()
 
 void BasicSceneNode::copy(const BasicSceneNode& other)
 {
-	model_ = other.model_;
+	renderable_ = other.renderable_;
 	shaderProgram_ = other.shaderProgram_;
 
 	sceneManager_ = other.sceneManager_;
@@ -89,12 +89,12 @@ void BasicSceneNode::copy(const BasicSceneNode& other)
 	active_ = other.active_;
 }
 
-void BasicSceneNode::attach(models::IModel* model)
+void BasicSceneNode::attach(models::IRenderable* renderable)
 {
-	model_ = model;
+	renderable_ = renderable;
 }
 
-void BasicSceneNode::detach(models::IModel* model)
+void BasicSceneNode::detach(models::IRenderable* renderable)
 {
 	// TODO: implement
 }
@@ -208,9 +208,9 @@ void BasicSceneNode::lookAt(const glm::vec3& lookAt)
 	orientationQuaternion_ =  glm::normalize( orientationQuaternion_ * glm::quat_cast( lookAtMatrix ) );
 }
 
-models::IModel* BasicSceneNode::getModel() const
+models::IRenderable* BasicSceneNode::getRenderable() const
 {
-	return model_;
+	return renderable_;
 }
 
 shaders::IShaderProgram* BasicSceneNode::getShaderProgram() const
@@ -220,7 +220,7 @@ shaders::IShaderProgram* BasicSceneNode::getShaderProgram() const
 
 void BasicSceneNode::render()
 {
-	if ( model_ != nullptr )
+	if ( renderable_ != nullptr )
 	{
 		if (shaderProgram_ != nullptr) 
 		{
@@ -258,7 +258,7 @@ void BasicSceneNode::render()
 		//	shaderProgram_->bind();
 		//else
 		//	shaders::ShaderProgram::unbindAll();
-		model_->render(shaderProgram_);
+		renderable_->render(shaderProgram_);
 	}
 }
 

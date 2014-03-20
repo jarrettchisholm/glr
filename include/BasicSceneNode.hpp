@@ -48,16 +48,16 @@ public:
 	
 	virtual void lookAt(const glm::vec3& lookAt);
 
-	virtual void attach(models::IModel* model);
+	virtual void attach(models::IRenderable* renderable);
 	virtual void attach(shaders::IShaderProgram* shaderProgram);
-	virtual void detach(models::IModel* model);
-	virtual models::IModel* getModel() const;
+	virtual void detach(models::IRenderable* renderable);
+	virtual models::IRenderable* getRenderable() const;
 	virtual shaders::IShaderProgram* getShaderProgram() const;
 	
 	virtual void render();
 
 protected:
-	models::IModel* model_;
+	models::IRenderable* renderable_;
 	shaders::IShaderProgram* shaderProgram_;
 
 	ISceneManager* sceneManager_;

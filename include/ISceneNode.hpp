@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 
-#include "models/IModel.hpp"
+#include "models/IRenderable.hpp"
 
 #include "Id.hpp"
 
@@ -53,10 +53,10 @@ public:
 	
 	virtual void lookAt(const glm::vec3& lookAt) = 0;
 
-	virtual void attach(models::IModel* model) = 0;
+	virtual void attach(models::IRenderable* renderable) = 0;
 	virtual void attach(shaders::IShaderProgram* shaderProgram) = 0;
-	virtual void detach(models::IModel* model) = 0;
-	virtual models::IModel* getModel() const = 0;
+	virtual void detach(models::IRenderable* renderable) = 0;
+	virtual models::IRenderable* getRenderable() const = 0;
 	virtual shaders::IShaderProgram* getShaderProgram() const = 0;
 	
 	virtual void render() = 0;
