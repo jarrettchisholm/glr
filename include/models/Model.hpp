@@ -10,7 +10,6 @@
 #include <assimp/postprocess.h>
 
 #include "models/IModel.hpp"
-#include "models/Animation.hpp"
 
 #include "Id.hpp"
 
