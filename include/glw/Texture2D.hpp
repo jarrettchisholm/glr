@@ -28,10 +28,10 @@ public:
 	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	virtual ~Texture2D();
 
-	virtual void bind(GLuint texturePosition = 0);
+	virtual void bind(GLuint texturePosition = 0) const;
 	
-	GLuint getBufferId();
-	GLuint getBindPoint();
+	GLuint getBufferId() const;
+	GLuint getBindPoint() const;
 	
 	/**
 	 * If the image is of the same format, width, and height of the previously uploaded image, you

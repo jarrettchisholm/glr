@@ -50,7 +50,7 @@ public:
 	);
 	virtual ~Material();
 
-	virtual void bind();
+	virtual void bind() const;
 	virtual GLuint getBufferId() const;
 	GLuint getBindPoint() const;
 

@@ -14,6 +14,9 @@ public:
 	}
 	;
 
+	/**
+	 * Will stream the latest graphics data into opengl memory.
+	 */
 	virtual void pushToVideoMemory() = 0;
 	virtual void pullFromVideoMemory() = 0;
 	virtual void freeLocalData() = 0;

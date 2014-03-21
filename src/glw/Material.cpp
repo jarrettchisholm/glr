@@ -109,7 +109,7 @@ Material::~Material()
 	freeVideoMemory();
 }
 
-void Material::bind()
+void Material::bind() const
 {
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "material: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;

@@ -29,7 +29,7 @@ Animation::Animation(IOpenGlDevice* openGlDevice, std::string name) : openGlDevi
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	setupAnimationUbo();
+	allocateVideoMemory();
 }
 
 Animation::Animation(
@@ -54,7 +54,7 @@ Animation::Animation(
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	setupAnimationUbo();
+	allocateVideoMemory();
 }
 
 Animation::Animation(const Animation& other)
@@ -74,7 +74,7 @@ Animation::Animation(const Animation& other)
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	setupAnimationUbo();
+	allocateVideoMemory();
 }
 
 Animation::~Animation()
@@ -82,7 +82,32 @@ Animation::~Animation()
 	openGlDevice_->releaseBufferObject( bufferId_ );
 }
 
-void Animation::setupAnimationUbo()
+void Animation::bind() const
+{
+	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
+}
+
+void Animation::pushToVideoMemory()
+{
+	pushToVideoMemory( currentTransforms_ );
+}
+
+void Animation::pullFromVideoMemory()
+{
+	// TODO: Implement
+}
+
+void Animation::freeLocalData()
+{
+	currentTransforms_ = std::vector< glm::mat4 >( 0 );
+}
+
+void Animation::freeVideoMemory()
+{
+	// TODO: Implement
+}
+
+void Animation::allocateVideoMemory()
 {
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0]);
 	
@@ -104,11 +129,6 @@ void Animation::setupAnimationUbo()
 	}
 }
 
-void Animation::pushToVideoMemory()
-{
-	pushToVideoMemory( currentTransforms_ );
-}
-
 // TODO: Look at making this more efficient?
 // Note: I couldn't just use glBufferSubData, as it didn't seem to synchronize when the previous buffer data was to be used for a draw call.
 // Furthermore, it appears 'buffer orphaning' is not working either. That is, when I added 
@@ -118,8 +138,8 @@ void Animation::pushToVideoMemory()
 void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformations)
 {
 	assert( transformations.size() <= Constants::MAX_NUMBER_OF_BONES_PER_MESH );
-	
-	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
+
+	bind();
 
 	if (transformations.size() > 0)
 	{

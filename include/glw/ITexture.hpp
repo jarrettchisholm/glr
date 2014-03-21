@@ -31,7 +31,7 @@ struct TextureSettings
 	GLint textureWrapT;
 };
 
-class ITexture : public IGraphicsObject
+class ITexture : public virtual IGraphicsObject
 {
 public:
 	virtual ~ITexture()
@@ -39,7 +39,7 @@ public:
 	}
 	;
 	
-	virtual void bind(GLuint texturePosition = 0) = 0;
+	virtual void bind(GLuint texturePosition = 0) const = 0;
 };
 
 }

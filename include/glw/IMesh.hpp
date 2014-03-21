@@ -128,7 +128,7 @@ struct BoneData
 /**
  * Represents a Mesh which can be rendered in the scene.
  */
-class IMesh : public IGraphicsObject
+class IMesh : public virtual IGraphicsObject
 {
 public:
 	virtual ~IMesh()

@@ -30,8 +30,15 @@ public:
 	Animation(const Animation& other);
 	virtual ~Animation();
 
+	virtual void bind() const;
+
 	virtual void pushToVideoMemory();
 	virtual void pushToVideoMemory(const std::vector< glm::mat4 >& transformations);
+	virtual void pullFromVideoMemory();
+	virtual void freeLocalData();
+	virtual void freeVideoMemory();
+	virtual void allocateVideoMemory();
+
 	virtual GLuint getBufferId() const;
 	GLuint getBindPoint() const;
 

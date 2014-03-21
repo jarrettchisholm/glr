@@ -28,10 +28,10 @@ public:
 	Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	virtual ~Texture2DArray();
 
-	virtual void bind(GLuint texturePosition = 0);
+	virtual void bind(GLuint texturePosition = 0) const;
 	
-	GLuint getBufferId();
-	GLuint getBindPoint();
+	GLuint getBufferId() const;
+	GLuint getBindPoint() const;
 	
 	void setData(const std::vector<utilities::Image*>& images);
 	std::vector<utilities::Image>& getData();

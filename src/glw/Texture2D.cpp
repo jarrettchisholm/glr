@@ -30,7 +30,7 @@ Texture2D::~Texture2D()
 {
 }
 
-void Texture2D::bind(GLuint texturePosition)
+void Texture2D::bind(GLuint texturePosition) const
 {
 	glActiveTexture(GL_TEXTURE0 + texturePosition);
 	glBindTexture(GL_TEXTURE_2D, bufferId_);
@@ -41,12 +41,12 @@ void Texture2D::bind(GLuint texturePosition)
 	//glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLuint Texture2D::getBufferId()
+GLuint Texture2D::getBufferId() const
 {
 	return bufferId_;
 }
 
-GLuint Texture2D::getBindPoint()
+GLuint Texture2D::getBindPoint() const
 {
 	return bindPoint_;
 }

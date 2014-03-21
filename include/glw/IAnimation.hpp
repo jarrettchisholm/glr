@@ -9,6 +9,8 @@
 #include "IAnimation.hpp"
 #include "IMesh.hpp"
 
+#include "IGraphicsObject.hpp"
+
 #include "AnimatedBoneNode.hpp"
 
 #include "common/utilities/Macros.hpp"
@@ -48,7 +50,7 @@ struct BoneNode
  * 		openGlDevice->bindBuffer( animation->getBufferId(), bindPoint );
  * }
  */
-class IAnimation
+class IAnimation : public virtual IGraphicsObject
 {
 public:
 	virtual ~IAnimation()
@@ -64,12 +66,15 @@ public:
 	virtual const std::string& getName() const = 0;
 
 	/**
-	 * Will stream the latest transformation matrices into opengl memory, and will then bind the data to a bind point.
+	 * Binds the data in OpenGL, making it ready to use.
 	 */
+	virtual void bind() const = 0;
+	
+	// Inherited from IGraphicsObject - need to declare it here so that it is visible to anything using an IAnimation object.
 	virtual void pushToVideoMemory() = 0;
 	
 	/**
-	 * Will stream the provided transformation matrices into opengl memory, and will then bind the data to a bind point.
+	 * Will stream the provided transformation matrices into opengl memory.
 	 * 
 	 * NOTE: You should only use this method if you know what you are doing!
 	 * 
