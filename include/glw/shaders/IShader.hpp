@@ -154,7 +154,7 @@ public:
 	 */
 	virtual void bind() = 0;
 	virtual Type getType() const = 0;
-	virtual GLuint getGLShaderId() const = 0;
+	virtual GLuint getGlShaderId() const = 0;
 	
 	/**
 	 * Gets the bindings for this IShader object.

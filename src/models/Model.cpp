@@ -2,6 +2,8 @@
 
 #include "models/Model.hpp"
 
+#include "glw/Constants.hpp"
+
 #include "exceptions/Exception.hpp"
 
 namespace glr
@@ -109,10 +111,8 @@ void Model::copy(const Model& other)
 	{
 		currentAnimation_ = other.currentAnimation_;
 	}
-	
-	// TODO: make this not crappy
-	emptyAnimation_ = new glw::Animation( openGlDevice_, std::string("EMPTY") );
-	emptyAnimation_->generateIdentityBoneTransforms( 100 );
+
+	emptyAnimation_ = openGlDevice_->getAnimationManager()->getAnimation( glw::Constants::GLR_IDENTITY_BONES );
 }
 
 void Model::initialize()
@@ -130,9 +130,7 @@ void Model::initialize()
 	endFrame_ = 0;
 	indexCache_ = std::vector<glmd::uint32>( 3 );
 	
-	// TODO: make this not crappy
-	emptyAnimation_ = new glw::Animation( openGlDevice_, "EMPTY" );
-	emptyAnimation_->generateIdentityBoneTransforms( 100 );
+	emptyAnimation_ = openGlDevice_->getAnimationManager()->getAnimation( glw::Constants::GLR_IDENTITY_BONES );
 }
 
 void Model::destroy()
@@ -429,7 +427,7 @@ void Model::render(shaders::IShaderProgram* shader)
 				currentAnimation_->setAnimationTime( animationTime_ );
 				currentAnimation_->setFrameClampping( startFrame_, endFrame_ );
 				currentAnimation_->calculate(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), indexCache_);
-				currentAnimation_->bind();
+				currentAnimation_->pushToVideoMemory();
 				
 				openGlDevice_->bindBuffer( currentAnimation_->getBufferId(), bindPoint );
 			}
@@ -442,7 +440,7 @@ void Model::render(shaders::IShaderProgram* shader)
 			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
 			if (bindPoint >= 0)
 			{
-				emptyAnimation_->bind();
+				emptyAnimation_->pushToVideoMemory();
 
 				openGlDevice_->bindBuffer( emptyAnimation_->getBufferId(), bindPoint );
 			}

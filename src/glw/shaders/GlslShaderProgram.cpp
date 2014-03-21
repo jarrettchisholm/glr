@@ -44,7 +44,7 @@ void GlslShaderProgram::compile()
 
 	for ( auto& s : shaders_ )
 	{
-		glAttachShader(programId_, s->getGLShaderId());
+		glAttachShader(programId_, s->getGlShaderId());
 	}
 	
 	generateBindings();
@@ -53,7 +53,6 @@ void GlslShaderProgram::compile()
 	for ( auto& it : reservedVertexAttribLocations )
 	{
 		glBindAttribLocation(programId_, it.second, it.first.c_str());
-		//std::cout << name_ << " | binding: " << it.second << " " << it.first << std::endl;
 	}
 	
 	// Bind all shader defined attribute locations
@@ -61,7 +60,6 @@ void GlslShaderProgram::compile()
 	{
 		if (b.type == IShader::BindType::BIND_TYPE_LOCATION)
 		{
-			//std::cout << name_ << " | binding: " << b.bindPoint << " " << b.variableName << std::endl;
 			glBindAttribLocation(programId_, b.bindPoint, b.variableName.c_str());
 		}
 	}
@@ -90,7 +88,7 @@ void GlslShaderProgram::compile()
 		// Cleanup
 		for ( auto& s : shaders_ )
 		{
-			glDetachShader(programId_, s->getGLShaderId());
+			glDetachShader(programId_, s->getGlShaderId());
 		}
 		glDeleteProgram(programId_);
 		
@@ -148,8 +146,6 @@ GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType) c
 			return b.bindPoint;
 		}
 	}
-	// Didn't find binding type in bind map
-	//LOG_WARN( "Unable to find binding for bind type: " << bindType );
 	
 	return -1;
 }
@@ -164,9 +160,6 @@ GLint GlslShaderProgram::getBindPointByVariableName(const std::string& varName) 
 		}
 	}
 	
-	// Didn't find binding type in bind map
-	//LOG_WARN( "Unable to find binding for variable name: " << varName );
-	
 	return -1;
 }
 
@@ -176,35 +169,6 @@ GLint GlslShaderProgram::getVertexAttributeLocationByName(const std::string& var
 	
 	return pos;
 }
-
-/*
-void GlslShaderProgram::bindVariable(std::string varName, GLuint bindPoint)
-{
-	GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_, varName.c_str());
-	glUniformBlockBinding(programId_, uniformBlockIndex, bindPoint);
-
-	
-	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-	//glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, ubo);
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
-void GlslShaderProgram::bindVariableByBindingName(IShader::BindType bindType, GLuint bindPoint)
-{
-	for ( auto it = bindings_.begin(); it != bindings_.end(); it++)
-	{
-		if (it->first == bindType)
-		{
-			GLuint uniformBlockIndex = glGetUniformBlockIndex(programId_,  it->second.c_str());
-			glUniformBlockBinding(programId_, uniformBlockIndex, bindPoint);
-		}
-	}
-	
-	//glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-	//glBindBufferBase(GL_UNIFORM_BUFFER, bindPoint, ubo);
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-*/
 
 const std::string& GlslShaderProgram::getName() const
 {

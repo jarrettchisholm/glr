@@ -5,6 +5,7 @@
 #endif
 
 #include "glw/AnimationManager.hpp"
+#include "glw/Constants.hpp"
 
 
 namespace glr
@@ -15,7 +16,7 @@ namespace glw
 AnimationManager::AnimationManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	// Create and add GLR_IDENTITY_BONES animation
-	
+	addAnimation(glw::Constants::GLR_IDENTITY_BONES);
 }
 
 AnimationManager::~AnimationManager()

@@ -41,13 +41,8 @@ template <typename It> void GlrParser::parseBind(It f, It l)
 		if ( hasResults )
 		{
 			bindBindings_ = mappings;
-			//for ( auto it = mappings.begin(); it != mappings.end(); ++it )
-			//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 		}
 	}
-
-	//if (f!=l)
-	//	std::cerr << "warning: remaing unparsed: '" << std::string(f,l) << "'\n";
 }
 
 template <typename It> void GlrParser::parseLocation(It f, It l)
@@ -72,8 +67,6 @@ template <typename It> void GlrParser::parseLocation(It f, It l)
 
 				locationBindings_.push_back(p);
 			}
-			//for ( auto it = mappings.begin(); it != mappings.end(); ++it )
-			//	std::cout << "'" << it->second << "' annotated with name '" << it->first << "'\n";
 		}
 	}
 }

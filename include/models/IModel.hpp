@@ -102,7 +102,18 @@ public:
 	}
 	;
 	
+	/**
+	 * Get the id of this model.
+	 * 
+	 * @return The id of this model.
+	 */
 	virtual const Id& getId() const = 0;
+	
+	/**
+	 * Get the name of this model.
+	 * 
+	 * @return The name of this model.
+	 */
 	virtual const std::string& getName() const = 0;
 
 	/**
@@ -111,7 +122,14 @@ public:
 	 * @param animation
 	 */
 	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop = true) = 0;
+	
+	// Sets the animation time for animation currently playing
+	// TODO: Should this be here?
 	virtual void setAnimationTime(glm::detail::float32 animationTime) = 0;
+	
+	/**
+	 * Stop the currently playing animation for this model.
+	 */
 	virtual void stopAnimation() = 0;
 
 	/**

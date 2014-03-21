@@ -35,7 +35,6 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, std::vec
 		binding.bindPoint = -1;
 		
 		bindings_.push_back(binding);
-		//std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 	
 	GLint maxNumLocations = 0;
@@ -64,7 +63,6 @@ GlslShader::GlslShader(std::string name, std::string source, Type type, std::vec
 		binding.bindPoint = it.first;
 		
 		bindings_.push_back(binding);
-		//std::cout << "'" << it.second << "' annotated with name '" << it.first << "'\n";
 	}
 }
 
@@ -179,7 +177,7 @@ IShader::BindingsMap GlslShader::getBindings()
 	return bindings_;
 }
 
-GLuint GlslShader::getGLShaderId() const
+GLuint GlslShader::getGlShaderId() const
 {
 	return shaderId_;
 }

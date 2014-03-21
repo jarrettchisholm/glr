@@ -27,7 +27,7 @@ public:
 
 	virtual void bind();
 	virtual IShader::Type getType() const;
-	virtual GLuint getGLShaderId() const;
+	virtual GLuint getGlShaderId() const;
 	virtual IShader::BindingsMap getBindings();
 
 	void compile();

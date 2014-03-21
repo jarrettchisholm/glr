@@ -29,7 +29,18 @@ public:
 	}
 	;
 
+	/**
+	 * Get the id of this model.
+	 * 
+	 * @return The id of this model.
+	 */
 	virtual const Id& getId() const = 0;
+	
+	/**
+	 * Get the name of this model.
+	 * 
+	 * @return The name of this model.
+	 */
 	virtual const std::string& getName() const = 0;
 };
 

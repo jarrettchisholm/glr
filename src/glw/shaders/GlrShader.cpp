@@ -50,7 +50,6 @@ void GlrShader::process(std::map< std::string, std::string > defineMap)
 		const boost::regex e("@location(\\s+)(\\S+)\\n+");
 		processedSource_ = boost::regex_replace(processedSource_, e, "\n");
 	}
-	//std::cout << "processedSource_: " << processedSource_ << std::endl;
 }
 
 const std::string& GlrShader::getName() const

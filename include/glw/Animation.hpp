@@ -30,17 +30,14 @@ public:
 	Animation(const Animation& other);
 	virtual ~Animation();
 
-	virtual void bind();
-	void bind(const std::vector< glm::mat4 >& transformations);
+	virtual void pushToVideoMemory();
+	virtual void pushToVideoMemory(const std::vector< glm::mat4 >& transformations);
 	virtual GLuint getBufferId() const;
 	GLuint getBindPoint() const;
 
 	virtual void setAnimationTime(glmd::float32 runningTime);
-	
 	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame);
-	
-	// TODO: make rootBoneNode const?
-	// TODO: Should we really be sending in BoneData&?  Shouldn't we send IMesh* or something?
+
 	virtual void calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData);
 	virtual void calculate(const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData, std::vector<glmd::uint32>& indexCache);
 	virtual void calculate(std::vector< glm::mat4 >& transformations, const glm::mat4& globalInverseTransformation, const BoneNode& rootBoneNode, const BoneData& boneData);
@@ -74,9 +71,7 @@ private:
 	std::vector< glm::mat4 > currentTransforms_;
 
 	void setupAnimationUbo();
-	void loadIntoVideoMemory();
-	void loadIntoVideoMemory(const std::vector< glm::mat4 >& transformations);
-	
+
 	glmd::uint32 findPosition(float animationTime, AnimatedBoneNode* animatedBoneNode);
 	glmd::uint32 findRotation(float animationTime, AnimatedBoneNode* animatedBoneNode);
 	glmd::uint32 findScaling(float animationTime, AnimatedBoneNode* animatedBoneNode);

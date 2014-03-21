@@ -37,7 +37,6 @@ void GlrShaderProgram::process(const std::map< std::string, std::unique_ptr<GlrS
 
 	name_ = pp.getName();
 	LOG_DEBUG( "name: " + name_ );
-	//LOG_DEBUG( << "getProcessedSource: " << pp.getProcessedSource();
 	std::vector<CPreProcessor::ShaderData> shaders = pp.getShaders();
 
 	LOG_DEBUG( "Initializing " << shaders.size() << " shaders." );
@@ -48,9 +47,6 @@ void GlrShaderProgram::process(const std::map< std::string, std::unique_ptr<GlrS
 		if ( it != glrShaderMap.end() )
 		{
 			// Found shader
-			//shaders_[s.name] = GlrShader( s.name, glrShaderMap[s.name].getSource(), s.defineMap );
-			//glrShaderMap[s.name].setType();
-
 			shaders_.push_back(it->second.get());
 			shaders_.back()->process(s.defineMap);
 		}

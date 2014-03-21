@@ -27,7 +27,7 @@ Animation::Animation(IOpenGlDevice* openGlDevice, std::string name) : openGlDevi
 	startFrame_ = 0;
 	endFrame_ = 0;
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
 	setupAnimationUbo();
 }
@@ -38,7 +38,7 @@ Animation::Animation(
 		glm::detail::float64 duration, 
 		glm::detail::float64 ticksPerSecond, 
 		std::map< std::string, AnimatedBoneNode > animatedBoneNodes
-	) : openGlDevice_(openGlDevice), name_(std::move(name)), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(animatedBoneNodes), runningTime_(0.0f)
+	) : openGlDevice_(openGlDevice), name_(std::move(name)), duration_(duration), ticksPerSecond_(ticksPerSecond), animatedBoneNodes_(std::move(animatedBoneNodes)), runningTime_(0.0f)
 {
 	// We probably shouldn't have an animation object at all if it has no animated bone nodes...
 	assert( animatedBoneNodes_.size() != 0 );
@@ -52,7 +52,7 @@ Animation::Animation(
 	// Error check - default to 25 ticks per second
 	ticksPerSecond_ = ( ticksPerSecond_ != 0.0f ? ticksPerSecond_ : 25.0f );
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
 	setupAnimationUbo();
 }
@@ -72,7 +72,7 @@ Animation::Animation(const Animation& other)
 	duration_ = other.duration_;
 	animatedBoneNodes_ = other.animatedBoneNodes_;
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4() );
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
 	setupAnimationUbo();
 }
@@ -104,37 +104,35 @@ void Animation::setupAnimationUbo()
 	}
 }
 
+void Animation::pushToVideoMemory()
+{
+	pushToVideoMemory( currentTransforms_ );
+}
+
 // TODO: Look at making this more efficient?
 // Note: I couldn't just use glBufferSubData, as it didn't seem to synchronize when the previous buffer data was to be used for a draw call.
 // Furthermore, it appears 'buffer orphaning' is not working either. That is, when I added 
 // `glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);` before my call to `glBufferSubData`, 
 // I get the same results.
 // StackOverflow Question: http://stackoverflow.com/questions/19897461/glbuffersubdata-between-gldrawarrays-calls-mangling-data#19897905
-void Animation::loadIntoVideoMemory()
+void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformations)
 {
-	loadIntoVideoMemory( currentTransforms_ );
-}
-
-void Animation::loadIntoVideoMemory(const std::vector< glm::mat4 >& transformations)
-{
+	assert( transformations.size() <= Constants::MAX_NUMBER_OF_BONES_PER_MESH );
+	
 	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
-	//glBufferData(GL_UNIFORM_BUFFER, currentTransforms_.size() * sizeof(glm::mat4), NULL, GL_DYNAMIC_DRAW);
-	//glBufferSubData(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), &currentTransforms_[0]);
-	if (currentTransforms_.size() > 0)
+
+	if (transformations.size() > 0)
 	{
-		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, currentTransforms_.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
+		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
 		
 		if (d != nullptr)
 		{
-			memcpy( d, &currentTransforms_[0], currentTransforms_.size() * sizeof(glm::mat4) );
+			memcpy( d, &transformations[0], transformations.size() * sizeof(glm::mat4) );
 			GLboolean r = glUnmapBuffer(GL_UNIFORM_BUFFER);
 			
 			if (r == GL_FALSE)
 			{
 				GlError err = openGlDevice_->getGlError();
-				
-				// Cleanup
-				//glBindBuffer(0);
 				
 				std::string msg = std::string("Call to 'glUnmapBuffer' failed with error: ") + err.name;
 				LOG_ERROR( msg );
@@ -145,25 +143,12 @@ void Animation::loadIntoVideoMemory(const std::vector< glm::mat4 >& transformati
 		else
 		{
 			GlError err = openGlDevice_->getGlError();
-				
-			// Cleanup
-			//glBindBuffer(0);
 			
 			std::string msg = std::string("Call to 'glMapBufferRange' failed with error: ") + err.name;
 			LOG_ERROR( msg );
 			throw exception::GlException( msg );
 		}
 	}
-}
-
-void Animation::bind()
-{
-	loadIntoVideoMemory();
-}
-
-void Animation::bind(const std::vector< glm::mat4 >& transformations)
-{
-	loadIntoVideoMemory(transformations);
 }
 
 GLuint Animation::getBufferId() const
@@ -446,16 +431,6 @@ void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::
 	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);
 	
 	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
-}
-
-// TODO: Testing this for now...I think maybe this isn't a good way to do it???  Not sure
-void Animation::generateIdentityBoneTransforms(glmd::uint32 numBones)
-{
-	glm::mat4 identity = glm::mat4();
-	
-	currentTransforms_ = std::vector< glm::mat4 >( numBones, identity );
-	
-	LOG_DEBUG("generateIdentityBoneTransforms: " << currentTransforms_.size() );
 }
 
 }
