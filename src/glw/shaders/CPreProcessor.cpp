@@ -298,14 +298,15 @@ bool CPreProcessor::found_include_directive(ContextT const& ctx, std::string con
 		// remove any quotations around the filename
 		boost::algorithm::erase_all(editedFilename, "\"");
 		
-		std::stringstream msg;
+		//std::stringstream msg;
 		//msg << "adding: " << editedFilename << " size: " << shaderData_.size();
-		LOG_DEBUG( msg.str() );
+		//LOG_DEBUG( msg.str() );
 
 		shaderData_.push_back(ShaderData(editedFilename));
 	}
 
-	return false;                                // ok to include this file
+	// ok to include this file
+	return false;
 }
 #endif
 
