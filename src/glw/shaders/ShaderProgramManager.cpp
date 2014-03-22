@@ -192,12 +192,42 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 				type = std::string("Shader include");
 
 			LOG_DEBUG( type + " found: " + entry.first);
-			glrShaderMap_[entry.first] = std::unique_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
+			auto it = glrShaderMap_.find(entry.first);
+			if ( it == glrShaderMap_.end() )
+			{
+				glrShaderMap_[entry.first] = std::unique_ptr<GlrShader>(new GlrShader(entry.first, entry.second, baseDirectory));
+			}
+			else
+			{
+				std::string msg = std::string("Duplicate Shader name found: ") + entry.first;
+				LOG_ERROR( msg );
+				
+				// Cleanup
+				glrShaderMap_.clear();
+				glrProgramMap_.clear();
+				
+				throw exception::Exception( msg );
+			}
 		}
 		else if ( isProgram(entry.second) )
 		{
 			LOG_DEBUG( "Shader program found: " + entry.first );
-			glrProgramMap_[entry.first] = std::unique_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
+			auto it = glrProgramMap_.find(entry.first);
+			if ( it == glrProgramMap_.end() )
+			{
+				glrProgramMap_[entry.first] = std::unique_ptr<GlrShaderProgram>(new GlrShaderProgram(entry.first, entry.second, baseDirectory));
+			}
+			else
+			{
+				std::string msg = std::string("Duplicate Shader Program name found: ") + entry.first;
+				LOG_ERROR( msg );
+				
+				// Cleanup
+				glrShaderMap_.clear();
+				glrProgramMap_.clear();
+				
+				throw exception::Exception( msg );
+			}
 		}
 		else
 		{
