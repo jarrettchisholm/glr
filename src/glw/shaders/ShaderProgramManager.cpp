@@ -248,7 +248,6 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 	for ( auto& entry : glrProgramMap_ )
 	{
 		entry.second->process(glrShaderMap_);
-		LOG_DEBUG( "entry.second->getName(): " + entry.second->getName() );
 		glslProgramMap_[ entry.second->getName() ] = convertGlrProgramToGlslProgram(entry.second.get());
 	}
 
