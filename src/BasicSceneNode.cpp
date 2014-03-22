@@ -222,43 +222,34 @@ void BasicSceneNode::render()
 {
 	if ( renderable_ != nullptr )
 	{
-		if (shaderProgram_ != nullptr) 
+		if (shaderProgram_ != nullptr)
 		{
+			GLint bindPoint = shaderProgram_->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
 			shaderProgram_->bind();
-			
+
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
 			int pvmMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "pvmMatrix");
 			int normalMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "normalMatrix");
-		
+
 			const glm::mat4 modelMatrix = openGlDevice_->getModelMatrix();
 			const glm::mat4 projectionMatrix = openGlDevice_->getProjectionMatrix();
 			const glm::mat4 viewMatrix = openGlDevice_->getViewMatrix();
 			
 			glm::mat4 newModel = glm::translate(modelMatrix, pos_);
-			
 			newModel = newModel * glm::mat4_cast( orientationQuaternion_ );
-			
-			//newModel = glm::rotate(newModel, glm::radians(rotation_.x), glm::vec3(1.0f, 0.0f, 0.0f));
-			//newModel = glm::rotate(newModel, glm::radians(rotation_.y), glm::vec3(0.0f, 1.0f, 0.0f));
-			//newModel = glm::rotate(newModel, glm::radians(rotation_.z), glm::vec3(0.0f, 0.0f, 1.0f));
 			newModel = glm::scale(newModel, scale_);
-			
-			
+
 			// Send uniform variable values to the shader		
 			glm::mat4 pvmMatrix(projectionMatrix * viewMatrix * newModel);
 			glUniformMatrix4fv(pvmMatrixLocation, 1, GL_FALSE, &pvmMatrix[0][0]);
-		
+
 			glm::mat3 normalMatrix = glm::inverse(glm::transpose(glm::mat3(viewMatrix * newModel)));
 			glUniformMatrix3fv(normalMatrixLocation, 1, GL_FALSE, &normalMatrix[0][0]);
-		
+
 			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &newModel[0][0]);
+			
+			renderable_->render(shaderProgram_);
 		}
-		
-		//if (shaderProgram_ != nullptr)
-		//	shaderProgram_->bind();
-		//else
-		//	shaders::ShaderProgram::unbindAll();
-		renderable_->render(shaderProgram_);
 	}
 }
 

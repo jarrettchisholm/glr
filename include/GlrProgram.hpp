@@ -10,13 +10,17 @@
 #include <windows.h>
 #endif
 
-#include "glw/OpenGlDevice.hpp"
+#include "glw/IOpenGlDevice.hpp"
 #include "IWindow.hpp"
 #include "BasicSceneNode.hpp"
 #include "BasicSceneManager.hpp"
 #include "Light.hpp"
 
 #include "gui/IGui.hpp"
+
+
+#include "models/IModelManager.hpp"
+#include "models/IBillboardManager.hpp"
 
 #include "glw/shaders/IShaderProgramManager.hpp"
 #include "glw/shaders/IShaderProgramBindListener.hpp"
@@ -58,6 +62,8 @@ public:
 	ISceneManager* getSceneManager();
 	gui::IGui* getHtmlGui();
 	glw::IOpenGlDevice* getOpenGlDevice();
+	models::IModelManager* getModelManager() const;
+	models::IBillboardManager* getBillboardManager() const;
 	
 	void reloadShaders();
 	
@@ -69,11 +75,12 @@ private:
 	std::map<std::string, std::vector<GLuint> > lightUbos_;
 	std::map<std::string, std::vector<GLuint> > materialUbos_;
 
-	std::unique_ptr< glw::OpenGlDevice > openGlDevice_;
+	// Should this be IOpenGlDevice instead of OpenGlDevice?
+	std::unique_ptr< glw::IOpenGlDevice > openGlDevice_;
+	std::unique_ptr< models::IModelManager > modelManager_;
+	std::unique_ptr< models::IBillboardManager > billboardManager_;
 	std::unique_ptr< ISceneManager > sMgr_;
 	std::unique_ptr< IWindow > window_;
-	
-	// Would it be better to use IGui instead of the cef Gui class here?
 	std::unique_ptr< gui::IGui > gui_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;

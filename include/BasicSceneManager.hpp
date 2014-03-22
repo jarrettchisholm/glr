@@ -14,7 +14,8 @@ namespace glr
 class BasicSceneManager : public ISceneManager
 {
 public:
-	BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice,
+		models::IModelManager* modelManager, models::IBillboardManager* billboardManager);
 	virtual ~BasicSceneManager();
 
 	virtual ISceneNode* createSceneNode(const std::string& name = std::string());
@@ -50,8 +51,11 @@ public:
 	shaders::IShaderProgram* getDefaultShaderProgram() const;
 
 	virtual const glm::mat4& getModelMatrix() const;
-	
+
+	virtual env::IEnvironmentManager* getEnvironmentManager();
+	// Get rid of this?
 	virtual models::IModelManager* getModelManager() const;
+	// Get rid of this?
 	virtual models::IBillboardManager* getBillboardManager() const;
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() const;
 
@@ -66,8 +70,9 @@ protected:
 	
 	IdManager idManager_;
 
-	std::unique_ptr<models::IModelManager> modelManager_;
-	std::unique_ptr<models::IBillboardManager> billboardManager_;
+	std::unique_ptr< env::IEnvironmentManager > environmentManager_;
+	models::IModelManager* modelManager_;
+	models::IBillboardManager* billboardManager_;
 	
 	shaders::IShaderProgramManager* shaderProgramManager_;
 	glw::IOpenGlDevice* openGlDevice_;

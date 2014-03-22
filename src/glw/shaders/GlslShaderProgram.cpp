@@ -67,10 +67,10 @@ void GlslShaderProgram::compile()
 	
 	glLinkProgram(programId_);
 
-	GLint linked;
+	GLint linked = GL_FALSE;
 	glGetProgramiv(programId_, GL_LINK_STATUS, &linked);
 
-	if ( !linked )
+	if ( linked == GL_FALSE )
 	{
 		std::stringstream ss;
 		ss << "Could not initialize shader program '" << name_ << "'.";

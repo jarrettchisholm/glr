@@ -5,6 +5,7 @@
 
 #include "Window.hpp"
 
+#include "glw/OpenGlDevice.hpp"
 #include "glw/shaders/ShaderProgramManager.hpp"
 #include "glw/shaders/IShader.hpp"
 #include "exceptions/GlException.hpp"
@@ -14,6 +15,8 @@
 #include "common/logger/Logger.hpp"
 
 #include "gui/cef/Gui.hpp"
+#include "models/ModelManager.hpp"
+#include "models/BillboardManager.hpp"
 
 namespace glr
 {
@@ -43,6 +46,10 @@ void GlrProgram::initialize(ProgramSettings settings)
 	//shaders::ShaderProgramManager::getInstance()->getShaderProgram("test", shaders);
 
 	//shaders::ShaderProgramManager::getInstance();
+
+	openGlDevice_ = std::unique_ptr<glw::OpenGlDevice>();
+	modelManager_ = std::unique_ptr<models::IModelManager>();
+	billboardManager_ = std::unique_ptr<models::IBillboardManager>();
 }
 
 /**
@@ -92,6 +99,9 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 		settings.defaultTextureDir = settings_.defaultTextureDir;
 	openGlDevice_ = std::unique_ptr< glw::OpenGlDevice >( new glw::OpenGlDevice(settings) );
 	
+	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager(openGlDevice_.get()));
+	billboardManager_ = std::unique_ptr<models::IBillboardManager>(new models::BillboardManager(openGlDevice_.get()));
+	
 	glw::GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{
@@ -109,7 +119,7 @@ IWindow* GlrProgram::createWindow(std::string name, std::string title,
 	shaderProgramManager_->addDefaultBindListener( this );
 	
 	LOG_DEBUG( "Create scene manager." );
-	std::unique_ptr<BasicSceneManager> sceneManager = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get()));
+	std::unique_ptr<BasicSceneManager> sceneManager = std::unique_ptr<BasicSceneManager>(new BasicSceneManager(shaderProgramManager_, openGlDevice_.get(), modelManager_.get(), billboardManager_.get()));
 	setSceneManager( std::move(sceneManager) );
 	
 	openGlDevice_->setProjectionMatrix( window_->getProjectionMatrix() );
@@ -324,6 +334,16 @@ gui::IGui* GlrProgram::getHtmlGui()
 glw::IOpenGlDevice* GlrProgram::getOpenGlDevice()
 {
 	return openGlDevice_.get();
+}
+
+models::IBillboardManager* GlrProgram::getBillboardManager() const
+{
+	return billboardManager_.get();
+}
+
+models::IModelManager* GlrProgram::getModelManager() const
+{
+	return modelManager_.get();
 }
 
 void GlrProgram::shaderBindCallback(shaders::IShaderProgram* shader)

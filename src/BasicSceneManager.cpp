@@ -12,6 +12,7 @@
 #include "Camera.hpp"
 #include "BasicSceneNode.hpp"
 #include "Light.hpp"
+#include "environment/EnvironmentManager.hpp"
 #include "models/ModelManager.hpp"
 #include "models/BillboardManager.hpp"
 #include "exceptions/RuntimeException.hpp"
@@ -19,19 +20,19 @@
 namespace glr
 {
 
-BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice) 
-	: shaderProgramManager_(shaderProgramManager), openGlDevice_(openGlDevice)
+BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgramManager, glw::IOpenGlDevice* openGlDevice, 
+	models::IModelManager* modelManager, models::IBillboardManager* billboardManager) 
+	: shaderProgramManager_(shaderProgramManager), openGlDevice_(openGlDevice), modelManager_(modelManager), billboardManager_(billboardManager)
 {
 	modelMatrix_ = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	
-	modelManager_ = std::unique_ptr<models::IModelManager>(new models::ModelManager(openGlDevice_));
-	billboardManager_ = std::unique_ptr<models::IBillboardManager>(new models::BillboardManager(openGlDevice_));
 
 	lightData_ = std::vector<LightData>();
 	
 	defaultShaderProgram_ = nullptr;
 
 	idManager_ = IdManager();
+	
+	environmentManager_ = std::unique_ptr< env::IEnvironmentManager >();
 }
 
 BasicSceneManager::~BasicSceneManager()
@@ -83,6 +84,9 @@ void BasicSceneManager::drawAll()
 		
 	for ( auto& light : lights_ )
 		light->render();
+	
+	if (environmentManager_.get() != nullptr)
+		environmentManager_->render();
 
 	for ( auto& node : sceneNodes_ )
 		node->render();
@@ -118,16 +122,6 @@ shaders::IShaderProgram* BasicSceneManager::getDefaultShaderProgram() const
 const glm::mat4& BasicSceneManager::getModelMatrix() const
 {
 	return modelMatrix_;
-}
-
-models::IBillboardManager* BasicSceneManager::getBillboardManager() const
-{
-	return billboardManager_.get();
-}
-
-models::IModelManager* BasicSceneManager::getModelManager() const
-{
-	return modelManager_.get();
 }
 
 shaders::IShaderProgramManager* BasicSceneManager::getShaderProgramManager() const
@@ -271,6 +265,28 @@ void BasicSceneManager::destroyLight(ILight* node)
 void BasicSceneManager::destroyAllLights()
 {
 	lights_.clear();
+}
+
+models::IBillboardManager* BasicSceneManager::getBillboardManager() const
+{
+	return billboardManager_;
+}
+
+models::IModelManager* BasicSceneManager::getModelManager() const
+{
+	return modelManager_;
+}
+
+env::IEnvironmentManager* BasicSceneManager::getEnvironmentManager()
+{
+	if ( environmentManager_.get() != nullptr )
+	{
+		return environmentManager_.get();
+	}
+
+	environmentManager_ = std::unique_ptr< env::IEnvironmentManager >( new env::EnvironmentManager(openGlDevice_, modelManager_) );
+
+	return environmentManager_.get();
 }
 
 glmd::uint32 BasicSceneManager::getNumSceneNodes() const

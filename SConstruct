@@ -106,7 +106,7 @@ def parseShadersIntoHeader():
 	"""Parse the OpenGL Shader files into a single C++ Header file."""
 	print('Parsing Shaders into header ShaderData.h')
 	
-	shaderDataOutputFilename = "ShaderData.h"
+	shaderDataOutputFilename = "ShaderData.hpp"
 	
 	# Will ultimately give something like 'data/shaders/' or 'data\shaders\'
 	# Note that the last '\' or '/' is important, as we use this to strip the filename of directory information
@@ -119,7 +119,7 @@ def parseShadersIntoHeader():
 	data = file.read()
 	
 	# Save shader data as a map of std::string objects in the file ShaderData.h
-	shaderDataFile = open( os.path.join('src/glw/shaders', shaderDataOutputFilename), 'w' )
+	shaderDataFile = open( os.path.join('include/glw/shaders', shaderDataOutputFilename), 'w' )
 	
 	cpp = """
 /**
@@ -239,6 +239,7 @@ source_files = source_files + Glob('build/exceptions/*.cpp')
 source_files = source_files + Glob('build/gui/*.cpp')
 source_files = source_files + Glob('build/gui/cef/*.cpp')
 source_files = source_files + Glob('build/models/*.cpp')
+source_files = source_files + Glob('build/environment/*.cpp')
 
 # OpenGL Wrapper stuff
 source_files = source_files + Glob('build/glw/*.cpp')

@@ -4,6 +4,7 @@
 #include "ISceneNode.hpp"
 #include "ICamera.hpp"
 #include "ILight.hpp"
+#include "environment/IEnvironmentManager.hpp"
 #include "models/IModelManager.hpp"
 #include "models/IBillboardManager.hpp"
 #include "glw/shaders/IShaderProgramManager.hpp"
@@ -52,7 +53,7 @@ public:
 	
 	virtual const glm::mat4& getModelMatrix() const = 0;
 
-	virtual models::IModelManager* getModelManager() const = 0;
+	virtual env::IEnvironmentManager* getEnvironmentManager() = 0;
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() const = 0;
 
 	virtual const std::vector<LightData>& getLightData() = 0;

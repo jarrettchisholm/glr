@@ -1,0 +1,5 @@
+#name sky_box
+#type program
+
+#include "sky_box.vert"
+#include "sky_box.frag"

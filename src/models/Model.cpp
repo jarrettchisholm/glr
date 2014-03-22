@@ -389,7 +389,7 @@ glmd::int32 Model::getIndexOf(glw::IMaterial* material) const
 void Model::render(shaders::IShaderProgram* shader)
 {
 	assert(shader != nullptr);
-	
+
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[i] != nullptr )
