@@ -20,24 +20,6 @@ Furthermore, the goals for the code are for it to be:
 
 Compile
 -------
-To compile, run `scons` from the command line.
-
-**Note**: You must have a 'lib' directory with the files:
-
-**Linux**
-
--  libcef.so
--  libffmpegsumo.so
--  libcef_dll_wrapper.lib
--  libcef_dll_wrapper
-
-**Windows**
-
--  libcef.dll
--  libcef.lib
--  libffmpegsumo.dll
--  libcef_dll_wrapper.lib
-
-The libcef_dll_wrapper is the directory that contains all of the cef_dll object files (within their folder heirarchy).
+To compile, run `python setup.py` followed by `scons` from the command line.
 
 For more details about compiling, check out the [wiki](https://github.com/jarrettchisholm/glr/wiki).
