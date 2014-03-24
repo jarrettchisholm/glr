@@ -6,29 +6,28 @@
 
 namespace glr
 {
+namespace terrain
+{
 
 class Terrain : public virtual ITerrain, public BasicSceneNode
 {
 public:
-	Terrain(glw::IOpenGlDevice* openGlDevice);
-	Terrain(std::string name, glw::IOpenGlDevice* openGlDevice);
+	Terrain(Id id, glw::IOpenGlDevice* openGlDevice);
+	Terrain(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
+	Terrain(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	Terrain(Id id, const Terrain& other);
 	virtual ~Terrain();
 
-	// inherited from ITerrain
 	virtual void render();
-
-	virtual void attach(models::IModel* model);
-
-	virtual void setTerrainData(TerrainData data);
-
-	virtual const TerrainData& getTerrainData();
+	virtual bool isDirty() const;
 
 private:
-	TerrainData lightData_;
-
 	void initialize();
+	
+	bool isDirty_;
 };
 
+}
 }
 
 #endif /* TERRAIN_H_ */

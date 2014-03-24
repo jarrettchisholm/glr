@@ -242,27 +242,27 @@ void Mesh::setName(std::string name)
 
 void Mesh::setVertices(std::vector< glm::vec3 > vertices)
 {
-	vertices_ = vertices;
+	vertices_ = std::move(vertices);
 }
 
 void Mesh::setNormals(std::vector< glm::vec3 > normals)
 {
-	normals_ = normals;
+	normals_ = std::move(normals);
 }
 
 void Mesh::setTextureCoordinates(std::vector< glm::vec2 > textureCoordinates)
 {
-	textureCoordinates_ = textureCoordinates;
+	textureCoordinates_ = std::move(textureCoordinates);
 }
 
 void Mesh::setColors(std::vector< glm::vec4 > colors)
 {
-	colors_ = colors;
+	colors_ = std::move(colors);
 }
 
 void Mesh::setVertexBoneData(std::vector< VertexBoneData > vertexBoneData)
 {
-	vertexBoneData_ = vertexBoneData;
+	vertexBoneData_ = std::move(vertexBoneData);
 }
 
 std::vector< glm::vec3 >& Mesh::getVertices()

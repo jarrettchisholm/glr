@@ -240,6 +240,7 @@ source_files = source_files + Glob('build/gui/*.cpp')
 source_files = source_files + Glob('build/gui/cef/*.cpp')
 source_files = source_files + Glob('build/models/*.cpp')
 source_files = source_files + Glob('build/environment/*.cpp')
+source_files = source_files + Glob('build/terrain/*.cpp')
 
 # OpenGL Wrapper stuff
 source_files = source_files + Glob('build/glw/*.cpp')
