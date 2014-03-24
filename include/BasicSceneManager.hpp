@@ -52,6 +52,7 @@ public:
 
 	virtual const glm::mat4& getModelMatrix() const;
 
+	virtual terrain::ITerrainManager* getTerrainManager();
 	virtual env::IEnvironmentManager* getEnvironmentManager();
 	// Get rid of this?
 	virtual models::IModelManager* getModelManager() const;
@@ -70,6 +71,7 @@ protected:
 	
 	IdManager idManager_;
 
+	std::unique_ptr< terrain::ITerrainManager > terrainManager_;
 	std::unique_ptr< env::IEnvironmentManager > environmentManager_;
 	models::IModelManager* modelManager_;
 	models::IBillboardManager* billboardManager_;

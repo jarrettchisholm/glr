@@ -35,7 +35,7 @@ void TerrainManager::update()
 {
 }
 
-void TerrainManager::drawAll()
+void TerrainManager::render()
 {
 }
 

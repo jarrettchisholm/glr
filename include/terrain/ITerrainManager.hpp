@@ -25,7 +25,7 @@ public:
 	virtual ITerrain* getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const = 0;
 	virtual void tick() = 0;
 	virtual void update() = 0;
-	virtual void drawAll() = 0;
+	virtual void render() = 0;
 
 	virtual void setFollowTarget(ISceneNode* target) = 0;
 	virtual ISceneNode* getFollowTarget() const = 0;

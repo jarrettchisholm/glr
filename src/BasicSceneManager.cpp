@@ -12,6 +12,7 @@
 #include "Camera.hpp"
 #include "BasicSceneNode.hpp"
 #include "Light.hpp"
+#include "terrain/TerrainManager.hpp"
 #include "environment/EnvironmentManager.hpp"
 #include "models/ModelManager.hpp"
 #include "models/BillboardManager.hpp"
@@ -32,6 +33,7 @@ BasicSceneManager::BasicSceneManager(shaders::IShaderProgramManager* shaderProgr
 
 	idManager_ = IdManager();
 	
+	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >();
 	environmentManager_ = std::unique_ptr< env::IEnvironmentManager >();
 }
 
@@ -87,6 +89,9 @@ void BasicSceneManager::drawAll()
 	
 	if (environmentManager_.get() != nullptr)
 		environmentManager_->render();
+	
+	if (terrainManager_.get() != nullptr)
+		terrainManager_->render();
 
 	for ( auto& node : sceneNodes_ )
 		node->render();
@@ -275,6 +280,18 @@ models::IBillboardManager* BasicSceneManager::getBillboardManager() const
 models::IModelManager* BasicSceneManager::getModelManager() const
 {
 	return modelManager_;
+}
+
+terrain::ITerrainManager* BasicSceneManager::getTerrainManager()
+{
+	if ( terrainManager_.get() != nullptr )
+	{
+		return terrainManager_.get();
+	}
+
+	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >( new terrain::TerrainManager(openGlDevice_) );
+
+	return terrainManager_.get();
 }
 
 env::IEnvironmentManager* BasicSceneManager::getEnvironmentManager()
