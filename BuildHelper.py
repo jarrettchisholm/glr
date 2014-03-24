@@ -12,6 +12,7 @@ isMac = platform.system() == 'Darwin'
 
 buildFlags = {}
 buildFlags['debug'] = True # True by default (at least for now)
+buildFlags['release'] = False
 buildFlags['useCef'] = True
 buildFlags['beautify'] = False
 buildFlags['clean'] = False
@@ -38,7 +39,7 @@ def setup(ARGUMENTS):
 	
 	AddOption('--beautify', dest='beautify', action='store_true', help='Will \'beautify\' the source code using uncrustify.')
 	AddOption('--without-cef', dest='without-cef', action='store_true', help='Will compile glr without using Chromium Embedded Framework as the html gui system.')
-	AddOption('--build', dest='build', type='string', nargs=1, action='store', help='Set the build to compile:  release, debug (default)')
+	AddOption('--build', dest='build', type='string', nargs=1, action='store', help='Set the build to compile:  release, debug (default), and release-with-debug')
 	AddOption('--compiler', dest='compiler', type='string', nargs=1, action='store', help='Set the compiler to use.')
 	
 	global buildFlags
@@ -52,15 +53,12 @@ def setup(ARGUMENTS):
 		buildFlags['clean'] = True
 	if (GetOption('build') is not None):
 		buildFlags['build'] = GetOption('build')
-		if (buildFlags['build'] != 'release' and buildFlags['build'] != 'debug'):
+		if (buildFlags['build'] != 'release' and buildFlags['build'] != 'debug' and buildFlags['build'] != 'release-with-debug'):
 			print( "Invalid build: '{0}'".format(buildFlags['build']) )
 			sys.exit(1)
 	if (GetOption('compiler') is not None):
 		buildFlags['compiler'] = GetOption('compiler')
-	# TODO: num_jobs seems to default to 1 - how can I know if the user is actually setting this value?
-	if (GetOption('num_jobs') > 1):
-		buildFlags['num_jobs'] = GetOption('num_jobs')
-	
+
 	# TODO: num_jobs seems to default to 1 - how can I know if the user is actually setting this value?
 	if (GetOption('num_jobs') > 1):
 		buildFlags['num_jobs'] = GetOption('num_jobs')
@@ -71,10 +69,13 @@ def setup(ARGUMENTS):
 	
 	if (buildFlags['useCef']):
 		cpp_defines.append('USE_CEF')
-	if (buildFlags['build'] == 'debug'):
+	if (buildFlags['build'] == 'debug' or buildFlags['build'] == 'release-with-debug'):
 		cpp_defines.append('DEBUG')
 	else:
 		buildFlags['debug'] = False
+	
+	if (buildFlags['build'] == 'release' or buildFlags['build'] == 'release-with-debug'):
+		buildFlags['release'] = True
 	
 	if (buildFlags['compiler'] is None or buildFlags['compiler'] == ''):
 		buildFlags['compiler'] = 'default'
@@ -137,7 +138,8 @@ def setup(ARGUMENTS):
 				cpp_flags.append('-g')
 				cpp_flags.append('-O0') # optimization level 0
 				cpp_flags.append('-pg') # profiler
-			else:
+			
+			if (buildFlags['release']):
 				cpp_flags.append('-O3') # optimization level 3
 			
 			cpp_flags.append('-std=c++11')
@@ -163,14 +165,16 @@ def setup(ARGUMENTS):
 					cpp_flags.append('/FS') # Allows multiple cl.exe processes to write to the same .pdb file
 					link_flags.append('/DEBUG') # Enable debug during linking
 					cpp_flags.append('/Od') # Disables optimization
-				else:
+				
+				if (buildFlags['release']):
 					cpp_flags.append('/Ox') # Full optimization
 			elif (buildFlags['compiler'] == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
 					cpp_flags.append('-O0') # optimization level 0
 					cpp_flags.append('-pg') # profiler
-				else:
+				
+				if (buildFlags['release']):
 					cpp_flags.append('-O3') # optimization level 3
 				
 				cpp_flags.append('-std=c++11')
