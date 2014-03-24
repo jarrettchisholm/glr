@@ -33,9 +33,9 @@ public:
 	}
 	;
 	
-	virtual glm::detail::int32 getGridX() = 0;
-	virtual glm::detail::int32 getGridY() = 0;
-	virtual glm::detail::int32 getGridZ() = 0;
+	virtual glm::detail::int32 getGridX() const = 0;
+	virtual glm::detail::int32 getGridY() const = 0;
+	virtual glm::detail::int32 getGridZ() const = 0;
 };
 
 }

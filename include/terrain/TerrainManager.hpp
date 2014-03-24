@@ -3,12 +3,19 @@
 
 #include <memory>
 #include <string>
-
-#include "terrain/ITerrainManager.hpp"
+#include <functional>
+#include <deque>
+#include <mutex>
 
 #include "glw/IOpenGlDevice.hpp"
 
+#include "IdManager.hpp"
+
+#include "terrain/ITerrainManager.hpp"
+#include "terrain/IFieldFunction.hpp"
+#include "terrain/TerrainSceneNode.hpp"
 #include "terrain/Terrain.hpp"
+#include "terrain/VoxelChunkMeshGenerator.hpp"
 
 namespace glr
 {
@@ -18,12 +25,12 @@ namespace terrain
 class TerrainManager : public ITerrainManager
 {
 public:
-	TerrainManager(glw::IOpenGlDevice* openGlDevice);
+	TerrainManager(glw::IOpenGlDevice* openGlDevice, IFieldFunction* fieldFunction);
 	virtual ~TerrainManager();
 
 	virtual ITerrain* getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const;
 	virtual void tick();
-	virtual void update();
+	virtual void update(glmd::uint32 maxUpdates = 10);
 	virtual void render();
 
 	virtual void setFollowTarget(ISceneNode* target);
@@ -46,10 +53,39 @@ public:
 
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
+	ISceneNode* followTarget_;
 
-	std::vector< std::unique_ptr<Terrain> > terrainChunks_;
+	glm::ivec3 currentGridLocation_;
+	glm::ivec3 previousGridLocation_;
+
+	IFieldFunction* fieldFunction_;
+	VoxelChunkMeshGenerator voxelChunkMeshGenerator_;
+	
+	std::vector< std::unique_ptr<TerrainSceneNode> > terrainChunks_;
+	std::mutex terrainChunksMutex_;
+	
+	mutable std::mutex openGlWorkMutex_;
+	std::deque< std::function<void()> > openGlWork_;
+	
+	IdManager idManager_;
 	
 	void initialize();
+	void postOpenGlWork(std::function<void()> work);
+	glm::ivec3 getTargetGridLocation();
+	void updateChunks();
+
+	void addChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	void addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	void addChunk(const glm::ivec3& coordinates);
+	void addChunk(TerrainSceneNode* chunk);
+	void removeChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	void removeChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	void removeChunk(const glm::ivec3& coordinates);
+	void removeChunk(TerrainSceneNode* chunk);
+	void removeAllChunks();
+	TerrainSceneNode* getChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	TerrainSceneNode* getChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	TerrainSceneNode* getChunk(const glm::ivec3& coordinates);
 };
 
 }

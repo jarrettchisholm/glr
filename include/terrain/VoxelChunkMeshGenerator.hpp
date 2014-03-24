@@ -20,7 +20,8 @@ namespace glmd = glm::detail;
 class VoxelChunkMeshGenerator
 {
 public:
-	VoxelChunkMeshGenerator(IFieldFunction& fieldFunction);
+	VoxelChunkMeshGenerator();
+	VoxelChunkMeshGenerator(IFieldFunction* fieldFunction);
 	virtual ~VoxelChunkMeshGenerator();
 
 	/**
@@ -29,7 +30,7 @@ public:
 	void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
 	
 private:
-	IFieldFunction& fieldFunction_;
+	IFieldFunction* fieldFunction_;
 	
 	struct Point
 	{

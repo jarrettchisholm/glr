@@ -282,14 +282,14 @@ models::IModelManager* BasicSceneManager::getModelManager() const
 	return modelManager_;
 }
 
-terrain::ITerrainManager* BasicSceneManager::getTerrainManager()
+terrain::ITerrainManager* BasicSceneManager::getTerrainManager(terrain::IFieldFunction* fieldFunction)
 {
 	if ( terrainManager_.get() != nullptr )
 	{
 		return terrainManager_.get();
 	}
 
-	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >( new terrain::TerrainManager(openGlDevice_) );
+	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >( new terrain::TerrainManager(openGlDevice_, fieldFunction) );
 
 	return terrainManager_.get();
 }

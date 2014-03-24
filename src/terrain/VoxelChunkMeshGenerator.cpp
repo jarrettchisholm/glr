@@ -15,7 +15,11 @@ namespace glr
 namespace terrain
 {
 
-VoxelChunkMeshGenerator::VoxelChunkMeshGenerator(IFieldFunction& fieldFunction) : fieldFunction_(fieldFunction)
+VoxelChunkMeshGenerator::VoxelChunkMeshGenerator()
+{
+}
+
+VoxelChunkMeshGenerator::VoxelChunkMeshGenerator(IFieldFunction* fieldFunction) : fieldFunction_(fieldFunction)
 {
 }
 
@@ -111,7 +115,7 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(Points& points, glmd
 	// If true, just uses the noise function
 	bool useNoiseFunction = true;
 	if (useNoiseFunction)
-		return fieldFunction_.getNoise(x, y, z);
+		return fieldFunction_->getNoise(x, y, z);
 	
 	if (gridX < 0)
 		gridX += glr::terrain::constants::CHUNK_SIZE;
