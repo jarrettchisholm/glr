@@ -69,7 +69,7 @@ bool determineIfEmptyOrSolid(VoxelChunk& chunk)
 	
 	bool isEmpty = true;
 	bool isSolid = true;
-	
+
 	for (glmd::int32 x=0; x < glr::terrain::constants::SIZE+3; x++)
 	{
 		for (glmd::int32 y=0; y < glr::terrain::constants::SIZE+3; y++)
@@ -81,22 +81,22 @@ bool determineIfEmptyOrSolid(VoxelChunk& chunk)
 					if (DENSITY_LOCAL(x, y, z) <= 0.0f)
 						isEmpty = false;
 				}
-				
+
 				if (isSolid)
 				{
 					if (DENSITY_LOCAL(x, y, z) > 0.0f)
 						isSolid = false;
 				}
-				
+
 				if (!isEmpty && !isSolid)
 					return false;
 			}
 		}
 	}
-	
+
 	if (isEmpty && isSolid)
 		assert(0);
-	
+
 	return true;
 }
 

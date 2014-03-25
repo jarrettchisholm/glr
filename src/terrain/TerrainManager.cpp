@@ -5,6 +5,7 @@
 
 #include "terrain/TerrainManager.hpp"
 #include "terrain/Constants.hpp"
+#include "terrain/VoxelChunkNoiseGenerator.hpp"
 
 #include "models/Model.hpp"
 
@@ -215,11 +216,11 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 	{
 		//std::cout << "addChunk START 1 " << std::this_thread::get_id() << std::endl;
 		
-		terrain::VoxelChunk voxelChunk = terrain::VoxelChunk(chunk->getGridX(), chunk->getGridY(), chunk->getGridZ());
+		VoxelChunk voxelChunk = VoxelChunk(chunk->getGridX(), chunk->getGridY(), chunk->getGridZ());
 	
 		generateNoise(voxelChunk, *fieldFunction_);
 		
-		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk, *fieldFunction_);
+		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk);
 
 		//std::cout << "addChunk START 2 " << std::this_thread::get_id() << std::endl;
 		if (!isEmptyOrSolid)
@@ -249,7 +250,7 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 				material = openGlDevice_->getMaterialManager()->addMaterial(materialName);
 				assert(material != nullptr);
 				
-				auto materialData = glr::models::MaterialData();
+				auto materialData = models::MaterialData();
 				materialData.name = materialName;
 				materialData.ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
 				materialData.diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -518,6 +519,10 @@ void TerrainManager::render()
 
 void TerrainManager::setFollowTarget(ISceneNode* target)
 {
+	followTarget_ = target;
+
+	currentGridLocation_ = getTargetGridLocation();
+	previousGridLocation_ = currentGridLocation_;
 }
 
 ISceneNode* TerrainManager::getFollowTarget() const

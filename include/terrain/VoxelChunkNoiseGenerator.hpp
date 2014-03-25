@@ -17,7 +17,7 @@ void generateNoise(VoxelChunk& chunk, glr::terrain::IFieldFunction& fieldFunctio
 /**
  * 
  */
-bool determineIfEmptyOrSolid(VoxelChunk& chunk, glr::terrain::IFieldFunction& fieldFunction);
+bool determineIfEmptyOrSolid(VoxelChunk& chunk);
 
 }
 }

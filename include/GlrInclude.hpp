@@ -19,6 +19,10 @@
 
 #include "glw/IOpenGlDevice.hpp"
 
+#include "terrain/IFieldFunction.hpp"
+#include "terrain/ITerrainManager.hpp"
+#include "terrain/ITerrain.hpp"
+
 #include "exceptions/ExceptionInclude.hpp"
 
 #endif /* GLRINCLUDE_H_ */
