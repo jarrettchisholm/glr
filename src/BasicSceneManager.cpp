@@ -282,6 +282,7 @@ models::IModelManager* BasicSceneManager::getModelManager() const
 	return modelManager_;
 }
 
+// TODO: Make a 'create' and 'get' function?
 terrain::ITerrainManager* BasicSceneManager::getTerrainManager(terrain::IFieldFunction* fieldFunction)
 {
 	if ( terrainManager_.get() != nullptr )
