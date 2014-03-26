@@ -72,7 +72,8 @@ public:
 	virtual const Id& getId() const;
 	virtual const std::string& getName() const;
 
-	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop = true);
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime = 0.0f, bool loop = true);
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, glm::detail::float32 animationTime = 0.0f, bool loop = true);
 	virtual void setAnimationTime(glm::detail::float32 animationTime);
 	virtual void stopAnimation();
 	virtual glw::IAnimation* getPlayingAnimation() const;

@@ -121,7 +121,14 @@ public:
 	 * 
 	 * @param animation
 	 */
-	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop = true) = 0;
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime = 0.0f, bool loop = true) = 0;
+
+	/**
+	 * Plays the given animation for this model.
+	 * 
+	 * @param animation
+	 */
+	virtual void playAnimation(glw::IAnimation* animation, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, glm::detail::float32 animationTime = 0.0f, bool loop = true) = 0;
 	
 	// Sets the animation time for animation currently playing
 	// TODO: Should this be here?

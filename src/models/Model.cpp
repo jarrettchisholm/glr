@@ -297,15 +297,25 @@ const std::string& Model::getName() const
 	return name_;
 }
 
+// TODO: Implement loop
+void Model::playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, bool loop)
+{
+	currentAnimation_ = animation;
+	animationTime_ = animationTime;
+	startFrame_ = 0;
+	endFrame_ = 0;
 
-void Model::playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, bool loop)
+	indexCache_ = std::vector<glmd::uint32>( 3 );
+}
+
+// TODO: Implement loop
+void Model::playAnimation(glw::IAnimation* animation, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, glm::detail::float32 animationTime, bool loop)
 {
 	currentAnimation_ = animation;
 	animationTime_ = animationTime;
 	startFrame_ = startFrame;
 	endFrame_ = endFrame;
-	
-	// TESTING (should we copy the index cache?)
+
 	indexCache_ = std::vector<glmd::uint32>( 3 );
 }
 
