@@ -40,6 +40,8 @@ void TerrainManager::initialize()
 
 ITerrain* TerrainManager::getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const
 {
+	// TODO: Implement
+	return nullptr;
 }
 
 glm::ivec3 TerrainManager::getTargetGridLocation()
@@ -527,6 +529,7 @@ void TerrainManager::setFollowTarget(ISceneNode* target)
 
 ISceneNode* TerrainManager::getFollowTarget() const
 {
+	return followTarget_;
 }
 
 void TerrainManager::generate()
@@ -559,18 +562,26 @@ void TerrainManager::deserialize(const std::string& filename)
 
 glm::detail::float32 TerrainManager::getWidth() const
 {
+	// TODO: Implement
+	return 0.0f;
 }
 
 glm::detail::float32 TerrainManager::getHeight() const
 {
+	// TODO: Implement
+	return 0.0f;
 }
 
 glm::detail::float32 TerrainManager::getLength() const
 {
+	// TODO: Implement
+	return 0.0f;
 }
 
 glm::detail::int32 TerrainManager::getBlockSize() const
 {
+	// TODO: Implement
+	return 0;
 }
 
 }
