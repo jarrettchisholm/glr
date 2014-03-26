@@ -136,8 +136,9 @@ def setup(ARGUMENTS):
 		if (buildFlags['compiler'] == 'gcc' or (buildFlags['compiler'] == 'default' and isLinux)):
 			if (buildFlags['debug']):
 				cpp_flags.append('-g')
-				cpp_flags.append('-O0') # optimization level 0
 				cpp_flags.append('-pg') # profiler
+				if (not buildFlags['release']):
+					cpp_flags.append('-O0') # optimization level 0
 			
 			if (buildFlags['release']):
 				cpp_flags.append('-O3') # optimization level 3
@@ -164,15 +165,17 @@ def setup(ARGUMENTS):
 					cpp_flags.append('/Zi') # Produces a program database (PDB) that contains type information and symbolic debugging information for use with the debugger.
 					cpp_flags.append('/FS') # Allows multiple cl.exe processes to write to the same .pdb file
 					link_flags.append('/DEBUG') # Enable debug during linking
-					cpp_flags.append('/Od') # Disables optimization
+					if (not buildFlags['release']):
+						cpp_flags.append('/Od') # Disables optimization
 				
 				if (buildFlags['release']):
 					cpp_flags.append('/Ox') # Full optimization
 			elif (buildFlags['compiler'] == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
-					cpp_flags.append('-O0') # optimization level 0
 					cpp_flags.append('-pg') # profiler
+					if (not buildFlags['release']):
+						cpp_flags.append('-O0') # optimization level 0
 				
 				if (buildFlags['release']):
 					cpp_flags.append('-O3') # optimization level 3

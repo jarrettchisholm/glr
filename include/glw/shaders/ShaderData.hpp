@@ -16,13 +16,16 @@ namespace shaders {
 
 static std::map<std::string, std::string> SHADER_DATA = {
 
-{"glr_gui.program", std::string(
+{"glr", std::string(
 	R"<STRING>(
-#name glr_gui
-#type program
+#type na
+#name glr
 
-#include "glr_gui.vert"
-#include "glr_gui.frag"
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 pvmMatrix;
+uniform mat3 normalMatrix;
 
 )<STRING>"
 )}	
@@ -38,21 +41,43 @@ static std::map<std::string, std::string> SHADER_DATA = {
 )<STRING>"
 )}	
 , 
-{"test.frag", std::string(
+{"glr_gui.frag", std::string(
 	R"<STRING>(
 #version 150 core
+
+#extension GL_EXT_texture_array : enable
 
 #type fragment
 
 in vec2 textureCoord;
 in vec3 normalDirection;
-in vec3 lightDirection;
-in vec4 color;
-in float bug;
 
-void main() {
-	gl_FragColor = color;
+@bind Texture2D
+uniform sampler2D tex2D;
+
+void main()
+{
+	
+	gl_FragColor = texture2D(tex2D, textureCoord);
+	
+	/*
+	float bug = 0.0;	
+	bvec4 result = equal( materials[0].diffuse, vec4(0.0, 0.0, 0.0, 0.0) );
+	if(result[0] && result[1] && result[2]) bug = 1.0;
+	gl_FragColor.x += bug;
+	*/
 }
+
+)<STRING>"
+)}	
+, 
+{"glr_gui.program", std::string(
+	R"<STRING>(
+#name glr_gui
+#type program
+
+#include "glr_gui.vert"
+#include "glr_gui.frag"
 
 )<STRING>"
 )}	
@@ -86,6 +111,113 @@ void main()
 	bvec3 result = equal( diffuseReflection, vec3(0.0, 0.0, 0.0) );
 	if(result[0] && result[1] && result[2]) bug = 1.0;
 	diffuseReflection.x += bug;
+	*/
+}
+
+)<STRING>"
+)}	
+, 
+{"light", std::string(
+	R"<STRING>(
+#type na
+#name light
+
+struct Light
+{
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	vec4 position;
+	vec4 direction;
+};
+
+)<STRING>"
+)}	
+, 
+{"material", std::string(
+	R"<STRING>(
+#type na
+#name material
+
+struct Material
+{
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	vec4 emission;
+	//float shininess;
+	//float strength;
+};
+
+)<STRING>"
+)}	
+, 
+{"shader.frag", std::string(
+	R"<STRING>(
+#version 150 core
+
+#extension GL_EXT_texture_array : enable
+
+#ifndef NUM_MATERIALS
+#define NUM_MATERIALS 1
+#endif
+
+#type fragment
+
+#include <material>
+
+in vec2 textureCoord;
+in vec3 normalDirection;
+in vec3 lightDirection;
+in vec4 color;
+in float bug;
+
+@bind Texture2D
+uniform sampler2D tex2D;
+
+//@bind Texture2DArray
+//uniform sampler2DArray tex2DArray;
+
+@bind Material
+layout(std140) uniform Materials 
+{
+	Material materials[ NUM_MATERIALS ];
+};
+
+
+void main()
+{
+	vec3 ct, cf;
+	vec4 texel;
+	float intensity, at, af;
+	intensity = max( dot(lightDirection, normalize(normalDirection)), 0.0 );
+ 
+	cf = intensity * (materials[0].diffuse).rgb + materials[0].ambient.rgb;
+	af = materials[0].diffuse.a;
+	//texel = texture2DArray(tex2DArray, vec3(textureCoord, 1));
+	texel = texture2D(tex2D, textureCoord);
+ 
+	ct = texel.rgb;
+	at = texel.a;
+	
+	gl_FragColor = vec4(ct * cf, at * af);
+	
+	
+	
+	// Show bugs
+	if (bug != 0.0)
+	{
+		if (bug == 1.0)	
+			gl_FragColor.x += bug;
+		else if (bug == 2.0)	
+			gl_FragColor.y += bug;
+	}
+	
+	/*
+	float bug = 0.0;	
+	bvec4 result = equal( materials[0].diffuse, vec4(0.0, 0.0, 0.0, 0.0) );
+	if(result[0] && result[1] && result[2]) bug = 1.0;
+	gl_FragColor.x += bug;
 	*/
 }
 
@@ -193,70 +325,6 @@ void main()
 )<STRING>"
 )}	
 , 
-{"material", std::string(
-	R"<STRING>(
-#type na
-#name material
-
-struct Material
-{
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 emission;
-	//float shininess;
-	//float strength;
-};
-
-)<STRING>"
-)}	
-, 
-{"light", std::string(
-	R"<STRING>(
-#type na
-#name light
-
-struct Light
-{
-	vec4 ambient;
-	vec4 diffuse;
-	vec4 specular;
-	vec4 position;
-	vec4 direction;
-};
-
-)<STRING>"
-)}	
-, 
-{"sky_box.vert", std::string(
-	R"<STRING>(
-#version 150 core
-
-#type vertex
-
-#include <glr>
-
-in vec3 in_Position;
-in vec2 in_Texture;
-in vec4 in_Color;
-in vec3 in_Normal;
-
-out vec2 textureCoord;
-out vec4 color;
-
-void main()
-{
-	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
-	
-	// Assign texture coordinates
-	textureCoord = in_Texture;
-	
-	color = in_Color;
-}
-
-)<STRING>"
-)}	
-, 
 {"sky_box.frag", std::string(
 	R"<STRING>(
 #version 150 core
@@ -303,36 +371,6 @@ void main()
 )<STRING>"
 )}	
 , 
-{"glr_gui.frag", std::string(
-	R"<STRING>(
-#version 150 core
-
-#extension GL_EXT_texture_array : enable
-
-#type fragment
-
-in vec2 textureCoord;
-in vec3 normalDirection;
-
-@bind Texture2D
-uniform sampler2D tex2D;
-
-void main()
-{
-	
-	gl_FragColor = texture2D(tex2D, textureCoord);
-	
-	/*
-	float bug = 0.0;	
-	bvec4 result = equal( materials[0].diffuse, vec4(0.0, 0.0, 0.0, 0.0) );
-	if(result[0] && result[1] && result[2]) bug = 1.0;
-	gl_FragColor.x += bug;
-	*/
-}
-
-)<STRING>"
-)}	
-, 
 {"sky_box.program", std::string(
 	R"<STRING>(
 #name sky_box
@@ -344,30 +382,40 @@ void main()
 )<STRING>"
 )}	
 , 
-{"test.program", std::string(
+{"sky_box.vert", std::string(
 	R"<STRING>(
-#name test
-#type program
+#version 150 core
 
-#include "shader.vert"
-#include "test.frag"
+#type vertex
+
+#include <glr>
+
+in vec3 in_Position;
+in vec2 in_Texture;
+in vec4 in_Color;
+in vec3 in_Normal;
+
+out vec2 textureCoord;
+out vec4 color;
+
+void main()
+{
+	gl_Position = pvmMatrix * vec4(in_Position, 1.0);
+	
+	// Assign texture coordinates
+	textureCoord = in_Texture;
+	
+	color = in_Color;
+}
 
 )<STRING>"
 )}	
 , 
-{"shader.frag", std::string(
+{"test.frag", std::string(
 	R"<STRING>(
 #version 150 core
 
-#extension GL_EXT_texture_array : enable
-
-#ifndef NUM_MATERIALS
-#define NUM_MATERIALS 1
-#endif
-
 #type fragment
-
-#include <material>
 
 in vec2 textureCoord;
 in vec3 normalDirection;
@@ -375,68 +423,20 @@ in vec3 lightDirection;
 in vec4 color;
 in float bug;
 
-@bind Texture2D
-uniform sampler2D tex2D;
-
-//@bind Texture2DArray
-//uniform sampler2DArray tex2DArray;
-
-@bind Material
-layout(std140) uniform Materials 
-{
-	Material materials[ NUM_MATERIALS ];
-};
-
-
-void main()
-{
-	vec3 ct, cf;
-	vec4 texel;
-	float intensity, at, af;
-	intensity = max( dot(lightDirection, normalize(normalDirection)), 0.0 );
- 
-	cf = intensity * (materials[0].diffuse).rgb + materials[0].ambient.rgb;
-	af = materials[0].diffuse.a;
-	//texel = texture2DArray(tex2DArray, vec3(textureCoord, 1));
-	texel = texture2D(tex2D, textureCoord);
- 
-	ct = texel.rgb;
-	at = texel.a;
-	
-	gl_FragColor = vec4(ct * cf, at * af);
-	
-	
-	
-	// Show bugs
-	if (bug != 0.0)
-	{
-		if (bug == 1.0)	
-			gl_FragColor.x += bug;
-		else if (bug == 2.0)	
-			gl_FragColor.y += bug;
-	}
-	
-	/*
-	float bug = 0.0;	
-	bvec4 result = equal( materials[0].diffuse, vec4(0.0, 0.0, 0.0, 0.0) );
-	if(result[0] && result[1] && result[2]) bug = 1.0;
-	gl_FragColor.x += bug;
-	*/
+void main() {
+	gl_FragColor = color;
 }
 
 )<STRING>"
 )}	
 , 
-{"glr", std::string(
+{"test.program", std::string(
 	R"<STRING>(
-#type na
-#name glr
+#name test
+#type program
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
-uniform mat4 pvmMatrix;
-uniform mat3 normalMatrix;
+#include "shader.vert"
+#include "test.frag"
 
 )<STRING>"
 )}	
