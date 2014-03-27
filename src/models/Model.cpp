@@ -73,6 +73,13 @@ Model::Model(Id id, const Model& other) : id_(id)
 	copy(other);
 }
 
+Model::Model(Id id, std::string newName, const Model& other) : id_(id)
+{
+	copy(other);
+	
+	name_ = std::move(newName);
+}
+
 Model::~Model()
 {
 }

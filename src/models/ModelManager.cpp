@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Configure.hpp"
 
 #ifdef OS_WINDOWS
@@ -125,8 +127,9 @@ IModel* ModelManager::createInstance(const std::string& name)
 	{
 		LOG_DEBUG( "Model template found." );
 		
+		std::string newName = name + std::string("_") + std::to_string(modelInstances_.size());
 		// Create a COPY of the model template
-		modelInstances_.push_back( std::unique_ptr<IModel>( new Model(idManager_.createId(), *model) ) );
+		modelInstances_.push_back( std::unique_ptr<IModel>( new Model(idManager_.createId(), std::move(newName), *model) ) );
 		
 		return modelInstances_.back().get();
 	}
