@@ -109,7 +109,7 @@ void Animation::freeVideoMemory()
 
 void Animation::allocateVideoMemory()
 {
-	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0]);
+	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0], GL_STREAM_DRAW);
 	
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
@@ -143,7 +143,7 @@ void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformation
 
 	if (transformations.size() > 0)
 	{
-		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT);
+		void* d = glMapBufferRange(GL_UNIFORM_BUFFER, 0, transformations.size() * sizeof(glm::mat4), GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 		
 		if (d != nullptr)
 		{

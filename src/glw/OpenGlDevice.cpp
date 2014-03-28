@@ -126,13 +126,13 @@ void OpenGlDevice::setProjectionMatrix(const glm::mat4& projectionMatrix)
 	projectionMatrix_ = projectionMatrix;
 }
 
-GLuint OpenGlDevice::createBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
+GLuint OpenGlDevice::createBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer, GLenum usage)
 {
 	GLuint bufferId = 0;
 	glGenBuffers(1, &bufferId);
 	glBindBuffer(target, bufferId);
 
-	glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
+	glBufferData(target, totalSize, dataPointer, usage);
 	glBindBuffer(target, 0);
 	
 	bufferIds_.push_back(bufferId);

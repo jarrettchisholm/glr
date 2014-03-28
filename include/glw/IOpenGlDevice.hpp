@@ -63,7 +63,7 @@ public:
 	}
 	;
 
-	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer) = 0;
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer, GLenum usage = GL_DYNAMIC_DRAW) = 0;
 	virtual void releaseBufferObject(GLuint bufferId) = 0;
 	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer) = 0;
 	virtual void releaseFrameBufferObject(GLuint bufferId) = 0;

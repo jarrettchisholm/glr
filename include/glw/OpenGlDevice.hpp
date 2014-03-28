@@ -37,7 +37,7 @@ public:
 	virtual void setViewMatrix(const glm::mat4& viewMatrix);
 	virtual void setProjectionMatrix(const glm::mat4& projectionMatrix);
 	
-	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
+	virtual GLuint createBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer, GLenum usage = GL_DYNAMIC_DRAW);
 	virtual void releaseBufferObject(GLuint bufferId);
 	virtual GLuint createFrameBufferObject(GLenum target, glm::detail::uint32 totalSize, const void* dataPointer);
 	virtual void releaseFrameBufferObject(GLuint bufferId);
