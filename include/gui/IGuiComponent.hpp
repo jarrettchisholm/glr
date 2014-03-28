@@ -44,9 +44,9 @@ public:
 	 * 
 	 * @param script The code to execute.
 	 */
-	virtual void executeScript(std::wstring script) = 0;
+	virtual void executeScript(const std::wstring& script) = 0;
 
-	virtual bool isVisible() = 0;
+	virtual bool isVisible() const = 0;
 	virtual void setVisible(bool isVisible) = 0;
 
 	/**
@@ -57,9 +57,9 @@ public:
 	 * @param name The name associated with this GUIObject
 	 * @return A pointer to an IGuiObject, or nullptr if the GUIObject could not be created successfully.
 	 */
-	virtual IGuiObject* createGuiObject(std::wstring name) = 0;
+	virtual IGuiObject* createGuiObject(const std::wstring& name) = 0;
 
-	virtual IGuiObject* getGuiObject(std::wstring name) = 0;
+	virtual IGuiObject* getGuiObject(const std::wstring& name) const = 0;
 };
 
 }

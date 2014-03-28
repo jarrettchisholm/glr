@@ -124,9 +124,9 @@ void Gui::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_
  */
 IGuiComponent* Gui::loadFromFile(std::string filename)
 {
-	std::unique_ptr<GuiComponent> comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
+	auto comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
 
-	comp->setContentsUrl(filename);
+	comp->setContentsUrl(std::move(filename));
 
 	/*
 	if ( comp->load() < 0 )
@@ -144,9 +144,9 @@ IGuiComponent* Gui::loadFromFile(std::string filename)
 
 IGuiComponent* Gui::loadFromData(std::string data)
 {
-	std::unique_ptr<GuiComponent> comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
+	auto comp = std::unique_ptr<GuiComponent>( new GuiComponent(openGlDevice_, width_, height_) );
 
-	comp->setContents(data);
+	comp->setContents(std::move(data));
 	/*
 	if ( comp->load() < 0 )
 	{

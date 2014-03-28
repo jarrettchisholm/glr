@@ -53,12 +53,12 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		
 		//std::wcout << L"GuiComponent ExecuteFunction " << objName << "." << functionName << " " << numArguments << std::endl;
 		
-		std::vector< boost::any > params = std::vector< boost::any >();
+		auto params = std::vector< boost::any >();
 		
 		// Wrap parameters
 		for (glmd::int32 i = 0; i < numArguments; i++)
 		{
-			CefValueType type = message->GetArgumentList()->GetType( i+2 );
+			const CefValueType type = message->GetArgumentList()->GetType( i+2 );
 			switch (type)
 			{
 				case VTYPE_INT:
@@ -144,9 +144,10 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 		}
 		
-		if ( guiObjects_.find(objName) != guiObjects_.end() )
+		auto it = guiObjects_.find(objName);
+		if ( it != guiObjects_.end() )
 		{
-			boost::any r = guiObjects_[objName]->processCallback(functionName, params);
+			boost::any r = it->second->processCallback(functionName, params);
 			std::string messageId = "Message_" + std::to_string(numMessagesSent_);
 			messageIdMapMutex_.lock();
 			messageIdMap_[messageId] = numMessagesSent_;
@@ -324,12 +325,12 @@ void GuiComponent::load()
 	window_info.SetAsOffScreen(nullptr);
 	window_info.SetTransparentPainting(true);
 	
-	this->renderHandler_ = new RenderHandler(webTexture, width_, height_);
+	renderHandler_ = new RenderHandler(webTexture, width_, height_);
 	
 	LOG_DEBUG( "Creating CEF Browser object." );
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
 	// We just want the render process created at this point so that we can do our bindings.
-	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_+"/", browserSettings, nullptr);
+	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_ + "/", browserSettings, nullptr);
 	
 	if (browser_.get() == nullptr)
 	{
@@ -363,7 +364,7 @@ void GuiComponent::unload()
 		browser_ = nullptr;
 	}
         
-	this->setVisible(false);
+	setVisible(false);
 }
 
 /** Maps an input coordinate to a texture coordinate for injection into
@@ -452,8 +453,8 @@ void GuiComponent::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 
 
 void GuiComponent::mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
-	this->mouseButton(buttonId, xPos, yPos, true, 1);
-	this->mouseButton(buttonId, xPos, yPos, false, 1);
+	mouseButton(buttonId, xPos, yPos, true, 1);
+	mouseButton(buttonId, xPos, yPos, false, 1);
 }
 
 void GuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
@@ -587,14 +588,14 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 int GuiComponent::setContents(std::string contents)
 {
 	// TODO: implement
-	url_ = contents;
+	url_ = std::move(contents);
 
 	return 0;
 }
 
 int GuiComponent::setContentsUrl(std::string url)
 {
-	url_ = url;
+	url_ = std::move(url);
 
 	return 0;
 }
@@ -604,7 +605,7 @@ void GuiComponent::update()
 	//browser_->GetMainFrame()->ExecuteJavaScript("update();", "about:blank", 0);
 }
 
-
+// TODO: Make this OpenGL 3.2 compliant
 void GuiComponent::render(shaders::IShaderProgram* shader)
 {
 	//texture_->bind();
@@ -653,9 +654,8 @@ void GuiComponent::onScriptAlert(Berkelium::Window*win, Berkelium::WideString me
 }
 */
 
-std::wstring GuiComponent::getObjectName(std::wstring name)
+std::wstring GuiComponent::getObjectName(const std::wstring& name) const
 {
-	//return L"testObj";
 	std::string::size_type loc = name.find(L".", 0);
 
 	if ( loc != std::string::npos )
@@ -666,9 +666,8 @@ std::wstring GuiComponent::getObjectName(std::wstring name)
 	return L"";
 }
 
-std::wstring GuiComponent::getFunctionName(std::wstring name)
+std::wstring GuiComponent::getFunctionName(const std::wstring& name) const
 {
-	//return L"testFunc";
 	std::string::size_type loc = name.find(L".", 0);
 
 	if ( loc != std::string::npos )
@@ -995,12 +994,12 @@ bool GuiComponent::mapOnPaintToTexture(
 }
 */
 
-void GuiComponent::executeScript(std::wstring script)
+void GuiComponent::executeScript(const std::wstring& script)
 {
 	browser_->GetMainFrame()->ExecuteJavaScript(script, "about:blank", 0);
 }
 
-bool GuiComponent::isVisible()
+bool GuiComponent::isVisible() const
 {
 	return isVisible_;
 }
@@ -1010,26 +1009,32 @@ void GuiComponent::setVisible(bool isVisible)
 	isVisible_ = isVisible;
 }
 
-IGuiObject* GuiComponent::createGuiObject(std::wstring name)
+IGuiObject* GuiComponent::createGuiObject(const std::wstring& name)
 {
-	if ( guiObjects_[name] != nullptr )
+	auto it = guiObjects_.find(name);
+	if ( it != guiObjects_.end() )
+	{
+		// TODO: Error?
+		return nullptr;
+	}
+	
+	auto object = std::unique_ptr<GuiObject>(new GuiObject(name));
+	auto objectPointer = object.get();
+
+	guiObjects_[name] = std::move(object);
+
+	return objectPointer;
+}
+
+IGuiObject* GuiComponent::getGuiObject(const std::wstring& name) const
+{
+	auto it = guiObjects_.find(name);
+	if ( it == guiObjects_.end() )
 	{
 		return nullptr;
 	}
 	
-	guiObjects_[name] = std::unique_ptr<GuiObject>(new GuiObject(name));
-
-	return guiObjects_[name].get();
-}
-
-IGuiObject* GuiComponent::getGuiObject(std::wstring name)
-{
-	if ( guiObjects_[name] == nullptr )
-	{
-		return nullptr;
-	}
-
-	return guiObjects_[name].get();
+	return it->second.get();
 }
 
 void GuiComponent::windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height)

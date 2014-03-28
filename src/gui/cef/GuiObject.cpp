@@ -1,6 +1,7 @@
 #ifdef USE_CEF
 
 #include <sstream>
+#include <utility>
 
 #include "gui/cef/GuiObject.hpp"
 
@@ -13,7 +14,7 @@ namespace gui
 namespace cef
 {
 
-GuiObject::GuiObject(std::wstring name) : name_(name)
+GuiObject::GuiObject(std::wstring name) : name_(std::move(name))
 {
 }
 
@@ -21,127 +22,106 @@ GuiObject::~GuiObject()
 {
 }
 
-void GuiObject::addFunction(std::wstring funcName)
-{
-	std::wstring pointTo = name_ + L"." + funcName;
-}
-
-void GuiObject::addFunction(std::wstring name, std::function<void()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<void()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_VOID;
-	functionMapVoid_[name] = function;
-	addFunction(name);
+	functionMapVoid_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<int()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<int()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_INT;
-	functionMapInt_[name] = function;
-	addFunction(name);
+	functionMapInt_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<unsigned int()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<unsigned int()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_UNSIGNED_INT;
-	functionMapUnsignedInt_[name] = function;
-	addFunction(name);
+	functionMapUnsignedInt_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<float()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<float()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_FLOAT;
-	functionMapFloat_[name] = function;
-	addFunction(name);
+	functionMapFloat_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<std::wstring()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<std::wstring()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WSTRING;
-	functionMapWstring_[name] = function;
-	addFunction(name);
+	functionMapWstring_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<std::string()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<std::string()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_STRING;
-	functionMapString_[name] = function;
-	addFunction(name);
+	functionMapString_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<char()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<char()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_CHAR;
-	functionMapChar_[name] = function;
-	addFunction(name);
+	functionMapChar_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<bool()> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<bool()> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_BOOL;
-	functionMapBool_[name] = function;
-	addFunction(name);
+	functionMapBool_[name] = std::move(function);
 }
 
 
-void GuiObject::addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<void(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_VOID;
-	functionMapWithParamatersVoid_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersVoid_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<int(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_INT;
-	functionMapWithParamatersInt_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersInt_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<unsigned int(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<unsigned int(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_UNSIGNED_INT;
-	functionMapWithParamatersUnsignedInt_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersUnsignedInt_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<float(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT;
-	functionMapWithParamatersFloat_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersFloat_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<std::string(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<std::string(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING;
-	functionMapWithParamatersString_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersString_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<std::wstring(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_STRING;
-	functionMapWithParamatersWstring_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersWstring_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<char(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_CHAR;
-	functionMapWithParamatersChar_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersChar_[name] = std::move(function);
 }
 
-void GuiObject::addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function)
+void GuiObject::addFunction(const std::wstring& name, std::function<bool(std::vector<boost::any>)> function)
 {
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_BOOL;
-	functionMapWithParamatersBool_[name] = function;
-	addFunction(name);
+	functionMapWithParamatersBool_[name] = std::move(function);
 }
 
-std::vector< std::wstring > GuiObject::getFunctionNames()
+std::vector< std::wstring > GuiObject::getFunctionNames() const
 {
-	std::vector< std::wstring > names = std::vector< std::wstring >();
+	auto names = std::vector< std::wstring >();
 	
 	for ( auto& it : functionTypeMap_ )
 	{
@@ -151,17 +131,17 @@ std::vector< std::wstring > GuiObject::getFunctionNames()
 	return names;
 }
 
-std::wstring GuiObject::getFunctionDefinitions()
+std::wstring GuiObject::getFunctionDefinitions() const
 {
 	std::wstringstream definitions;
 	
 	// Number of functions
 	definitions << functionTypeMap_.size();
 	
-	for ( auto &it : functionTypeMap_ )
+	for ( auto& it : functionTypeMap_ )
 	{
-		std::wstring name = it.first;
-		int type = it.second;
+		const std::wstring name = it.first;
+		const int type = it.second;
 		
 		definitions << ",";
 		
@@ -202,12 +182,12 @@ std::wstring GuiObject::getFunctionDefinitions()
 	return definitions.str();
 }
 
-std::wstring GuiObject::getName()
+const std::wstring& GuiObject::getName() const
 {
 	return name_;
 }
 
-boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any > params)
+boost::any GuiObject::processCallback(const std::wstring& name, const std::vector< boost::any >& params)
 {	
 	auto it = functionTypeMap_.find( name );
 	if (it == functionTypeMap_.end())
@@ -216,11 +196,9 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 		assert(0);
 	}
 	
-	int type = it->second;
-	
-	//std::wcout << "calling: " << name << " | " << type << std::endl;
+	const int type = it->second;
 
-	boost::any variant;
+	boost::any variant = boost::any();
 
 	switch ( type )
 	{
@@ -281,7 +259,8 @@ boost::any GuiObject::processCallback(std::wstring name, std::vector< boost::any
 	
 	
 		// Lambda functions with parameters
-		case FunctionTypes::TYPE_WITH_PARAMETERS_VOID:   {
+		case FunctionTypes::TYPE_WITH_PARAMETERS_VOID:
+		{
 			functionMapWithParamatersVoid_[name](params);
 		}
 		break;

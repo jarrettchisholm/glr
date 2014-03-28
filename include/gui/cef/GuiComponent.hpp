@@ -89,7 +89,8 @@ public:
 
 
 
-class GuiComponent : public IGuiComponent, public CefClient {
+class GuiComponent : public IGuiComponent, public CefClient
+{
 public:
 	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
 	virtual ~GuiComponent();
@@ -111,13 +112,13 @@ public:
 	virtual void update();
 	virtual void render(shaders::IShaderProgram* shader);
 
-	virtual void executeScript(std::wstring script);
+	virtual void executeScript(const std::wstring& script);
 
-	virtual bool isVisible();
+	virtual bool isVisible() const;
 	virtual void setVisible(bool isVisible);
 
-	virtual IGuiObject* createGuiObject(std::wstring name);
-	virtual IGuiObject* getGuiObject(std::wstring name);
+	virtual IGuiObject* createGuiObject(const std::wstring& name);
+	virtual IGuiObject* getGuiObject(const std::wstring& name) const;
 	
 	void windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height);
 	
@@ -163,8 +164,8 @@ private:
 
 	std::map< std::wstring, std::unique_ptr<GuiObject> > guiObjects_;
 
-	std::wstring getFunctionName(std::wstring name);
-	std::wstring getObjectName(std::wstring name);
+	std::wstring getFunctionName(const std::wstring& name) const;
+	std::wstring getObjectName(const std::wstring& name) const;
 
 	//unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 	glm::detail::int32 getCefStateModifiers(glm::detail::int32 state);

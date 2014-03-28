@@ -19,32 +19,32 @@ class GuiObject : public IGuiObject
 public:
 	GuiObject(std::wstring name);
 	virtual ~GuiObject();
-	
-	virtual void addFunction(std::wstring name, std::function<void()> function);
-	virtual void addFunction(std::wstring name, std::function<int()> function);
-	virtual void addFunction(std::wstring name, std::function<unsigned int()> function);
-	virtual void addFunction(std::wstring name, std::function<float()> function);
-	virtual void addFunction(std::wstring name, std::function<std::string()> function);
-	virtual void addFunction(std::wstring name, std::function<std::wstring()> function);
-	virtual void addFunction(std::wstring name, std::function<char()> function);
-	virtual void addFunction(std::wstring name, std::function<bool()> function);
+
+	virtual void addFunction(const std::wstring& name, std::function<void()> function);
+	virtual void addFunction(const std::wstring& name, std::function<int()> function);
+	virtual void addFunction(const std::wstring& name, std::function<unsigned int()> function);
+	virtual void addFunction(const std::wstring& name, std::function<float()> function);
+	virtual void addFunction(const std::wstring& name, std::function<std::string()> function);
+	virtual void addFunction(const std::wstring& name, std::function<std::wstring()> function);
+	virtual void addFunction(const std::wstring& name, std::function<char()> function);
+	virtual void addFunction(const std::wstring& name, std::function<bool()> function);
 
 
-	virtual void addFunction(std::wstring name, std::function<void(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<int(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<unsigned int(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<float(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<std::string(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<std::wstring(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<char(std::vector<boost::any>)> function);
-	virtual void addFunction(std::wstring name, std::function<bool(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<void(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<int(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<unsigned int(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<float(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<std::string(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<std::wstring(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<char(std::vector<boost::any>)> function);
+	virtual void addFunction(const std::wstring& name, std::function<bool(std::vector<boost::any>)> function);
 	
-	std::wstring getName();
+	const std::wstring& getName() const;
 	
-	std::wstring getFunctionDefinitions();
-	std::vector< std::wstring > getFunctionNames();
+	std::wstring getFunctionDefinitions() const;
+	std::vector< std::wstring > getFunctionNames() const;
 
-	boost::any processCallback(std::wstring name, std::vector< boost::any > params);
+	boost::any processCallback(const std::wstring& name, const std::vector< boost::any >& params);
 
 private:
 	enum FunctionTypes
@@ -89,9 +89,6 @@ private:
 	std::map< std::wstring, std::function<std::wstring(std::vector<boost::any> )> > 		functionMapWithParamatersWstring_;
 	std::map< std::wstring, std::function<char( std::vector<boost::any> )> >				functionMapWithParamatersChar_;
 	std::map< std::wstring, std::function<bool( std::vector<boost::any> )> >				functionMapWithParamatersBool_;
-
-
-	void addFunction(std::wstring funcName);
 };
 
 }
