@@ -163,6 +163,10 @@ public:
 	 * @param endFrame
 	 */
 	virtual void setFrameClampping(glm::detail::uint32 startFrame, glm::detail::uint32 endFrame) = 0;
+	
+	// TESTING Debug
+	virtual void printTransformations() = 0;
+	virtual void printTransformations(const std::vector< glm::mat4 >& transformations) = 0;
 };
 
 }

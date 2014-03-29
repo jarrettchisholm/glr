@@ -307,7 +307,7 @@ void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animation
 	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->positionTimes_[nextPositionIndex] - animatedBoneNode->positionTimes_[positionIndex]);
 	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->positionTimes_[positionIndex]) / deltaTime;
 	
-	//assert(factor >= 0.0f && factor <= 1.0f);
+	assert(factor >= 0.0f && factor <= 1.0f);
 	const glm::vec3& start = animatedBoneNode->positions_[positionIndex];
 	const glm::vec3& end = animatedBoneNode->positions_[nextPositionIndex];
 	glm::vec3 delta = end - start;
@@ -331,7 +331,7 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
 	
 	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->rotationTimes_[nextRotationIndex] - animatedBoneNode->rotationTimes_[rotationIndex]);
 	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->rotationTimes_[rotationIndex]) / deltaTime;
-	//assert(factor >= 0.0f && factor <= 1.0f);
+	assert(factor >= 0.0f && factor <= 1.0f);
 	const glm::quat& startRotationQuat = animatedBoneNode->rotations_[rotationIndex];
 	const glm::quat& endRotationQuat   = animatedBoneNode->rotations_[nextRotationIndex];
 	
@@ -356,7 +356,7 @@ void Animation::calcInterpolatedScaling(glm::vec3& out, glmd::float32 animationT
 	
 	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->scalingTimes_[nextScalingIndex] - animatedBoneNode->scalingTimes_[scalingIndex]);
 	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->scalingTimes_[scalingIndex]) / deltaTime;
-	//assert(factor >= 0.0f && factor <= 1.0f);
+	assert(factor >= 0.0f && factor <= 1.0f);
 	const glm::vec3& start = animatedBoneNode->scalings_[scalingIndex];
 	const glm::vec3& end   = animatedBoneNode->scalings_[nextScalingIndex];
 	glm::vec3 delta = end - start;
@@ -379,14 +379,14 @@ void Animation::readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glm
 			{
 				glmd::float32 st = (glmd::float32)animatedBoneNode->positionTimes_[startFrame_];
 				glmd::float32 et = (glmd::float32)animatedBoneNode->positionTimes_[endFrame_];
-				
+
 				animationTime = fmod(animationTime, et) + st;
 			}
 			
 			// Interpolate scaling and generate scaling transformation matrix
-			glm::vec3 Scaling;
-			calcInterpolatedScaling(Scaling, animationTime, animatedBoneNode);
-			glm::mat4 scalingM = glm::scale( glm::mat4(1.0f), glm::vec3(Scaling.x, Scaling.y, Scaling.z) );
+			glm::vec3 scaling;
+			calcInterpolatedScaling(scaling, animationTime, animatedBoneNode);
+			glm::mat4 scalingM = glm::scale( glm::mat4(1.0f), glm::vec3(scaling.x, scaling.y, scaling.z) );
 			
 			// Interpolate rotation and generate rotation transformation matrix
 			glm::quat rotationQ;
@@ -447,10 +447,33 @@ void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::
 
 	indexCache_ = indexCache;
 	
-	glmd::float32 timeInTicks_ = runningTime_ * ticksPerSecond_;
-	glmd::float32 animationTime = fmod(timeInTicks_, (glmd::float32)duration_);
+	glmd::float32 timeInTicks = runningTime_ * ticksPerSecond_;
+	glmd::float32 animationTime = fmod(timeInTicks, (glmd::float32)duration_);
 	
 	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
+}
+
+void Animation::printTransformations()
+{
+	printTransformations(currentTransforms_);
+}
+
+void Animation::printTransformations(const std::vector< glm::mat4 >& transformations)
+{
+	glmd::float32 timeInTicks = runningTime_ * ticksPerSecond_;
+	glmd::float32 animationTime = fmod(timeInTicks, (glmd::float32)duration_);
+
+	std::cout << "Transformations (length: " << transformations.size() << ")" << std::endl;
+	std::cout << "ticksPerSecond_: " << ticksPerSecond_ << std::endl;
+	std::cout << "runningTime_: " << runningTime_ << std::endl;
+	std::cout << "duration_: " << duration_ << std::endl;
+	std::cout << "timeInTicks: " << timeInTicks << std::endl;
+	std::cout << "animationTime: " << animationTime << std::endl;
+	std::cout << "Matrices: " << std::endl;
+	for ( auto& t : transformations )
+	{
+		std::cout << glm::to_string(t) << std::endl;
+	}
 }
 
 }

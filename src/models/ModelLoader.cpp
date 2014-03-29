@@ -224,37 +224,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 	vertexIndexMap.resize( mesh->mNumVertices );
 	
 	std::string msg = std::string();
-	
-	/*
-	data.vertices.resize(mesh->mNumVertices);
-	data.normals.resize(mesh->mNumVertices);
-	data.textureCoordinates.resize(mesh->mNumVertices);
-	data.colors.resize(mesh->mNumVertices);
-	
-	const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-	const aiColor4D Zero4D(0.0f, 0.0f, 0.0f, 0.0f);
-	
-	for ( glmd::uint32 i = 0; i < mesh->mNumVertices; i++ )
-	{
-		const aiVector3D* pPos      = &(mesh->mVertices[i]);
-        const aiVector3D* pNormal   = &(mesh->mNormals[i]);
-        const aiVector3D* pTexCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
-        const aiColor4D*  pColor    = mesh->mColors[0] != 0 ? &(mesh->mColors[0][i]) : &Zero4D;
-        
-        data.vertices.push_back(glm::vec3(pPos->x, pPos->y, pPos->z));
-        data.normals.push_back(glm::vec3(pNormal->x, pNormal->y, pNormal->z));
-        data.textureCoordinates.push_back(glm::vec2(pTexCoord->x, pTexCoord->y));  
-		data.colors.push_back( glm::vec4(
-				pColor->a,
-				pColor->b,
-				pColor->g,
-				pColor->r
-			)
-		);
-	}
-	*/
-	
-	
+
 	for ( glmd::uint32 t = 0; t < mesh->mNumFaces; ++t )
 	{
 		const aiFace* face = &mesh->mFaces[t];
@@ -313,7 +283,6 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 				data.textureCoordinates[currentIndex + i] = glm::vec2(mesh->mTextureCoords[0][vertexIndex].x, mesh->mTextureCoords[0][vertexIndex].y);
 			}
 
-			//utilities::color4ToVec4(&mesh->mColors[0][vertexIndex], data.colors[data.colors.size() + i]);
 			if ( mesh->mColors[0] != 0 )
 			{
 				data.colors[currentIndex + i] = glm::vec4(
@@ -345,9 +314,8 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 			for (glmd::uint32 j = 0; j < mesh->mBones[i]->mNumWeights; j++)
 			{
 				glmd::uint32 vertexID = vertexIndexMap[ mesh->mBones[i]->mWeights[j].mVertexId ];
-				glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight; 
-				//std::cout << vertexID << " " << weight << std::endl;
-				
+				glmd::float32 weight = mesh->mBones[i]->mWeights[j].mWeight;
+
 				temp++;
 				data.bones[ vertexID ].addBoneWeight( boneIndex, weight );
 			}
@@ -355,44 +323,8 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 	}
 	
 	std::cout << "Load results: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
-	// Fill in any empty weights
-	
-	// DEBUGGING
-	/*
-	std::ofstream file;
-	file.open("bones.txt");
-	for (glmd::uint32 i = 0; i < data.bones.size(); i++)
-	{
-		//data.bones[ i ].normalize();
-		file << i << ": " << data.bones[ i ].toString() << "\n";
-	}
-	file.close();
-	
-	file.open("vertices.txt");
-	for (glmd::uint32 i = 0; i < data.vertices.size(); i++)
-	{
-		file << i << ": " << glm::to_string(data.vertices[ i ]) << "\n";
-	}
-	file.close();
-	
-	file.open("normals.txt");
-	for (glmd::uint32 i = 0; i < data.normals.size(); i++)
-	{
-		file << i << ": " << glm::to_string(data.normals[ i ]) << "\n";
-	}
-	file.close();
-	
-	file.open("textureCoordinates.txt");
-	for (glmd::uint32 i = 0; i < data.textureCoordinates.size(); i++)
-	{
-		file << i << ": " << glm::to_string(data.textureCoordinates[ i ]) << "\n";
-	}
-	file.close();
-	*/
-	LOG_DEBUG( "done loading mesh '" << filename << "'." );
 
-	//materialMap_[n] = scene->mMeshes[n]->mMaterialIndex;
-	//textureMap_[n] = scene->mMeshes[n]->mMaterialIndex;
+	LOG_DEBUG( "done loading mesh '" << filename << "'." );
 	
 	return data;
 }
@@ -511,12 +443,6 @@ glw::BoneData ModelLoader::loadBones(const std::string& name, const std::string&
 
 		boneData.boneIndexMap[data.name] = boneIndex;
 		boneData.boneTransform[boneIndex].boneOffset = convertAssImpMatrix( &(mesh->mBones[i]->mOffsetMatrix) );
-
-		//for (glmd::uint32 j = 0 ; j < mesh->mBones[i]->mNumWeights ; j++) {
-		//	glmd::uint32 VertexID = m_Entries[MeshIndex].BaseVertex + mesh->mBones[i]->mWeights[j].mVertexId;
-		//	float Weight = mesh->mBones[i]->mWeights[j].mWeight; 
-		//	Bones[VertexID].AddBoneData(boneIndex, Weight);
-		//}
 	} 
 
 	LOG_DEBUG( "done loading boneData." );
@@ -574,9 +500,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 			
 			AnimatedBoneNode abn = AnimatedBoneNode();
 			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
-			
-			//std::cout << "loading abn: " << abn.name << " " << pNodeAnim->mNumPositionKeys << " " << pNodeAnim->mNumRotationKeys << " " << pNodeAnim->mNumScalingKeys <<std::endl;
-			
+
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)
 			{
 				abn.positionTimes.push_back( pNodeAnim->mPositionKeys[k].mTime );
@@ -585,15 +509,13 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 			
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumRotationKeys; k++)
 			{
-				abn.rotationTimes.push_back( pNodeAnim->mRotationKeys[k].mTime );
-				abn.rotations.push_back( 
-					glm::quat( 
-						pNodeAnim->mRotationKeys[k].mValue.w,
-						pNodeAnim->mRotationKeys[k].mValue.x,
-						pNodeAnim->mRotationKeys[k].mValue.y,
-						pNodeAnim->mRotationKeys[k].mValue.z
-					)
-				);
+				const auto& rk = pNodeAnim->mRotationKeys[k];
+
+				abn.rotationTimes.push_back( rk.mTime );
+
+				glm::quat rotation = glm::quat( rk.mValue.w, rk.mValue.x, rk.mValue.y, rk.mValue.z );
+				rotation = glm::normalize( rotation );
+				abn.rotations.push_back( rotation );
 			}
 			
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumScalingKeys; k++)
