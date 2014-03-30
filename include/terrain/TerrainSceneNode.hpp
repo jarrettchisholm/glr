@@ -36,6 +36,8 @@ public:
 	// TODO: Something other than this?
 	void setMesh(std::unique_ptr<glr::terrain::TerrainMesh> mesh);
 	void setModel(std::unique_ptr<models::IModel> model);
+	
+	TerrainMesh* getData();
 
 private:
 	glmd::int32 gridX_, gridY_, gridZ_;

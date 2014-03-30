@@ -6,6 +6,7 @@
 #include "terrain/TerrainManager.hpp"
 #include "terrain/Constants.hpp"
 #include "terrain/VoxelChunkNoiseGenerator.hpp"
+#include "terrain/TerrainMeshSerializer.hpp"
 
 #include "models/Model.hpp"
 
@@ -496,6 +497,7 @@ TerrainSceneNode* TerrainManager::getChunk(glmd::int32 x, glmd::int32 y, glmd::i
 	return retVal;
 }
 
+bool saved = false;
 void TerrainManager::update(glmd::uint32 maxUpdates)
 {
 	glmd::uint32 size = 0;
@@ -513,6 +515,13 @@ void TerrainManager::update(glmd::uint32 maxUpdates)
 		openGlWorkMutex_.unlock();
 
 		work();
+	}
+	
+	if (!saved && size == 0)
+	{
+		// Save all chunks
+		serialize( std::string("testing.bin") );
+		saved = true;
 	}
 }
 
@@ -544,6 +553,23 @@ ISceneNode* TerrainManager::getFollowTarget() const
 
 void TerrainManager::generate()
 {
+	int length = 4;
+	int width = 4;
+	int height = 2;
+	for (int i=-length/2; i <= length/2; i++)
+	{
+		for (int j=-height/2; j <= height/2; j++)
+		{
+			for (int k=-width/2; k <= width/2; k++)
+			{
+				addChunk( i, j, k );
+			}
+		}
+		std::cout << "MARK: " << i << std::endl;
+	}
+	
+	// Save all chunks
+	//serialize( std::string("testing.bin") );
 }
 
 void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z)
@@ -564,6 +590,22 @@ void TerrainManager::removeTerrainManagerEventListener(ITerrainManagerEventListe
 
 void TerrainManager::serialize(const std::string& filename)
 {
+	std::ofstream stream(filename, std::ios::out | std::ios::binary);
+	
+	{
+		std::lock_guard<std::mutex> lock(terrainChunksMutex_);
+		
+		int length = 4;
+		int width = 4;
+		int height = 2;
+		
+		for (auto& chunk : terrainChunks_)
+		{
+			std::cout << "Saving..." << std::endl;
+			auto mesh = chunk->getData();
+			glr::terrain::serialize(stream, *mesh);
+		}
+	}
 }
 
 void TerrainManager::deserialize(const std::string& filename)

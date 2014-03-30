@@ -32,7 +32,7 @@ TerrainSceneNode::~TerrainSceneNode()
 
 void TerrainSceneNode::freeVideoMemory()
 {
-	meshData_ = std::unique_ptr<glr::terrain::TerrainMesh>( nullptr );
+	meshData_ = std::unique_ptr<TerrainMesh>( nullptr );
 		
 	modelPtr_ = std::unique_ptr<models::IModel>( nullptr );
 	this->attach( (models::IModel*)nullptr );
@@ -78,7 +78,7 @@ void TerrainSceneNode::render()
 	BasicSceneNode::render();
 }
 
-void TerrainSceneNode::setMesh(std::unique_ptr<glr::terrain::TerrainMesh> mesh)
+void TerrainSceneNode::setMesh(std::unique_ptr<TerrainMesh> mesh)
 {
 	meshData_ = std::move(mesh);
 }
@@ -86,6 +86,11 @@ void TerrainSceneNode::setMesh(std::unique_ptr<glr::terrain::TerrainMesh> mesh)
 void TerrainSceneNode::setModel(std::unique_ptr<models::IModel> model)
 {
 	modelPtr_ = std::move(model);
+}
+
+TerrainMesh* TerrainSceneNode::getData()
+{
+	return meshData_.get();
 }
 
 }
