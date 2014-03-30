@@ -453,28 +453,5 @@ void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::
 	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
 }
 
-void Animation::printTransformations()
-{
-	printTransformations(currentTransforms_);
-}
-
-void Animation::printTransformations(const std::vector< glm::mat4 >& transformations)
-{
-	glmd::float32 timeInTicks = runningTime_ * ticksPerSecond_;
-	glmd::float32 animationTime = fmod(timeInTicks, (glmd::float32)duration_);
-
-	std::cout << "Transformations (length: " << transformations.size() << ")" << std::endl;
-	std::cout << "ticksPerSecond_: " << ticksPerSecond_ << std::endl;
-	std::cout << "runningTime_: " << runningTime_ << std::endl;
-	std::cout << "duration_: " << duration_ << std::endl;
-	std::cout << "timeInTicks: " << timeInTicks << std::endl;
-	std::cout << "animationTime: " << animationTime << std::endl;
-	std::cout << "Matrices: " << std::endl;
-	for ( auto& t : transformations )
-	{
-		std::cout << glm::to_string(t) << std::endl;
-	}
-}
-
 }
 }

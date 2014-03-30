@@ -54,10 +54,6 @@ public:
 	
 	virtual const std::string& getName() const;
 	
-	// Debug
-	virtual void printTransformations();
-	virtual void printTransformations(const std::vector< glm::mat4 >& transformations);
-	
 private:
 	GLuint bufferId_;
 	GLuint bindPoint_;

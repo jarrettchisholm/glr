@@ -58,14 +58,19 @@ glm::ivec3 TerrainManager::getTargetGridLocation()
 	return retVal;
 }
 
+// TESTING
+std::mutex gridMutex;
 void TerrainManager::tick()
 {
 	auto followTargetGridLocation = getTargetGridLocation();
 	//std::cout << glm::to_string(followTargetGridLocation) << "    " << glm::to_string(currentGridLocation_) << std::endl;
 	if (followTargetGridLocation != currentGridLocation_)
 	{
-		previousGridLocation_ = currentGridLocation_;
-		currentGridLocation_ = followTargetGridLocation;
+		{
+			std::lock_guard<std::mutex> lock(gridMutex);
+			previousGridLocation_ = currentGridLocation_;
+			currentGridLocation_ = followTargetGridLocation;
+		}
 		std::cout << "updateChunks START " << std::endl;
 		this->updateChunks();
 		std::cout << "updateChunks END " << std::endl;
@@ -495,14 +500,21 @@ TerrainSceneNode* TerrainManager::getChunk(glmd::int32 x, glmd::int32 y, glmd::i
 
 void TerrainManager::update(glmd::uint32 maxUpdates)
 {
+	glmd::uint32 size = 0;
+	openGlWorkMutex_.lock();
+	size = openGlWork_.size();
+	openGlWorkMutex_.unlock();
+
+	for (glmd::uint32 i=0; i < maxUpdates && i < size; i++)
 	{
-		std::lock_guard<std::mutex> lock(openGlWorkMutex_);
-		for (glmd::uint32 i=0; i < maxUpdates && i < openGlWork_.size(); i++)
-		{
-			auto work = std::move(openGlWork_.front());
-			openGlWork_.pop_front();
-			work();
-		}
+		auto work = std::function<void()>();
+
+		openGlWorkMutex_.lock();
+		work = std::move(openGlWork_.front());
+		openGlWork_.pop_front();
+		openGlWorkMutex_.unlock();
+
+		work();
 	}
 }
 
