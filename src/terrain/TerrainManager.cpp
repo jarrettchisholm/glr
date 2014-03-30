@@ -440,21 +440,17 @@ void TerrainManager::removeChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 
 void TerrainManager::removeChunk(TerrainSceneNode* chunk)
 {
-	glmd::int32 index = 0;
-	bool found = false;
-	
 	terrainChunksMutex_.lock();
-	for ( auto& c : terrainChunks_ )
+	
+	auto findFunction = [chunk](const std::unique_ptr<TerrainSceneNode>& node) { return node.get() == chunk; };
+	
+	auto it = std::find_if(terrainChunks_.begin(), terrainChunks_.end(), findFunction);
+	
+	if (it != terrainChunks_.end())
 	{
-		if (c.get() == chunk)
-		{
-			found = true;
-			break;
-		}
-		index++;
+		terrainChunks_.erase(it);
 	}
-	if (found)
-		terrainChunks_.erase(terrainChunks_.begin() + index);
+
 	terrainChunksMutex_.unlock();
 }
 
@@ -485,14 +481,16 @@ TerrainSceneNode* TerrainManager::getChunk(glmd::int32 x, glmd::int32 y, glmd::i
 	TerrainSceneNode* retVal = nullptr;
 	
 	terrainChunksMutex_.lock();
-	for ( auto& chunk : terrainChunks_ )
+	
+	auto findFunction = [x, y, z](const std::unique_ptr<TerrainSceneNode>& node) { return (node->isActive() && node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	
+	auto it = std::find_if(terrainChunks_.begin(), terrainChunks_.end(), findFunction);
+	
+	if (it != terrainChunks_.end())
 	{
-		if (chunk->isActive() && chunk->getGridX() == x && chunk->getGridY() == y && chunk->getGridZ() == z)
-		{
-			retVal = chunk.get();
-			break;
-		}
+		retVal = it->get();
 	}
+
 	terrainChunksMutex_.unlock();
 	//std::cout << "getChunk END " << std::this_thread::get_id() << std::endl;
 	return retVal;
