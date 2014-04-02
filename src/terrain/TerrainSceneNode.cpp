@@ -39,7 +39,7 @@ void TerrainSceneNode::freeVideoMemory()
 }
 
 void TerrainSceneNode::initialize()
-{	
+{
 	isActive_ = true;
 }
 
