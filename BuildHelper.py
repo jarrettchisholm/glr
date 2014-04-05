@@ -70,7 +70,8 @@ def setup(ARGUMENTS):
 	if (buildFlags['useCef']):
 		cpp_defines.append('USE_CEF')
 	if (buildFlags['build'] == 'debug' or buildFlags['build'] == 'release-with-debug'):
-		cpp_defines.append('DEBUG')
+		pass
+		#cpp_defines.append('DEBUG')
 	else:
 		buildFlags['debug'] = False
 	
@@ -139,8 +140,10 @@ def setup(ARGUMENTS):
 				cpp_flags.append('-pg') # profiler
 				if (not buildFlags['release']):
 					cpp_flags.append('-O0') # optimization level 0
+					cpp_defines.append('DEBUG')
 			
 			if (buildFlags['release']):
+				cpp_defines.append('NDEBUG')
 				cpp_flags.append('-O3') # optimization level 3
 			
 			cpp_flags.append('-std=c++11')
@@ -167,17 +170,21 @@ def setup(ARGUMENTS):
 					link_flags.append('/DEBUG') # Enable debug during linking
 					if (not buildFlags['release']):
 						cpp_flags.append('/Od') # Disables optimization
+						cpp_defines.append('DEBUG')
 				
 				if (buildFlags['release']):
 					cpp_flags.append('/Ox') # Full optimization
+					cpp_defines.append('NDEBUG')
 			elif (buildFlags['compiler'] == 'mingw'):
 				if (buildFlags['debug']):
 					cpp_flags.append('-g')
 					cpp_flags.append('-pg') # profiler
 					if (not buildFlags['release']):
 						cpp_flags.append('-O0') # optimization level 0
+						cpp_defines.append('DEBUG')
 				
 				if (buildFlags['release']):
+					cpp_defines.append('NDEBUG')
 					cpp_flags.append('-O3') # optimization level 3
 				
 				cpp_flags.append('-std=c++11')
