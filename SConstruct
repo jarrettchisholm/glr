@@ -32,6 +32,7 @@ def setupDependencies():
 	boostRegexLib = 'boost_regex'
 	boostFilesystemLib = 'boost_filesystem'
 	boostSystemLib = 'boost_system'
+	boostSerializationLib = 'boost_serialization'
 	
 	if (isWindows):
 		glLib = 'opengl32'
@@ -48,6 +49,7 @@ def setupDependencies():
 		boostRegexLib = 'libboost_regex-vc120-mt-1_55'
 		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
 		boostSystemLib = 'libboost_system-vc120-mt-1_55'
+		boostSerializationLib = 'libboost_serialization-vc120-mt-1_55'
 
 
 	# Set our required libraries
@@ -68,6 +70,7 @@ def setupDependencies():
 	libraries.append(boostRegexLib)
 	libraries.append(boostFilesystemLib)
 	libraries.append(boostSystemLib)
+	libraries.append(boostSerializationLib)
 	
 	if (not isWindows):
 		# XInput for linux
@@ -241,6 +244,9 @@ source_files = source_files + Glob('build/gui/cef/*.cpp')
 source_files = source_files + Glob('build/models/*.cpp')
 source_files = source_files + Glob('build/environment/*.cpp')
 source_files = source_files + Glob('build/terrain/*.cpp')
+
+source_files = source_files + Glob('build/serialize/*.cpp')
+source_files = source_files + Glob('build/serialize/glm/*.cpp')
 
 # OpenGL Wrapper stuff
 source_files = source_files + Glob('build/glw/*.cpp')

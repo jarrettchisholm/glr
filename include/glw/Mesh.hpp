@@ -29,6 +29,11 @@ class Mesh : public IMesh
 {
 public:
 	/**
+	 * Required for Serialization.
+	 */
+	Mesh();
+
+	/**
 	 * Basic constructor.  The creator of the Mesh will have to set the data, and then call
 	 * 'allocateVideoMemory()' and 'pushToVideoMemory()' before this mesh will render properly.
 	 */
@@ -86,6 +91,12 @@ public:
 	std::vector< glm::vec4 >& getColors();
 	std::vector< VertexBoneData >& getVertexBoneData();
 	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+	
 protected:
 	IOpenGlDevice* openGlDevice_;
 	std::string name_;
@@ -95,12 +106,17 @@ protected:
 	std::vector< glm::vec4 > colors_;
 	std::vector< VertexBoneData > vertexBoneData_;
 
-	BoneData boneData_;	
+	BoneData boneData_;
 
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[5];
 
 	std::string textureFileName_;
+
+private:
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

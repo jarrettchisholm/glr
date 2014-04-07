@@ -12,6 +12,8 @@
 
 #include "common/logger/Logger.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -128,7 +130,7 @@ struct BoneData
 /**
  * Represents a Mesh which can be rendered in the scene.
  */
-class IMesh : public virtual IGraphicsObject
+class IMesh : public virtual IGraphicsObject, public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IMesh()

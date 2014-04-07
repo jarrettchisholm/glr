@@ -12,6 +12,15 @@ namespace glr
 namespace glw
 {
 
+Mesh::Mesh()
+{
+	openGlDevice_ = nullptr;
+	vertexBoneData_ = std::vector< VertexBoneData >();
+	boneData_ = BoneData();
+	
+	vaoId_ = 0;
+}
+
 Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	vertexBoneData_ = std::vector< VertexBoneData >();
@@ -290,5 +299,43 @@ std::vector< VertexBoneData >& Mesh::getVertexBoneData()
 	return vertexBoneData_;
 }
 
+void Mesh::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Mesh::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Mesh::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Mesh::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Mesh::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Mesh, IMesh>(
+		static_cast<Mesh*>(nullptr),
+		static_cast<IMesh*>(nullptr)
+	);
+	//std::cout << "WTF2" << std::endl;
+	//ar & boost::serialization::base_object<IModel>(*this); 
+	ar & vertices_;
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IMesh)
+BOOST_CLASS_EXPORT_GUID(glr::glw::Mesh, "glr::glw::Mesh")
