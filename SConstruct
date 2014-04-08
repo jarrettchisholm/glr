@@ -246,7 +246,6 @@ source_files = source_files + Glob('build/environment/*.cpp')
 source_files = source_files + Glob('build/terrain/*.cpp')
 
 source_files = source_files + Glob('build/serialize/*.cpp')
-source_files = source_files + Glob('build/serialize/glm/*.cpp')
 
 # OpenGL Wrapper stuff
 source_files = source_files + Glob('build/glw/*.cpp')
