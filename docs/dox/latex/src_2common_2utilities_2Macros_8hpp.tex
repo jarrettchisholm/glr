@@ -1,0 +1,190 @@
+\hypertarget{src_2common_2utilities_2Macros_8hpp}{\section{/home/jarrett/projects/icebreakers/glr/src/common/utilities/\-Macros.hpp File Reference}
+\label{src_2common_2utilities_2Macros_8hpp}\index{/home/jarrett/projects/icebreakers/glr/src/common/utilities/\-Macros.\-hpp@{/home/jarrett/projects/icebreakers/glr/src/common/utilities/\-Macros.\-hpp}}
+}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_ad2a6f9579e26c054049b21a47e4dd840}{G\-E\-T}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_a3c3aae7b86b53e75786996242c12c6c4}{S\-E\-T}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_a7f6c0d735130cb19a0565109992912a1}{S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_adc4eedf60e33108b302a41c2f86755b7}{G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_ac61943feaf25bb227f016c4401f69e4a}{S\-E\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_a776e21651dbadaa7065d73f5afa073dc}{G\-E\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}{G\-E\-T\-S\-E\-T}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_a81b15e1cb056a085840f8f1432e32126}{G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_a7ebf58cb6cbc7e48016db1568b553bb3}{G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{src_2common_2utilities_2Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}(Type, Face\-Name)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_ad2a6f9579e26c054049b21a47e4dd840}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T@{G\-E\-T}}
+\index{G\-E\-T@{G\-E\-T}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_ad2a6f9579e26c054049b21a47e4dd840}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+Type \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_adc4eedf60e33108b302a41c2f86755b7}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}}
+\index{G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_adc4eedf60e33108b302a41c2f86755b7}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} Type& \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_a776e21651dbadaa7065d73f5afa073dc}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-\_\-\-R\-E\-F@{G\-E\-T\-\_\-\-R\-E\-F}}
+\index{G\-E\-T\-\_\-\-R\-E\-F@{G\-E\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_a776e21651dbadaa7065d73f5afa073dc}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+Type& \textcolor{keyword}{get}##FaceName() \{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-S\-E\-T@{G\-E\-T\-S\-E\-T}}
+\index{G\-E\-T\-S\-E\-T@{G\-E\-T\-S\-E\-T}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+Type \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \}; \(\backslash\)
+        \(\backslash\)
+        void \textcolor{keyword}{set}##FaceName(Type value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_a81b15e1cb056a085840f8f1432e32126}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}}
+\index{G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_a81b15e1cb056a085840f8f1432e32126}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keyword}{const} Type& \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \}; \(\backslash\)
+        \(\backslash\)
+        void \textcolor{keyword}{set}##FaceName(\textcolor{keyword}{const} Type& value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E@{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}}
+\index{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E@{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keyword}{virtual} Type \textcolor{keyword}{get}##FaceName() \textcolor{keyword}{const} = 0; \(\backslash\)
+        \(\backslash\)
+        virtual \textcolor{keywordtype}{void} \textcolor{keyword}{set}##FaceName(Type value) = 0;
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_a7ebf58cb6cbc7e48016db1568b553bb3}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F@{G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F}}
+\index{G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F@{G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_a7ebf58cb6cbc7e48016db1568b553bb3}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+Type& \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \}; \(\backslash\)
+        \(\backslash\)
+        void \textcolor{keyword}{set}##FaceName(Type& value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_a3c3aae7b86b53e75786996242c12c6c4}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!S\-E\-T@{S\-E\-T}}
+\index{S\-E\-T@{S\-E\-T}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-E\-T(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_a3c3aae7b86b53e75786996242c12c6c4}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keywordtype}{void} \textcolor{keyword}{set}##FaceName(Type value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_a7f6c0d735130cb19a0565109992912a1}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}}
+\index{S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F@{S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-E\-T\-\_\-\-C\-O\-N\-S\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_a7f6c0d735130cb19a0565109992912a1}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keywordtype}{void} \textcolor{keyword}{set}##FaceName(\textcolor{keyword}{const} Type& value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{src_2common_2utilities_2Macros_8hpp_ac61943feaf25bb227f016c4401f69e4a}{\index{src/common/utilities/\-Macros.\-hpp@{src/common/utilities/\-Macros.\-hpp}!S\-E\-T\-\_\-\-R\-E\-F@{S\-E\-T\-\_\-\-R\-E\-F}}
+\index{S\-E\-T\-\_\-\-R\-E\-F@{S\-E\-T\-\_\-\-R\-E\-F}!src/common/utilities/Macros.hpp@{src/common/utilities/\-Macros.\-hpp}}
+\subsubsection[{S\-E\-T\-\_\-\-R\-E\-F}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\-E\-T\-\_\-\-R\-E\-F(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{src_2common_2utilities_2Macros_8hpp_ac61943feaf25bb227f016c4401f69e4a}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keywordtype}{void} \textcolor{keyword}{set}##FaceName(Type& value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}

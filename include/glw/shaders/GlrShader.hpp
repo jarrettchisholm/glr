@@ -15,20 +15,20 @@ namespace shaders
 {
 
 /**
- * Class representing a 'glr' shader.  This is a shader that contains the 'raw' shader source (i.e. before it has been processed).
+ * Class representing a `glr` shader.  This is a shader that contains the 'raw' shader source (i.e. before it has been processed).
  * 
- * Note that, in the shader source, there are 2 kinds of #include directives.  The first one looks like this:
+ * Note that, in the shader source, there are 2 kinds of `#include` directives.  The first one looks like this:
  * 
- * #include <lights>
+ * `#include <lights>`
  * 
- * The '<' and '>' around the filename indicate that this is a 'system' file to include.  GLR has several of these system shader source
+ * The `<` and `>` around the filename indicate that this is a 'system' file to include.  GLR has several of these system shader source
  * files available for use.
  * 
  * The second one looks like this:
  * 
- * #include "myshader.vs"
+ * `#include "myshader.vs"`
  * 
- * This will include a file named 'myshader.vs' from the disk.  This is so that you can include your own, user-defined shader files.
+ * This will include a file named `myshader.vs` from the disk.  This is so that you can include your own, user-defined shader files.
  * 
  * You can use this class to then process the 'raw' shader source into something more amenable to an opengl shader.
  */

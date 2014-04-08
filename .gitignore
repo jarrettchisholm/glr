@@ -23,7 +23,7 @@ deps
 
 # Documentation #
 #################
-dox/*
+docs/dox/*
 
 # Logs and databases #
 ######################

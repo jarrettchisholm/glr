@@ -329,8 +329,7 @@ template<class Archive> void Mesh::serialize(Archive& ar, const unsigned int ver
 		static_cast<Mesh*>(nullptr),
 		static_cast<IMesh*>(nullptr)
 	);
-	//std::cout << "WTF2" << std::endl;
-	//ar & boost::serialization::base_object<IModel>(*this); 
+	//ar & boost::serialization::base_object<IMesh>(*this); 
 	ar & vertices_;
 }
 

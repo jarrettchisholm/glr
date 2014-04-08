@@ -1,0 +1,46 @@
+\hypertarget{Macros_8hpp}{\section{/home/jarrett/projects/icebreakers/glr/cef\-\_\-client/include/\-Macros.hpp File Reference}
+\label{Macros_8hpp}\index{/home/jarrett/projects/icebreakers/glr/cef\-\_\-client/include/\-Macros.\-hpp@{/home/jarrett/projects/icebreakers/glr/cef\-\_\-client/include/\-Macros.\-hpp}}
+}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}{G\-E\-T\-S\-E\-T}(Type, Member\-Name, Face\-Name)
+\item 
+\#define \hyperlink{Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}(Type, Face\-Name)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}{\index{Macros.\-hpp@{Macros.\-hpp}!G\-E\-T\-S\-E\-T@{G\-E\-T\-S\-E\-T}}
+\index{G\-E\-T\-S\-E\-T@{G\-E\-T\-S\-E\-T}!Macros.hpp@{Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Member\-Name, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{Macros_8hpp_acf708473b2d8f8dc15c56e99707db41b}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+Type \textcolor{keyword}{get}##FaceName()\textcolor{keyword}{ const }\{ \(\backslash\)
+                return MemberName; \(\backslash\)
+        \}; \(\backslash\)
+        \(\backslash\)
+        void \textcolor{keyword}{set}##FaceName(Type value) \{ \(\backslash\)
+                MemberName = value; \(\backslash\)
+        \};
+\end{DoxyCode}
+\hypertarget{Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}{\index{Macros.\-hpp@{Macros.\-hpp}!G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E@{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}}
+\index{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E@{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}!Macros.hpp@{Macros.\-hpp}}
+\subsubsection[{G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-E\-T\-S\-E\-T\-\_\-\-I\-N\-T\-E\-R\-F\-A\-C\-E(
+\begin{DoxyParamCaption}
+\item[{}]{Type, }
+\item[{}]{Face\-Name}
+\end{DoxyParamCaption}
+)}}\label{Macros_8hpp_af37a62428b4c19b092f16232dc99aca8}
+{\bfseries Value\-:}
+\begin{DoxyCode}
+\textcolor{keyword}{virtual} Type \textcolor{keyword}{get}##FaceName() \textcolor{keyword}{const} = 0; \(\backslash\)
+        \(\backslash\)
+        virtual \textcolor{keywordtype}{void} \textcolor{keyword}{set}##FaceName(Type value) = 0;
+\end{DoxyCode}

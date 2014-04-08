@@ -29,6 +29,13 @@ namespace glr
 {
 
 /**
+ * @mainpage Graphics Language Renderer Documentation
+ *
+ * @b Note: This documentation is for an alpha product, and is not necessarily representative of the final product.
+ * 
+ */
+
+/**
  * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).
  */
 struct ProgramSettings

@@ -1,0 +1,39 @@
+\hypertarget{ModelLoader_8cpp}{\section{/home/jarrett/projects/icebreakers/glr/src/models/\-Model\-Loader.cpp File Reference}
+\label{ModelLoader_8cpp}\index{/home/jarrett/projects/icebreakers/glr/src/models/\-Model\-Loader.\-cpp@{/home/jarrett/projects/icebreakers/glr/src/models/\-Model\-Loader.\-cpp}}
+}
+{\ttfamily \#include \char`\"{}Configure.\-hpp\char`\"{}}\\*
+{\ttfamily \#include $<$iostream$>$}\\*
+{\ttfamily \#include $<$fstream$>$}\\*
+{\ttfamily \#include $<$assimp/\-Importer.\-hpp$>$}\\*
+{\ttfamily \#include $<$assimp/postprocess.\-h$>$}\\*
+{\ttfamily \#include $<$glm/gtc/matrix\-\_\-transform.\-hpp$>$}\\*
+{\ttfamily \#include $<$glm/gtx/string\-\_\-cast.\-hpp$>$}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Material\-Manager.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Texture\-Manager.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Mesh\-Manager.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Animation\-Manager.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Mesh.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Texture.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Material.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}glw/\-I\-Animation.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}models/\-Model\-Loader.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}common/utilities/\-Ass\-Imp\-Utilities.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}exceptions/\-Gl\-Exception.\-hpp\char`\"{}}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespaceglr}{glr}
+\item 
+namespace \hyperlink{namespaceglr_1_1models}{glr\-::models}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ModelLoader_8cpp_a816ab7d5c2ce1f0a01216042837beb93}{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{ModelLoader_8cpp_a816ab7d5c2ce1f0a01216042837beb93}{\index{Model\-Loader.\-cpp@{Model\-Loader.\-cpp}!G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S@{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}}
+\index{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S@{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}!ModelLoader.cpp@{Model\-Loader.\-cpp}}
+\subsubsection[{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}}\label{ModelLoader_8cpp_a816ab7d5c2ce1f0a01216042837beb93}

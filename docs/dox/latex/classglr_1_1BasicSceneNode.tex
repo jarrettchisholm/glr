@@ -1,0 +1,451 @@
+\hypertarget{classglr_1_1BasicSceneNode}{\section{glr\-:\-:Basic\-Scene\-Node Class Reference}
+\label{classglr_1_1BasicSceneNode}\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}}
+}
+
+
+{\ttfamily \#include $<$Basic\-Scene\-Node.\-hpp$>$}
+
+Inheritance diagram for glr\-:\-:Basic\-Scene\-Node\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.465969cm]{classglr_1_1BasicSceneNode}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classglr_1_1BasicSceneNode_a0d6ce7488ef828f9cd0798cc1be4cf6b}{Basic\-Scene\-Node} (\hyperlink{classglr_1_1Id}{Id} id, \hyperlink{classglr_1_1glw_1_1IOpenGlDevice}{glw\-::\-I\-Open\-Gl\-Device} $\ast$open\-Gl\-Device)
+\item 
+\hyperlink{classglr_1_1BasicSceneNode_ac05abe6d5d3727c36f58888f8d169910}{Basic\-Scene\-Node} (\hyperlink{classglr_1_1Id}{Id} id, std\-::string name, \hyperlink{classglr_1_1glw_1_1IOpenGlDevice}{glw\-::\-I\-Open\-Gl\-Device} $\ast$open\-Gl\-Device)
+\item 
+\hyperlink{classglr_1_1BasicSceneNode_a84be0e82fbb8f31d0ad810f867eb91d4}{Basic\-Scene\-Node} (\hyperlink{classglr_1_1Id}{Id} id, std\-::string name, glm\-::vec3 \&position, const glm\-::quat \&orientation, glm\-::vec3 \&scale, \hyperlink{classglr_1_1glw_1_1IOpenGlDevice}{glw\-::\-I\-Open\-Gl\-Device} $\ast$open\-Gl\-Device)
+\item 
+\hyperlink{classglr_1_1BasicSceneNode_aec64a71d244696656b7b9b865e9393ab}{Basic\-Scene\-Node} (\hyperlink{classglr_1_1Id}{Id} id, const \hyperlink{classglr_1_1BasicSceneNode}{Basic\-Scene\-Node} \&other)
+\item 
+virtual \hyperlink{classglr_1_1BasicSceneNode_a3e68039082791b51e1683d900fc9a258}{$\sim$\-Basic\-Scene\-Node} ()
+\item 
+void \hyperlink{classglr_1_1BasicSceneNode_aab3a02c6ef23affe6cb9252cccb9c19a}{copy} (const \hyperlink{classglr_1_1BasicSceneNode}{Basic\-Scene\-Node} \&other)
+\item 
+virtual const \hyperlink{classglr_1_1Id}{Id} \& \hyperlink{classglr_1_1BasicSceneNode_aa942ba69e78e95aface51616fa14fffe}{get\-Id} () const 
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_aa1822565f19302533edc20eeeab5d67c}{set\-Name} (std\-::string name)
+\item 
+virtual const std\-::string \& \hyperlink{classglr_1_1BasicSceneNode_a2ea663be310f731848122c522e735eec}{get\-Name} () const 
+\item 
+virtual glm\-::vec3 \& \hyperlink{classglr_1_1BasicSceneNode_a5a8616cc44759599b69f66ab58b13496}{get\-Position} ()
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_acf18999cd237cc434d2fef249d3762e9}{set\-Position} (glm\-::vec3 \&new\-Pos)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a2f1217111e8ce40c37c6404b5e9ff9ac}{set\-Position} (glm\-::detail\-::float32 x, glm\-::detail\-::float32 y, glm\-::detail\-::float32 z)
+\item 
+virtual glm\-::vec3 \& \hyperlink{classglr_1_1BasicSceneNode_afb0cb5d2273408277154c400dee9bafa}{get\-Scale} ()
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a85332188c5aac6ba149a9d19d57b4698}{set\-Scale} (const glm\-::vec3 \&scale)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_abcefe0919b3b95f43326c7e6b1397154}{set\-Scale} (glm\-::detail\-::float32 x, glm\-::detail\-::float32 y, glm\-::detail\-::float32 z)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a89d36e8080ff28ff75e19d1ad872f4a1}{translate} (const glm\-::vec3 \&trans, \hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52a}{Transform\-Space} relative\-To=\hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52aaca47a4d27c5f296f990e9d426beba45d}{T\-S\-\_\-\-L\-O\-C\-A\-L})
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a974b85c31b87e3848aa5b62920993880}{translate} (glm\-::detail\-::float32 x, glm\-::detail\-::float32 y, glm\-::detail\-::float32 z, \hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52a}{Transform\-Space} relative\-To=\hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52aaca47a4d27c5f296f990e9d426beba45d}{T\-S\-\_\-\-L\-O\-C\-A\-L})
+\item 
+virtual const glm\-::quat \& \hyperlink{classglr_1_1BasicSceneNode_a90fa449be21838bc339e758c63abbd00}{get\-Orientation} () const 
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a28f8894b96db8245a971fe96664e9d07}{rotate} (const glm\-::detail\-::float32 degrees, const glm\-::vec3 \&axis, \hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52a}{Transform\-Space} relative\-To=\hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52aaca47a4d27c5f296f990e9d426beba45d}{T\-S\-\_\-\-L\-O\-C\-A\-L})
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a1bf63e0dca92e2581ce876c35f2e4f0b}{rotate} (const glm\-::quat \&quaternion, \hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52a}{Transform\-Space} relative\-To=\hyperlink{classglr_1_1ISceneNode_a851f520b81216ff73085a9ee79e2c52aaca47a4d27c5f296f990e9d426beba45d}{T\-S\-\_\-\-L\-O\-C\-A\-L})
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_ab8f6ec487b2d8740a660e6f5066c78db}{look\-At} (const glm\-::vec3 \&look\-At)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a91b45e17416a614ed539d7c3db9d4e58}{attach} (\hyperlink{classglr_1_1models_1_1IRenderable}{models\-::\-I\-Renderable} $\ast$renderable)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_ac5e9f17c9ec9d8a7c66e39089875a909}{attach} (\hyperlink{classglr_1_1shaders_1_1IShaderProgram}{shaders\-::\-I\-Shader\-Program} $\ast$shader\-Program)
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_aaa20e051494c1ae6a80980a7190c6db6}{detach} (\hyperlink{classglr_1_1models_1_1IRenderable}{models\-::\-I\-Renderable} $\ast$renderable)
+\item 
+virtual \hyperlink{classglr_1_1models_1_1IRenderable}{models\-::\-I\-Renderable} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_a3f12bd5bb7547c330a69b39db4cfc319}{get\-Renderable} () const 
+\item 
+virtual \hyperlink{classglr_1_1shaders_1_1IShaderProgram}{shaders\-::\-I\-Shader\-Program} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_a725ea33de7532a355d8cd438e2ab6daa}{get\-Shader\-Program} () const 
+\item 
+virtual void \hyperlink{classglr_1_1BasicSceneNode_a15dfdcd877d3c6eebc46ca5f9c0f284a}{render} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classglr_1_1models_1_1IRenderable}{models\-::\-I\-Renderable} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_a35e50a3683416e32f6de3dd85cfebeee}{renderable\-\_\-}
+\item 
+\hyperlink{classglr_1_1shaders_1_1IShaderProgram}{shaders\-::\-I\-Shader\-Program} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_a5c51888436caf0096125b3f94d177bae}{shader\-Program\-\_\-}
+\item 
+\hyperlink{classglr_1_1ISceneManager}{I\-Scene\-Manager} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_ac7e2e35880f8aac581fc01a8d96be89d}{scene\-Manager\-\_\-}
+\item 
+\hyperlink{classglr_1_1Id}{Id} \hyperlink{classglr_1_1BasicSceneNode_a9f431cf1fd91fb8d2873d7afdffa7b0e}{id\-\_\-}
+\item 
+std\-::string \hyperlink{classglr_1_1BasicSceneNode_a69b060fc10ea5e9899ab3b8dd5d2ec42}{name\-\_\-}
+\item 
+glm\-::vec3 \hyperlink{classglr_1_1BasicSceneNode_abedd8fd8a3adb3a761444f3d7314f8b8}{pos\-\_\-}
+\item 
+glm\-::quat \hyperlink{classglr_1_1BasicSceneNode_a109ae99b7ab0d0fbb6a9498794c1a8f5}{orientation\-Quaternion\-\_\-}
+\item 
+glm\-::vec3 \hyperlink{classglr_1_1BasicSceneNode_a307a3cb15c861120c010af11da38b785}{scale\-\_\-}
+\item 
+\hyperlink{classglr_1_1glw_1_1IOpenGlDevice}{glw\-::\-I\-Open\-Gl\-Device} $\ast$ \hyperlink{classglr_1_1BasicSceneNode_afc77302b4f85ed240d990c9261812a94}{open\-Gl\-Device\-\_\-}
+\item 
+bool \hyperlink{classglr_1_1BasicSceneNode_a8a770ee05b35396d7390c14fc0216793}{active\-\_\-}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classglr_1_1BasicSceneNode_a0d6ce7488ef828f9cd0798cc1be4cf6b}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!Basic\-Scene\-Node@{Basic\-Scene\-Node}}
+\index{Basic\-Scene\-Node@{Basic\-Scene\-Node}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{Basic\-Scene\-Node}]{\setlength{\rightskip}{0pt plus 5cm}glr\-::\-Basic\-Scene\-Node\-::\-Basic\-Scene\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Id}}]{id, }
+\item[{{\bf glw\-::\-I\-Open\-Gl\-Device} $\ast$}]{open\-Gl\-Device}
+\end{DoxyParamCaption}
+)}}\label{classglr_1_1BasicSceneNode_a0d6ce7488ef828f9cd0798cc1be4cf6b}
+\hypertarget{classglr_1_1BasicSceneNode_ac05abe6d5d3727c36f58888f8d169910}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!Basic\-Scene\-Node@{Basic\-Scene\-Node}}
+\index{Basic\-Scene\-Node@{Basic\-Scene\-Node}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{Basic\-Scene\-Node}]{\setlength{\rightskip}{0pt plus 5cm}glr\-::\-Basic\-Scene\-Node\-::\-Basic\-Scene\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Id}}]{id, }
+\item[{std\-::string}]{name, }
+\item[{{\bf glw\-::\-I\-Open\-Gl\-Device} $\ast$}]{open\-Gl\-Device}
+\end{DoxyParamCaption}
+)}}\label{classglr_1_1BasicSceneNode_ac05abe6d5d3727c36f58888f8d169910}
+\hypertarget{classglr_1_1BasicSceneNode_a84be0e82fbb8f31d0ad810f867eb91d4}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!Basic\-Scene\-Node@{Basic\-Scene\-Node}}
+\index{Basic\-Scene\-Node@{Basic\-Scene\-Node}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{Basic\-Scene\-Node}]{\setlength{\rightskip}{0pt plus 5cm}glr\-::\-Basic\-Scene\-Node\-::\-Basic\-Scene\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Id}}]{id, }
+\item[{std\-::string}]{name, }
+\item[{glm\-::vec3 \&}]{position, }
+\item[{const glm\-::quat \&}]{orientation, }
+\item[{glm\-::vec3 \&}]{scale, }
+\item[{{\bf glw\-::\-I\-Open\-Gl\-Device} $\ast$}]{open\-Gl\-Device}
+\end{DoxyParamCaption}
+)}}\label{classglr_1_1BasicSceneNode_a84be0e82fbb8f31d0ad810f867eb91d4}
+\hypertarget{classglr_1_1BasicSceneNode_aec64a71d244696656b7b9b865e9393ab}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!Basic\-Scene\-Node@{Basic\-Scene\-Node}}
+\index{Basic\-Scene\-Node@{Basic\-Scene\-Node}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{Basic\-Scene\-Node}]{\setlength{\rightskip}{0pt plus 5cm}glr\-::\-Basic\-Scene\-Node\-::\-Basic\-Scene\-Node (
+\begin{DoxyParamCaption}
+\item[{{\bf Id}}]{id, }
+\item[{const {\bf Basic\-Scene\-Node} \&}]{other}
+\end{DoxyParamCaption}
+)}}\label{classglr_1_1BasicSceneNode_aec64a71d244696656b7b9b865e9393ab}
+\hypertarget{classglr_1_1BasicSceneNode_a3e68039082791b51e1683d900fc9a258}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!$\sim$\-Basic\-Scene\-Node@{$\sim$\-Basic\-Scene\-Node}}
+\index{$\sim$\-Basic\-Scene\-Node@{$\sim$\-Basic\-Scene\-Node}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{$\sim$\-Basic\-Scene\-Node}]{\setlength{\rightskip}{0pt plus 5cm}virtual glr\-::\-Basic\-Scene\-Node\-::$\sim$\-Basic\-Scene\-Node (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a3e68039082791b51e1683d900fc9a258}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classglr_1_1BasicSceneNode_a91b45e17416a614ed539d7c3db9d4e58}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!attach@{attach}}
+\index{attach@{attach}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{attach}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::attach (
+\begin{DoxyParamCaption}
+\item[{{\bf models\-::\-I\-Renderable} $\ast$}]{renderable}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a91b45e17416a614ed539d7c3db9d4e58}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_af437dc8b253cc25a38be93c81463e7f0}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_ac5e9f17c9ec9d8a7c66e39089875a909}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!attach@{attach}}
+\index{attach@{attach}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{attach}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::attach (
+\begin{DoxyParamCaption}
+\item[{{\bf shaders\-::\-I\-Shader\-Program} $\ast$}]{shader\-Program}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_ac5e9f17c9ec9d8a7c66e39089875a909}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a043785031b3990d9da2758e8ee0afc18}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_aab3a02c6ef23affe6cb9252cccb9c19a}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!copy@{copy}}
+\index{copy@{copy}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{copy}]{\setlength{\rightskip}{0pt plus 5cm}void glr\-::\-Basic\-Scene\-Node\-::copy (
+\begin{DoxyParamCaption}
+\item[{const {\bf Basic\-Scene\-Node} \&}]{other}
+\end{DoxyParamCaption}
+)}}\label{classglr_1_1BasicSceneNode_aab3a02c6ef23affe6cb9252cccb9c19a}
+\hypertarget{classglr_1_1BasicSceneNode_aaa20e051494c1ae6a80980a7190c6db6}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!detach@{detach}}
+\index{detach@{detach}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{detach}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::detach (
+\begin{DoxyParamCaption}
+\item[{{\bf models\-::\-I\-Renderable} $\ast$}]{renderable}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_aaa20e051494c1ae6a80980a7190c6db6}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a66d866cc49fea3f9990c6fa01666dd05}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_aa942ba69e78e95aface51616fa14fffe}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}virtual const {\bf Id}\& glr\-::\-Basic\-Scene\-Node\-::get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_aa942ba69e78e95aface51616fa14fffe}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a14dc71a566ba94069f0d67008fab09da}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a2ea663be310f731848122c522e735eec}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Name@{get\-Name}}
+\index{get\-Name@{get\-Name}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Name}]{\setlength{\rightskip}{0pt plus 5cm}virtual const std\-::string\& glr\-::\-Basic\-Scene\-Node\-::get\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a2ea663be310f731848122c522e735eec}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a446a7bc6cad1b184877d375c57a2e70f}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a90fa449be21838bc339e758c63abbd00}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Orientation@{get\-Orientation}}
+\index{get\-Orientation@{get\-Orientation}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Orientation}]{\setlength{\rightskip}{0pt plus 5cm}virtual const glm\-::quat\& glr\-::\-Basic\-Scene\-Node\-::get\-Orientation (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a90fa449be21838bc339e758c63abbd00}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_ae22f3c7fa300d55c8a80cfecb4c11a74}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a5a8616cc44759599b69f66ab58b13496}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Position@{get\-Position}}
+\index{get\-Position@{get\-Position}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Position}]{\setlength{\rightskip}{0pt plus 5cm}virtual glm\-::vec3\& glr\-::\-Basic\-Scene\-Node\-::get\-Position (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a5a8616cc44759599b69f66ab58b13496}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_aa9cda61cde10446e39e86adbe7ecb7d9}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a3f12bd5bb7547c330a69b39db4cfc319}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Renderable@{get\-Renderable}}
+\index{get\-Renderable@{get\-Renderable}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Renderable}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf models\-::\-I\-Renderable}$\ast$ glr\-::\-Basic\-Scene\-Node\-::get\-Renderable (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a3f12bd5bb7547c330a69b39db4cfc319}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a1d8aecab8369547016f7634e75354b55}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_afb0cb5d2273408277154c400dee9bafa}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Scale@{get\-Scale}}
+\index{get\-Scale@{get\-Scale}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Scale}]{\setlength{\rightskip}{0pt plus 5cm}virtual glm\-::vec3\& glr\-::\-Basic\-Scene\-Node\-::get\-Scale (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_afb0cb5d2273408277154c400dee9bafa}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_ac47abdcfa7edd89a974f3f78b3dfdb22}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a725ea33de7532a355d8cd438e2ab6daa}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!get\-Shader\-Program@{get\-Shader\-Program}}
+\index{get\-Shader\-Program@{get\-Shader\-Program}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{get\-Shader\-Program}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf shaders\-::\-I\-Shader\-Program}$\ast$ glr\-::\-Basic\-Scene\-Node\-::get\-Shader\-Program (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a725ea33de7532a355d8cd438e2ab6daa}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_aaef5a2a8fe0c401e20499f4bdb069b5c}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_ab8f6ec487b2d8740a660e6f5066c78db}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!look\-At@{look\-At}}
+\index{look\-At@{look\-At}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{look\-At}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::look\-At (
+\begin{DoxyParamCaption}
+\item[{const glm\-::vec3 \&}]{look\-At}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_ab8f6ec487b2d8740a660e6f5066c78db}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_af40215bdf972057fae0d835b78c991db}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a15dfdcd877d3c6eebc46ca5f9c0f284a}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!render@{render}}
+\index{render@{render}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{render}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::render (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a15dfdcd877d3c6eebc46ca5f9c0f284a}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a88657ab0fc5400e7a4df3ecb00cf786f}{glr\-::\-I\-Scene\-Node}.
+
+
+
+Reimplemented in \hyperlink{classglr_1_1env_1_1SkyBox_a5ad53cec950e76597323fe6b41ebc9d7}{glr\-::env\-::\-Sky\-Box}, \hyperlink{classglr_1_1terrain_1_1TerrainSceneNode_a8cfd035ba1d742896418745a5161b290}{glr\-::terrain\-::\-Terrain\-Scene\-Node}, \hyperlink{classglr_1_1terrain_1_1Terrain_a48772a347af4521402cbb9c246103b8a}{glr\-::terrain\-::\-Terrain}, \hyperlink{classglr_1_1Camera_a4f7ff6087032b0aa9a1e375183ecdfce}{glr\-::\-Camera}, and \hyperlink{classglr_1_1Light_addce3fb454b86ded633a737e0a02ba08}{glr\-::\-Light}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a28f8894b96db8245a971fe96664e9d07}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!rotate@{rotate}}
+\index{rotate@{rotate}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{rotate}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::rotate (
+\begin{DoxyParamCaption}
+\item[{const glm\-::detail\-::float32}]{degrees, }
+\item[{const glm\-::vec3 \&}]{axis, }
+\item[{{\bf Transform\-Space}}]{relative\-To = {\ttfamily {\bf T\-S\-\_\-\-L\-O\-C\-A\-L}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a28f8894b96db8245a971fe96664e9d07}
+Rotates the scene node around the axis 'axis' the specified number of degrees. This rotation is relative to the transform space specified by 'relative\-To'. 
+
+Implements \hyperlink{classglr_1_1ISceneNode_a8b8bb8f85be1a10db721cb6572c5e8ea}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a1bf63e0dca92e2581ce876c35f2e4f0b}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!rotate@{rotate}}
+\index{rotate@{rotate}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{rotate}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::rotate (
+\begin{DoxyParamCaption}
+\item[{const glm\-::quat \&}]{quaternion, }
+\item[{{\bf Transform\-Space}}]{relative\-To = {\ttfamily {\bf T\-S\-\_\-\-L\-O\-C\-A\-L}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a1bf63e0dca92e2581ce876c35f2e4f0b}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_aa72f49a8e53fdc20dc209b9da0b2aaad}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_aa1822565f19302533edc20eeeab5d67c}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!set\-Name@{set\-Name}}
+\index{set\-Name@{set\-Name}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{set\-Name}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::set\-Name (
+\begin{DoxyParamCaption}
+\item[{std\-::string}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_aa1822565f19302533edc20eeeab5d67c}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_aa4c3644ed722f71d7cfa443b01cde072}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_acf18999cd237cc434d2fef249d3762e9}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!set\-Position@{set\-Position}}
+\index{set\-Position@{set\-Position}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{set\-Position}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::set\-Position (
+\begin{DoxyParamCaption}
+\item[{glm\-::vec3 \&}]{new\-Pos}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_acf18999cd237cc434d2fef249d3762e9}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a2e0b97154c38cc00b7def897722d0c23}{glr\-::\-I\-Scene\-Node}.
+
+
+
+Reimplemented in \hyperlink{classglr_1_1env_1_1SkyBoxPlane_a2de48b70443a5fede2ef3f7d2d4dad56}{glr\-::env\-::\-Sky\-Box\-Plane}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a2f1217111e8ce40c37c6404b5e9ff9ac}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!set\-Position@{set\-Position}}
+\index{set\-Position@{set\-Position}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{set\-Position}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::set\-Position (
+\begin{DoxyParamCaption}
+\item[{glm\-::detail\-::float32}]{x, }
+\item[{glm\-::detail\-::float32}]{y, }
+\item[{glm\-::detail\-::float32}]{z}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a2f1217111e8ce40c37c6404b5e9ff9ac}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a56d7760cbc63fe7453506412a83165dd}{glr\-::\-I\-Scene\-Node}.
+
+
+
+Reimplemented in \hyperlink{classglr_1_1env_1_1SkyBoxPlane_a7356498219e9ef407b5dc0f57a7963be}{glr\-::env\-::\-Sky\-Box\-Plane}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a85332188c5aac6ba149a9d19d57b4698}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!set\-Scale@{set\-Scale}}
+\index{set\-Scale@{set\-Scale}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{set\-Scale}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::set\-Scale (
+\begin{DoxyParamCaption}
+\item[{const glm\-::vec3 \&}]{scale}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a85332188c5aac6ba149a9d19d57b4698}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_ac65de94c3cdf1fee1340ba196adb9404}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_abcefe0919b3b95f43326c7e6b1397154}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!set\-Scale@{set\-Scale}}
+\index{set\-Scale@{set\-Scale}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{set\-Scale}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::set\-Scale (
+\begin{DoxyParamCaption}
+\item[{glm\-::detail\-::float32}]{x, }
+\item[{glm\-::detail\-::float32}]{y, }
+\item[{glm\-::detail\-::float32}]{z}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_abcefe0919b3b95f43326c7e6b1397154}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a0c0e5e9e556e01b993a72fa5540dfcc6}{glr\-::\-I\-Scene\-Node}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a89d36e8080ff28ff75e19d1ad872f4a1}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!translate@{translate}}
+\index{translate@{translate}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{translate}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::translate (
+\begin{DoxyParamCaption}
+\item[{const glm\-::vec3 \&}]{trans, }
+\item[{{\bf Transform\-Space}}]{relative\-To = {\ttfamily {\bf T\-S\-\_\-\-L\-O\-C\-A\-L}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a89d36e8080ff28ff75e19d1ad872f4a1}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_a6b958e7fbfa006bda878e7c97e2b952e}{glr\-::\-I\-Scene\-Node}.
+
+
+
+Reimplemented in \hyperlink{classglr_1_1env_1_1SkyBoxPlane_a0672466660c3dcc933b45290343263ad}{glr\-::env\-::\-Sky\-Box\-Plane}.
+
+\hypertarget{classglr_1_1BasicSceneNode_a974b85c31b87e3848aa5b62920993880}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!translate@{translate}}
+\index{translate@{translate}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{translate}]{\setlength{\rightskip}{0pt plus 5cm}virtual void glr\-::\-Basic\-Scene\-Node\-::translate (
+\begin{DoxyParamCaption}
+\item[{glm\-::detail\-::float32}]{x, }
+\item[{glm\-::detail\-::float32}]{y, }
+\item[{glm\-::detail\-::float32}]{z, }
+\item[{{\bf Transform\-Space}}]{relative\-To = {\ttfamily {\bf T\-S\-\_\-\-L\-O\-C\-A\-L}}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classglr_1_1BasicSceneNode_a974b85c31b87e3848aa5b62920993880}
+
+
+Implements \hyperlink{classglr_1_1ISceneNode_aef51fe63856879874066441be8230fd2}{glr\-::\-I\-Scene\-Node}.
+
+
+
+Reimplemented in \hyperlink{classglr_1_1env_1_1SkyBoxPlane_a97632902492dc6922bb176e935228f43}{glr\-::env\-::\-Sky\-Box\-Plane}.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classglr_1_1BasicSceneNode_a8a770ee05b35396d7390c14fc0216793}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!active\-\_\-@{active\-\_\-}}
+\index{active\-\_\-@{active\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{active\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}bool glr\-::\-Basic\-Scene\-Node\-::active\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a8a770ee05b35396d7390c14fc0216793}
+\hypertarget{classglr_1_1BasicSceneNode_a9f431cf1fd91fb8d2873d7afdffa7b0e}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!id\-\_\-@{id\-\_\-}}
+\index{id\-\_\-@{id\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{id\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Id} glr\-::\-Basic\-Scene\-Node\-::id\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a9f431cf1fd91fb8d2873d7afdffa7b0e}
+\hypertarget{classglr_1_1BasicSceneNode_a69b060fc10ea5e9899ab3b8dd5d2ec42}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!name\-\_\-@{name\-\_\-}}
+\index{name\-\_\-@{name\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{name\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string glr\-::\-Basic\-Scene\-Node\-::name\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a69b060fc10ea5e9899ab3b8dd5d2ec42}
+\hypertarget{classglr_1_1BasicSceneNode_afc77302b4f85ed240d990c9261812a94}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!open\-Gl\-Device\-\_\-@{open\-Gl\-Device\-\_\-}}
+\index{open\-Gl\-Device\-\_\-@{open\-Gl\-Device\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{open\-Gl\-Device\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf glw\-::\-I\-Open\-Gl\-Device}$\ast$ glr\-::\-Basic\-Scene\-Node\-::open\-Gl\-Device\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_afc77302b4f85ed240d990c9261812a94}
+\hypertarget{classglr_1_1BasicSceneNode_a109ae99b7ab0d0fbb6a9498794c1a8f5}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!orientation\-Quaternion\-\_\-@{orientation\-Quaternion\-\_\-}}
+\index{orientation\-Quaternion\-\_\-@{orientation\-Quaternion\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{orientation\-Quaternion\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}glm\-::quat glr\-::\-Basic\-Scene\-Node\-::orientation\-Quaternion\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a109ae99b7ab0d0fbb6a9498794c1a8f5}
+\hypertarget{classglr_1_1BasicSceneNode_abedd8fd8a3adb3a761444f3d7314f8b8}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!pos\-\_\-@{pos\-\_\-}}
+\index{pos\-\_\-@{pos\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{pos\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}glm\-::vec3 glr\-::\-Basic\-Scene\-Node\-::pos\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_abedd8fd8a3adb3a761444f3d7314f8b8}
+\hypertarget{classglr_1_1BasicSceneNode_a35e50a3683416e32f6de3dd85cfebeee}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!renderable\-\_\-@{renderable\-\_\-}}
+\index{renderable\-\_\-@{renderable\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{renderable\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf models\-::\-I\-Renderable}$\ast$ glr\-::\-Basic\-Scene\-Node\-::renderable\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a35e50a3683416e32f6de3dd85cfebeee}
+\hypertarget{classglr_1_1BasicSceneNode_a307a3cb15c861120c010af11da38b785}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!scale\-\_\-@{scale\-\_\-}}
+\index{scale\-\_\-@{scale\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{scale\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}glm\-::vec3 glr\-::\-Basic\-Scene\-Node\-::scale\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a307a3cb15c861120c010af11da38b785}
+\hypertarget{classglr_1_1BasicSceneNode_ac7e2e35880f8aac581fc01a8d96be89d}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!scene\-Manager\-\_\-@{scene\-Manager\-\_\-}}
+\index{scene\-Manager\-\_\-@{scene\-Manager\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{scene\-Manager\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf I\-Scene\-Manager}$\ast$ glr\-::\-Basic\-Scene\-Node\-::scene\-Manager\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_ac7e2e35880f8aac581fc01a8d96be89d}
+\hypertarget{classglr_1_1BasicSceneNode_a5c51888436caf0096125b3f94d177bae}{\index{glr\-::\-Basic\-Scene\-Node@{glr\-::\-Basic\-Scene\-Node}!shader\-Program\-\_\-@{shader\-Program\-\_\-}}
+\index{shader\-Program\-\_\-@{shader\-Program\-\_\-}!glr::BasicSceneNode@{glr\-::\-Basic\-Scene\-Node}}
+\subsubsection[{shader\-Program\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}{\bf shaders\-::\-I\-Shader\-Program}$\ast$ glr\-::\-Basic\-Scene\-Node\-::shader\-Program\-\_\-\hspace{0.3cm}{\ttfamily [protected]}}}\label{classglr_1_1BasicSceneNode_a5c51888436caf0096125b3f94d177bae}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/jarrett/projects/icebreakers/glr/include/\hyperlink{BasicSceneNode_8hpp}{Basic\-Scene\-Node.\-hpp}\end{DoxyCompactItemize}

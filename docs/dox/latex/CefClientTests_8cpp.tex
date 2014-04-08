@@ -1,0 +1,181 @@
+\hypertarget{CefClientTests_8cpp}{\section{/home/jarrett/projects/icebreakers/glr/tests/src/\-Cef\-Client\-Tests.cpp File Reference}
+\label{CefClientTests_8cpp}\index{/home/jarrett/projects/icebreakers/glr/tests/src/\-Cef\-Client\-Tests.\-cpp@{/home/jarrett/projects/icebreakers/glr/tests/src/\-Cef\-Client\-Tests.\-cpp}}
+}
+{\ttfamily \#include $<$chrono$>$}\\*
+{\ttfamily \#include $<$boost/test/unit\-\_\-test.\-hpp$>$}\\*
+{\ttfamily \#include $<$cef\-\_\-app.\-h$>$}\\*
+{\ttfamily \#include $<$cef\-\_\-client.\-h$>$}\\*
+{\ttfamily \#include $<$cef\-\_\-render\-\_\-handler.\-h$>$}\\*
+{\ttfamily \#include $<$boost/any.\-hpp$>$}\\*
+{\ttfamily \#include \char`\"{}glm/glm.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../cef\-\_\-client/include/\-Function\-List.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../cef\-\_\-client/include/\-Exception\-List.\-hpp\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../src/common/utilities/\-String\-Utilities.\-hpp\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structGuiObject}{Gui\-Object}
+\item 
+class \hyperlink{classRenderHandler}{Render\-Handler}
+\item 
+class \hyperlink{classClient}{Client}
+\item 
+struct \hyperlink{structdata}{data}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{CefClientTests_8cpp_a139f00d2466d591f60b8d6a73c8273f1}{B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K}
+\item 
+\#define \hyperlink{CefClientTests_8cpp_a816ab7d5c2ce1f0a01216042837beb93}{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{CefClientTests_8cpp_ae58feb5e745eba80d6cf332492e648d9}{is\-Empty} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_ad5674feb2fe01eec3dee1d1bdfbc40a0}{is\-Int} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_a1209fff2126d5660b026b2ced64becd5}{is\-Uint} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_a1c6ee2a790300cedb3e5273a29807d25}{is\-Float} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_a0b8e4a0399eef9dde329832861c8b4f9}{is\-Double} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_a0d995e33be8febd1c84e8edd1443276a}{is\-Bool} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_aab3ce591875ec3c196512da2e0fe61ff}{is\-String} (const boost\-::any \&operand)
+\item 
+bool \hyperlink{CefClientTests_8cpp_a41e41a967c0af39867d94631c0d7743e}{is\-Wstring} (const boost\-::any \&operand)
+\item 
+void \hyperlink{CefClientTests_8cpp_a490d0fbba83b4e2d95201b6c354748ad}{setup\-Gui\-Objects} ()
+\item 
+glm\-::detail\-::uint32 \hyperlink{CefClientTests_8cpp_a0da3ba8551238764fbfb3697f7e3366d}{send\-Test\-Bindings} (Cef\-Ref\-Ptr$<$ Cef\-Browser $>$ browser)
+\item 
+bool \hyperlink{CefClientTests_8cpp_ae153e05df754906082852b0a60de15f6}{create\-Cef\-Client\-Test} ()
+\item 
+\hyperlink{structdata}{data} \hyperlink{CefClientTests_8cpp_ade41116d0a6fba1637272b8d43ab13da}{create\-Cef\-Browser\-Test} ()
+\item 
+\hyperlink{CefClientTests_8cpp_a03521b26391bc5644208191d57b56b5b}{B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E} (create\-Cef\-Client)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+std\-::map$<$ std\-::string, \\*
+glm\-::detail\-::uint32 $>$ \hyperlink{CefClientTests_8cpp_acb70066fd7d65d451294f193ffe81d8e}{message\-Id\-Map}
+\item 
+std\-::vector$<$ std\-::shared\-\_\-ptr\\*
+$<$ \hyperlink{structGuiObject}{Gui\-Object} $>$ $>$ \hyperlink{CefClientTests_8cpp_a88218ee76c9ae3784bae9d8ef957340a}{gui\-Objects}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{CefClientTests_8cpp_a139f00d2466d591f60b8d6a73c8273f1}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K@{B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K}}
+\index{B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K@{B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\-O\-O\-S\-T\-\_\-\-T\-E\-S\-T\-\_\-\-D\-Y\-N\-\_\-\-L\-I\-N\-K}}\label{CefClientTests_8cpp_a139f00d2466d591f60b8d6a73c8273f1}
+\hypertarget{CefClientTests_8cpp_a816ab7d5c2ce1f0a01216042837beb93}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S@{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}}
+\index{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S@{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\-L\-M\-\_\-\-F\-O\-R\-C\-E\-\_\-\-R\-A\-D\-I\-A\-N\-S}}\label{CefClientTests_8cpp_a816ab7d5c2ce1f0a01216042837beb93}
+
+
+\subsection{Function Documentation}
+\hypertarget{CefClientTests_8cpp_a03521b26391bc5644208191d57b56b5b}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E@{B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E}}
+\index{B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E@{B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E}]{\setlength{\rightskip}{0pt plus 5cm}B\-O\-O\-S\-T\-\_\-\-A\-U\-T\-O\-\_\-\-T\-E\-S\-T\-\_\-\-C\-A\-S\-E (
+\begin{DoxyParamCaption}
+\item[{create\-Cef\-Client}]{}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a03521b26391bc5644208191d57b56b5b}
+\hypertarget{CefClientTests_8cpp_ade41116d0a6fba1637272b8d43ab13da}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!create\-Cef\-Browser\-Test@{create\-Cef\-Browser\-Test}}
+\index{create\-Cef\-Browser\-Test@{create\-Cef\-Browser\-Test}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{create\-Cef\-Browser\-Test}]{\setlength{\rightskip}{0pt plus 5cm}{\bf data} create\-Cef\-Browser\-Test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_ade41116d0a6fba1637272b8d43ab13da}
+\hypertarget{CefClientTests_8cpp_ae153e05df754906082852b0a60de15f6}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!create\-Cef\-Client\-Test@{create\-Cef\-Client\-Test}}
+\index{create\-Cef\-Client\-Test@{create\-Cef\-Client\-Test}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{create\-Cef\-Client\-Test}]{\setlength{\rightskip}{0pt plus 5cm}bool create\-Cef\-Client\-Test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_ae153e05df754906082852b0a60de15f6}
+\hypertarget{CefClientTests_8cpp_a0d995e33be8febd1c84e8edd1443276a}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Bool@{is\-Bool}}
+\index{is\-Bool@{is\-Bool}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Bool}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Bool (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a0d995e33be8febd1c84e8edd1443276a}
+\hypertarget{CefClientTests_8cpp_a0b8e4a0399eef9dde329832861c8b4f9}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Double@{is\-Double}}
+\index{is\-Double@{is\-Double}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Double}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Double (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a0b8e4a0399eef9dde329832861c8b4f9}
+\hypertarget{CefClientTests_8cpp_ae58feb5e745eba80d6cf332492e648d9}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Empty@{is\-Empty}}
+\index{is\-Empty@{is\-Empty}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Empty}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Empty (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_ae58feb5e745eba80d6cf332492e648d9}
+\hypertarget{CefClientTests_8cpp_a1c6ee2a790300cedb3e5273a29807d25}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Float@{is\-Float}}
+\index{is\-Float@{is\-Float}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Float}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Float (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a1c6ee2a790300cedb3e5273a29807d25}
+\hypertarget{CefClientTests_8cpp_ad5674feb2fe01eec3dee1d1bdfbc40a0}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Int@{is\-Int}}
+\index{is\-Int@{is\-Int}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Int}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Int (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_ad5674feb2fe01eec3dee1d1bdfbc40a0}
+\hypertarget{CefClientTests_8cpp_aab3ce591875ec3c196512da2e0fe61ff}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-String@{is\-String}}
+\index{is\-String@{is\-String}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-String}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-String (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_aab3ce591875ec3c196512da2e0fe61ff}
+\hypertarget{CefClientTests_8cpp_a1209fff2126d5660b026b2ced64becd5}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Uint@{is\-Uint}}
+\index{is\-Uint@{is\-Uint}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Uint}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Uint (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a1209fff2126d5660b026b2ced64becd5}
+\hypertarget{CefClientTests_8cpp_a41e41a967c0af39867d94631c0d7743e}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!is\-Wstring@{is\-Wstring}}
+\index{is\-Wstring@{is\-Wstring}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{is\-Wstring}]{\setlength{\rightskip}{0pt plus 5cm}bool is\-Wstring (
+\begin{DoxyParamCaption}
+\item[{const boost\-::any \&}]{operand}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a41e41a967c0af39867d94631c0d7743e}
+\hypertarget{CefClientTests_8cpp_a0da3ba8551238764fbfb3697f7e3366d}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!send\-Test\-Bindings@{send\-Test\-Bindings}}
+\index{send\-Test\-Bindings@{send\-Test\-Bindings}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{send\-Test\-Bindings}]{\setlength{\rightskip}{0pt plus 5cm}glm\-::detail\-::uint32 send\-Test\-Bindings (
+\begin{DoxyParamCaption}
+\item[{Cef\-Ref\-Ptr$<$ Cef\-Browser $>$}]{browser}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a0da3ba8551238764fbfb3697f7e3366d}
+\hypertarget{CefClientTests_8cpp_a490d0fbba83b4e2d95201b6c354748ad}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!setup\-Gui\-Objects@{setup\-Gui\-Objects}}
+\index{setup\-Gui\-Objects@{setup\-Gui\-Objects}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{setup\-Gui\-Objects}]{\setlength{\rightskip}{0pt plus 5cm}void setup\-Gui\-Objects (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{CefClientTests_8cpp_a490d0fbba83b4e2d95201b6c354748ad}
+
+
+\subsection{Variable Documentation}
+\hypertarget{CefClientTests_8cpp_a88218ee76c9ae3784bae9d8ef957340a}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!gui\-Objects@{gui\-Objects}}
+\index{gui\-Objects@{gui\-Objects}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{gui\-Objects}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$ std\-::shared\-\_\-ptr$<${\bf Gui\-Object}$>$ $>$ gui\-Objects}}\label{CefClientTests_8cpp_a88218ee76c9ae3784bae9d8ef957340a}
+\hypertarget{CefClientTests_8cpp_acb70066fd7d65d451294f193ffe81d8e}{\index{Cef\-Client\-Tests.\-cpp@{Cef\-Client\-Tests.\-cpp}!message\-Id\-Map@{message\-Id\-Map}}
+\index{message\-Id\-Map@{message\-Id\-Map}!CefClientTests.cpp@{Cef\-Client\-Tests.\-cpp}}
+\subsubsection[{message\-Id\-Map}]{\setlength{\rightskip}{0pt plus 5cm}std\-::map$<$ std\-::string, glm\-::detail\-::uint32 $>$ message\-Id\-Map}}\label{CefClientTests_8cpp_acb70066fd7d65d451294f193ffe81d8e}

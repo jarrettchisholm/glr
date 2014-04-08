@@ -1,0 +1,150 @@
+\hypertarget{Interpolation_8cpp}{\section{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Interpolation.cpp File Reference}
+\label{Interpolation_8cpp}\index{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Interpolation.\-cpp@{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Interpolation.\-cpp}}
+}
+{\ttfamily \#include $<$math.\-h$>$}\\*
+{\ttfamily \#include \char`\"{}terrain/\-Interpolation.\-hpp\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \hyperlink{Interpolation_8cpp_a29237f93f6ed7a655f1a0898cc9a93e6}{ffn\-\_\-bilinear} (double T9, double lg\-\_\-rho\-Ye, const double $\ast$rate\-\_\-tbl)
+\item 
+double \hyperlink{Interpolation_8cpp_a3b76f35f235e3d2739558af9c2d58a65}{bilinear\-\_\-interp\-\_\-unit\-\_\-square} (double X, double Y, double A00, double A10, double A11, double A01)
+\item 
+double \hyperlink{Interpolation_8cpp_af2d40869628734401f2c89855d3a6cf8}{trilinear\-\_\-interp\-\_\-unit\-\_\-cube} (double X, double Y, double Z, double A000, double A100, double A101, double A001, double A010, double A110, double A111, double A011)
+\item 
+double \hyperlink{Interpolation_8cpp_ae9f9d02bbc0187a80ed83a9372e965b4}{bilinear\-\_\-interp} (double X, double Y, const double $\ast$tbl, const int N\-\_\-\-X, const int N\-\_\-\-Y, const double X\-\_\-\-M\-I\-N, const double X\-\_\-\-M\-A\-X, const double Y\-\_\-\-M\-I\-N, const double Y\-\_\-\-M\-A\-X, const int O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, const double O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E)
+\item 
+double \hyperlink{Interpolation_8cpp_ab0aa0e01995876f21e2efdefecab024f}{bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid} (double X, double Y, double $\ast$tbl, const double $\ast$Xtbl, const int N\-\_\-\-X, const double $\ast$Ytbl, const int N\-\_\-\-Y, const int O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, const double O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E)
+\item 
+double \hyperlink{Interpolation_8cpp_ab32faec7d47964d8fed2ba5367f1c16f}{trilinear\-\_\-interp} (double X, double Y, double Z, const double $\ast$tbl, const int N\-\_\-\-X, const int N\-\_\-\-Y, const int N\-\_\-\-Z, const double X\-\_\-\-M\-I\-N, const double X\-\_\-\-M\-A\-X, const double Y\-\_\-\-M\-I\-N, const double Y\-\_\-\-M\-A\-X, const double Z\-\_\-\-M\-I\-N, const double Z\-\_\-\-M\-A\-X, const int O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, const double O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E)
+\item 
+double \hyperlink{Interpolation_8cpp_a572185e24ecf421d9cd677200866fd79}{trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid} (double X, double Y, double Z, double $\ast$tbl, const double $\ast$Xtbl, const int N\-\_\-\-X, const double $\ast$Ytbl, const int N\-\_\-\-Y, const double $\ast$Ztbl, const int N\-\_\-\-Z, const int O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, const double O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static const double \hyperlink{Interpolation_8cpp_a14cc37467d245c78f295389c733ad3bd}{T9\-\_\-tbl} \mbox{[}14\mbox{]} = \{0.\-0,0.\-01,0.\-1,0.\-2,0.\-4,0.\-7,1.\-0,1.\-5,2.\-0,3.\-0,5.\-0,10.\-0,30.\-0,100.\-0\}
+\item 
+static const double \hyperlink{Interpolation_8cpp_a14af815060e9d7beda150d29233a523a}{lg\-\_\-rho\-Ye\-\_\-tbl} \mbox{[}12\mbox{]} = \{0.\-0,1.\-0,2.\-0,3.\-0,4.\-0,5.\-0,6.\-0,7.\-0,8.\-0,9.\-0,10.\-0,11.\-0\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{Interpolation_8cpp_ae9f9d02bbc0187a80ed83a9372e965b4}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!bilinear\-\_\-interp@{bilinear\-\_\-interp}}
+\index{bilinear\-\_\-interp@{bilinear\-\_\-interp}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{bilinear\-\_\-interp}]{\setlength{\rightskip}{0pt plus 5cm}double bilinear\-\_\-interp (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{const double $\ast$}]{tbl, }
+\item[{const int}]{N\-\_\-\-X, }
+\item[{const int}]{N\-\_\-\-Y, }
+\item[{const double}]{X\-\_\-\-M\-I\-N, }
+\item[{const double}]{X\-\_\-\-M\-A\-X, }
+\item[{const double}]{Y\-\_\-\-M\-I\-N, }
+\item[{const double}]{Y\-\_\-\-M\-A\-X, }
+\item[{const int}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, }
+\item[{const double}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E}
+\end{DoxyParamCaption}
+)}}\label{Interpolation_8cpp_ae9f9d02bbc0187a80ed83a9372e965b4}
+\hypertarget{Interpolation_8cpp_ab0aa0e01995876f21e2efdefecab024f}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid@{bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}}
+\index{bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid@{bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}]{\setlength{\rightskip}{0pt plus 5cm}double bilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{double $\ast$}]{tbl, }
+\item[{const double $\ast$}]{Xtbl, }
+\item[{const int}]{N\-\_\-\-X, }
+\item[{const double $\ast$}]{Ytbl, }
+\item[{const int}]{N\-\_\-\-Y, }
+\item[{const int}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, }
+\item[{const double}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E}
+\end{DoxyParamCaption}
+)}}\label{Interpolation_8cpp_ab0aa0e01995876f21e2efdefecab024f}
+\hypertarget{Interpolation_8cpp_a3b76f35f235e3d2739558af9c2d58a65}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!bilinear\-\_\-interp\-\_\-unit\-\_\-square@{bilinear\-\_\-interp\-\_\-unit\-\_\-square}}
+\index{bilinear\-\_\-interp\-\_\-unit\-\_\-square@{bilinear\-\_\-interp\-\_\-unit\-\_\-square}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{bilinear\-\_\-interp\-\_\-unit\-\_\-square}]{\setlength{\rightskip}{0pt plus 5cm}double bilinear\-\_\-interp\-\_\-unit\-\_\-square (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{double}]{A00, }
+\item[{double}]{A10, }
+\item[{double}]{A11, }
+\item[{double}]{A01}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{Interpolation_8cpp_a3b76f35f235e3d2739558af9c2d58a65}
+\hypertarget{Interpolation_8cpp_a29237f93f6ed7a655f1a0898cc9a93e6}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!ffn\-\_\-bilinear@{ffn\-\_\-bilinear}}
+\index{ffn\-\_\-bilinear@{ffn\-\_\-bilinear}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{ffn\-\_\-bilinear}]{\setlength{\rightskip}{0pt plus 5cm}double ffn\-\_\-bilinear (
+\begin{DoxyParamCaption}
+\item[{double}]{T9, }
+\item[{double}]{lg\-\_\-rho\-Ye, }
+\item[{const double $\ast$}]{rate\-\_\-tbl}
+\end{DoxyParamCaption}
+)}}\label{Interpolation_8cpp_a29237f93f6ed7a655f1a0898cc9a93e6}
+\hypertarget{Interpolation_8cpp_ab32faec7d47964d8fed2ba5367f1c16f}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!trilinear\-\_\-interp@{trilinear\-\_\-interp}}
+\index{trilinear\-\_\-interp@{trilinear\-\_\-interp}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{trilinear\-\_\-interp}]{\setlength{\rightskip}{0pt plus 5cm}double trilinear\-\_\-interp (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{double}]{Z, }
+\item[{const double $\ast$}]{tbl, }
+\item[{const int}]{N\-\_\-\-X, }
+\item[{const int}]{N\-\_\-\-Y, }
+\item[{const int}]{N\-\_\-\-Z, }
+\item[{const double}]{X\-\_\-\-M\-I\-N, }
+\item[{const double}]{X\-\_\-\-M\-A\-X, }
+\item[{const double}]{Y\-\_\-\-M\-I\-N, }
+\item[{const double}]{Y\-\_\-\-M\-A\-X, }
+\item[{const double}]{Z\-\_\-\-M\-I\-N, }
+\item[{const double}]{Z\-\_\-\-M\-A\-X, }
+\item[{const int}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, }
+\item[{const double}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E}
+\end{DoxyParamCaption}
+)}}\label{Interpolation_8cpp_ab32faec7d47964d8fed2ba5367f1c16f}
+\hypertarget{Interpolation_8cpp_a572185e24ecf421d9cd677200866fd79}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid@{trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}}
+\index{trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid@{trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid}]{\setlength{\rightskip}{0pt plus 5cm}double trilinear\-\_\-interp\-\_\-arbitrary\-\_\-grid (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{double}]{Z, }
+\item[{double $\ast$}]{tbl, }
+\item[{const double $\ast$}]{Xtbl, }
+\item[{const int}]{N\-\_\-\-X, }
+\item[{const double $\ast$}]{Ytbl, }
+\item[{const int}]{N\-\_\-\-Y, }
+\item[{const double $\ast$}]{Ztbl, }
+\item[{const int}]{N\-\_\-\-Z, }
+\item[{const int}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N, }
+\item[{const double}]{O\-U\-T\-\_\-\-O\-F\-\_\-\-D\-O\-M\-A\-I\-N\-\_\-\-V\-A\-L\-U\-E}
+\end{DoxyParamCaption}
+)}}\label{Interpolation_8cpp_a572185e24ecf421d9cd677200866fd79}
+\hypertarget{Interpolation_8cpp_af2d40869628734401f2c89855d3a6cf8}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!trilinear\-\_\-interp\-\_\-unit\-\_\-cube@{trilinear\-\_\-interp\-\_\-unit\-\_\-cube}}
+\index{trilinear\-\_\-interp\-\_\-unit\-\_\-cube@{trilinear\-\_\-interp\-\_\-unit\-\_\-cube}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{trilinear\-\_\-interp\-\_\-unit\-\_\-cube}]{\setlength{\rightskip}{0pt plus 5cm}double trilinear\-\_\-interp\-\_\-unit\-\_\-cube (
+\begin{DoxyParamCaption}
+\item[{double}]{X, }
+\item[{double}]{Y, }
+\item[{double}]{Z, }
+\item[{double}]{A000, }
+\item[{double}]{A100, }
+\item[{double}]{A101, }
+\item[{double}]{A001, }
+\item[{double}]{A010, }
+\item[{double}]{A110, }
+\item[{double}]{A111, }
+\item[{double}]{A011}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{Interpolation_8cpp_af2d40869628734401f2c89855d3a6cf8}
+
+
+\subsection{Variable Documentation}
+\hypertarget{Interpolation_8cpp_a14af815060e9d7beda150d29233a523a}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!lg\-\_\-rho\-Ye\-\_\-tbl@{lg\-\_\-rho\-Ye\-\_\-tbl}}
+\index{lg\-\_\-rho\-Ye\-\_\-tbl@{lg\-\_\-rho\-Ye\-\_\-tbl}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{lg\-\_\-rho\-Ye\-\_\-tbl}]{\setlength{\rightskip}{0pt plus 5cm}const double lg\-\_\-rho\-Ye\-\_\-tbl\mbox{[}12\mbox{]} = \{0.\-0,1.\-0,2.\-0,3.\-0,4.\-0,5.\-0,6.\-0,7.\-0,8.\-0,9.\-0,10.\-0,11.\-0\}\hspace{0.3cm}{\ttfamily [static]}}}\label{Interpolation_8cpp_a14af815060e9d7beda150d29233a523a}
+\hypertarget{Interpolation_8cpp_a14cc37467d245c78f295389c733ad3bd}{\index{Interpolation.\-cpp@{Interpolation.\-cpp}!T9\-\_\-tbl@{T9\-\_\-tbl}}
+\index{T9\-\_\-tbl@{T9\-\_\-tbl}!Interpolation.cpp@{Interpolation.\-cpp}}
+\subsubsection[{T9\-\_\-tbl}]{\setlength{\rightskip}{0pt plus 5cm}const double T9\-\_\-tbl\mbox{[}14\mbox{]} = \{0.\-0,0.\-01,0.\-1,0.\-2,0.\-4,0.\-7,1.\-0,1.\-5,2.\-0,3.\-0,5.\-0,10.\-0,30.\-0,100.\-0\}\hspace{0.3cm}{\ttfamily [static]}}}\label{Interpolation_8cpp_a14cc37467d245c78f295389c733ad3bd}

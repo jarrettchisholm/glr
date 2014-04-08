@@ -1,0 +1,62 @@
+\hypertarget{Qef_8cpp}{\section{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Qef.cpp File Reference}
+\label{Qef_8cpp}\index{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Qef.\-cpp@{/home/jarrett/projects/icebreakers/glr/src/terrain/\-Qef.\-cpp}}
+}
+{\ttfamily \#include \char`\"{}terrain/\-Qef.\-hpp\char`\"{}}\\*
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespaceglr}{glr}
+\item 
+namespace \hyperlink{namespaceglr_1_1terrain}{glr\-::terrain}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Qef_8cpp_a5defaa6a67c0db00483fb376caf78bd0}{M\-A\-X\-R\-O\-W\-S}~12
+\item 
+\#define \hyperlink{Qef_8cpp_a002b2f4894492820fe708b1b7e7c5e70}{E\-P\-S\-I\-L\-O\-N}~1e-\/5
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+glm\-::vec3 \hyperlink{namespaceglr_1_1terrain_af7685a3f1c66dca7804baad6f079e94d}{glr\-::terrain\-::evaluate} (glmd\-::float64 mat\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 $\ast$vec, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ac601c4439c8ff8f0f2e8cdeaa558eb7a}{glr\-::terrain\-::compute\-S\-V\-D} (glmd\-::float64 mat\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}3\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 d\mbox{[}3\mbox{]}, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_a1c2fcf4cbc4110c24d2266247548d2f2}{glr\-::terrain\-::factorize} (glmd\-::float64 mat\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}2\mbox{]}, glmd\-::int32 rows)
+\item 
+glmd\-::float64 \hyperlink{namespaceglr_1_1terrain_abbbf757b7f1af6a5b04c5840032bc268}{glr\-::terrain\-::factorize\-\_\-hh} (glmd\-::float64 $\ast$ptrs\mbox{[}$\,$\mbox{]}, glmd\-::int32 n)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ade7c495a594284c1bd14c64642e048a7}{glr\-::terrain\-::unpack} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}3\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}2\mbox{]}, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_a25cc2d6c88247357190dcc7aeb76206f}{glr\-::terrain\-::diagonalize} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}3\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}2\mbox{]}, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_abb2c1694f816f8f22f5faa7df4595b91}{glr\-::terrain\-::chop} (glmd\-::float64 $\ast$a, glmd\-::float64 $\ast$b, glmd\-::int32 n)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ae537fde7ba3359bc86726bbfd5b6e03f}{glr\-::terrain\-::qrstep} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}$\,$\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}$\,$\mbox{]}, glmd\-::int32 rows, glmd\-::int32 cols)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_a48e5fa50426bd4f217018cc6d9d4125f}{glr\-::terrain\-::qrstep\-\_\-middle} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}$\,$\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}$\,$\mbox{]}, glmd\-::int32 rows, glmd\-::int32 cols, glmd\-::int32 col)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_a76bd533a1fd55229e024312ce37e21ed}{glr\-::terrain\-::qrstep\-\_\-end} (glmd\-::float64 v\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}$\,$\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}$\,$\mbox{]}, glmd\-::int32 cols)
+\item 
+glmd\-::float64 \hyperlink{namespaceglr_1_1terrain_a5ac90036475b9788c701df831b06da7a}{glr\-::terrain\-::qrstep\-\_\-eigenvalue} (glmd\-::float64 tau\-\_\-u\mbox{[}$\,$\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}$\,$\mbox{]}, glmd\-::int32 cols)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_abab1c7a8d2b943a6bc4e9671dcb04d0c}{glr\-::terrain\-::qrstep\-\_\-cols2} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 tau\-\_\-u\mbox{[}$\,$\mbox{]}, glmd\-::float64 tau\-\_\-v\mbox{[}$\,$\mbox{]}, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_a4686808a20eae13f22b31b485bdf6c4c}{glr\-::terrain\-::compute\-Givens} (glmd\-::float64 a, glmd\-::float64 b, glmd\-::float64 $\ast$c, glmd\-::float64 $\ast$s)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ac6247df3c197439ecb91b1a0deffd208}{glr\-::terrain\-::compute\-Schur} (glmd\-::float64 a1, glmd\-::float64 a2, glmd\-::float64 a3, glmd\-::float64 $\ast$c, glmd\-::float64 $\ast$s)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ab31407b158cbc5b07ace0bf054ee84dc}{glr\-::terrain\-::singularize} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}3\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 d\mbox{[}3\mbox{]}, glmd\-::int32 rows)
+\item 
+void \hyperlink{namespaceglr_1_1terrain_ab52431482afa62289645ce599afe3bff}{glr\-::terrain\-::solve\-S\-V\-D} (glmd\-::float64 u\mbox{[}$\,$\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 v\mbox{[}3\mbox{]}\mbox{[}3\mbox{]}, glmd\-::float64 d\mbox{[}3\mbox{]}, glmd\-::float64 b\mbox{[}$\,$\mbox{]}, glmd\-::float64 x\mbox{[}3\mbox{]}, glmd\-::int32 rows)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{Qef_8cpp_a002b2f4894492820fe708b1b7e7c5e70}{\index{Qef.\-cpp@{Qef.\-cpp}!E\-P\-S\-I\-L\-O\-N@{E\-P\-S\-I\-L\-O\-N}}
+\index{E\-P\-S\-I\-L\-O\-N@{E\-P\-S\-I\-L\-O\-N}!Qef.cpp@{Qef.\-cpp}}
+\subsubsection[{E\-P\-S\-I\-L\-O\-N}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\-P\-S\-I\-L\-O\-N~1e-\/5}}\label{Qef_8cpp_a002b2f4894492820fe708b1b7e7c5e70}
+\hypertarget{Qef_8cpp_a5defaa6a67c0db00483fb376caf78bd0}{\index{Qef.\-cpp@{Qef.\-cpp}!M\-A\-X\-R\-O\-W\-S@{M\-A\-X\-R\-O\-W\-S}}
+\index{M\-A\-X\-R\-O\-W\-S@{M\-A\-X\-R\-O\-W\-S}!Qef.cpp@{Qef.\-cpp}}
+\subsubsection[{M\-A\-X\-R\-O\-W\-S}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\-A\-X\-R\-O\-W\-S~12}}\label{Qef_8cpp_a5defaa6a67c0db00483fb376caf78bd0}
