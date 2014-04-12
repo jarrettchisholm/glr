@@ -8,7 +8,9 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/vector.hpp>
 
+#include "serialize/glm/Vec2.hpp"
 #include "serialize/glm/Vec3.hpp"
+#include "serialize/glm/Vec4.hpp"
 #include "serialize/glm/Mat4.hpp"
 #include "serialize/glm/Quat.hpp"
 
