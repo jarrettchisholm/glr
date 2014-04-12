@@ -5,8 +5,8 @@
 
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp>
+#include "Serialization.hpp"
+#include "std/Vector.hpp"
 
 #include "serialize/glm/Vec2.hpp"
 #include "serialize/glm/Vec3.hpp"

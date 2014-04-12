@@ -8,6 +8,10 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
+#include "VertexBoneData.hpp"
+#include "BoneData.hpp"
+#include "Bone.hpp"
+
 #include "IGraphicsObject.hpp"
 
 #include "common/logger/Logger.hpp"
@@ -18,51 +22,6 @@ namespace glr
 {
 namespace glw
 {
-
-struct VertexBoneData
-{
-	glm::ivec4 boneIds;
-	glm::vec4 weights;
-	
-	VertexBoneData()
-	{
-		boneIds = glm::ivec4(0);
-		weights = glm::vec4(0.0f);
-	}
-	
-	void addBoneWeight( glm::detail::uint32 id, glm::detail::float32 weight )
-	{
-		for (glm::detail::uint32 i = 0; i < 4; i++)
-		{
-			if (weights[i] == 0.0f)
-			{
-				boneIds[i] = id;
-				weights[i] = weight;
-				
-				assert( weights[0] + weights[1] + weights[2] + weights[3] < 1.05f );
-				
-				return;
-			} 
-		}
-		
-		// If we get here, we have too many bones per vertex
-		assert(0);
-	}
-};
-
-// Bone information
-struct Bone
-{
-	std::string name;
-	glm::mat4 boneOffset;
-};
-
-struct BoneData
-{
-	std::string name;
-	std::map< std::string, glm::detail::uint32 > boneIndexMap;
-	std::vector< Bone > boneTransform;
-};
 
 /**
  * Represents a Mesh which can be rendered in the scene.
@@ -91,4 +50,4 @@ public:
 }
 }
 
-#endif /* MESH_H_ */
+#endif /* IMESH_H_ */

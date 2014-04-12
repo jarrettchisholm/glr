@@ -335,8 +335,8 @@ template<class Archive> void Mesh::serialize(Archive& ar, const unsigned int ver
 	ar & normals_;
 	ar & textureCoordinates_;
 	ar & colors_;
-	//ar & vertexBoneData_;
-	//ar & boneData_;
+	ar & vertexBoneData_;
+	ar & boneData_;
 }
 
 }
