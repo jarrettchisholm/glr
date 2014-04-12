@@ -342,4 +342,5 @@ template<class Archive> void Mesh::serialize(Archive& ar, const unsigned int ver
 }
 }
 
+BOOST_CLASS_EXPORT(glr::glw::IMesh)
 BOOST_CLASS_EXPORT_GUID(glr::glw::Mesh, "glr::glw::Mesh")

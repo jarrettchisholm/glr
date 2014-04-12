@@ -50,6 +50,4 @@ public:
 }
 }
 
-BOOST_CLASS_EXPORT(glr::glw::IMesh)
-
 #endif /* IMESH_H_ */
