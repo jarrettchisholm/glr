@@ -105,19 +105,46 @@ void MaterialManager::deserialize(serialize::TextInArchive& inArchive)
 
 template<class Archive> void MaterialManager::serialize(Archive& ar, const unsigned int version)
 {
-	boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void MaterialManager::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
 		static_cast<MaterialManager*>(nullptr),
 		static_cast<IMaterialManager*>(nullptr)
 	);
-	/*
-	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	
+	auto size = materials_.size();
+	ar & size;
+	for (auto& it : materials_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+}
+
+template<class Archive> void MaterialManager::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
+		static_cast<MaterialManager*>(nullptr),
+		static_cast<IMaterialManager*>(nullptr)
+	);
+
+    std::map< std::string, std::unique_ptr<Material> >::size_type numMaterials = 0;
+    ar & numMaterials;
+
+	materials_ = std::map< std::string, std::unique_ptr<Material> >();
+
+	for (glmd::uint32 i=0; i < numMaterials; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto material = std::unique_ptr<Material>( new Material(openGlDevice_, s) );
+		ar & *(material.get());
+		
+		materials_[s] = std::move(material);
+	}
 }
 
 }

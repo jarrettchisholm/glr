@@ -105,19 +105,46 @@ void AnimationManager::deserialize(serialize::TextInArchive& inArchive)
 
 template<class Archive> void AnimationManager::serialize(Archive& ar, const unsigned int version)
 {
-	boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void AnimationManager::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
 		static_cast<AnimationManager*>(nullptr),
 		static_cast<IAnimationManager*>(nullptr)
 	);
-	/*
-	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	
+	auto size = animations_.size();
+	ar & size;
+	for (auto& it : animations_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+}
+
+template<class Archive> void AnimationManager::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
+		static_cast<AnimationManager*>(nullptr),
+		static_cast<IAnimationManager*>(nullptr)
+	);
+
+    std::map< std::string, std::unique_ptr<Animation> >::size_type numAnimations = 0;
+    ar & numAnimations;
+
+	animations_ = std::map< std::string, std::unique_ptr<Animation> >();
+
+	for (glmd::uint32 i=0; i < numAnimations; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto animation = std::unique_ptr<Animation>( new Animation(openGlDevice_, s) );
+		ar & *(animation.get());
+		
+		animations_[s] = std::move(animation);
+	}
 }
 
 }

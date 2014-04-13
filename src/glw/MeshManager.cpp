@@ -130,19 +130,46 @@ void MeshManager::deserialize(serialize::TextInArchive& inArchive)
 
 template<class Archive> void MeshManager::serialize(Archive& ar, const unsigned int version)
 {
-	boost::serialization::void_cast_register<MeshManager, IMeshManager>(
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void MeshManager::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<MeshManager, IMeshManager>(
 		static_cast<MeshManager*>(nullptr),
 		static_cast<IMeshManager*>(nullptr)
 	);
-	/*
-	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	
+	auto size = meshes_.size();
+	ar & size;
+	for (auto& it : meshes_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+}
+
+template<class Archive> void MeshManager::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<MeshManager, IMeshManager>(
+		static_cast<MeshManager*>(nullptr),
+		static_cast<IMeshManager*>(nullptr)
+	);
+
+    std::map< std::string, std::unique_ptr<Mesh> >::size_type numMeshes = 0;
+    ar & numMeshes;
+
+	meshes_ = std::map< std::string, std::unique_ptr<Mesh> >();
+
+	for (glmd::uint32 i=0; i < numMeshes; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto mesh = std::unique_ptr<Mesh>( new Mesh(openGlDevice_, s) );
+		ar & *(mesh.get());
+		
+		meshes_[s] = std::move(mesh);
+	}
 }
 
 }

@@ -9,7 +9,7 @@
 
 #include "ITextureManager.hpp"
 
-#include <boost/serialization/split_member.hpp>
+#include "serialize/SplitMember.hpp"
 
 namespace glr
 {

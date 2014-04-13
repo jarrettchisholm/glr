@@ -272,7 +272,7 @@ template<class Archive> void TextureManager::load(Archive& ar, const unsigned in
 
 	textures2DArray_ = std::map< std::string, std::unique_ptr<Texture2DArray> >();
 
-	for (int i=0; i < textures2DArraySize; i++)
+	for (glmd::uint32 i=0; i < textures2DArraySize; i++)
 	{
 		auto s = std::string();
 		ar & s;
@@ -289,7 +289,7 @@ template<class Archive> void TextureManager::load(Archive& ar, const unsigned in
 
 	textures2D_ = std::map< std::string, std::unique_ptr<Texture2D> >();
 
-	for (int i=0; i < texture2DSize; i++)
+	for (glmd::uint32 i=0; i < texture2DSize; i++)
 	{
 		auto s = std::string();
 		ar & s;

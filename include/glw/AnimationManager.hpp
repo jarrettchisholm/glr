@@ -9,6 +9,8 @@
 
 #include "IOpenGlDevice.hpp"
 
+#include "serialize/SplitMember.hpp"
+
 namespace glr
 {
 namespace glw
@@ -41,6 +43,11 @@ private:
 	friend class boost::serialization::access;
 	
 	template<class Archive> void serialize(Archive& ar, const unsigned int version);
+	// Need to do these because boost serialization doesn't have a standard implementation for std::unique_ptr
+	// Apparently, std::unique_ptr will have a serializable implementation in boost 1.56
+	// TODO: Implement one myself?
+	template<class Archive> void save(Archive & ar, const unsigned int version) const;
+	template<class Archive> void load(Archive & ar, const unsigned int version);
 };
 
 }
