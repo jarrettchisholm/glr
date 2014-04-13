@@ -11,6 +11,11 @@ namespace glr
 {
 namespace glw
 {
+
+MeshManager::MeshManager()
+{
+	openGlDevice_ = nullptr;
+}
 	
 MeshManager::MeshManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
@@ -99,5 +104,49 @@ Mesh* MeshManager::addMesh(
 	return meshes_[name].get();
 }
 
+void MeshManager::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void MeshManager::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void MeshManager::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void MeshManager::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void MeshManager::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<MeshManager, IMeshManager>(
+		static_cast<MeshManager*>(nullptr),
+		static_cast<IMeshManager*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IMeshManager)
+BOOST_CLASS_EXPORT_GUID(glr::glw::MeshManager, "glr::glw::MeshManager")

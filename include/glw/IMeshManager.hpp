@@ -5,6 +5,8 @@
 
 #include "Mesh.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -12,7 +14,7 @@ namespace glw
 
 class Mesh;
 
-class IMeshManager
+class IMeshManager : public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IMeshManager()

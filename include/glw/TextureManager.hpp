@@ -9,6 +9,8 @@
 
 #include "ITextureManager.hpp"
 
+#include <boost/serialization/split_member.hpp>
+
 namespace glr
 {
 namespace glw
@@ -17,6 +19,7 @@ namespace glw
 class TextureManager : public ITextureManager
 {
 public:
+	TextureManager();
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
@@ -30,11 +33,23 @@ public:
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<std::string>& filenames, const TextureSettings settings = TextureSettings());
 	virtual Texture2DArray* addTexture2DArray(const std::string& name, const std::vector<utilities::Image*>& images, const TextureSettings settings = TextureSettings());
 	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+	
 private:
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Texture2D> > textures2D_;
 	std::map< std::string, std::unique_ptr<Texture2DArray> > textures2DArray_;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
+	template<class Archive> void save(Archive & ar, const unsigned int version) const;
+	template<class Archive> void load(Archive & ar, const unsigned int version);
 };
 
 }

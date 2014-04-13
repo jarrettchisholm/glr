@@ -15,6 +15,25 @@ namespace glr
 namespace glw
 {
 
+Animation::Animation()
+{
+	openGlDevice_ = nullptr;
+	name_ = std::string();
+	duration_ = 0.0f;
+	ticksPerSecond_ = 0.0f;
+	animatedBoneNodes_ = std::map< std::string, AnimatedBoneNode >();
+	runningTime_ = 0.0f;
+	
+	bufferId_ = 0;
+	
+	startFrame_ = 0;
+	endFrame_ = 0;
+	
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	
+	//allocateVideoMemory();
+}
+
 Animation::Animation(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	duration_ = 0.0f;
@@ -453,5 +472,49 @@ void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::
 	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
 }
 
+void Animation::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Animation::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Animation::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Animation::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Animation::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Animation, IAnimation>(
+		static_cast<Animation*>(nullptr),
+		static_cast<IAnimation*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IAnimation)
+BOOST_CLASS_EXPORT_GUID(glr::glw::Animation, "glr::glw::Animation")

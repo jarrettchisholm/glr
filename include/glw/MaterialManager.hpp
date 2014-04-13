@@ -17,9 +17,11 @@ namespace glr
 {
 namespace glw
 {
+
 class MaterialManager : public IMaterialManager
 {
 public:
+	MaterialManager();
 	MaterialManager(IOpenGlDevice* openGlDevice);
 	virtual ~MaterialManager();
 
@@ -34,10 +36,21 @@ public:
 		glm::detail::float32 shininess,
 		glm::detail::float32 strength
 	);
+	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+
 private:	
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

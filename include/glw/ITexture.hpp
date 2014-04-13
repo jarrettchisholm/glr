@@ -13,6 +13,8 @@
 #include "common/logger/Logger.hpp"
 #include "common/utilities/ImageLoader.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -31,7 +33,7 @@ struct TextureSettings
 	GLint textureWrapT;
 };
 
-class ITexture : public virtual IGraphicsObject
+class ITexture : public virtual IGraphicsObject, public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~ITexture()

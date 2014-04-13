@@ -16,6 +16,11 @@ namespace glr
 namespace glw
 {
 
+TextureManager::TextureManager()
+{
+	openGlDevice_ = nullptr;
+}
+
 TextureManager::TextureManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 }
@@ -203,5 +208,101 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	return textures2DArray_[name].get();
 }
 
+void TextureManager::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void TextureManager::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void TextureManager::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void TextureManager::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void TextureManager::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void TextureManager::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<TextureManager, ITextureManager>(
+		static_cast<TextureManager*>(nullptr),
+		static_cast<ITextureManager*>(nullptr)
+	);
+	
+	auto size = textures2DArray_.size();
+	ar & size;
+	for (auto& it : textures2DArray_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+
+	auto size2 = textures2D_.size();
+    ar & size2;
+	for (auto& it : textures2D_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+}
+
+template<class Archive> void TextureManager::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<TextureManager, ITextureManager>(
+		static_cast<TextureManager*>(nullptr),
+		static_cast<ITextureManager*>(nullptr)
+	);
+
+	// Texture 2D Array
+    long unsigned int size = 0;
+    ar & size;
+
+	textures2DArray_ = std::map< std::string, std::unique_ptr<Texture2DArray> >();
+
+	for (int i=0; i < size; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto tex2DArray = std::unique_ptr<Texture2DArray>( new Texture2DArray() );
+		ar & *(tex2DArray.get());
+		
+		textures2DArray_[s] = std::move(tex2DArray);
+	}
+
+	// Texture 2D
+	size = 0;
+    ar & size;
+
+	textures2D_ = std::map< std::string, std::unique_ptr<Texture2D> >();
+
+	for (int i=0; i < size; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto tex2D = std::unique_ptr<Texture2D>( new Texture2D() );
+		ar & *(tex2D.get());
+		
+		textures2D_[s] = std::move(tex2D);
+	}
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::ITextureManager)
+BOOST_CLASS_EXPORT_GUID(glr::glw::TextureManager, "glr::glw::TextureManager")

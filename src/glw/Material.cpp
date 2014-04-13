@@ -13,6 +13,12 @@ namespace glr
 namespace glw
 {
 
+Material::Material() : bufferId_(0)
+{
+	openGlDevice_ = nullptr;
+	name_ = std::string();
+}
+
 Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
 {	
 }
@@ -170,5 +176,49 @@ void Material::setStrength(glm::detail::float32 strength)
 	strength_ = strength;
 }
 
+void Material::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Material::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Material::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Material::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Material::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Material, IMaterial>(
+		static_cast<Material*>(nullptr),
+		static_cast<IMaterial*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IMaterial)
+BOOST_CLASS_EXPORT_GUID(glr::glw::Material, "glr::glw::Material")

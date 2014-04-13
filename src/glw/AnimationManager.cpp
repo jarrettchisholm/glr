@@ -12,6 +12,14 @@ namespace glr
 {
 namespace glw
 {
+
+AnimationManager::AnimationManager()
+{
+	openGlDevice_ = nullptr;
+	
+	// Create and add GLR_IDENTITY_BONES animation
+	addAnimation(glw::Constants::GLR_IDENTITY_BONES);
+}
 	
 AnimationManager::AnimationManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
@@ -71,5 +79,49 @@ Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::
 	return animations_[name].get();
 }
 
+void AnimationManager::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void AnimationManager::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void AnimationManager::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void AnimationManager::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void AnimationManager::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
+		static_cast<AnimationManager*>(nullptr),
+		static_cast<IAnimationManager*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IAnimationManager)
+BOOST_CLASS_EXPORT_GUID(glr::glw::AnimationManager, "glr::glw::AnimationManager")

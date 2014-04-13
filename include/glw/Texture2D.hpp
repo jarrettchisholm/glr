@@ -24,6 +24,7 @@ class IOpenGlDevice;
 class Texture2D : public ITexture
 {
 public:
+	Texture2D();
 	Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	virtual ~Texture2D();
@@ -52,6 +53,12 @@ public:
 	virtual void freeVideoMemory();
 	virtual void allocateVideoMemory();
 
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+
 	GETSET(std::string, name_, Name)
 
 private:
@@ -64,6 +71,10 @@ private:
 	
 	GLuint bufferId_;
 	GLuint bindPoint_;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

@@ -5,6 +5,8 @@
 
 #include "Material.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -12,7 +14,7 @@ namespace glw
 
 class Material;
 
-class IMaterialManager
+class IMaterialManager : public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IMaterialManager()

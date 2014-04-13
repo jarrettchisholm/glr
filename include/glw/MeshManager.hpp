@@ -19,6 +19,7 @@ namespace glw
 class MeshManager : public IMeshManager
 {
 public:
+	MeshManager();
 	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
 
@@ -41,10 +42,20 @@ public:
 		std::vector< glm::vec4 > colors
 	);
 	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+	
 private:	
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

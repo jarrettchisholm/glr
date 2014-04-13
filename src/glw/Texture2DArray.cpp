@@ -12,6 +12,13 @@ namespace glr
 namespace glw
 {
 
+Texture2DArray::Texture2DArray() : bufferId_(0)
+{
+	openGlDevice_ = nullptr;
+	name_ = std::string();
+	settings_ = TextureSettings();
+}
+
 Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
@@ -214,5 +221,49 @@ bool Texture2DArray::areImagesSameFormat()
 	return true;
 }
 
+void Texture2DArray::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Texture2DArray::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Texture2DArray::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Texture2DArray::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Texture2DArray::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Texture2DArray, ITexture>(
+		static_cast<Texture2DArray*>(nullptr),
+		static_cast<ITexture*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+//BOOST_CLASS_EXPORT(glr::glw::ITexture)
+BOOST_CLASS_EXPORT_GUID(glr::glw::Texture2DArray, "glr::glw::Texture2DArray")

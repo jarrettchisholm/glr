@@ -5,6 +5,8 @@
 
 #include "Animation.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -12,7 +14,8 @@ namespace glw
 
 class Animation;
 
-class IAnimationManager {
+class IAnimationManager : public virtual serialize::ITextSerializable
+{
 public:
 	virtual ~IAnimationManager()
 	{

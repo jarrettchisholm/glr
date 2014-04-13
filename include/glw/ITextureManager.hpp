@@ -10,6 +10,8 @@
 
 #include "common/utilities/ImageLoader.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -18,7 +20,7 @@ namespace glw
 class Texture2D;
 class Texture2DArray;
 	
-class ITextureManager
+class ITextureManager : public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~ITextureManager()

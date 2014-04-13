@@ -12,6 +12,11 @@ namespace glr
 namespace glw
 {
 
+MaterialManager::MaterialManager()
+{
+	openGlDevice_ = nullptr;
+}
+
 MaterialManager::MaterialManager(IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 }
@@ -74,5 +79,49 @@ Material* MaterialManager::addMaterial(
 	return materials_[name].get();
 }
 
+void MaterialManager::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void MaterialManager::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void MaterialManager::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void MaterialManager::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void MaterialManager::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
+		static_cast<MaterialManager*>(nullptr),
+		static_cast<IMaterialManager*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::IMaterialManager)
+BOOST_CLASS_EXPORT_GUID(glr::glw::MaterialManager, "glr::glw::MaterialManager")

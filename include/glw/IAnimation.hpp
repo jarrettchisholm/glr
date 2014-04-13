@@ -15,6 +15,8 @@
 
 #include "common/utilities/Macros.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
@@ -50,7 +52,7 @@ struct BoneNode
  * 		openGlDevice->bindBuffer( animation->getBufferId(), bindPoint );
  * }
  */
-class IAnimation : public virtual IGraphicsObject
+class IAnimation : public virtual IGraphicsObject, public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IAnimation()
@@ -70,8 +72,8 @@ public:
 	 */
 	virtual void bind() const = 0;
 	
-	// Inherited from IGraphicsObject - need to declare it here so that it is visible to anything using an IAnimation object.
-	virtual void pushToVideoMemory() = 0;
+	// Make visible to anything using/subclassing IAnimation object.
+	using IGraphicsObject::pushToVideoMemory;
 	
 	/**
 	 * Will stream the provided transformation matrices into opengl memory.

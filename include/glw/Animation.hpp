@@ -23,8 +23,10 @@ namespace glw
 
 namespace glmd = glm::detail;
 
-class Animation : public IAnimation {
+class Animation : public IAnimation
+{
 public:
+	Animation();
 	Animation(IOpenGlDevice* openGlDevice, std::string name);
 	Animation(IOpenGlDevice* openGlDevice, std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	Animation(const Animation& other);
@@ -53,6 +55,12 @@ public:
 	void generateIdentityBoneTransforms(glmd::uint32 numBones);
 	
 	virtual const std::string& getName() const;
+	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
 	
 private:
 	GLuint bufferId_;
@@ -87,6 +95,10 @@ private:
 	void calcInterpolatedRotation(glm::quat& Out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
 	void calcInterpolatedScaling(glm::vec3& Out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
 	void readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glmd::float32 animationTime, const glm::mat4& globalInverseTransform, const BoneNode& rootBoneNode, const BoneData& boneData, const glm::mat4& parentTransform);
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

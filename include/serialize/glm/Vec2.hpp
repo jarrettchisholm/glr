@@ -1,8 +1,8 @@
 #ifndef GLMVEC2SERIALIZE_H_
 #define GLMVEC2SERIALIZE_H_
 
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/vector.hpp>
+#include "serialize/Serialization.hpp"
+#include "serialize/std/Vector.hpp"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>

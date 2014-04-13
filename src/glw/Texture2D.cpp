@@ -11,6 +11,13 @@ namespace glr
 namespace glw
 {
 
+Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+{
+	openGlDevice_ = nullptr;
+	name_ = std::string();
+	settings_ = TextureSettings();
+}
+
 Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings ) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 }
@@ -150,5 +157,49 @@ void Texture2D::allocateVideoMemory()
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat_,  image_.width, image_.height, 0, internalFormat_, GL_UNSIGNED_BYTE, nullptr);
 }
 
+void Texture2D::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Texture2D::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Texture2D::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Texture2D::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Texture2D::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Texture2D, ITexture>(
+		static_cast<Texture2D*>(nullptr),
+		static_cast<ITexture*>(nullptr)
+	);
+	/*
+	ar & name_;
+	ar & vertices_;
+	ar & normals_;
+	ar & textureCoordinates_;
+	ar & colors_;
+	ar & vertexBoneData_;
+	ar & boneData_;
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::glw::ITexture)
+BOOST_CLASS_EXPORT_GUID(glr::glw::Texture2D, "glr::glw::Texture2D")

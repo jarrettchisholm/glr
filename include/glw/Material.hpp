@@ -37,6 +37,7 @@ struct MaterialData
 class Material : public IMaterial
 {
 public:
+	Material();
 	Material(IOpenGlDevice* openGlDevice, std::string name);
 	Material(
 		IOpenGlDevice* openGlDevice,
@@ -67,6 +68,12 @@ public:
 	void setShininess(glm::detail::float32 shininess);
 	void setStrength(glm::detail::float32 strength);
 
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
+
 	GETSET(std::string, name_, Name)
 private:	
 	IOpenGlDevice* openGlDevice_;
@@ -90,6 +97,10 @@ private:
 	glm::detail::int32 two_sided_true_;
 	glm::detail::int32 wireframe_;
 	glm::detail::uint32 max_;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 };
 
 }

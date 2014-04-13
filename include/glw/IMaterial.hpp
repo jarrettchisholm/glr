@@ -3,12 +3,14 @@
 
 #include "IGraphicsObject.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace glw
 {
 
-class IMaterial : public virtual IGraphicsObject
+class IMaterial : public virtual IGraphicsObject, public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IMaterial()
