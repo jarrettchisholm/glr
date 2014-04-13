@@ -26,7 +26,6 @@ class IOpenGlDevice;
 class Material : public IMaterial
 {
 public:
-	Material();
 	Material(IOpenGlDevice* openGlDevice, std::string name);
 	Material(
 		IOpenGlDevice* openGlDevice,
@@ -65,7 +64,12 @@ public:
 
 	const std::string& getName() const;
 	void setName(std::string name);
-private:	
+private:
+	/**
+	 * Required by serialization.
+	 */
+	Material();
+
 	IOpenGlDevice* openGlDevice_;
 	std::string name_;
 	glm::vec4 ambient_;

@@ -24,7 +24,6 @@ class IOpenGlDevice;
 class Texture2D : public ITexture
 {
 public:
-	Texture2D();
 	Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	virtual ~Texture2D();
@@ -62,6 +61,11 @@ public:
 	GETSET(std::string, name_, Name)
 
 private:
+	/**
+	 * Required by serialization.
+	 */
+	Texture2D();
+
 	IOpenGlDevice* openGlDevice_;
 	std::string name_;
 	TextureSettings settings_;

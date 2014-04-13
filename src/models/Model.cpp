@@ -11,6 +11,19 @@ namespace glr
 namespace models
 {
 
+Model::Model()
+{
+	id_ = Id::INVALID;
+	name_ = std::string();
+	openGlDevice_ = nullptr;
+	initialize();
+}
+
+Model::Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
+{
+	initialize();
+}
+
 Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice)
 	: id_(id), name_(std::move(name)), rootBoneNode_(std::move(rootBoneNode)), globalInverseTransformation_(std::move(globalInverseTransformation)), openGlDevice_(openGlDevice)
 {
@@ -467,5 +480,46 @@ void Model::render(shaders::IShaderProgram* shader)
 	}
 }
 
+
+void Model::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void Model::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void Model::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void Model::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void Model::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::void_cast_register<Model, IModel>(
+		static_cast<Model*>(nullptr),
+		static_cast<IModel*>(nullptr)
+	);
+
+	// Define non-default constructore for Model??
+	ar & name_;
+	//ar & image_;
+	//ar & internalFormat_;
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::models::IModel)
+BOOST_CLASS_EXPORT_GUID(glr::models::Model, "glr::models::Model")

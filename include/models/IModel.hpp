@@ -10,6 +10,8 @@
 
 #include "Id.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace models
@@ -94,7 +96,7 @@ struct ModelData
 /**
  * 
  */
-class IModel : public virtual IRenderable
+class IModel : public virtual IRenderable, public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IModel()

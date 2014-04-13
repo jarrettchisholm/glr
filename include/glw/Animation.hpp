@@ -26,7 +26,6 @@ namespace glmd = glm::detail;
 class Animation : public IAnimation
 {
 public:
-	Animation();
 	Animation(IOpenGlDevice* openGlDevice, std::string name);
 	Animation(IOpenGlDevice* openGlDevice, std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
 	Animation(const Animation& other);
@@ -63,6 +62,11 @@ public:
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 	
 private:
+	/**
+	 * Required by serialization.
+	 */
+	Animation();
+
 	GLuint bufferId_;
 	GLuint bindPoint_;
 

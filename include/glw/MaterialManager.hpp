@@ -23,7 +23,6 @@ namespace glw
 class MaterialManager : public IMaterialManager
 {
 public:
-	MaterialManager();
 	MaterialManager(IOpenGlDevice* openGlDevice);
 	virtual ~MaterialManager();
 
@@ -45,7 +44,12 @@ public:
 	virtual void deserialize(const std::string& filename);
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 
-private:	
+private:
+	/**
+	 * Required by serialization.
+	 */
+	MaterialManager();
+
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;

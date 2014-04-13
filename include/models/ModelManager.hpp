@@ -22,6 +22,8 @@
 
 #include "IdManager.hpp"
 
+#include "serialize/SplitMember.hpp"
+
 namespace glr
 {
 namespace models
@@ -48,8 +50,19 @@ public:
 	virtual void destroyInstance(IModel* model);
 
 	virtual IModel* getInstance(Id id) const;
+	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
 
 private:	
+	/**
+	 * Required for serialization.
+	 */
+	ModelManager();
+
 	glw::IOpenGlDevice* openGlDevice_;
 
 	aiLogStream stream;
@@ -63,6 +76,15 @@ private:
 	
 	Model* getModel(Id id) const;
 	Model* getModel(const std::string& name) const;
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
+	// Need to do these because boost serialization doesn't have a standard implementation for std::unique_ptr
+	// Apparently, std::unique_ptr will have a serializable implementation in boost 1.56
+	// TODO: Implement one myself?
+	template<class Archive> void save(Archive & ar, const unsigned int version) const;
+	template<class Archive> void load(Archive & ar, const unsigned int version);
 };
 
 }

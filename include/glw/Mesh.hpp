@@ -29,7 +29,9 @@ class Mesh : public IMesh
 {
 public:
 	/**
-	 * Required for Serialization.
+	 * Required by serialization.
+	 * 
+	 * Made public for testing!
 	 */
 	Mesh();
 

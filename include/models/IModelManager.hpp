@@ -9,6 +9,8 @@
 
 #include "Id.hpp"
 
+#include "serialize/ITextSerializable.hpp"
+
 namespace glr
 {
 namespace models
@@ -17,7 +19,7 @@ namespace models
 /**
  * 
  */
-class IModelManager
+class IModelManager : public virtual serialize::ITextSerializable
 {
 public:
 	virtual ~IModelManager()

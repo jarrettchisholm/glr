@@ -25,7 +25,6 @@ class IOpenGlDevice;
 class Texture2DArray : public ITexture
 {
 public:
-	Texture2DArray();
 	Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
 	virtual ~Texture2DArray();
@@ -52,6 +51,11 @@ public:
 	GETSET(std::string, name_, Name)
 
 private:
+	/**
+	 * Required by serialization.
+	 */
+	Texture2DArray();
+	
 	IOpenGlDevice* openGlDevice_;
 	std::string name_;
 	TextureSettings settings_;

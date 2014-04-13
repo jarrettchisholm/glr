@@ -19,7 +19,6 @@ namespace glw
 class TextureManager : public ITextureManager
 {
 public:
-	TextureManager();
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
@@ -40,6 +39,11 @@ public:
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 	
 private:
+	/**
+	 * Required by serialization.
+	 */
+	TextureManager();
+
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Texture2D> > textures2D_;

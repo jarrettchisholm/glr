@@ -21,7 +21,6 @@ namespace glw
 class MeshManager : public IMeshManager
 {
 public:
-	MeshManager();
 	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
 
@@ -50,7 +49,12 @@ public:
 	virtual void deserialize(const std::string& filename);
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 	
-private:	
+private:
+	/**
+	 * Required by serialization.
+	 */
+	MeshManager();
+
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;

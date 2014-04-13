@@ -15,6 +15,11 @@ namespace glr
 namespace models
 {
 
+ModelManager::ModelManager()
+{
+	openGlDevice_ = nullptr;
+}
+
 ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openGlDevice)
 {
 	modelLoader_ = std::unique_ptr<ModelLoader>( new ModelLoader(openGlDevice_) );
@@ -166,5 +171,79 @@ IModel* ModelManager::getInstance(Id id) const
 	return nullptr;
 }
 
+void ModelManager::serialize(const std::string& filename)
+{
+	std::ofstream ofs(filename.c_str());
+	serialize::TextOutArchive textOutArchive(ofs);
+	serialize(textOutArchive);
+}
+
+void ModelManager::serialize(serialize::TextOutArchive& outArchive)
+{
+	outArchive << *this;
+}
+
+void ModelManager::deserialize(const std::string& filename)
+{
+	std::ifstream ifs(filename.c_str());
+	serialize::TextInArchive textInArchive(ifs);
+	deserialize(textInArchive);
+}
+
+void ModelManager::deserialize(serialize::TextInArchive& inArchive)
+{
+	inArchive >> *this;
+}
+
+template<class Archive> void ModelManager::serialize(Archive& ar, const unsigned int version)
+{
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void ModelManager::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<ModelManager, IModelManager>(
+		static_cast<ModelManager*>(nullptr),
+		static_cast<IModelManager*>(nullptr)
+	);
+
+	/*
+	auto size = meshes_.size();
+	ar & size;
+	for (auto& it : meshes_)
+	{
+		ar & it.first & *(it.second.get());
+	}
+	*/
+}
+
+template<class Archive> void ModelManager::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<ModelManager, IModelManager>(
+		static_cast<ModelManager*>(nullptr),
+		static_cast<IModelManager*>(nullptr)
+	);
+	/*
+    std::map< std::string, std::unique_ptr<Mesh> >::size_type numMeshes = 0;
+    ar & numMeshes;
+
+	meshes_ = std::map< std::string, std::unique_ptr<Mesh> >();
+
+	for (glmd::uint32 i=0; i < numMeshes; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		auto mesh = std::unique_ptr<Mesh>( new Mesh(openGlDevice_, s) );
+		ar & *(mesh.get());
+		
+		meshes_[s] = std::move(mesh);
+	}
+	*/
+}
+
 }
 }
+
+BOOST_CLASS_EXPORT(glr::models::IModelManager)
+BOOST_CLASS_EXPORT_GUID(glr::models::ModelManager, "glr::models::ModelManager")

@@ -21,7 +21,6 @@ class Animation;
 class AnimationManager : public IAnimationManager
 {
 public:
-	AnimationManager();
 	AnimationManager(IOpenGlDevice* openGlDevice);
 	virtual ~AnimationManager();
 
@@ -36,6 +35,11 @@ public:
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 	
 private:
+	/**
+	 * Required by serialization.
+	 */
+	AnimationManager();
+
 	IOpenGlDevice* openGlDevice_;
 	
 	std::map< std::string, std::unique_ptr<Animation> > animations_;

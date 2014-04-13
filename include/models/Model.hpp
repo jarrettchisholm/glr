@@ -89,6 +89,12 @@ public:
 	 * @param shader The shader to use to render this model.
 	 */
 	virtual void render(shaders::IShaderProgram* shader);
+	
+	virtual void serialize(const std::string& filename);
+	virtual void serialize(serialize::TextOutArchive& outArchive);
+
+	virtual void deserialize(const std::string& filename);
+	virtual void deserialize(serialize::TextInArchive& inArchive);
 
 protected:
 	Id id_;
@@ -133,6 +139,16 @@ protected:
 	glmd::int32 getIndexOf(glw::IMaterial* material) const;
 	
 private:
+	/**
+	 * Required for serialization.
+	 */
+	Model();
+	
+	/**
+	 * Used by serialization (?)
+	 */
+	Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
+
 	// We don't copy straight up, since we need a new id for the copy
 	Model(const Model& other);
 	
@@ -140,6 +156,10 @@ private:
 	void destroy();
 	
 	void copy(const Model& other);
+	
+	friend class boost::serialization::access;
+	
+	template<class Archive> void serialize(Archive& ar, const unsigned int version);
 
 };
 
