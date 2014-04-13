@@ -9,14 +9,18 @@
 #include <glm/glm.hpp>
 #include "glm/gtc/quaternion.hpp"
 
+#include "serialize/Serialization.hpp"
+#include "serialize/std/Vector.hpp"
+#include "serialize/glm/Vec3.hpp"
+#include "serialize/glm/Quat.hpp"
+
 namespace glr
 {
 namespace glw
 {
 
-class AnimatedBoneNode
+struct AnimatedBoneNode
 {
-public:
 	AnimatedBoneNode()
 	{}
 	AnimatedBoneNode(
@@ -27,21 +31,39 @@ public:
 		std::vector< glm::vec3 > positions,
 		std::vector< glm::quat > rotations,
 		std::vector< glm::vec3 > scalings
-	) : name_(std::move(name)), positionTimes_(std::move(positionTimes)), rotationTimes_(std::move(rotationTimes)), scalingTimes_(std::move(scalingTimes)), positions_(std::move(positions)), rotations_(std::move(rotations)), scalings_(std::move(scalings))
-	{}
-	virtual ~AnimatedBoneNode()
+	) : name(std::move(name)), positionTimes(std::move(positionTimes)), rotationTimes(std::move(rotationTimes)), scalingTimes(std::move(scalingTimes)), positions(std::move(positions)), rotations(std::move(rotations)), scalings(std::move(scalings))
 	{}
 
-// TODO: make these private
-public:
-	std::string name_;
-	std::vector< glm::detail::float64 > positionTimes_;
-	std::vector< glm::detail::float64 > rotationTimes_;
-	std::vector< glm::detail::float64 > scalingTimes_;
-	std::vector< glm::vec3 > positions_;
-	std::vector< glm::quat > rotations_;
-	std::vector< glm::vec3 > scalings_;
+	std::string name;
+	std::vector< glm::detail::float64 > positionTimes;
+	std::vector< glm::detail::float64 > rotationTimes;
+	std::vector< glm::detail::float64 > scalingTimes;
+	std::vector< glm::vec3 > positions;
+	std::vector< glm::quat > rotations;
+	std::vector< glm::vec3 > scalings;
 };
+
+}
+}
+
+BOOST_SERIALIZATION_SPLIT_FREE(glr::glw::AnimatedBoneNode)
+
+namespace boost
+{
+namespace serialization
+{
+
+template<class Archive> void save(Archive& ar, const glr::glw::AnimatedBoneNode& abn, unsigned int version)
+{
+	ar & abn.name & abn.positionTimes & abn.rotationTimes & abn.scalingTimes;
+	ar & abn.positions & abn.rotations & abn.scalings;
+}
+
+template<class Archive> void load(Archive& ar, glr::glw::AnimatedBoneNode& abn, unsigned int version)
+{
+	ar & abn.name & abn.positionTimes & abn.rotationTimes & abn.scalingTimes;
+	ar & abn.positions & abn.rotations & abn.scalings;
+}
 
 }
 }

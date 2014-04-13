@@ -267,34 +267,34 @@ template<class Archive> void TextureManager::load(Archive& ar, const unsigned in
 	);
 
 	// Texture 2D Array
-    long unsigned int size = 0;
-    ar & size;
+    std::map< std::string, std::unique_ptr<Texture2DArray> >::size_type textures2DArraySize = 0;
+    ar & textures2DArraySize;
 
 	textures2DArray_ = std::map< std::string, std::unique_ptr<Texture2DArray> >();
 
-	for (int i=0; i < size; i++)
+	for (int i=0; i < textures2DArraySize; i++)
 	{
 		auto s = std::string();
 		ar & s;
 		
-		auto tex2DArray = std::unique_ptr<Texture2DArray>( new Texture2DArray() );
+		auto tex2DArray = std::unique_ptr<Texture2DArray>( new Texture2DArray(openGlDevice_, s) );
 		ar & *(tex2DArray.get());
 		
 		textures2DArray_[s] = std::move(tex2DArray);
 	}
 
 	// Texture 2D
-	size = 0;
-    ar & size;
+	std::map< std::string, std::unique_ptr<Texture2D> >::size_type texture2DSize = 0;
+    ar & texture2DSize;
 
 	textures2D_ = std::map< std::string, std::unique_ptr<Texture2D> >();
 
-	for (int i=0; i < size; i++)
+	for (int i=0; i < texture2DSize; i++)
 	{
 		auto s = std::string();
 		ar & s;
 		
-		auto tex2D = std::unique_ptr<Texture2D>( new Texture2D() );
+		auto tex2D = std::unique_ptr<Texture2D>( new Texture2D(openGlDevice_, s) );
 		ar & *(tex2D.get());
 		
 		textures2D_[s] = std::move(tex2D);

@@ -14,8 +14,7 @@
 #include "shaders/IShaderProgram.hpp"
 
 #include "IMaterial.hpp"
-
-#include "common/utilities/Macros.hpp"
+#include "MaterialData.hpp"
 
 namespace glr
 {
@@ -23,16 +22,6 @@ namespace glw
 {
 	
 class IOpenGlDevice;
-	
-struct MaterialData
-{
-	glm::vec4 ambient;
-	glm::vec4 diffuse;
-	glm::vec4 specular;	
-	glm::vec4 emission;
-	//glm::detail::float32 shininess;
-	//glm::detail::float32 strength;
-};
 	
 class Material : public IMaterial
 {
@@ -74,7 +63,8 @@ public:
 	virtual void deserialize(const std::string& filename);
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 
-	GETSET(std::string, name_, Name)
+	const std::string& getName() const;
+	void setName(std::string name);
 private:	
 	IOpenGlDevice* openGlDevice_;
 	std::string name_;
@@ -87,16 +77,6 @@ private:
 	
 	GLuint bufferId_;
 	GLuint bindPoint_;
-
-	GLenum fill_mode_;
-	glm::detail::int32 ret1_, ret2_;
-	
-	MaterialData materialData_;
-	
-	glm::detail::int32 two_sided_;
-	glm::detail::int32 two_sided_true_;
-	glm::detail::int32 wireframe_;
-	glm::detail::uint32 max_;
 	
 	friend class boost::serialization::access;
 	

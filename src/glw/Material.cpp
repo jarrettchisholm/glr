@@ -176,6 +176,16 @@ void Material::setStrength(glm::detail::float32 strength)
 	strength_ = strength;
 }
 
+const std::string& Material::getName() const
+{
+	return name_;
+}
+
+void Material::setName(std::string name)
+{
+	name_ = std::move(name);
+}
+
 void Material::serialize(const std::string& filename)
 {
 	std::ofstream ofs(filename.c_str());
@@ -206,15 +216,14 @@ template<class Archive> void Material::serialize(Archive& ar, const unsigned int
 		static_cast<Material*>(nullptr),
 		static_cast<IMaterial*>(nullptr)
 	);
-	/*
+
 	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	ar & ambient_;
+	ar & diffuse_;
+	ar & specular_;
+	ar & emission_;
+	ar & shininess_;
+	ar & strength_;
 }
 
 }

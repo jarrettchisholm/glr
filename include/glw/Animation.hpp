@@ -87,13 +87,13 @@ private:
 
 	void setupAnimationUbo();
 
-	glmd::uint32 findPosition(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
-	glmd::uint32 findRotation(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
-	glmd::uint32 findScaling(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
+	glmd::uint32 findPosition(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
+	glmd::uint32 findRotation(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
+	glmd::uint32 findScaling(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
 
-	void calcInterpolatedPosition(glm::vec3& Out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
-	void calcInterpolatedRotation(glm::quat& Out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
-	void calcInterpolatedScaling(glm::vec3& Out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode);
+	void calcInterpolatedPosition(glm::vec3& Out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
+	void calcInterpolatedRotation(glm::quat& Out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
+	void calcInterpolatedScaling(glm::vec3& Out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
 	void readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glmd::float32 animationTime, const glm::mat4& globalInverseTransform, const BoneNode& rootBoneNode, const BoneData& boneData, const glm::mat4& parentTransform);
 	
 	friend class boost::serialization::access;

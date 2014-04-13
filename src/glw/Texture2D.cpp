@@ -187,15 +187,10 @@ template<class Archive> void Texture2D::serialize(Archive& ar, const unsigned in
 		static_cast<Texture2D*>(nullptr),
 		static_cast<ITexture*>(nullptr)
 	);
-	/*
+
 	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	ar & image_;
+	ar & internalFormat_;
 }
 
 }

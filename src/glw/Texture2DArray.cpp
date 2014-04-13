@@ -251,15 +251,9 @@ template<class Archive> void Texture2DArray::serialize(Archive& ar, const unsign
 		static_cast<Texture2DArray*>(nullptr),
 		static_cast<ITexture*>(nullptr)
 	);
-	/*
+
 	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	ar & images_;
 }
 
 }

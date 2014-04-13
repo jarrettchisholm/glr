@@ -219,15 +219,15 @@ const std::string& Animation::getName() const
 	return name_;
 }
 
-glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+glmd::uint32 Animation::findPosition(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
-	assert(animatedBoneNode->positionTimes_.size() > 0);
-	assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode->positionTimes_.size() );
+	assert(animatedBoneNode.positionTimes.size() > 0);
+	assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode.positionTimes.size() );
 	
 	// Search first from cache position
-	for (glmd::uint32 i = indexCache_[0]; i < animatedBoneNode->positionTimes_.size() - 1; i++)
+	for (glmd::uint32 i = indexCache_[0]; i < animatedBoneNode.positionTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->positionTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.positionTimes[i + 1])
 		{
 			indexCache_[0] = i;
 			return i;
@@ -235,9 +235,9 @@ glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNo
 	}
 	
 	// If not found, search from the beginning
-	for (glmd::uint32 i = 0; i < animatedBoneNode->positionTimes_.size() - 1; i++)
+	for (glmd::uint32 i = 0; i < animatedBoneNode.positionTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->positionTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.positionTimes[i + 1])
 		{
 			indexCache_[0] = i;
 			return i;
@@ -249,15 +249,15 @@ glmd::uint32 Animation::findPosition(glmd::float32 animationTime, AnimatedBoneNo
 	return 0;
 }
 
-glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+glmd::uint32 Animation::findRotation(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
-	assert(animatedBoneNode->rotationTimes_.size() > 0);
-	assert( indexCache_[1] >= 0 && indexCache_[1] < animatedBoneNode->rotationTimes_.size() );
+	assert(animatedBoneNode.rotationTimes.size() > 0);
+	assert( indexCache_[1] >= 0 && indexCache_[1] < animatedBoneNode.rotationTimes.size() );
 	
 	// Search first from cache position
-	for (glmd::uint32 i = indexCache_[1]; i < animatedBoneNode->rotationTimes_.size() - 1; i++)
+	for (glmd::uint32 i = indexCache_[1]; i < animatedBoneNode.rotationTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->rotationTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.rotationTimes[i + 1])
 		{
 			indexCache_[1] = i;
 			return i;
@@ -265,9 +265,9 @@ glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNo
 	}
 	
 	// If not found, search from the beginning
-	for (glmd::uint32 i = 0; i < animatedBoneNode->rotationTimes_.size() - 1; i++)
+	for (glmd::uint32 i = 0; i < animatedBoneNode.rotationTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->rotationTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.rotationTimes[i + 1])
 		{
 			indexCache_[1] = i;
 			return i;
@@ -280,15 +280,15 @@ glmd::uint32 Animation::findRotation(glmd::float32 animationTime, AnimatedBoneNo
 }
 
 
-glmd::uint32 Animation::findScaling(glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+glmd::uint32 Animation::findScaling(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
-	assert(animatedBoneNode->scalingTimes_.size() > 0);
-	assert( indexCache_[2] >= 0 && indexCache_[2] < animatedBoneNode->scalingTimes_.size() );
+	assert(animatedBoneNode.scalingTimes.size() > 0);
+	assert( indexCache_[2] >= 0 && indexCache_[2] < animatedBoneNode.scalingTimes.size() );
 	
 	// Search first from cache position
-	for (glmd::uint32 i = indexCache_[2]; i < animatedBoneNode->scalingTimes_.size() - 1; i++)
+	for (glmd::uint32 i = indexCache_[2]; i < animatedBoneNode.scalingTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->scalingTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.scalingTimes[i + 1])
 		{
 			indexCache_[2] = i;
 			return i;
@@ -296,9 +296,9 @@ glmd::uint32 Animation::findScaling(glmd::float32 animationTime, AnimatedBoneNod
 	}
 	
 	// If not found, search from the beginning
-	for (glmd::uint32 i = 0; i < animatedBoneNode->scalingTimes_.size() - 1; i++)
+	for (glmd::uint32 i = 0; i < animatedBoneNode.scalingTimes.size() - 1; i++)
 	{
-		if (animationTime < (glmd::float32)animatedBoneNode->scalingTimes_[i + 1])
+		if (animationTime < (glmd::float32)animatedBoneNode.scalingTimes[i + 1])
 		{
 			indexCache_[2] = i;
 			return i;
@@ -310,49 +310,49 @@ glmd::uint32 Animation::findScaling(glmd::float32 animationTime, AnimatedBoneNod
 	return 0;
 }
 
-void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
-	if (animatedBoneNode->positionTimes_.size() == 1)
+	if (animatedBoneNode.positionTimes.size() == 1)
 	{
-		out = animatedBoneNode->positions_[0];
+		out = animatedBoneNode.positions[0];
 		return;
 	}
 			
 	glmd::uint32 positionIndex = findPosition(animationTime, animatedBoneNode);
 	glmd::uint32 nextPositionIndex = (positionIndex + 1);
 	
-	assert(nextPositionIndex < animatedBoneNode->positionTimes_.size());
+	assert(nextPositionIndex < animatedBoneNode.positionTimes.size());
 	
-	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->positionTimes_[nextPositionIndex] - animatedBoneNode->positionTimes_[positionIndex]);
-	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->positionTimes_[positionIndex]) / deltaTime;
+	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode.positionTimes[nextPositionIndex] - animatedBoneNode.positionTimes[positionIndex]);
+	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode.positionTimes[positionIndex]) / deltaTime;
 	
 	assert(factor >= 0.0f && factor <= 1.0f);
-	const glm::vec3& start = animatedBoneNode->positions_[positionIndex];
-	const glm::vec3& end = animatedBoneNode->positions_[nextPositionIndex];
+	const glm::vec3& start = animatedBoneNode.positions[positionIndex];
+	const glm::vec3& end = animatedBoneNode.positions[nextPositionIndex];
 	glm::vec3 delta = end - start;
 	out = start + factor * delta;
 }
 
 
-void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
 	// we need at least two values to interpolate...
-	if (animatedBoneNode->rotationTimes_.size() == 1)
+	if (animatedBoneNode.rotationTimes.size() == 1)
 	{
-		out = animatedBoneNode->rotations_[0];
+		out = animatedBoneNode.rotations[0];
 		return;
 	}
 
 	glmd::uint32 rotationIndex = findRotation(animationTime, animatedBoneNode);
 	glmd::uint32 nextRotationIndex = (rotationIndex + 1);
 	
-	assert(nextRotationIndex < animatedBoneNode->rotationTimes_.size());
+	assert(nextRotationIndex < animatedBoneNode.rotationTimes.size());
 	
-	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->rotationTimes_[nextRotationIndex] - animatedBoneNode->rotationTimes_[rotationIndex]);
-	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->rotationTimes_[rotationIndex]) / deltaTime;
+	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode.rotationTimes[nextRotationIndex] - animatedBoneNode.rotationTimes[rotationIndex]);
+	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode.rotationTimes[rotationIndex]) / deltaTime;
 	assert(factor >= 0.0f && factor <= 1.0f);
-	const glm::quat& startRotationQuat = animatedBoneNode->rotations_[rotationIndex];
-	const glm::quat& endRotationQuat   = animatedBoneNode->rotations_[nextRotationIndex];
+	const glm::quat& startRotationQuat = animatedBoneNode.rotations[rotationIndex];
+	const glm::quat& endRotationQuat   = animatedBoneNode.rotations[nextRotationIndex];
 	
 	out = glm::slerp(startRotationQuat, endRotationQuat, factor);
 	// TODO: I might not need to normalize the quaternion here...might already have been done in glm::mix??
@@ -360,24 +360,24 @@ void Animation::calcInterpolatedRotation(glm::quat& out, glmd::float32 animation
 }
 
 
-void Animation::calcInterpolatedScaling(glm::vec3& out, glmd::float32 animationTime, AnimatedBoneNode* animatedBoneNode)
+void Animation::calcInterpolatedScaling(glm::vec3& out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
-	if (animatedBoneNode->scalingTimes_.size() == 1)
+	if (animatedBoneNode.scalingTimes.size() == 1)
 	{
-		out = animatedBoneNode->scalings_[0];
+		out = animatedBoneNode.scalings[0];
 		return;
 	}
 
 	glmd::uint32 scalingIndex = findScaling(animationTime, animatedBoneNode);
 	glmd::uint32 nextScalingIndex = (scalingIndex + 1);
 	
-	assert(nextScalingIndex < animatedBoneNode->scalingTimes_.size());
+	assert(nextScalingIndex < animatedBoneNode.scalingTimes.size());
 	
-	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode->scalingTimes_[nextScalingIndex] - animatedBoneNode->scalingTimes_[scalingIndex]);
-	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode->scalingTimes_[scalingIndex]) / deltaTime;
+	glmd::float32 deltaTime = (glmd::float32)(animatedBoneNode.scalingTimes[nextScalingIndex] - animatedBoneNode.scalingTimes[scalingIndex]);
+	glmd::float32 factor = (animationTime - (glmd::float32)animatedBoneNode.scalingTimes[scalingIndex]) / deltaTime;
 	assert(factor >= 0.0f && factor <= 1.0f);
-	const glm::vec3& start = animatedBoneNode->scalings_[scalingIndex];
-	const glm::vec3& end   = animatedBoneNode->scalings_[nextScalingIndex];
+	const glm::vec3& start = animatedBoneNode.scalings[scalingIndex];
+	const glm::vec3& end   = animatedBoneNode.scalings[nextScalingIndex];
 	glm::vec3 delta = end - start;
 	out = start + factor * delta;
 }
@@ -391,13 +391,13 @@ void Animation::readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glm
 		
 		if ( it != animatedBoneNodes_.end() )
 		{
-			AnimatedBoneNode* animatedBoneNode = &(it->second);
+			const AnimatedBoneNode& animatedBoneNode = it->second;
 			
 			// Clamp animation time between start and end frame
 			if ( startFrame_ > 0 || endFrame_ > 0)
 			{
-				glmd::float32 st = (glmd::float32)animatedBoneNode->positionTimes_[startFrame_];
-				glmd::float32 et = (glmd::float32)animatedBoneNode->positionTimes_[endFrame_];
+				glmd::float32 st = (glmd::float32)animatedBoneNode.positionTimes[startFrame_];
+				glmd::float32 et = (glmd::float32)animatedBoneNode.positionTimes[endFrame_];
 
 				animationTime = fmod(animationTime, et) + st;
 			}
@@ -502,15 +502,11 @@ template<class Archive> void Animation::serialize(Archive& ar, const unsigned in
 		static_cast<Animation*>(nullptr),
 		static_cast<IAnimation*>(nullptr)
 	);
-	/*
+
 	ar & name_;
-	ar & vertices_;
-	ar & normals_;
-	ar & textureCoordinates_;
-	ar & colors_;
-	ar & vertexBoneData_;
-	ar & boneData_;
-	*/
+	ar & duration_;
+	ar & ticksPerSecond_;
+	ar & animatedBoneNodes_;
 }
 
 }
