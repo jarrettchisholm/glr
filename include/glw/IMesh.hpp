@@ -44,6 +44,11 @@ public:
 	 */
 	virtual BoneData& getBoneData() = 0;
 	
+	/**
+	 * Returns the name of this mesh.
+	 * 
+	 * @return The name of the mesh.
+	 */
 	virtual const std::string& getName() const = 0;
 };
 

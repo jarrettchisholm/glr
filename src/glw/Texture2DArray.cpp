@@ -221,6 +221,11 @@ bool Texture2DArray::areImagesSameFormat()
 	return true;
 }
 
+const std::string& Texture2DArray::getName() const
+{
+	return name_;
+}
+
 void Texture2DArray::serialize(const std::string& filename)
 {
 	std::ofstream ofs(filename.c_str());

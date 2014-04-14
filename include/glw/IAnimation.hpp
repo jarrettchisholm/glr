@@ -12,6 +12,7 @@
 #include "IGraphicsObject.hpp"
 
 #include "AnimatedBoneNode.hpp"
+#include "BoneNode.hpp"
 
 #include "common/utilities/Macros.hpp"
 
@@ -21,13 +22,6 @@ namespace glr
 {
 namespace glw
 {
-
-struct BoneNode
-{
-	std::string name;
-	glm::mat4 transformation;
-	std::vector< BoneNode > children;
-};
 
 /**
  * Represents an animation in OpenGL.

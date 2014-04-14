@@ -157,6 +157,11 @@ void Texture2D::allocateVideoMemory()
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat_,  image_.width, image_.height, 0, internalFormat_, GL_UNSIGNED_BYTE, nullptr);
 }
 
+const std::string& Texture2D::getName() const
+{
+	return name_;
+}
+
 void Texture2D::serialize(const std::string& filename)
 {
 	std::ofstream ofs(filename.c_str());

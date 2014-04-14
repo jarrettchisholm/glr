@@ -206,15 +206,13 @@ template<class Archive> void ModelManager::save(Archive& ar, const unsigned int 
 		static_cast<ModelManager*>(nullptr),
 		static_cast<IModelManager*>(nullptr)
 	);
-
-	/*
-	auto size = meshes_.size();
+	
+	auto size = models_.size();
 	ar & size;
-	for (auto& it : meshes_)
+	for (auto& it : models_)
 	{
-		ar & it.first & *(it.second.get());
+		ar & it->getName() & *(it.get());
 	}
-	*/
 }
 
 template<class Archive> void ModelManager::load(Archive& ar, const unsigned int version)
@@ -223,23 +221,25 @@ template<class Archive> void ModelManager::load(Archive& ar, const unsigned int 
 		static_cast<ModelManager*>(nullptr),
 		static_cast<IModelManager*>(nullptr)
 	);
-	/*
-    std::map< std::string, std::unique_ptr<Mesh> >::size_type numMeshes = 0;
-    ar & numMeshes;
 
-	meshes_ = std::map< std::string, std::unique_ptr<Mesh> >();
+	std::vector< std::unique_ptr<Model> >::size_type modelsSize = 0;
+    ar & modelsSize;
 
-	for (glmd::uint32 i=0; i < numMeshes; i++)
+	models_ = std::vector< std::unique_ptr<Model> >();
+
+	for (glmd::uint32 i=0; i < modelsSize; i++)
 	{
+		// TODO: Create new id?  Or just save/load existing id?
 		auto s = std::string();
 		ar & s;
 		
-		auto mesh = std::unique_ptr<Mesh>( new Mesh(openGlDevice_, s) );
-		ar & *(mesh.get());
+		Id id = idManager_.createId();
 		
-		meshes_[s] = std::move(mesh);
+		auto model = std::unique_ptr<Model>( new Model(id, s, openGlDevice_) );
+		ar & *(model.get());
+		
+		models_.push_back( std::move(model) );
 	}
-	*/
 }
 
 }

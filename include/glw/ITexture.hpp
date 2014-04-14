@@ -42,6 +42,13 @@ public:
 	;
 	
 	virtual void bind(GLuint texturePosition = 0) const = 0;
+	
+	/**
+	 * Returns the name of this texture.
+	 * 
+	 * @return The name of the texture.
+	 */
+	virtual const std::string& getName() const = 0;
 };
 
 }

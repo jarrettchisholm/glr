@@ -62,7 +62,7 @@ public:
 	virtual void deserialize(const std::string& filename);
 	virtual void deserialize(serialize::TextInArchive& inArchive);
 
-	const std::string& getName() const;
+	virtual const std::string& getName() const;
 	void setName(std::string name);
 private:
 	/**

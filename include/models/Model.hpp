@@ -25,6 +25,8 @@
 #include "glw/IMaterial.hpp"
 #include "glw/IAnimation.hpp"
 
+#include "serialize/SplitMember.hpp"
+
 namespace glr
 {
 namespace models
@@ -33,6 +35,10 @@ namespace models
 class Model : public IModel
 {
 public:
+	/**
+	 * Used by serialization.
+	 */
+	Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vector<glw::ITexture*> textures, std::vector<glw::IMaterial*> materials, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice);
@@ -143,11 +149,6 @@ private:
 	 * Required for serialization.
 	 */
 	Model();
-	
-	/**
-	 * Used by serialization (?)
-	 */
-	Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
 
 	// We don't copy straight up, since we need a new id for the copy
 	Model(const Model& other);
@@ -160,6 +161,8 @@ private:
 	friend class boost::serialization::access;
 	
 	template<class Archive> void serialize(Archive& ar, const unsigned int version);
+	template<class Archive> void save(Archive & ar, const unsigned int version) const;
+	template<class Archive> void load(Archive & ar, const unsigned int version);
 
 };
 

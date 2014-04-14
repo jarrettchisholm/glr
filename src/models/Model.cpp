@@ -505,17 +505,107 @@ void Model::deserialize(serialize::TextInArchive& inArchive)
 	inArchive >> *this;
 }
 
+// TODO: Have a more generic serialize function, so we don't duplicate meshes, textures, etc each time we serialize a model
 template<class Archive> void Model::serialize(Archive& ar, const unsigned int version)
 {
-	boost::serialization::void_cast_register<Model, IModel>(
+	boost::serialization::split_member(ar, *this, version);
+}
+
+template<class Archive> void Model::save(Archive& ar, const unsigned int version) const
+{
+    boost::serialization::void_cast_register<Model, IModel>(
+		static_cast<Model*>(nullptr),
+		static_cast<IModel*>(nullptr)
+	);
+	
+	// Define non-default constructor for Model??
+	ar & name_;
+	
+	{
+		auto size = meshes_.size();
+		ar & size;
+		for (auto it : meshes_)
+		{
+			std::string s = std::string();
+			if (it != nullptr)
+			{
+				s = it->getName();
+			}
+	
+			ar & s;
+		}
+	}
+	
+	{
+		auto size = textures_.size();
+		ar & size;
+		for (auto it : textures_)
+		{
+			std::string s = std::string();
+			if (it != nullptr)
+			{
+				s = it->getName();
+			}
+	
+			ar & s;
+		}
+	}
+	
+	{
+		auto size = materials_.size();
+		ar & size;
+		for (auto it : materials_)
+		{
+			std::string s = std::string();
+			if (it != nullptr)
+			{
+				s = it->getName();
+			}
+	
+			ar & s;
+		}
+	}
+	
+	ar & rootBoneNode_;
+	ar & globalInverseTransformation_;
+	
+	{
+		auto size = animations_.size();
+		ar & size;
+		for (auto it : animations_)
+		{
+			ar & it.first;
+		}
+	}
+}
+
+template<class Archive> void Model::load(Archive& ar, const unsigned int version)
+{
+    boost::serialization::void_cast_register<Model, IModel>(
 		static_cast<Model*>(nullptr),
 		static_cast<IModel*>(nullptr)
 	);
 
-	// Define non-default constructore for Model??
-	ar & name_;
-	//ar & image_;
-	//ar & internalFormat_;
+	std::vector<glr::glw::IMesh*>::size_type meshSize = 0;
+    ar & meshSize;
+
+	meshes_ = std::vector< glr::glw::IMesh* >();
+
+	for (glmd::uint32 i=0; i < meshSize; i++)
+	{
+		auto s = std::string();
+		ar & s;
+		
+		if (s.length() == 0)
+		{
+			meshes_.push_back(nullptr);
+		}
+		else
+		{
+			auto mesh = openGlDevice_->getMeshManager()->getMesh( s );
+			meshes_.push_back( mesh );
+		}
+	}
 }
 
 }
