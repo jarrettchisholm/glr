@@ -22,6 +22,7 @@ public:
 	TextureManager(IOpenGlDevice* openGlDevice);
 	virtual ~TextureManager();
 
+	virtual ITexture* getTexture(const std::string& name) const;
 	virtual Texture2D* getTexture2D(const std::string& name) const;
 	virtual Texture2DArray* getTexture2DArray(const std::string& name) const;
 	

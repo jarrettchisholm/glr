@@ -29,6 +29,18 @@ TextureManager::~TextureManager()
 {
 }
 
+ITexture* TextureManager::getTexture(const std::string& name) const
+{
+	ITexture* texture = getTexture2D( name );
+	
+	if (texture != nullptr)
+		return texture;
+	
+	texture = getTexture2DArray( name );
+	
+	return texture;
+}
+
 Texture2D* TextureManager::getTexture2D(const std::string& name) const
 {
 	auto it = textures2D_.find(name);

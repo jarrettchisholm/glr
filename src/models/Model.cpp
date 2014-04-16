@@ -586,24 +586,97 @@ template<class Archive> void Model::load(Archive& ar, const unsigned int version
 		static_cast<IModel*>(nullptr)
 	);
 
-	std::vector<glr::glw::IMesh*>::size_type meshSize = 0;
-    ar & meshSize;
+	ar & name_;
 
-	meshes_ = std::vector< glr::glw::IMesh* >();
-
-	for (glmd::uint32 i=0; i < meshSize; i++)
 	{
-		auto s = std::string();
-		ar & s;
-		
-		if (s.length() == 0)
+		std::vector<glr::glw::IMesh*>::size_type size = 0;
+	    ar & size;
+	
+		meshes_ = std::vector< glr::glw::IMesh* >();
+	
+		for (glmd::uint32 i=0; i < size; i++)
 		{
-			meshes_.push_back(nullptr);
+			auto s = std::string();
+			ar & s;
+			
+			if (s.length() == 0)
+			{
+				meshes_.push_back(nullptr);
+			}
+			else
+			{
+				auto mesh = openGlDevice_->getMeshManager()->getMesh( s );
+				meshes_.push_back( mesh );
+			}
 		}
-		else
+	}
+	
+	{
+		std::vector<glr::glw::ITexture*>::size_type size = 0;
+	    ar & size;
+	
+		textures_ = std::vector< glr::glw::ITexture* >();
+	
+		for (glmd::uint32 i=0; i < size; i++)
 		{
-			auto mesh = openGlDevice_->getMeshManager()->getMesh( s );
-			meshes_.push_back( mesh );
+			auto s = std::string();
+			ar & s;
+			
+			if (s.length() == 0)
+			{
+				textures_.push_back(nullptr);
+			}
+			else
+			{
+				auto texture = openGlDevice_->getTextureManager()->getTexture( s );
+				textures_.push_back( texture );
+			}
+		}
+	}
+	
+	{
+		std::vector<glr::glw::IMaterial*>::size_type size = 0;
+	    ar & size;
+	
+		materials_ = std::vector< glr::glw::IMaterial* >();
+	
+		for (glmd::uint32 i=0; i < size; i++)
+		{
+			auto s = std::string();
+			ar & s;
+			
+			if (s.length() == 0)
+			{
+				materials_.push_back(nullptr);
+			}
+			else
+			{
+				auto material = openGlDevice_->getMaterialManager()->getMaterial( s );
+				materials_.push_back( material );
+			}
+		}
+	}
+	
+	ar & rootBoneNode_;
+	ar & globalInverseTransformation_;
+	
+	{
+		std::map< std::string, glr::glw::IAnimation* >::size_type size = 0;
+		ar & size;
+		
+		animations_ = std::map< std::string, glr::glw::IAnimation* >();
+	
+		for (glmd::uint32 i=0; i < size; i++)
+		{
+			auto s = std::string();
+			ar & s;
+			
+			if (s.length() != 0)
+			{
+				auto animation = openGlDevice_->getAnimationManager()->getAnimation( s );
+				if (animation != nullptr)
+					animations_[s] = animation;
+			}
 		}
 	}
 }

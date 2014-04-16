@@ -32,10 +32,26 @@ public:
 	//virtual Texture1DArray* getTexture1DArray(const std::string name) = 0;
 	//virtual Texture1D* addTexture1D(const std::string name, const std::string filename) = 0;
 	//virtual Texture1DArray* addTexture1DArray(const std::string name, const std::string filename) = 0;
-
+	
 	/**
 	 * Returns the texture with the given name.  If a texture with the given name doesn't exist, it returns
 	 * nullptr.
+	 * 
+	 * Note that texture names are unique across all different types of textures (for example, you cannot have
+	 * a Texture2D and Texture2DArray objects with the same name).
+	 * 
+	 * @param name
+	 * 
+	 * @return The Texture object with name 'name', or nullptr if no texture exists with that name.
+	 */
+	virtual ITexture* getTexture(const std::string& name) const = 0;
+
+	/**
+	 * Returns the Texture2D object with the given name.  If a Texture2D object with the given name doesn't exist, it returns
+	 * nullptr.
+	 * 
+	 * Note that texture names are unique across all different types of textures (for example, you cannot have
+	 * a Texture2D and Texture2DArray objects with the same name).
 	 * 
 	 * @param name
 	 * 
@@ -47,6 +63,9 @@ public:
 	 * Returns the texture array with the given name.  If a texture array with the given name doesn't exist, it returns
 	 * nullptr.
 	 * 
+	 * Note that texture names are unique across all different types of textures (for example, you cannot have
+	 * a Texture2D and Texture2DArray objects with the same name).
+	 * 
 	 * @param name
 	 * 
 	 * @return The Texture2DArray object with name 'name', or nullptr if no texture array exists with that name.
@@ -56,7 +75,9 @@ public:
 	/**
 	 * Creates an empty texture with the given name and using the provided texture settings.
 	 * 
-	 * If a texture already exists with the given name, it will return that texture.
+	 * If a Texture2D object already exists with the given name, it will return that texture.
+	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
 	 * @param name
 	 * @param settings
@@ -70,6 +91,8 @@ public:
 	 * loaded from the file 'filename'.  The file must be a valid image.
 	 * 
 	 * If a texture already exists with the given name, it will return that texture.
+	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
 	 * @param name
 	 * @param filename
@@ -85,6 +108,8 @@ public:
 	 * 
 	 * If a texture already exists with the given name, it will return that texture.
 	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
+	 * 
 	 * @param name
 	 * @param image
 	 * @param settings
@@ -97,6 +122,8 @@ public:
 	 * Creates an empty texture 2d array with the given name and using the provided texture settings.
 	 * 
 	 * If a texture array already exists with the given name, it will return that texture array.
+	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
 	 * @param name
 	 * @param settings
@@ -111,6 +138,8 @@ public:
 	 * 
 	 * If a texture array already exists with the given name, it will return that texture.
 	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
+	 * 
 	 * @param name
 	 * @param filenames
 	 * @param settings
@@ -124,6 +153,8 @@ public:
 	 * from the provided images.  The images must be valid and non-null.
 	 * 
 	 * If a texture array already exists with the given name, it will return that texture.
+	 * 
+	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
 	 * @param name
 	 * @param images
