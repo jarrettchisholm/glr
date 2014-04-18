@@ -110,7 +110,7 @@ template<class Archive> void AnimationManager::serialize(Archive& ar, const unsi
 
 template<class Archive> void AnimationManager::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
+	boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
 		static_cast<AnimationManager*>(nullptr),
 		static_cast<IAnimationManager*>(nullptr)
 	);
@@ -125,13 +125,13 @@ template<class Archive> void AnimationManager::save(Archive& ar, const unsigned 
 
 template<class Archive> void AnimationManager::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
+	boost::serialization::void_cast_register<AnimationManager, IAnimationManager>(
 		static_cast<AnimationManager*>(nullptr),
 		static_cast<IAnimationManager*>(nullptr)
 	);
 
-    std::map< std::string, std::unique_ptr<Animation> >::size_type numAnimations = 0;
-    ar & numAnimations;
+	std::map< std::string, std::unique_ptr<Animation> >::size_type numAnimations = 0;
+	ar & numAnimations;
 
 	animations_ = std::map< std::string, std::unique_ptr<Animation> >();
 

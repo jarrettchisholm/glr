@@ -202,7 +202,7 @@ template<class Archive> void ModelManager::serialize(Archive& ar, const unsigned
 
 template<class Archive> void ModelManager::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<ModelManager, IModelManager>(
+	boost::serialization::void_cast_register<ModelManager, IModelManager>(
 		static_cast<ModelManager*>(nullptr),
 		static_cast<IModelManager*>(nullptr)
 	);
@@ -217,13 +217,13 @@ template<class Archive> void ModelManager::save(Archive& ar, const unsigned int 
 
 template<class Archive> void ModelManager::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<ModelManager, IModelManager>(
+	boost::serialization::void_cast_register<ModelManager, IModelManager>(
 		static_cast<ModelManager*>(nullptr),
 		static_cast<IModelManager*>(nullptr)
 	);
 
 	std::vector< std::unique_ptr<Model> >::size_type modelsSize = 0;
-    ar & modelsSize;
+	ar & modelsSize;
 
 	models_ = std::vector< std::unique_ptr<Model> >();
 

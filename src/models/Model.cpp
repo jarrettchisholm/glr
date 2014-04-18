@@ -513,7 +513,7 @@ template<class Archive> void Model::serialize(Archive& ar, const unsigned int ve
 
 template<class Archive> void Model::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<Model, IModel>(
+	boost::serialization::void_cast_register<Model, IModel>(
 		static_cast<Model*>(nullptr),
 		static_cast<IModel*>(nullptr)
 	);
@@ -581,7 +581,7 @@ template<class Archive> void Model::save(Archive& ar, const unsigned int version
 
 template<class Archive> void Model::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<Model, IModel>(
+	boost::serialization::void_cast_register<Model, IModel>(
 		static_cast<Model*>(nullptr),
 		static_cast<IModel*>(nullptr)
 	);
@@ -590,7 +590,7 @@ template<class Archive> void Model::load(Archive& ar, const unsigned int version
 
 	{
 		std::vector<glr::glw::IMesh*>::size_type size = 0;
-	    ar & size;
+		ar & size;
 	
 		meshes_ = std::vector< glr::glw::IMesh* >();
 	
@@ -613,7 +613,7 @@ template<class Archive> void Model::load(Archive& ar, const unsigned int version
 	
 	{
 		std::vector<glr::glw::ITexture*>::size_type size = 0;
-	    ar & size;
+		ar & size;
 	
 		textures_ = std::vector< glr::glw::ITexture* >();
 	
@@ -636,7 +636,7 @@ template<class Archive> void Model::load(Archive& ar, const unsigned int version
 	
 	{
 		std::vector<glr::glw::IMaterial*>::size_type size = 0;
-	    ar & size;
+		ar & size;
 	
 		materials_ = std::vector< glr::glw::IMaterial* >();
 	

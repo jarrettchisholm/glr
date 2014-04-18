@@ -135,7 +135,7 @@ template<class Archive> void MeshManager::serialize(Archive& ar, const unsigned 
 
 template<class Archive> void MeshManager::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<MeshManager, IMeshManager>(
+	boost::serialization::void_cast_register<MeshManager, IMeshManager>(
 		static_cast<MeshManager*>(nullptr),
 		static_cast<IMeshManager*>(nullptr)
 	);
@@ -150,13 +150,13 @@ template<class Archive> void MeshManager::save(Archive& ar, const unsigned int v
 
 template<class Archive> void MeshManager::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<MeshManager, IMeshManager>(
+	boost::serialization::void_cast_register<MeshManager, IMeshManager>(
 		static_cast<MeshManager*>(nullptr),
 		static_cast<IMeshManager*>(nullptr)
 	);
 
-    std::map< std::string, std::unique_ptr<Mesh> >::size_type numMeshes = 0;
-    ar & numMeshes;
+	std::map< std::string, std::unique_ptr<Mesh> >::size_type numMeshes = 0;
+	ar & numMeshes;
 
 	meshes_ = std::map< std::string, std::unique_ptr<Mesh> >();
 

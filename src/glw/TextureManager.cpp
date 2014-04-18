@@ -251,36 +251,40 @@ template<class Archive> void TextureManager::serialize(Archive& ar, const unsign
 
 template<class Archive> void TextureManager::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<TextureManager, ITextureManager>(
+	boost::serialization::void_cast_register<TextureManager, ITextureManager>(
 		static_cast<TextureManager*>(nullptr),
 		static_cast<ITextureManager*>(nullptr)
 	);
 	
-	auto size = textures2DArray_.size();
-	ar & size;
-	for (auto& it : textures2DArray_)
 	{
-		ar & it.first & *(it.second.get());
+		auto size = textures2DArray_.size();
+		ar & size;
+		for (auto& it : textures2DArray_)
+		{
+			ar & it.first & *(it.second.get());
+		}
 	}
 
-	auto size2 = textures2D_.size();
-    ar & size2;
-	for (auto& it : textures2D_)
 	{
-		ar & it.first & *(it.second.get());
+		auto size = textures2D_.size();
+		ar & size;
+		for (auto& it : textures2D_)
+		{
+			ar & it.first & *(it.second.get());
+		}
 	}
 }
 
 template<class Archive> void TextureManager::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<TextureManager, ITextureManager>(
+	boost::serialization::void_cast_register<TextureManager, ITextureManager>(
 		static_cast<TextureManager*>(nullptr),
 		static_cast<ITextureManager*>(nullptr)
 	);
 
 	// Texture 2D Array
-    std::map< std::string, std::unique_ptr<Texture2DArray> >::size_type textures2DArraySize = 0;
-    ar & textures2DArraySize;
+	std::map< std::string, std::unique_ptr<Texture2DArray> >::size_type textures2DArraySize = 0;
+	ar & textures2DArraySize;
 
 	textures2DArray_ = std::map< std::string, std::unique_ptr<Texture2DArray> >();
 
@@ -297,7 +301,7 @@ template<class Archive> void TextureManager::load(Archive& ar, const unsigned in
 
 	// Texture 2D
 	std::map< std::string, std::unique_ptr<Texture2D> >::size_type texture2DSize = 0;
-    ar & texture2DSize;
+	ar & texture2DSize;
 
 	textures2D_ = std::map< std::string, std::unique_ptr<Texture2D> >();
 

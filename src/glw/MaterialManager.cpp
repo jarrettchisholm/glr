@@ -110,7 +110,7 @@ template<class Archive> void MaterialManager::serialize(Archive& ar, const unsig
 
 template<class Archive> void MaterialManager::save(Archive& ar, const unsigned int version) const
 {
-    boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
+	boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
 		static_cast<MaterialManager*>(nullptr),
 		static_cast<IMaterialManager*>(nullptr)
 	);
@@ -125,13 +125,13 @@ template<class Archive> void MaterialManager::save(Archive& ar, const unsigned i
 
 template<class Archive> void MaterialManager::load(Archive& ar, const unsigned int version)
 {
-    boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
+	boost::serialization::void_cast_register<MaterialManager, IMaterialManager>(
 		static_cast<MaterialManager*>(nullptr),
 		static_cast<IMaterialManager*>(nullptr)
 	);
 
-    std::map< std::string, std::unique_ptr<Material> >::size_type numMaterials = 0;
-    ar & numMaterials;
+	std::map< std::string, std::unique_ptr<Material> >::size_type numMaterials = 0;
+	ar & numMaterials;
 
 	materials_ = std::map< std::string, std::unique_ptr<Material> >();
 
