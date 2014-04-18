@@ -143,8 +143,8 @@ def setup(ARGUMENTS):
 					cpp_defines.append('DEBUG')
 			
 			if (buildFlags['release']):
-				cpp_defines.append('NDEBUG')
 				cpp_flags.append('-O3') # optimization level 3
+				cpp_defines.append('NDEBUG')
 			
 			cpp_flags.append('-std=c++11')
 			cpp_flags.append('-pedantic-errors')
