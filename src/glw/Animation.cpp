@@ -496,6 +496,7 @@ void Animation::deserialize(serialize::TextInArchive& inArchive)
 	inArchive >> *this;
 }
 
+/*
 template<class Archive> void Animation::serialize(Archive& ar, const unsigned int version)
 {
 	boost::serialization::void_cast_register<Animation, IAnimation>(
@@ -508,6 +509,7 @@ template<class Archive> void Animation::serialize(Archive& ar, const unsigned in
 	ar & ticksPerSecond_;
 	ar & animatedBoneNodes_;
 }
+*/
 
 }
 }

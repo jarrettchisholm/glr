@@ -6,9 +6,9 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include "IFieldFunction.hpp"
+#include "../IFieldFunction.hpp"
 
-#include "VoxelChunk.hpp"
+#include "../VoxelChunk.hpp"
 
 namespace glr
 {

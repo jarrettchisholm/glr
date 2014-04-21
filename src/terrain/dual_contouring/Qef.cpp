@@ -2,7 +2,7 @@
 // ThreeD Quadric Error Function
 //----------------------------------------------------------------------------
 
-#include "terrain/Qef.hpp"
+#include "terrain/dual_contouring/Qef.hpp"
 
 namespace glr
 {

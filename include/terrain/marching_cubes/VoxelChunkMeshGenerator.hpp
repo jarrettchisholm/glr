@@ -1,0 +1,85 @@
+#ifndef VOXELCHUNKMESHGENERATOR_H_
+#define VOXELCHUNKMESHGENERATOR_H_
+
+#include <vector>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
+#include "../VoxelChunk.hpp"
+
+namespace glr
+{
+namespace terrain
+{
+
+namespace glmd = glm::detail;
+
+class VoxelChunkMeshGenerator
+{
+public:
+	VoxelChunkMeshGenerator();
+	virtual ~VoxelChunkMeshGenerator();
+
+	/**
+	 * Will generate a mesh of the provided VoxelChunk, and put the data in the provided vectors (vertices, normals, and textureBlendingValues).
+	 */
+	void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
+	
+private:
+	struct Point
+	{
+		glm::vec3 pos;
+		glm::vec3 normal;
+		glmd::float32 density;
+	};
+	
+	struct Block
+	{
+		Point points[2][2][2];
+	};
+	
+	typedef std::vector< std::vector< std::vector<Block> > > Blocks;
+	
+	glm::vec3 vertexInterp(double isolevel, const glm::vec3& p1, const glm::vec3& p2, double valp1, double valp2) const;
+	
+	/**
+	 * Determines whether the points provided define a a fully solid space or a totally empty space.
+	 * 
+	 * @return True if space is totally empty or solid; false otherwise.
+	 */
+	bool isEmptyOrSolid(Points& points) const;
+	
+	/**
+	 * Calculate the normal for the provided point.
+	 */
+	glm::vec3 calculateNormal(const glm::vec3& point, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const;
+	
+	/**
+	 * Determine if the cubes along the xz plane at point y have an intersection.  If a cube does, generate the vertex for that block.
+	 */
+	void computeCubes(Blocks& blocks, glmd::int32 y, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const;
+	
+	/**
+	 * Generate the 3 points for a triangle along the y coordinate (will move along the xz plane at point y).  Will generate
+	 * up to 3 points per block.
+	 */
+	void generateTriangles(Blocks& blocks, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, glmd::int32 y) const;
+	
+	/**
+	 * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.
+	 */
+	void setDensitiesAndPositions(Blocks& blocks, Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const;
+	
+	/**
+	 * Will resize the provided Blocks 3D vector to the appropriate size.
+	 * 
+	 * @param blocks
+	 */
+	void resizeBlocks(Blocks& blocks) const;
+};
+
+}
+}
+
+#endif /* VOXELCHUNKMESHGENERATOR_H_ */

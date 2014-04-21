@@ -506,10 +506,12 @@ void Model::deserialize(serialize::TextInArchive& inArchive)
 }
 
 // TODO: Have a more generic serialize function, so we don't duplicate meshes, textures, etc each time we serialize a model
+/*
 template<class Archive> void Model::serialize(Archive& ar, const unsigned int version)
 {
 	boost::serialization::split_member(ar, *this, version);
 }
+*/
 
 template<class Archive> void Model::save(Archive& ar, const unsigned int version) const
 {

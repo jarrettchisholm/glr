@@ -5,7 +5,6 @@
 #include "BasicSceneNode.hpp"
 #include "TerrainMesh.hpp"
 
-#include "VoxelChunkMeshGenerator.hpp"
 #include "VoxelChunkNoiseGenerator.hpp"
 
 namespace glr

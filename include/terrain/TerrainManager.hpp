@@ -15,7 +15,8 @@
 #include "terrain/IFieldFunction.hpp"
 #include "terrain/TerrainSceneNode.hpp"
 #include "terrain/Terrain.hpp"
-#include "terrain/VoxelChunkMeshGenerator.hpp"
+//#include "terrain/dual_contouring/VoxelChunkMeshGenerator.hpp"
+#include "terrain/marching_cubes/VoxelChunkMeshGenerator.hpp"
 
 namespace glr
 {

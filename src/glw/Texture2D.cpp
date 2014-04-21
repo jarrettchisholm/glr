@@ -186,6 +186,7 @@ void Texture2D::deserialize(serialize::TextInArchive& inArchive)
 	inArchive >> *this;
 }
 
+/*
 template<class Archive> void Texture2D::serialize(Archive& ar, const unsigned int version)
 {
 	boost::serialization::void_cast_register<Texture2D, ITexture>(
@@ -197,6 +198,7 @@ template<class Archive> void Texture2D::serialize(Archive& ar, const unsigned in
 	ar & image_;
 	ar & internalFormat_;
 }
+*/
 
 }
 }

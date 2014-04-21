@@ -3,9 +3,9 @@
 #include <fstream>
 #include <mutex>
 
-#include "terrain/VoxelChunkMeshGenerator.hpp"
+#include "terrain/dual_contouring/VoxelChunkMeshGenerator.hpp"
 
-#include "terrain/Qef.hpp"
+#include "terrain/dual_contouring/Qef.hpp"
 #include "terrain/Interpolation.hpp"
 
 #include "terrain/Constants.hpp"

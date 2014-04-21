@@ -244,6 +244,8 @@ source_files = source_files + Glob('build/gui/cef/*.cpp')
 source_files = source_files + Glob('build/models/*.cpp')
 source_files = source_files + Glob('build/environment/*.cpp')
 source_files = source_files + Glob('build/terrain/*.cpp')
+#source_files = source_files + Glob('build/terrain/dual_contouring/*.cpp')
+source_files = source_files + Glob('build/terrain/marching_cubes/*.cpp')
 
 source_files = source_files + Glob('build/serialize/*.cpp')
 
