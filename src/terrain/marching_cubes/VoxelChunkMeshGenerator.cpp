@@ -13,7 +13,7 @@
 #define NX 200
 #define NY 160
 #define NZ 160
-#define ISOLEVEL 128
+#define ISOLEVEL 0
 
 namespace glr
 {
@@ -551,7 +551,7 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 			if (block.points[1][1][1].density < ISOLEVEL) cubeindex |= 32;
 			if (block.points[1][1][0].density < ISOLEVEL) cubeindex |= 64;
 			if (block.points[0][1][0].density < ISOLEVEL) cubeindex |= 128;
-		
+			
 			/* Cube is entirely in/out of the surface */
 			if (edgeTable[cubeindex] == 0)
 				continue;
@@ -597,15 +597,20 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 			/* Create the triangles */
 			for (int i=0; triTable[cubeindex][i] != -1; i += 3)
 			{
-				vertices.push_back( vertlist[triTable[cubeindex][i  ]] );
-				vertices.push_back( vertlist[triTable[cubeindex][i+1]] );
-				vertices.push_back( vertlist[triTable[cubeindex][i+2]] );
+				const glm::vec3& p1 = vertlist[triTable[cubeindex][i  ]];
+				const glm::vec3& p2 = vertlist[triTable[cubeindex][i+1]];
+				const glm::vec3& p3 = vertlist[triTable[cubeindex][i+2]];
+				
+				vertices.push_back( p1 );
+				vertices.push_back( p2 );
+				vertices.push_back( p3 );
 				ntri++;
 				
 				// TODO: Figure out how to get the normals
-				normals.push_back( glm::vec3() );
-				normals.push_back( glm::vec3() );
-				normals.push_back( glm::vec3() );
+				glm::vec3 normal = glm::normalize( glm::cross(p2 - p1, p3 - p1) );
+				normals.push_back( normal );
+				normals.push_back( normal );
+				normals.push_back( normal );
 			}
 			
 			// return(ntri);
@@ -796,7 +801,7 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	resizeBlocks(blocks);
 	
 	setDensitiesAndPositions(blocks, points, gridX, gridY, gridZ);
-
+	/*
 	computeCubes(blocks, 0, gridX, gridY, gridZ, points);
 	
 	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
@@ -805,7 +810,7 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 		
 		generateTriangles(blocks, vertices, normals, y-1);
 	}
-	
+	*/
 	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
 	{
 		generateTriangles(blocks, vertices, normals, y-1);
