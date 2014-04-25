@@ -3,6 +3,9 @@
 #include <fstream>
 #include <mutex>
 
+#define GLM_FORCE_RADIANS
+#include <glm/gtx/vector_angle.hpp>
+
 #include "terrain/marching_cubes/VoxelChunkMeshGenerator.hpp"
 
 #include "terrain/Interpolation.hpp"
@@ -419,112 +422,17 @@ bool VoxelChunkMeshGenerator::isEmptyOrSolid(Points& points) const
 }
 
 /**
- * Calculate the normal for the provided point.
- */
-glm::vec3 VoxelChunkMeshGenerator::calculateNormal(const glm::vec3& point, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const
-{
-	/*
-	glmd::float32 d = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y, point.z);
-	glmd::float32 nx = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x + glr::terrain::constants::EPSILON_VALUE, point.y, point.z) - d;
-	glmd::float32 ny = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y + glr::terrain::constants::EPSILON_VALUE, point.z) - d;
-	glmd::float32 nz = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y, point.z + glr::terrain::constants::EPSILON_VALUE) - d;
-	
-	glm::vec3 normal = glm::vec3(nx, ny, nz);
-
-	if (normal == glm::vec3(0.0f, 0.0f, 0.0f))
-		return glm::vec3(0.0f, 1.0f, 0.0f);
-
-	return glm::normalize( normal );
-	*/
-	
-	return glm::vec3();
-}
-
-/**
- * Determine if the cubes along the xz plane at point y have an intersection.  If a cube does, generate the vertex for that block.
- */
-void VoxelChunkMeshGenerator::computeCubes(Blocks& blocks, glmd::int32 y, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const
-{	
-	/*
-	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE+1; x++)
-	{
-		for (glmd::int32 z = 0; z < glr::terrain::constants::SIZE+1; z++)
-		{
-			glmd::int32 index = 0;
-
-#define IF_DENSITY(n,i,j,k) if (! std::signbit(blocks[x][y][z].points[i][j][k].density)) index |= (1 << n)
-			
-			// We find all of the vertices of the block that lie outside of the contour
-			IF_DENSITY(0, 0,0,0);
-			IF_DENSITY(1, 1,0,0);
-			IF_DENSITY(2, 1,1,0);
-			IF_DENSITY(3, 0,1,0);
-			IF_DENSITY(4, 0,0,1);
-			IF_DENSITY(5, 1,0,1);
-			IF_DENSITY(6, 1,1,1);
-			IF_DENSITY(7, 0,1,1);
-#undef IF_DENSITY
-			
-			// What I think this is doing:
-			// If the configuration of vertices that lie outside the contour does not match any of the
-			// special cases in the edge table, we don't need to create a vertex for this block
-			if (edgeTable_[index] == 0)
-			{
-				blocks[x][y][z].index = 0;
-				continue;
-			}
-			
-			blocks[x][y][z].index = index;
-			generateVertex(blocks, x, y, z, gridX, gridY, gridZ, densityValues);
-		}
-	}
-	*/
-}
-
-/*
-typedef struct {
-	XYZ p[8];
-	XYZ n[8];
-	double val[8];
-} GRIDCELL;
-
-typedef struct {
-	XYZ p[3];			// Vertices
-	XYZ c;				// Centroid
-	XYZ n[3];			// Normal
-} TRIANGLE;
-*/
-
-/*
-struct Point
-{
-	glm::vec3 pos;
-	glm::vec3 normal;
-	glmd::float32 density;
-};
-
-struct Block
-{
-	Point points[2][2][2];
-};
-*/
-
-/**
  * Generate the triangles for cubes (aka 'blocks') along the y coordinate (will move along the xz plane at point y).
  * 
  */
-void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, glmd::int32 y) const
+void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& points, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, glmd::int32 y) const
 {
-	// GRIDCELL g, double iso, TRIANGLE *tri
-	
 	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE; x++)
 	{
 		for (glmd::int32 z = 0; z < glr::terrain::constants::SIZE; z++)
 		{
 			const Block& block = blocks[x][y][z];
-			
-			int i = 0;
-			int ntri = 0;
+
 			int cubeindex = 0;
 			glm::vec3 vertlist[12];
 			
@@ -543,14 +451,14 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 			if (block.points[1][1][0].density < ISOLEVEL) cubeindex |= 64;
 			if (block.points[0][1][0].density < ISOLEVEL) cubeindex |= 128;
 			*/
-			if (block.points[0][0][1].density < ISOLEVEL) cubeindex |= 1;
-			if (block.points[1][0][1].density < ISOLEVEL) cubeindex |= 2;
-			if (block.points[1][0][0].density < ISOLEVEL) cubeindex |= 4;
-			if (block.points[0][0][0].density < ISOLEVEL) cubeindex |= 8;
-			if (block.points[0][1][1].density < ISOLEVEL) cubeindex |= 16;
-			if (block.points[1][1][1].density < ISOLEVEL) cubeindex |= 32;
-			if (block.points[1][1][0].density < ISOLEVEL) cubeindex |= 64;
-			if (block.points[0][1][0].density < ISOLEVEL) cubeindex |= 128;
+			if (block.points[0][0][1].density >= ISOLEVEL) cubeindex |= 1;
+			if (block.points[1][0][1].density >= ISOLEVEL) cubeindex |= 2;
+			if (block.points[1][0][0].density >= ISOLEVEL) cubeindex |= 4;
+			if (block.points[0][0][0].density >= ISOLEVEL) cubeindex |= 8;
+			if (block.points[0][1][1].density >= ISOLEVEL) cubeindex |= 16;
+			if (block.points[1][1][1].density >= ISOLEVEL) cubeindex |= 32;
+			if (block.points[1][1][0].density >= ISOLEVEL) cubeindex |= 64;
+			if (block.points[0][1][0].density >= ISOLEVEL) cubeindex |= 128;
 			
 			/* Cube is entirely in/out of the surface */
 			if (edgeTable[cubeindex] == 0)
@@ -604,92 +512,20 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 				vertices.push_back( p1 );
 				vertices.push_back( p2 );
 				vertices.push_back( p3 );
-				ntri++;
 				
 				// TODO: Figure out how to get the normals
-				glm::vec3 normal = glm::normalize( glm::cross(p2 - p1, p3 - p1) );
-				normals.push_back( normal );
-				normals.push_back( normal );
-				normals.push_back( normal );
-			}
-			
-			// return(ntri);
-		}
-	}
-	
-	/*
-	Block blocksTemp[4];
-
-	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE; x++)
-	{
-		for (glmd::int32 z = 0; z < glr::terrain::constants::SIZE; z++)
-		{
-			blocksTemp[0] = blocks[x][y][z];
-			glmd::int32 cube0_edgeInfo = edgeTable_[blocksTemp[0].index];
-			glmd::int32 flip_if_nonzero = 0;
-
-			for (glmd::int32 i = 0; i < 3; i++)
-			{
-				if (i == 0 && cube0_edgeInfo & (1 << 10))
+				glm::vec3 normal = calculateNormal(x, y, z, points);
+				if (normal == glm::vec3())
 				{
-					blocksTemp[1] = blocks[x+1][y][z];
-					blocksTemp[2] = blocks[x+1][y+1][z];
-					blocksTemp[3] = blocks[x][y+1][z];
-					flip_if_nonzero = (blocksTemp[0].index & (1 << 6));
-				} else if (i == 1 && cube0_edgeInfo & (1 << 6))
-				{
-					blocksTemp[1] = blocks[x][y][z+1];
-					blocksTemp[2] = blocks[x][y+1][z+1];
-					blocksTemp[3] = blocks[x][y+1][z];
-					flip_if_nonzero = (blocksTemp[0].index & (1 << 7));
-				} else if (i == 2 && cube0_edgeInfo & (1 << 5))
-				{
-					blocksTemp[1] = blocks[x+1][y][z];
-					blocksTemp[2] = blocks[x+1][y][z+1];
-					blocksTemp[3] = blocks[x][y][z+1];
-					flip_if_nonzero = (blocksTemp[0].index & (1 << 5));
-				} else
-					continue;
-
-				// create triangles (cube0,cube2,cube1)
-				//			  and (cube0,cube3,cube2)
-				// flipping last two vertices if necessary
-
-				auto p0 = blocksTemp[0].meshPoint;
-				auto n0 = blocksTemp[0].meshPointNormal;
-				//const Isosurface::Material &mat0 = blocksTemp[0]->mat;
-
-				for (glmd::int32 j = 1; j < 3; j++)
-				{
-					glmd::int32 ja = 0;
-					glmd::int32 jb = 0;
-					if (flip_if_nonzero)
-					{
-						ja = j + 0;
-						jb = j + 1;
-					} else
-					{
-						ja = j + 1;
-						jb = j + 0;
-					}
-
-					auto p1 = blocksTemp[ja].meshPoint;
-					auto p2 = blocksTemp[jb].meshPoint;
-					auto n1 = blocksTemp[ja].meshPointNormal;
-					auto n2 = blocksTemp[jb].meshPointNormal;
-
-					vertices.push_back( p2 );
-					vertices.push_back( p1 );
-					vertices.push_back( p0 );
-					
-					normals.push_back( n2 );
-					normals.push_back( n1 );
-					normals.push_back( n0 );					
+					normal = calculateSimpleNormal(p1, p2, p3);
 				}
+
+				normals.push_back( normal );
+				normals.push_back( normal );
+				normals.push_back( normal );
 			}
 		}
 	}
-	*/
 }
 
 /*-------------------------------------------------------------------------
@@ -715,6 +551,36 @@ glm::vec3 VoxelChunkMeshGenerator::vertexInterp(double isolevel, const glm::vec3
 	p.z = p1.z + mu * (p2.z - p1.z);
 
 	return p;
+}
+
+/**
+ * Will calculate a normal for a triangle face which is composed of p1, p2, and p3.
+ */
+glm::vec3 VoxelChunkMeshGenerator::calculateSimpleNormal(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3) const
+{
+	return glm::normalize( glm::cross(p2 - p1, p3 - p1) );
+}
+
+/**
+ * Calculate the normal for the vertex at x, y, z.
+ * 
+ * Code based off of: http://www.angelfire.com/linux/myp/MCAdvanced/MCImproved.html
+ */
+glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x, int y, int z, const Points& densityValues) const
+{
+	if (x <=0 || y <= 0 || z <=0)
+		return glm::vec3();
+	if (x+1 >= densityValues.size() || y+1 >= densityValues[0].size() || z+1 >= densityValues[0][0].size())
+		return glm::vec3();
+	
+	glm::vec3 normal = glm::vec3();
+	const glm::detail::float32 scale = 1.0f;
+	
+	normal.x = (densityValues[x-1][y][z] - densityValues[x+1][y][z]) / scale;
+	normal.y = (densityValues[x][y-1][z] - densityValues[x][y+1][z]) / scale;
+	normal.z = (densityValues[x][y][z-1] - densityValues[x][y][z+1]) / scale;
+	
+	return glm::normalize( normal );
 }
 
 /**
@@ -801,29 +667,24 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	resizeBlocks(blocks);
 	
 	setDensitiesAndPositions(blocks, points, gridX, gridY, gridZ);
-	/*
-	computeCubes(blocks, 0, gridX, gridY, gridZ, points);
-	
+
 	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
 	{
-		computeCubes(blocks, y, gridX, gridY, gridZ, points);
-		
-		generateTriangles(blocks, vertices, normals, y-1);
-	}
-	*/
-	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
-	{
-		generateTriangles(blocks, vertices, normals, y-1);
+		generateTriangles(blocks, points, vertices, normals, y-1);
 	}
 	
 	// Calculate texture blending values
 	textureBlendingValues.resize( vertices.size() );
+	glm::vec3 levelVector = glm::normalize( glm::vec3(1.0f, 0.0f, 1.0f) );
 	for ( glmd::uint32 i=0; i < textureBlendingValues.size(); i++)
 	{
 		auto& v = textureBlendingValues[i];
-		auto& n = normals[i];
+		const glm::vec3& n = normals[i];
 		
-		if (n.y > 0.5f)
+		glm::detail::float32 angle = glm::orientedAngle(levelVector, n, glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		if (angle > 0.0f)
+		//if (n.y > 0.5f)
 		{
 			v.x = 1.0f;
 			v.y = 0.0f;

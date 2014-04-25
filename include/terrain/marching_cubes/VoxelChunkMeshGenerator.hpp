@@ -42,7 +42,8 @@ private:
 	typedef std::vector< std::vector< std::vector<Block> > > Blocks;
 	
 	glm::vec3 vertexInterp(double isolevel, const glm::vec3& p1, const glm::vec3& p2, double valp1, double valp2) const;
-	
+	glm::vec3 calculateNormal(int x, int y, int z, const Points& densityValues) const;
+	glm::vec3 calculateSimpleNormal(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3) const;
 	/**
 	 * Determines whether the points provided define a a fully solid space or a totally empty space.
 	 * 
@@ -56,15 +57,10 @@ private:
 	glm::vec3 calculateNormal(const glm::vec3& point, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const;
 	
 	/**
-	 * Determine if the cubes along the xz plane at point y have an intersection.  If a cube does, generate the vertex for that block.
-	 */
-	void computeCubes(Blocks& blocks, glmd::int32 y, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, Points& densityValues) const;
-	
-	/**
 	 * Generate the 3 points for a triangle along the y coordinate (will move along the xz plane at point y).  Will generate
 	 * up to 3 points per block.
 	 */
-	void generateTriangles(Blocks& blocks, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, glmd::int32 y) const;
+	void generateTriangles(Blocks& blocks, const Points& points, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, glmd::int32 y) const;
 	
 	/**
 	 * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.

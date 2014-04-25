@@ -12,6 +12,8 @@ namespace glr
 namespace glw
 {
 
+GLuint vaoTemp = 0;
+GLuint vboTemp = 0;
 Mesh::Mesh()
 {
 	openGlDevice_ = nullptr;
@@ -223,13 +225,65 @@ void Mesh::allocateVideoMemory()
 	{
 		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
 	}
+	
+	// TESTING
+	if (vertices_.size() == normals_.size())
+	{
+		std::cout << "Calculating for mesh: " << name_ << std::endl;
+		glGenVertexArrays(1, &vaoTemp);
+		
+		glBindVertexArray(vaoTemp);
+	
+		glGenBuffers(1, &vboTemp);
+		
+		auto temp = std::vector<glm::vec3>( vertices_.size()*3 );
+		
+		int j = 0;
+		for (int i=0; i < vertices_.size(); i+=3)
+		{
+			temp[i] = vertices_[j];
+			temp[i+1] = vertices_[j] + normals_[j];
+			temp[i+2] = vertices_[j];
+			
+			j++;
+		}
+		
+		glBindBuffer(GL_ARRAY_BUFFER, vboTemp);
+		glBufferData(GL_ARRAY_BUFFER, temp.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		
+		glBindVertexArray(0);
+	}
+	
+	err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		freeVideoMemory();
+		
+		std::string msg = std::string( "Error while allocating video memory for mesh '" + name_ + "' in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
+	}
 }
 
 void Mesh::render()
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vaoId_);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
+	
+	if (vaoTemp != 0)
+	{
+		glBindVertexArray(vaoTemp);
+		glDrawArrays(GL_TRIANGLES, 0, vertices_.size()*3);
+	}
 
 	glBindVertexArray(0);
 }
