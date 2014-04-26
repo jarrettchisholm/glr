@@ -514,7 +514,7 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 				vertices.push_back( p3 );
 				
 				// TODO: Figure out how to get the normals
-				glm::vec3 normal = calculateNormal(x, y, z, points);
+				glm::vec3 normal = glm::vec3(); //calculateNormal(x, y, z, points);
 				if (normal == glm::vec3())
 				{
 					normal = calculateSimpleNormal(p1, p2, p3);

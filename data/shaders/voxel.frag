@@ -117,8 +117,8 @@ void main()
 	//ct = color.xyz;
 	//at = color.a;
 
-	//gl_FragColor = vec4(ct*cf, at*af);
-	gl_FragColor = vec4(ct, at);
+	gl_FragColor = vec4(ct*cf, at*af);
+	//gl_FragColor = vec4(ct, at);
 	
 	// Error check
 	//if ( blendWeights.x + blendWeights.y + blendWeights.z > 1.02f || blendWeights.x + blendWeights.y + blendWeights.z < 0.98f)
