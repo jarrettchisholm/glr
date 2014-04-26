@@ -1,0 +1,5 @@
+#name voxel
+#type program
+
+#include "voxel.vert"
+#include "voxel.frag"

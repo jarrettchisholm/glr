@@ -31,7 +31,7 @@ TerrainManager::~TerrainManager()
 void TerrainManager::initialize()
 {
 	followTarget_ = nullptr;
-	voxelChunkMeshGenerator_ = VoxelChunkMeshGenerator();
+	voxelChunkMeshGenerator_ = VoxelChunkMeshGenerator(	);
 	terrainChunks_ = std::vector< std::unique_ptr<TerrainSceneNode> >();
 	
 	idManager_ = IdManager();

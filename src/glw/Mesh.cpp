@@ -123,6 +123,31 @@ void Mesh::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully pushed data for mesh '" + name_ + "' to video memory." );
 	}
+	
+	// TESTING
+	if (vertices_.size() == normals_.size())
+	{
+		std::cout << "Pushing for mesh: " << name_ << std::endl;
+		
+		glBindVertexArray(vaoTemp);
+		
+		auto temp = std::vector<glm::vec3>( vertices_.size()*3 );
+		
+		int j = 0;
+		for (int i=0; i < vertices_.size(); i+=3)
+		{
+			temp[i] = vertices_[j];
+			temp[i+1] = vertices_[j] + normals_[j];
+			temp[i+2] = vertices_[j];
+			
+			j++;
+		}
+		
+		glBindBuffer(GL_ARRAY_BUFFER, vboTemp);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, temp.size() * sizeof(glm::vec3), &temp[0]);
+		
+		glBindVertexArray(0);
+	}
 }
 
 void Mesh::pullFromVideoMemory()
@@ -274,17 +299,18 @@ void Mesh::allocateVideoMemory()
 
 void Mesh::render()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vaoId_);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 	
+	/*
 	if (vaoTemp != 0)
 	{
 		glBindVertexArray(vaoTemp);
 		glDrawArrays(GL_TRIANGLES, 0, vertices_.size()*3);
 	}
-
+	*/
 	glBindVertexArray(0);
 }
 
