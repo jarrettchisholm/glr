@@ -435,6 +435,7 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 
 			int cubeindex = 0;
 			glm::vec3 vertlist[12];
+			glm::vec3 normalList[12];
 			
 			/*
 				Determine the index into the edge table which
@@ -465,41 +466,65 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 				continue;
 		
 			/* Find the vertices where the surface intersects the cube */
-			if (edgeTable[cubeindex] & 1) {
+			if (edgeTable[cubeindex] & 1)
+			{
 				vertlist[0] = vertexInterp(ISOLEVEL, block.points[0][0][1].pos, block.points[1][0][1].pos, block.points[0][0][1].density, block.points[1][0][1].density);
+				normalList[0] = calculateNormal(x, y, z+1, x+1, y, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 2) {
+			if (edgeTable[cubeindex] & 2)
+			{
 				vertlist[1] = vertexInterp(ISOLEVEL, block.points[1][0][1].pos, block.points[1][0][0].pos, block.points[1][0][1].density, block.points[1][0][0].density);
+				normalList[1] = calculateNormal(x+1, y, z+1, x+1, y, z, points);
 			}
-			if (edgeTable[cubeindex] & 4) {
+			if (edgeTable[cubeindex] & 4)
+			{
 				vertlist[2] = vertexInterp(ISOLEVEL, block.points[1][0][0].pos, block.points[0][0][0].pos, block.points[1][0][0].density, block.points[0][0][0].density);
+				normalList[2] = calculateNormal(x+1, y, z, x, y, z, points);
 			}
-			if (edgeTable[cubeindex] & 8) {
+			if (edgeTable[cubeindex] & 8)
+			{
 				vertlist[3] = vertexInterp(ISOLEVEL, block.points[0][0][0].pos, block.points[0][0][1].pos, block.points[0][0][0].density, block.points[0][0][1].density);
+				normalList[1] = calculateNormal(x, y, z, x, y, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 16) {
+			if (edgeTable[cubeindex] & 16)
+			{
 				vertlist[4] = vertexInterp(ISOLEVEL, block.points[0][1][1].pos, block.points[1][1][1].pos, block.points[0][1][1].density, block.points[1][1][1].density);
+				normalList[4] = calculateNormal(x, y+1, z+1, x+1, y+1, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 32) {
+			if (edgeTable[cubeindex] & 32)
+			{
 				vertlist[5] = vertexInterp(ISOLEVEL, block.points[1][1][1].pos, block.points[1][1][0].pos, block.points[1][1][1].density, block.points[1][1][0].density);
+				normalList[5] = calculateNormal(x+1, y+1, z+1, x+1, y+1, z, points);
 			}
-			if (edgeTable[cubeindex] & 64) {
+			if (edgeTable[cubeindex] & 64)
+			{
 				vertlist[6] = vertexInterp(ISOLEVEL, block.points[1][1][0].pos, block.points[0][1][0].pos, block.points[1][1][0].density, block.points[0][1][0].density);
+				normalList[6] = calculateNormal(x+1, y+1, z, x, y+1, z, points);
 			}
-			if (edgeTable[cubeindex] & 128) {
+			if (edgeTable[cubeindex] & 128)
+			{
 				vertlist[7] = vertexInterp(ISOLEVEL, block.points[0][1][0].pos, block.points[0][1][1].pos, block.points[0][1][0].density, block.points[0][1][1].density);
+				normalList[7] = calculateNormal(x, y+1, z, x, y+1, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 256) {
+			if (edgeTable[cubeindex] & 256)
+			{
 				vertlist[8] = vertexInterp(ISOLEVEL, block.points[0][0][1].pos, block.points[0][1][1].pos, block.points[0][0][1].density, block.points[0][1][1].density);
+				normalList[8] = calculateNormal(x, y, z+1, x, y+1, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 512) {
+			if (edgeTable[cubeindex] & 512)
+			{
 				vertlist[9] = vertexInterp(ISOLEVEL, block.points[1][0][1].pos, block.points[1][1][1].pos, block.points[1][0][1].density, block.points[1][1][1].density);
+				normalList[9] = calculateNormal(x+1, y, z+1, x+1, y+1, z+1, points);
 			}
-			if (edgeTable[cubeindex] & 1024) {
+			if (edgeTable[cubeindex] & 1024)
+			{
 				vertlist[10] = vertexInterp(ISOLEVEL, block.points[1][0][0].pos, block.points[1][1][0].pos, block.points[1][0][0].density, block.points[1][1][0].density);
+				normalList[10] = calculateNormal(x+1, y, z, x+1, y+1, z, points);
 			}
-			if (edgeTable[cubeindex] & 2048) {
+			if (edgeTable[cubeindex] & 2048)
+			{
 				vertlist[11] = vertexInterp(ISOLEVEL, block.points[0][0][0].pos, block.points[0][1][0].pos, block.points[0][0][0].density, block.points[0][1][0].density);
+				normalList[11] = calculateNormal(x, y, z, x, y+1, z, points);
 			}
 
 			/* Create the triangles */
@@ -513,8 +538,29 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 				vertices.push_back( p2 );
 				vertices.push_back( p3 );
 				
+				glm::vec3 n1 = normalList[triTable[cubeindex][i  ]];
+				glm::vec3 n2 = normalList[triTable[cubeindex][i+1]];
+				glm::vec3 n3 = normalList[triTable[cubeindex][i+2]];
+				
+				if (n1 == glm::vec3())
+				{
+					n1 = calculateSimpleNormal(p1, p2, p3);
+				}
+				if (n2 == glm::vec3())
+				{
+					n2 = calculateSimpleNormal(p1, p2, p3);
+				}
+				if (n3 == glm::vec3())
+				{
+					n3 = calculateSimpleNormal(p1, p2, p3);
+				}
+				normals.push_back( n1 );
+				normals.push_back( n2 );
+				normals.push_back( n3 );
+				
+				/*
 				// TODO: Figure out how to get the normals
-				glm::vec3 normal = glm::vec3(); //calculateNormal(x, y, z, points);
+				glm::vec3 normal = calculateNormal(x, y, z, points);
 				if (normal == glm::vec3())
 				{
 					normal = calculateSimpleNormal(p1, p2, p3);
@@ -523,6 +569,7 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 				normals.push_back( normal );
 				normals.push_back( normal );
 				normals.push_back( normal );
+				*/
 			}
 		}
 	}
@@ -566,21 +613,44 @@ glm::vec3 VoxelChunkMeshGenerator::calculateSimpleNormal(const glm::vec3& p1, co
  * 
  * Code based off of: http://www.angelfire.com/linux/myp/MCAdvanced/MCImproved.html
  */
-glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x, int y, int z, const Points& densityValues) const
+glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x2, int y2, int z2, const Points& densityValues) const
+{
+	if (x1 <=0 || y1 <= 0 || z1 <=0)
+		return glm::vec3();
+	if (x1+1 >= densityValues.size() || y1+1 >= densityValues[0].size() || z1+1 >= densityValues[0][0].size())
+		return glm::vec3();
+	if (x2 <=0 || y2 <= 0 || z2 <=0)
+		return glm::vec3();
+	if (x2+1 >= densityValues.size() || y2+1 >= densityValues[0].size() || z2+1 >= densityValues[0][0].size())
+		return glm::vec3();
+	
+	glm::vec3 gradient1 = calculateGradientVector(x1, y1, z1, densityValues);
+	glm::vec3 gradient2 = calculateGradientVector(x2, y2, z2, densityValues);
+	
+	const double valp1 = densityValues[x1][y1][z1];
+	const double valp2 = densityValues[x2][y2][z2];
+	const double mu = (ISOLEVEL - valp1) / (valp2 - valp1);
+	
+	glm::vec3 out = glm::mix(gradient1, gradient2, mu);
+	
+	return glm::normalize( -1.0f*out );
+}
+
+glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, const Points& densityValues) const
 {
 	if (x <=0 || y <= 0 || z <=0)
 		return glm::vec3();
 	if (x+1 >= densityValues.size() || y+1 >= densityValues[0].size() || z+1 >= densityValues[0][0].size())
 		return glm::vec3();
 	
-	glm::vec3 normal = glm::vec3();
+	glm::vec3 gradient = glm::vec3();
 	const glm::detail::float32 scale = 1.0f;
 	
-	normal.x = (densityValues[x-1][y][z] - densityValues[x+1][y][z]) / scale;
-	normal.y = (densityValues[x][y-1][z] - densityValues[x][y+1][z]) / scale;
-	normal.z = (densityValues[x][y][z-1] - densityValues[x][y][z+1]) / scale;
+	gradient.x = (densityValues[x-1][y][z] - densityValues[x+1][y][z]) / scale;
+	gradient.y = (densityValues[x][y-1][z] - densityValues[x][y+1][z]) / scale;
+	gradient.z = (densityValues[x][y][z-1] - densityValues[x][y][z+1]) / scale;
 	
-	return glm::normalize( normal );
+	return gradient;
 }
 
 /**

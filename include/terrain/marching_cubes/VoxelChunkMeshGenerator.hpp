@@ -42,7 +42,9 @@ private:
 	typedef std::vector< std::vector< std::vector<Block> > > Blocks;
 	
 	glm::vec3 vertexInterp(double isolevel, const glm::vec3& p1, const glm::vec3& p2, double valp1, double valp2) const;
-	glm::vec3 calculateNormal(int x, int y, int z, const Points& densityValues) const;
+	glm::vec3 calculateNormal(int x1, int y1, int z1, int x2, int y2, int z2, const Points& densityValues) const;
+	glm::vec3 calculateGradientVector(int x, int y, int z, const Points& densityValues) const;
+	//glm::vec3 calculateNormal(int x, int y, int z, const Points& densityValues) const;
 	glm::vec3 calculateSimpleNormal(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3) const;
 	/**
 	 * Determines whether the points provided define a a fully solid space or a totally empty space.
