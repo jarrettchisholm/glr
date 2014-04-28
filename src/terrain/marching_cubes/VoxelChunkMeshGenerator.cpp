@@ -557,19 +557,6 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 				normals.push_back( n1 );
 				normals.push_back( n2 );
 				normals.push_back( n3 );
-				
-				/*
-				// TODO: Figure out how to get the normals
-				glm::vec3 normal = calculateNormal(x, y, z, points);
-				if (normal == glm::vec3())
-				{
-					normal = calculateSimpleNormal(p1, p2, p3);
-				}
-
-				normals.push_back( normal );
-				normals.push_back( normal );
-				normals.push_back( normal );
-				*/
 			}
 		}
 	}
@@ -609,9 +596,7 @@ glm::vec3 VoxelChunkMeshGenerator::calculateSimpleNormal(const glm::vec3& p1, co
 }
 
 /**
- * Calculate the normal for the vertex at x, y, z.
- * 
- * Code based off of: http://www.angelfire.com/linux/myp/MCAdvanced/MCImproved.html
+ * Calculate the normal for the vertex that lies along the edge defined by vertex (x1, y1, z1) and (x2, y2, z2).
  */
 glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x2, int y2, int z2, const Points& densityValues) const
 {
@@ -633,9 +618,15 @@ glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x
 	
 	glm::vec3 out = glm::mix(gradient1, gradient2, mu);
 	
+	// Question: Why do I need to 'reverse' the normal?
 	return glm::normalize( -1.0f*out );
 }
 
+/**
+ * Calculate the gradient vector for the vertex at x, y, z.
+ * 
+ * Code based off of: http://www.angelfire.com/linux/myp/MCAdvanced/MCImproved.html
+ */
 glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, const Points& densityValues) const
 {
 	if (x <=0 || y <= 0 || z <=0)
