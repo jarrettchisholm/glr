@@ -25,6 +25,7 @@ def setupDependencies():
 	boostThreadLib = 'boost_thread'
 	boostWaveLib = 'boost_wave'
 	boostRegexLib = 'boost_regex'
+	boostProgramOptionsLib = 'boost_program_options'
 	boostFilesystemLib = 'boost_filesystem'
 	boostSystemLib = 'boost_system'
 	boostSerializationLib = 'boost_serialization'
@@ -43,6 +44,7 @@ def setupDependencies():
 		boostThreadLib = 'libboost_thread-vc120-mt-1_55'
 		boostWaveLib = 'libboost_wave-vc120-mt-1_55'
 		boostRegexLib = 'libboost_regex-vc120-mt-1_55'
+		boostProgramOptionsLib = 'libboost_program_options-vc120-mt-1_55'
 		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
 		boostSystemLib = 'libboost_system-vc120-mt-1_55'
 		boostSerializationLib = 'libboost_serialization-vc120-mt-1_55'
@@ -67,6 +69,7 @@ def setupDependencies():
 	libraries.append(boostThreadLib)
 	libraries.append(boostWaveLib)
 	libraries.append(boostRegexLib)
+	libraries.append(boostProgramOptionsLib)
 	libraries.append(boostFilesystemLib)
 	libraries.append(boostSystemLib)
 	libraries.append(boostSerializationLib)
@@ -144,6 +147,17 @@ def copyResources():
 			print("Copied " + binary);
 		except:
 			print("Couldn't copy cef3_client executable");
+	
+	try:
+		binary = 'libglr.so'
+		if (isWindows):
+			binary = 'libglr.dll'
+		
+		shutil.copyfile('../build/' + binary, 'build/' + binary)
+		os.chmod('build/' + binary, 0755)
+		print("Copied " + binary);
+	except:
+		print("Couldn't copy libglr library");
 	
 	try:
 		for filename in glob.glob(os.path.join('../' + dependenciesDirectory + 'cef3/Release/', '*.*')):
