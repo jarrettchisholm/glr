@@ -81,6 +81,7 @@ def setupDependencies():
 	library_paths.append(dependenciesDirectory + 'boost/lib')
 	library_paths.append(dependenciesDirectory + 'freeimage/lib')
 	library_paths.append(dependenciesDirectory + 'cef3/Release')
+	library_paths.append(dependenciesDirectory + 'glew/lib')
 	
 	library_paths.append('./lib')
 	#library_paths.append('./lib_d')
