@@ -161,10 +161,8 @@ private:
 	friend class boost::serialization::access;
 	
 	//template<class Archive> void serialize(Archive& ar, const unsigned int version);
-	template<class Archive> void serialize(Archive& ar, const unsigned int version)
-	{
-		boost::serialization::split_member(ar, *this, version);
-	}
+	template<class Archive> inline void serialize(Archive& ar, const unsigned int version);
+	
 	template<class Archive> void save(Archive & ar, const unsigned int version) const;
 	template<class Archive> void load(Archive & ar, const unsigned int version);
 
@@ -172,5 +170,7 @@ private:
 
 }
 }
+
+#include "Model.inl"
 
 #endif /* MODEL_H_ */

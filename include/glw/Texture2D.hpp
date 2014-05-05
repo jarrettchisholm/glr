@@ -79,21 +79,12 @@ private:
 	
 	friend class boost::serialization::access;
 	
-	//template<class Archive> void serialize(Archive& ar, const unsigned int version);
-	template<class Archive> void serialize(Archive& ar, const unsigned int version)
-	{
-		boost::serialization::void_cast_register<Texture2D, ITexture>(
-			static_cast<Texture2D*>(nullptr),
-			static_cast<ITexture*>(nullptr)
-		);
-	
-		ar & name_;
-		ar & image_;
-		ar & internalFormat_;
-	}
+	template<class Archive> inline void serialize(Archive& ar, const unsigned int version);
 };
 
 }
 }
+
+#include "Texture2D.inl"
 
 #endif /* TEXTURE2D_H_ */
