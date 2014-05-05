@@ -237,7 +237,6 @@ source_files = source_files + Glob('build/common/math/*.cpp')
 source_files = source_files + Glob('build/common/logger/*.cpp')
 source_files = source_files + Glob('build/common/utilities/*.cpp')
 
-source_files = source_files + Glob('build/*.cpp')
 source_files = source_files + Glob('build/exceptions/*.cpp')
 source_files = source_files + Glob('build/gui/*.cpp')
 source_files = source_files + Glob('build/gui/cef/*.cpp')
@@ -262,4 +261,4 @@ setupEnvironment(env)
 print("Build type: " + buildFlags['build'])
 
 ### Tell SCons the library to build
-env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
+env.SharedLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
