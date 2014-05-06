@@ -8,6 +8,9 @@ build/
 *.o
 cef_client/build/
 *.pyc
+samples/simple/build/
+samples/lights/build/
+tests/build/
 
 # Windows debug files #
 #######################
