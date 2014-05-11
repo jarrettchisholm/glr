@@ -1,7 +1,7 @@
 #ifndef FORMATEXCEPTION_H_
 #define FORMATEXCEPTION_H_
 
-#include "Exception.hpp"
+#include "exceptions/Exception.hpp"
 
 namespace glr
 {
@@ -11,7 +11,7 @@ namespace exception
 class FormatException : public Exception
 {
 public:
-	FormatException(const std::string message = "Glr FormatException");
+	FormatException(std::string message = "Glr FormatException");
 	virtual ~FormatException() throw();
 };
 

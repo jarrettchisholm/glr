@@ -283,14 +283,14 @@ models::IModelManager* BasicSceneManager::getModelManager() const
 }
 
 // TODO: Make a 'create' and 'get' function?
-terrain::ITerrainManager* BasicSceneManager::getTerrainManager(terrain::IFieldFunction* fieldFunction)
+terrain::ITerrainManager* BasicSceneManager::getTerrainManager(terrain::IFieldFunction* fieldFunction, terrain::TerrainSettings terrainSettings)
 {
 	if ( terrainManager_.get() != nullptr )
 	{
 		return terrainManager_.get();
 	}
 
-	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >( new terrain::TerrainManager(openGlDevice_, fieldFunction) );
+	terrainManager_ = std::unique_ptr< terrain::ITerrainManager >( new terrain::TerrainManager(openGlDevice_, fieldFunction, terrainSettings) );
 
 	return terrainManager_.get();
 }

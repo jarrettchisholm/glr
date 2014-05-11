@@ -8,6 +8,8 @@ namespace glr
 {
 namespace terrain
 {
+namespace dual_contouring
+{
 
 //----------------------------------------------------------------------------
 
@@ -830,5 +832,6 @@ void solveSVD(
 	}
 }
 
+}
 }
 }

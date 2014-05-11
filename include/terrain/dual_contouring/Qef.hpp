@@ -14,6 +14,8 @@ namespace glr
 {
 namespace terrain
 {
+namespace dual_contouring
+{
 
 namespace glmd = glm::detail;
 
@@ -118,6 +120,7 @@ void solveSVD(
 	glmd::float64 x[3],				// vector (1x3)
 	glmd::int32 rows);
 
+}
 }
 }
 

@@ -1,21 +1,24 @@
-#ifndef VOXELCHUNKMESHGENERATOR_H_
-#define VOXELCHUNKMESHGENERATOR_H_
+#ifndef MARCHINGCUBESVOXELCHUNKMESHGENERATOR_H_
+#define MARCHINGCUBESVOXELCHUNKMESHGENERATOR_H_
 
 #include <vector>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
+#include "../IVoxelChunkMeshGenerator.hpp"
 #include "../VoxelChunk.hpp"
 
 namespace glr
 {
 namespace terrain
 {
+namespace marching_cubes
+{
 
 namespace glmd = glm::detail;
 
-class VoxelChunkMeshGenerator
+class VoxelChunkMeshGenerator : public IVoxelChunkMeshGenerator
 {
 public:
 	VoxelChunkMeshGenerator();
@@ -24,7 +27,7 @@ public:
 	/**
 	 * Will generate a mesh of the provided VoxelChunk, and put the data in the provided vectors (vertices, normals, and textureBlendingValues).
 	 */
-	void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
+	virtual void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
 	
 private:
 	struct Point
@@ -79,5 +82,6 @@ private:
 
 }
 }
+}
 
-#endif /* VOXELCHUNKMESHGENERATOR_H_ */
+#endif /* MARCHINGCUBESVOXELCHUNKMESHGENERATOR_H_ */

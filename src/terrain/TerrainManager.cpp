@@ -7,10 +7,13 @@
 #include "terrain/Constants.hpp"
 #include "terrain/VoxelChunkNoiseGenerator.hpp"
 #include "terrain/TerrainMeshSerializer.hpp"
+#include "terrain/dual_contouring/VoxelChunkMeshGenerator.hpp"
+#include "terrain/marching_cubes/VoxelChunkMeshGenerator.hpp"
 
 #include "models/Model.hpp"
 
 #include "exceptions/Exception.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 #include "common/logger/Logger.hpp"
 
@@ -19,7 +22,8 @@ namespace glr
 namespace terrain
 {
 
-TerrainManager::TerrainManager(glw::IOpenGlDevice* openGlDevice, IFieldFunction* fieldFunction) : openGlDevice_(openGlDevice), fieldFunction_(fieldFunction)
+TerrainManager::TerrainManager(glw::IOpenGlDevice* openGlDevice, IFieldFunction* fieldFunction, TerrainSettings terrainSettings)
+	: openGlDevice_(openGlDevice), fieldFunction_(fieldFunction), terrainSettings_(terrainSettings)
 {
 	initialize();
 }
@@ -31,7 +35,32 @@ TerrainManager::~TerrainManager()
 void TerrainManager::initialize()
 {
 	followTarget_ = nullptr;
-	voxelChunkMeshGenerator_ = VoxelChunkMeshGenerator(	);
+	
+	switch (terrainSettings_.smoothingAlgorithm)
+	{
+		case ALGORITHM_MARCHING_CUBES:
+			LOG_DEBUG("Using Marching Cubes smoothing algorithm.");
+			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new marching_cubes::VoxelChunkMeshGenerator() );
+			break;
+		
+		case ALGORITHM_DUAL_CONTOURING:
+			if (fieldFunction_ == nullptr)
+			{
+				const std::string message = std::string("Dual Contouring algorithm requires a field function.");
+				LOG_ERROR(message);
+				throw exception::InvalidArgumentException(message);
+			}
+			
+			LOG_DEBUG("Using Dual Contouring smoothing algorithm.");
+			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new dual_contouring::VoxelChunkMeshGenerator(fieldFunction_) );
+			break;
+		
+		default:
+			const std::string message = std::string("Invalid smoothing algorithm set for terrain manager.");
+			LOG_ERROR(message);
+			throw exception::InvalidArgumentException(message);
+	}
+	
 	terrainChunks_ = std::vector< std::unique_ptr<TerrainSceneNode> >();
 	
 	idManager_ = IdManager();
@@ -237,7 +266,7 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 			auto normals = std::vector< glm::vec3 >();
 			auto textureBlendingValues = std::vector< glm::vec4 >();
 			
-			voxelChunkMeshGenerator_.generateMesh(voxelChunk, vertices, normals, textureBlendingValues);
+			voxelChunkMeshGenerator_->generateMesh(voxelChunk, vertices, normals, textureBlendingValues);
 
 			auto shader = openGlDevice_->getShaderProgramManager()->getShaderProgram( std::string("voxel") );
 			assert( shader != nullptr );

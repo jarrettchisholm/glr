@@ -9,6 +9,7 @@
 #include "models/IBillboardManager.hpp"
 #include "terrain/ITerrainManager.hpp"
 #include "terrain/IFieldFunction.hpp"
+#include "terrain/TerrainSettings.hpp"
 #include "glw/shaders/IShaderProgramManager.hpp"
 
 namespace glr
@@ -57,7 +58,7 @@ public:
 
 	virtual env::IEnvironmentManager* getEnvironmentManager() = 0;
 	// TODO: make this just a getter?
-	virtual terrain::ITerrainManager* getTerrainManager(terrain::IFieldFunction* fieldFunction) = 0;
+	virtual terrain::ITerrainManager* getTerrainManager(terrain::IFieldFunction* fieldFunction = nullptr, terrain::TerrainSettings terrainSettings = terrain::TerrainSettings()) = 0;
 	virtual shaders::IShaderProgramManager* getShaderProgramManager() const = 0;
 
 	virtual const std::vector<LightData>& getLightData() = 0;

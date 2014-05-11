@@ -1,11 +1,12 @@
-#ifndef VOXELCHUNKMESHGENERATOR_H_
-#define VOXELCHUNKMESHGENERATOR_H_
+#ifndef DUALCONTOURINGVOXELCHUNKMESHGENERATOR_H_
+#define DUALCONTOURINGVOXELCHUNKMESHGENERATOR_H_
 
 #include <vector>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
+#include "../IVoxelChunkMeshGenerator.hpp"
 #include "../IFieldFunction.hpp"
 
 #include "../VoxelChunk.hpp"
@@ -14,10 +15,12 @@ namespace glr
 {
 namespace terrain
 {
+namespace dual_contouring
+{
 
 namespace glmd = glm::detail;
 
-class VoxelChunkMeshGenerator
+class VoxelChunkMeshGenerator : public IVoxelChunkMeshGenerator
 {
 public:
 	VoxelChunkMeshGenerator();
@@ -27,7 +30,7 @@ public:
 	/**
 	 * Will generate a mesh of the provided VoxelChunk, and put the data in the provided vectors (vertices, normals, and textureBlendingValues).
 	 */
-	void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
+	virtual void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
 	
 private:
 	IFieldFunction* fieldFunction_;
@@ -111,5 +114,6 @@ private:
 
 }
 }
+}
 
-#endif /* VOXELCHUNKMESHGENERATOR_H_ */
+#endif /* DUALCONTOURINGVOXELCHUNKMESHGENERATOR_H_ */

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "exceptions/Exception.hpp"
 
 namespace glr
@@ -5,7 +7,7 @@ namespace glr
 namespace exception
 {
 
-Exception::Exception(const std::string message) : message_(message)
+Exception::Exception(std::string message) : message_(std::move(message))
 {
 }
 

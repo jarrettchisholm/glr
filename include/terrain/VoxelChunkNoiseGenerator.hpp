@@ -1,5 +1,5 @@
-#ifndef NOISEMACHINE_H_
-#define NOISEMACHINE_H_
+#ifndef VOXELCHUNKNOISEGENERATOR_H_
+#define VOXELCHUNKNOISEGENERATOR_H_
 
 #include "IFieldFunction.hpp"
 #include "VoxelChunk.hpp"
@@ -22,4 +22,4 @@ bool determineIfEmptyOrSolid(VoxelChunk& chunk);
 }
 }
 
-#endif /* NOISEMACHINE_H_ */
+#endif /* VOXELCHUNKNOISEGENERATOR_H_ */

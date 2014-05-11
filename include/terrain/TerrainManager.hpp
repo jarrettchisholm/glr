@@ -7,16 +7,17 @@
 #include <deque>
 #include <mutex>
 
+#include "TerrainSettings.hpp"
+
 #include "glw/IOpenGlDevice.hpp"
 
 #include "IdManager.hpp"
 
 #include "terrain/ITerrainManager.hpp"
 #include "terrain/IFieldFunction.hpp"
+#include "terrain/IVoxelChunkMeshGenerator.hpp"
 #include "terrain/TerrainSceneNode.hpp"
 #include "terrain/Terrain.hpp"
-//#include "terrain/dual_contouring/VoxelChunkMeshGenerator.hpp"
-#include "terrain/marching_cubes/VoxelChunkMeshGenerator.hpp"
 
 namespace glr
 {
@@ -26,7 +27,7 @@ namespace terrain
 class TerrainManager : public ITerrainManager
 {
 public:
-	TerrainManager(glw::IOpenGlDevice* openGlDevice, IFieldFunction* fieldFunction);
+	TerrainManager(glw::IOpenGlDevice* openGlDevice, IFieldFunction* fieldFunction = nullptr, TerrainSettings terrainSettings = TerrainSettings());
 	virtual ~TerrainManager();
 
 	virtual ITerrain* getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const;
@@ -60,7 +61,8 @@ private:
 	glm::ivec3 previousGridLocation_;
 
 	IFieldFunction* fieldFunction_;
-	VoxelChunkMeshGenerator voxelChunkMeshGenerator_;
+	TerrainSettings terrainSettings_;
+	std::unique_ptr<IVoxelChunkMeshGenerator> voxelChunkMeshGenerator_;
 	
 	std::vector< std::unique_ptr<TerrainSceneNode> > terrainChunks_;
 	std::mutex terrainChunksMutex_;

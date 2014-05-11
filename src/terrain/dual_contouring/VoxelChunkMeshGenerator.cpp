@@ -14,6 +14,8 @@ namespace glr
 {
 namespace terrain
 {
+namespace dual_contouring
+{
 
 VoxelChunkMeshGenerator::VoxelChunkMeshGenerator()
 {
@@ -839,5 +841,6 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	}	
 }
 
+}
 }
 }

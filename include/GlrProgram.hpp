@@ -10,6 +10,8 @@
 #include <windows.h>
 #endif
 
+#include "ProgramSettings.hpp"
+
 #include "glw/IOpenGlDevice.hpp"
 #include "IWindow.hpp"
 #include "BasicSceneNode.hpp"
@@ -34,18 +36,6 @@ namespace glr
  * @b Note: This documentation is for an alpha product, and is not necessarily representative of the final product.
  * 
  */
-
-/**
- * Used to pass in GlrProgram settings (so we don't have to have a method with a whole ton of parameters).
- */
-struct ProgramSettings
-{
-	ProgramSettings() : defaultTextureDir("")
-	{
-	}
-	
-	std::string defaultTextureDir;
-};
 
 /**
  * 

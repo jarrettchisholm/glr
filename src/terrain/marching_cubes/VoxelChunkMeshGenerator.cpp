@@ -22,6 +22,8 @@ namespace glr
 {
 namespace terrain
 {
+namespace marching_cubes
+{
 
 VoxelChunkMeshGenerator::VoxelChunkMeshGenerator()
 {
@@ -761,5 +763,6 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	}	
 }
 
+}
 }
 }

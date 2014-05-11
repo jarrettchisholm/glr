@@ -52,7 +52,7 @@ public:
 
 	virtual const glm::mat4& getModelMatrix() const;
 
-	virtual terrain::ITerrainManager* getTerrainManager(terrain::IFieldFunction* fieldFunction);
+	virtual terrain::ITerrainManager* getTerrainManager(terrain::IFieldFunction* fieldFunction = nullptr, terrain::TerrainSettings terrainSettings = terrain::TerrainSettings());
 	virtual env::IEnvironmentManager* getEnvironmentManager();
 	// Get rid of this?
 	virtual models::IModelManager* getModelManager() const;
