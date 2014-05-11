@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "exceptions/IoException.hpp"
 
 namespace glr
@@ -7,7 +5,7 @@ namespace glr
 namespace exception
 {
 
-IoException::IoException(std::string message) : Exception(std::move(message))
+IoException::IoException(const std::string& message) : Exception(message)
 {
 }
 

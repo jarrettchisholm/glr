@@ -1,5 +1,3 @@
-#include <utility>
-
 #include "exceptions/FormatException.hpp"
 
 namespace glr
@@ -7,7 +5,7 @@ namespace glr
 namespace exception
 {
 
-FormatException::FormatException(std::string message) : Exception(std::move(message))
+FormatException::FormatException(const std::string& message) : Exception(message)
 {
 }
 

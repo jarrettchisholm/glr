@@ -11,7 +11,7 @@ namespace exception
 class FormatException : public Exception
 {
 public:
-	FormatException(std::string message = "Glr FormatException");
+	FormatException(const std::string& message = std::string("Glr FormatException"));
 	virtual ~FormatException() throw();
 };
 

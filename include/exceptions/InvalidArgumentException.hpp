@@ -11,7 +11,7 @@ namespace exception
 class InvalidArgumentException : public LogicException
 {
 public:
-	InvalidArgumentException(std::string message = std::string("Glr InvalidArgumentException"));
+	InvalidArgumentException(const std::string& message = std::string("Glr InvalidArgumentException"));
 	virtual ~InvalidArgumentException() throw();
 };
 

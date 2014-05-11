@@ -25,7 +25,8 @@ public:
 	virtual ~VoxelChunkMeshGenerator();
 
 	/**
-	 * Will generate a mesh of the provided VoxelChunk, and put the data in the provided vectors (vertices, normals, and textureBlendingValues).
+	 * Will generate a mesh of the provided VoxelChunk, and put the data in the provided vectors (vertices, normals, and textureBlendingValues).  This function
+	 * will use the Marching Cubes algorithm to accomplish the smoothing of the density field data.
 	 */
 	virtual void generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const;
 	
@@ -54,7 +55,7 @@ private:
 	 * 
 	 * @return True if space is totally empty or solid; false otherwise.
 	 */
-	bool isEmptyOrSolid(Points& points) const;
+	bool isEmptyOrSolid(const Points& points) const;
 	
 	/**
 	 * Calculate the normal for the provided point.
@@ -70,7 +71,7 @@ private:
 	/**
 	 * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.
 	 */
-	void setDensitiesAndPositions(Blocks& blocks, Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const;
+	void setDensitiesAndPositions(Blocks& blocks, const Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const;
 	
 	/**
 	 * Will resize the provided Blocks 3D vector to the appropriate size.

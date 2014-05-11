@@ -12,7 +12,7 @@ namespace exception
 class Exception : public std::exception
 {
 public:
-	Exception(std::string message = "Glr Exception");
+	Exception(const std::string& message = std::string("Glr Exception"));
 	virtual ~Exception() throw();
 
 	virtual const char* what() throw();

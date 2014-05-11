@@ -11,7 +11,7 @@ namespace exception
 class GlException : public Exception
 {
 public:
-	GlException(std::string message = "Glr GlException");
+	GlException(const std::string& message = std::string("Glr GlException"));
 	virtual ~GlException() throw();
 };
 

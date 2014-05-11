@@ -388,7 +388,7 @@ int triTable[256][16] = {
  * 
  * @return True if space is totally empty or solid; false otherwise.
  */
-bool VoxelChunkMeshGenerator::isEmptyOrSolid(Points& points) const
+bool VoxelChunkMeshGenerator::isEmptyOrSolid(const Points& points) const
 {
 	bool isEmpty = true;
 	bool isSolid = true;
@@ -602,11 +602,15 @@ glm::vec3 VoxelChunkMeshGenerator::calculateSimpleNormal(const glm::vec3& p1, co
  */
 glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x2, int y2, int z2, const Points& densityValues) const
 {
-	if (x1 <=0 || y1 <= 0 || z1 <=0)
-		return glm::vec3();
+	if (constants::POINT_FIELD_OFFSET <= 0)
+	{
+		if (x1 <=0 || y1 <= 0 || z1 <=0)
+			return glm::vec3();
+		if (x2 <=0 || y2 <= 0 || z2 <=0)
+			return glm::vec3();
+	}
+	
 	if (x1+1 >= densityValues.size() || y1+1 >= densityValues[0].size() || z1+1 >= densityValues[0][0].size())
-		return glm::vec3();
-	if (x2 <=0 || y2 <= 0 || z2 <=0)
 		return glm::vec3();
 	if (x2+1 >= densityValues.size() || y2+1 >= densityValues[0].size() || z2+1 >= densityValues[0][0].size())
 		return glm::vec3();
@@ -614,8 +618,8 @@ glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x
 	glm::vec3 gradient1 = calculateGradientVector(x1, y1, z1, densityValues);
 	glm::vec3 gradient2 = calculateGradientVector(x2, y2, z2, densityValues);
 	
-	const double valp1 = densityValues[x1][y1][z1];
-	const double valp2 = densityValues[x2][y2][z2];
+	const double valp1 = densityValues[x1+constants::POINT_FIELD_OFFSET][y1+constants::POINT_FIELD_OFFSET][z1+constants::POINT_FIELD_OFFSET];
+	const double valp2 = densityValues[x2+constants::POINT_FIELD_OFFSET][y2+constants::POINT_FIELD_OFFSET][z2+constants::POINT_FIELD_OFFSET];
 	const double mu = (ISOLEVEL - valp1) / (valp2 - valp1);
 	
 	glm::vec3 out = glm::mix(gradient1, gradient2, mu);
@@ -631,17 +635,33 @@ glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x
  */
 glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, const Points& densityValues) const
 {
-	if (x <=0 || y <= 0 || z <=0)
-		return glm::vec3();
+	if (constants::POINT_FIELD_OFFSET <= 0)
+	{
+		if (x <=0 || y <= 0 || z <=0)
+			return glm::vec3();
+	}
+	
 	if (x+1 >= densityValues.size() || y+1 >= densityValues[0].size() || z+1 >= densityValues[0][0].size())
 		return glm::vec3();
 	
 	glm::vec3 gradient = glm::vec3();
 	const glm::detail::float32 scale = 1.0f;
 	
-	gradient.x = (densityValues[x-1][y][z] - densityValues[x+1][y][z]) / scale;
-	gradient.y = (densityValues[x][y-1][z] - densityValues[x][y+1][z]) / scale;
-	gradient.z = (densityValues[x][y][z-1] - densityValues[x][y][z+1]) / scale;
+	//gradient.x = (densityValues[x-1][y][z] - densityValues[x+1][y][z]) / scale;
+	//gradient.y = (densityValues[x][y-1][z] - densityValues[x][y+1][z]) / scale;
+	//gradient.z = (densityValues[x][y][z-1] - densityValues[x][y][z+1]) / scale;
+	
+	gradient.x = (
+			densityValues[x-1+constants::POINT_FIELD_OFFSET][y+constants::POINT_FIELD_OFFSET][z+constants::POINT_FIELD_OFFSET]
+			-
+			densityValues[x+1+constants::POINT_FIELD_OFFSET][y+constants::POINT_FIELD_OFFSET][z+constants::POINT_FIELD_OFFSET]
+		) / scale;
+	gradient.y = (densityValues[x+constants::POINT_FIELD_OFFSET][y-1+constants::POINT_FIELD_OFFSET][z+constants::POINT_FIELD_OFFSET] 
+		- densityValues[x+constants::POINT_FIELD_OFFSET][y+1+constants::POINT_FIELD_OFFSET][z+constants::POINT_FIELD_OFFSET]) 
+		/ scale;
+	gradient.z = (densityValues[x+constants::POINT_FIELD_OFFSET][y+constants::POINT_FIELD_OFFSET][z-1+constants::POINT_FIELD_OFFSET] 
+		- densityValues[x+constants::POINT_FIELD_OFFSET][y+constants::POINT_FIELD_OFFSET][z+1+constants::POINT_FIELD_OFFSET]) 
+		/ scale;
 	
 	return gradient;
 }
@@ -649,14 +669,14 @@ glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, 
 /**
  * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.
  */
-void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const
+void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const
 {
 	// Set the starting x, y, z
 	glmd::float32 fx = (glmd::float32)(gridX * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
 	glmd::float32 fy = (glmd::float32)(gridY * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
 	glmd::float32 fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
 
-#define SET_DENSITY(x, y, z, i, j, k) blocks[x][y][z].points[i][j][k].density = points[x+i][y+j][z+k];
+#define SET_DENSITY(x, y, z, i, j, k) blocks[x][y][z].points[i][j][k].density = points[x+i+constants::POINT_FIELD_OFFSET][y+j+constants::POINT_FIELD_OFFSET][z+k+constants::POINT_FIELD_OFFSET];
 #define SET_POSITION(x, y, z, i, j, k)\
 	blocks[x][y][z].points[i][j][k].pos.x = fx + (glmd::float32)(i * glr::terrain::constants::RESOLUTION);\
 	blocks[x][y][z].points[i][j][k].pos.y = fy + (glmd::float32)(j * glr::terrain::constants::RESOLUTION);\
@@ -716,10 +736,10 @@ void VoxelChunkMeshGenerator::resizeBlocks(Blocks& blocks) const
 
 void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const
 {	
-	Points points = chunk.getPoints();
-	glmd::int32 gridX = chunk.getGridX();
-	glmd::int32 gridY = chunk.getGridY();
-	glmd::int32 gridZ = chunk.getGridZ();
+	const Points& points = chunk.points;
+	glmd::int32 gridX = chunk.gridX;
+	glmd::int32 gridY = chunk.gridY;
+	glmd::int32 gridZ = chunk.gridZ;
 	
 	if (isEmptyOrSolid(points))
 		return;

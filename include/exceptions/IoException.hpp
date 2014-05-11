@@ -11,7 +11,7 @@ namespace exception
 class IoException : public Exception
 {
 public:
-	IoException(std::string message = "Glr IoException");
+	IoException(const std::string& message = std::string("Glr IoException"));
 	virtual ~IoException() throw();
 };
 
