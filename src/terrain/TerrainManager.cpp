@@ -148,7 +148,7 @@ void TerrainManager::updateChunks()
 	int diffY = diff.y;
 	int diffZ = diff.z;
 	
-	std::cout << "diff: " << glm::to_string(diff) << std::endl;
+	//std::cout << "diff: " << glm::to_string(diff) << std::endl;
 	
 	// along x plane
 	for (int i=0; i < std::abs(diff.x); i++)
