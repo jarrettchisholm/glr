@@ -24,11 +24,32 @@ public:
 
 	virtual ITerrain* getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const = 0;
 	virtual void tick() = 0;
+	
+	/**
+	 * Will do up to maxUpdates number of updates to/from graphics card.
+	 * 
+	 * Note: This method is NOT thread safe.  Only call it from the OpenGL thread.
+	 */
 	virtual void update(glm::detail::uint32 maxUpdates = 10) = 0;
+	
+	/**
+	 * Will render the terrain to the scene.
+	 * 
+	 * Note: This method is NOT thread safe.  Only call it from the OpenGL thread.
+	 */
 	virtual void render() = 0;
 
+	/**
+	 * Set the ISceneNode target that the terrain should be centered around.
+	 */
 	virtual void setFollowTarget(ISceneNode* target) = 0;
 	virtual ISceneNode* getFollowTarget() const = 0;
+	
+	/**
+	 * Generates (or regenerates) the terrain using the data loaded from disk or passed in as parameters.
+	 * 
+	 * This method IS thread safe - you can call it outside of the OpenGL thread.
+	 */
 	virtual void generate() = 0;
 	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) = 0;
 	virtual void generate(ITerrain* terrain) = 0;

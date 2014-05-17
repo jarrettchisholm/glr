@@ -262,4 +262,5 @@ setupEnvironment(env)
 print("Build type: " + buildFlags['build'])
 
 ### Tell SCons the library to build
-env.SharedLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
+#env.SharedLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
+env.StaticLibrary('build/glr', source_files, LIBS = libraries, LIBPATH = library_paths)
