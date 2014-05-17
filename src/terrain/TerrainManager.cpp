@@ -116,9 +116,9 @@ void TerrainManager::updateTerrainLod()
 {
 	for (int i=0; i < terrainSettings_.length; i++)
 	{
-		for (int j=0; j < terrainSettings_.width; j++)
+		for (int j=0; j < terrainSettings_.height; j++)
 		{
-			for (int k=0; k < terrainSettings_.height; k++)
+			for (int k=0; k < terrainSettings_.width; k++)
 			{
 				auto t = getTerrain(i, j, k);
 				
@@ -202,7 +202,7 @@ void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 		
 		VoxelChunk voxelChunk = VoxelChunk(terrain->getGridX(), terrain->getGridY(), terrain->getGridZ());
 	
-		generateNoise(voxelChunk, *fieldFunction_);
+		generateNoise(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, *fieldFunction_);
 		
 		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk);
 
@@ -537,9 +537,9 @@ void TerrainManager::generate()
 {
 	for (int i=0; i < terrainSettings_.length; i++)
 	{
-		for (int j=0; j < terrainSettings_.width; j++)
+		for (int j=0; j < terrainSettings_.height; j++)
 		{
-			for (int k=0; k < terrainSettings_.height; k++)
+			for (int k=0; k < terrainSettings_.width; k++)
 			{
 				createTerrain( i, j, k );
 			}

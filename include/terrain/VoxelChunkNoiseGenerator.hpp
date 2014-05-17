@@ -19,7 +19,7 @@ namespace terrain
  * for interpolation, etc.
  * 
  */
-void generateNoise(VoxelChunk& chunk, glr::terrain::IFieldFunction& fieldFunction);
+void generateNoise(VoxelChunk& chunk, glm::detail::int32 length, glm::detail::int32 width, glm::detail::int32 height, glr::terrain::IFieldFunction& fieldFunction);
 
 /**
  * 

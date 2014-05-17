@@ -783,8 +783,8 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
 		fx += glr::terrain::constants::RESOLUTION;
 		
 		fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
-		fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
 		fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
+		fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
 		fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 	}
 }

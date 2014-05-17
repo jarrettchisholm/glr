@@ -29,7 +29,7 @@ enum LevelOfDetail
 struct TerrainSettings
 {
 	TerrainSettings() 
-		: smoothingAlgorithm(ALGORITHM_MARCHING_CUBES), length(4), width(4), height(2),
+		: smoothingAlgorithm(ALGORITHM_MARCHING_CUBES), length(8), width(8), height(8),
 		maxViewDistance(256.0f), maxLevelOfDetail(LOD_HIGHEST), minLevelOfDetail(LOD_LOWEST),
 		lodHighestRadius(32.0f), lodHighRadius(64.0f), lodMediumRadius(128.0f), lodLowRadius(256.0f)
 	{
