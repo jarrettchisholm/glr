@@ -16,7 +16,6 @@
 #include "terrain/ITerrainManager.hpp"
 #include "terrain/IFieldFunction.hpp"
 #include "terrain/IVoxelChunkMeshGenerator.hpp"
-#include "terrain/TerrainSceneNode.hpp"
 #include "terrain/Terrain.hpp"
 
 namespace glr
@@ -47,9 +46,9 @@ public:
 	virtual void serialize(const std::string& filename);
 	virtual void deserialize(const std::string& filename);
 	
-	virtual glm::detail::float32 getWidth() const;
-	virtual glm::detail::float32 getHeight() const;
-	virtual glm::detail::float32 getLength() const;
+	virtual glm::detail::int32 getWidth() const;
+	virtual glm::detail::int32 getHeight() const;
+	virtual glm::detail::int32 getLength() const;
 	
 	virtual glm::detail::int32 getBlockSize() const;
 
@@ -64,8 +63,8 @@ private:
 	TerrainSettings terrainSettings_;
 	std::unique_ptr<IVoxelChunkMeshGenerator> voxelChunkMeshGenerator_;
 	
-	std::vector< std::unique_ptr<TerrainSceneNode> > terrainChunks_;
-	std::mutex terrainChunksMutex_;
+	std::vector< std::unique_ptr<Terrain> > terrain_;
+	std::mutex terrainMutex_;
 	
 	mutable std::mutex openGlWorkMutex_;
 	std::deque< std::function<void()> > openGlWork_;
@@ -75,20 +74,23 @@ private:
 	void initialize();
 	void postOpenGlWork(std::function<void()> work);
 	glm::ivec3 getTargetGridLocation();
-	void updateChunks();
+	void updateTerrainLod();
 
-	void addChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
-	void addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
-	void addChunk(const glm::ivec3& coordinates);
-	void addChunk(TerrainSceneNode* chunk);
-	void removeChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
-	void removeChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
-	void removeChunk(const glm::ivec3& coordinates);
-	void removeChunk(TerrainSceneNode* chunk);
-	void removeAllChunks();
-	TerrainSceneNode* getChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z);
-	TerrainSceneNode* getChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z);
-	TerrainSceneNode* getChunk(const glm::ivec3& coordinates);
+	LevelOfDetail getNewTerrainLod(Terrain& t);
+	bool isWithinRadius(Terrain& t, ISceneNode& n, glmd::float32 radius);
+
+	void createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	void createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	void createTerrain(const glm::ivec3& coordinates);
+	void addTerrain(Terrain* terrain);
+	void removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	void removeTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	void removeTerrain(const glm::ivec3& coordinates);
+	void removeTerrain(Terrain* terrain);
+	void removeAllTerrain();
+	Terrain* getTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	Terrain* getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	Terrain* getTerrain(const glm::ivec3& coordinates);
 };
 
 }

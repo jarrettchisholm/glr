@@ -1,6 +1,9 @@
 #ifndef ITERRAIN_H_
 #define ITERRAIN_H_
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 #include "ISceneNode.hpp"
 #include "TerrainSettings.hpp"
 
@@ -8,6 +11,20 @@ namespace glr
 {
 namespace terrain
 {
+
+struct Point
+{
+	glmd::float32 density;
+	glm::vec3 pos;
+};
+
+struct Block
+{
+	Point points[2][2][2];
+	glmd::int32 index;
+	glm::vec3 meshPoint;
+	glm::vec3 meshPointNormal;
+};
 
 class ITerrain : public virtual ISceneNode
 {
@@ -37,11 +54,18 @@ public:
 	 */
 	virtual void update() = 0;
 	
-	virtual ? getLocalData() = 0;
-	virtual void setLocalData() = 0;
-	
+	/**
+	 * Will set the level of detail of the terrain.
+	 * 
+	 * If the level of detail is different than the current value, this method will mark the terrain
+	 * as dirty.
+	 */
 	virtual void setLod(LevelOfDetail lod) = 0;
 	virtual LevelOfDetail getLod() const = 0;
+	
+	virtual glm::detail::int32 getGridX() const = 0;
+	virtual glm::detail::int32 getGridY() const = 0;
+	virtual glm::detail::int32 getGridZ() const = 0;
 };
 
 }

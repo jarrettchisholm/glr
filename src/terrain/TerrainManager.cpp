@@ -16,6 +16,7 @@
 #include "exceptions/InvalidArgumentException.hpp"
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/GlmUtilities.hpp"
 
 namespace glr
 {
@@ -61,7 +62,7 @@ void TerrainManager::initialize()
 			throw exception::InvalidArgumentException(message);
 	}
 	
-	terrainChunks_ = std::vector< std::unique_ptr<TerrainSceneNode> >();
+	terrain_ = std::vector< std::unique_ptr<Terrain> >();
 	
 	idManager_ = IdManager();
 
@@ -80,8 +81,12 @@ glm::ivec3 TerrainManager::getTargetGridLocation()
 
 	if (followTarget_ != nullptr)
 	{
-		// TODO: make size not hard coded
-		const glm::vec3 pos = followTarget_->getPosition() / 4.0f; // - 0.5f * totalWorldGridSize  (?)
+		glm::vec3 pos = followTarget_->getPosition() / (glmd::float32)constants::CHUNK_SIZE; // - 0.5f * totalWorldGridSize  (?)
+		
+		pos.x -= terrainSettings_.length/2;
+		pos.y -= terrainSettings_.width/2;
+		pos.z -= terrainSettings_.height/2;
+		
 		retVal = glm::ivec3((int)pos.x, (int)pos.y, (int)pos.z);
 	}
 
@@ -101,111 +106,53 @@ void TerrainManager::tick()
 			previousGridLocation_ = currentGridLocation_;
 			currentGridLocation_ = followTargetGridLocation;
 		}
-		std::cout << "updateChunks START " << std::endl;
-		this->updateChunks();
-		std::cout << "updateChunks END " << std::endl;
+		std::cout << "updateTerrainLod START " << std::endl;
+		this->updateTerrainLod();
+		std::cout << "updateTerrainLod END " << std::endl;
 	}
 }
 
-const int MAX_QUADRANT_DISTANCE = 2;
-void TerrainManager::updateChunks()
+void TerrainManager::updateTerrainLod()
 {
-	// update current location
-	addChunk( currentGridLocation_ );
-	// update cube around location (distance = 1)
-	/*
-	for (int i=-1; i <= 1; i++)
+	for (int i=0; i < terrainSettings_.length; i++)
 	{
-		for (int j=-1; j <= 1; j++)
+		for (int j=0; j < terrainSettings_.width; j++)
 		{
-			for (int k=-1; k <= 1; k++)
+			for (int k=0; k < terrainSettings_.height; k++)
 			{
-				addChunk( currentGridLocation_.x+i, currentGridLocation_.y+j, currentGridLocation_.z+k );
+				auto t = getTerrain(i, j, k);
+				
+				if (t != nullptr)
+				{
+					LevelOfDetail lod = getNewTerrainLod(*t);
+					t->setLod(lod);
+				}
 			}
 		}
+		//std::cout << "MARK: " << i << std::endl;
 	}
-	*/
+}
+
+LevelOfDetail TerrainManager::getNewTerrainLod(Terrain& t)
+{
+	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodHighestRadius))
+		return LOD_HIGHEST;
+	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodHighRadius))
+		return LOD_HIGH;
+	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodMediumRadius))
+		return LOD_MEDIUM;
+	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodLowRadius))
+		return LOD_LOW;
+	else
+		return LOD_LOWEST;
+}
+
+bool TerrainManager::isWithinRadius(Terrain& t, ISceneNode& n, glmd::float32 radius)
+{
+	glm::vec3 pos = t.getPosition();
+	glm::vec3 center = n.getPosition();
 	
-	// update cubes around location ( 1 < distance <= MAX_QUADRANT_DISTANCE)
-	// TODO: level of detail
-	std::cout << "currentGridLocation_: " << glm::to_string(currentGridLocation_) << std::endl;
-	std::cout << "previousGridLocation_: " << glm::to_string(previousGridLocation_) << std::endl;
-	for (int i=-MAX_QUADRANT_DISTANCE; i <= MAX_QUADRANT_DISTANCE; i++)
-	{
-		for (int j=-MAX_QUADRANT_DISTANCE; j <= MAX_QUADRANT_DISTANCE; j++)
-		{
-			for (int k=-MAX_QUADRANT_DISTANCE; k <= MAX_QUADRANT_DISTANCE; k++)
-			{
-				//std::cout << "add: " << currentGridLocation_.x+i << ", " << currentGridLocation_.y+j << ", " << currentGridLocation_.z+k << std::endl;
-				addChunk( currentGridLocation_.x+i, currentGridLocation_.y+j, currentGridLocation_.z+k );
-			}
-		}
-	}
-	
-	// update (i.e. hide) cubes too far from new location ( distance > MAX_QUADRANT_DISTANCE)
-	auto diff = currentGridLocation_ - previousGridLocation_;
-	int diffX = diff.x;
-	int diffY = diff.y;
-	int diffZ = diff.z;
-	
-	//std::cout << "diff: " << glm::to_string(diff) << std::endl;
-	
-	// along x plane
-	for (int i=0; i < std::abs(diff.x); i++)
-	{
-		int plane = 0;
-		if (diffX >= 0)
-			plane = -(MAX_QUADRANT_DISTANCE + diff.x);
-		else
-			plane = MAX_QUADRANT_DISTANCE + std::abs(diff.x);
-		
-		for (int j=-MAX_QUADRANT_DISTANCE; j <= MAX_QUADRANT_DISTANCE; j++)
-		{
-			for (int k=-MAX_QUADRANT_DISTANCE; k <= MAX_QUADRANT_DISTANCE; k++)
-			{
-				//std::cout << "remove X: " << plane << ", " << j << ", " << k << std::endl;
-				removeChunk( currentGridLocation_.x+plane, currentGridLocation_.y+j, currentGridLocation_.z+k );
-			}
-		}
-	}
-	
-	// along y plane
-	for (int i=0; i < std::abs(diff.y); i++)
-	{
-		int plane = 0;
-		if (diffY >= 0)
-			plane = -(MAX_QUADRANT_DISTANCE + diff.y);
-		else
-			plane = MAX_QUADRANT_DISTANCE + std::abs(diff.y);
-		
-		for (int j=-MAX_QUADRANT_DISTANCE; j <= MAX_QUADRANT_DISTANCE; j++)
-		{
-			for (int k=-MAX_QUADRANT_DISTANCE; k <= MAX_QUADRANT_DISTANCE; k++)
-			{
-				//std::cout << "remove Y: " << j << ", " << plane<< ", " << k << std::endl;
-				removeChunk( currentGridLocation_.x+j, currentGridLocation_.y+plane, currentGridLocation_.z+k );
-			}
-		}
-	}
-	
-	// along z plane
-	for (int i=0; i < std::abs(diff.z); i++)
-	{
-		int plane = 0;
-		if (diffZ >= 0)
-			plane = -(MAX_QUADRANT_DISTANCE + diff.z);
-		else
-			plane = MAX_QUADRANT_DISTANCE + std::abs(diff.z);
-		
-		for (int j=-MAX_QUADRANT_DISTANCE; j <= MAX_QUADRANT_DISTANCE; j++)
-		{
-			for (int k=-MAX_QUADRANT_DISTANCE; k <= MAX_QUADRANT_DISTANCE; k++)
-			{
-				//std::cout << "remove Z: " << j << ", " << k << ", " << plane << std::endl;
-				removeChunk( currentGridLocation_.x+j, currentGridLocation_.y+k, currentGridLocation_.z+plane );
-			}
-		}
-	}
+	return utilities::isVec3InSphere(pos, center, radius);
 }
 
 void TerrainManager::postOpenGlWork(std::function<void()> work)
@@ -215,64 +162,64 @@ void TerrainManager::postOpenGlWork(std::function<void()> work)
 	openGlWorkMutex_.unlock();
 }
 
-void TerrainManager::addChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
 	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
 	
-	addChunk(i, j, k);
+	createTerrain(i, j, k);
 }
 
-void TerrainManager::addChunk(const glm::ivec3& coordinates)
+void TerrainManager::createTerrain(const glm::ivec3& coordinates)
 {
-	addChunk(coordinates.x, coordinates.y, coordinates.z);
+	createTerrain(coordinates.x, coordinates.y, coordinates.z);
 }
 
-void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	auto chunk = getChunk(x, y, z);
+	auto terrain = getTerrain(x, y, z);
 	
-	if (chunk == nullptr)
+	if (terrain == nullptr)
 	{
 		//std::cout << "add: " << x << ", " << y << ", " << z << std::endl;
-		chunk = new TerrainSceneNode(idManager_.createId(), openGlDevice_, x, y, z);
-		//terrainChunks_.push_back( std::unique_ptr<TerrainSceneNode>(  ) );
-		//chunk = terrainChunks_.back().get();
+		terrain = new Terrain(idManager_.createId(), openGlDevice_, x, y, z);
+		//terrain_.push_back( std::unique_ptr<Terrain>(  ) );
+		//terrain = terrain_.back().get();
 	}
 	else
 	{
-		terrainChunksMutex_.lock();
-		if (!chunk->isActive())
-			chunk->setIsActive( true );
-		terrainChunksMutex_.unlock();
+		terrainMutex_.lock();
+		if (!terrain->isActive())
+			terrain->setIsActive( true );
+		terrainMutex_.unlock();
 		return;
 	}
 
 	// MARK: Previous lambda function
 	{
-		//std::cout << "addChunk START 1 " << std::this_thread::get_id() << std::endl;
+		//std::cout << "createTerrain START 1 " << std::this_thread::get_id() << std::endl;
 		
-		VoxelChunk voxelChunk = VoxelChunk(chunk->getGridX(), chunk->getGridY(), chunk->getGridZ());
+		VoxelChunk voxelChunk = VoxelChunk(terrain->getGridX(), terrain->getGridY(), terrain->getGridZ());
 	
 		generateNoise(voxelChunk, *fieldFunction_);
 		
 		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk);
 
-		//std::cout << "addChunk START 2 " << std::this_thread::get_id() << std::endl;
+		//std::cout << "createTerrain START 2 " << std::this_thread::get_id() << std::endl;
 		if (!isEmptyOrSolid)
 		{
 			auto vertices = std::vector< glm::vec3 >();
 			auto normals = std::vector< glm::vec3 >();
 			auto textureBlendingValues = std::vector< glm::vec4 >();
 			
-			voxelChunkMeshGenerator_->generateMesh(voxelChunk, vertices, normals, textureBlendingValues);
+			voxelChunkMeshGenerator_->generateMesh(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, vertices, normals, textureBlendingValues);
 
 			auto shader = openGlDevice_->getShaderProgramManager()->getShaderProgram( std::string("voxel") );
 			assert( shader != nullptr );
 			
 			std::stringstream ss;
-			ss << "terrain_" << chunk->getGridX() << "_" << chunk->getGridY() << "_" << chunk->getGridZ();
+			ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
 			ss << "_model";
 			
 			auto mesh = std::unique_ptr<TerrainMesh>( new TerrainMesh(openGlDevice_, ss.str()) );
@@ -305,24 +252,24 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 				material->setStrength(materialData.strength);
 			}
 			
-			chunk->attach(shader);
+			terrain->attach(shader);
 			
 			auto meshPtr = mesh.get();
-			chunk->setMesh( std::move(mesh) );
+			terrain->setMesh( std::move(mesh) );
 			
-			//glmd::float32 posX = (glmd::float32)(chunk->getGridX()*constants::CHUNK_SIZE) * constants::RESOLUTION;
-			//glmd::float32 posY = (glmd::float32)(chunk->getGridY()*constants::CHUNK_SIZE) * constants::RESOLUTION;
-			//glmd::float32 posZ = (glmd::float32)(chunk->getGridZ()*constants::CHUNK_SIZE) * constants::RESOLUTION;
+			//glmd::float32 posX = (glmd::float32)(terrain->getGridX()*constants::CHUNK_SIZE) * constants::RESOLUTION;
+			//glmd::float32 posY = (glmd::float32)(terrain->getGridY()*constants::CHUNK_SIZE) * constants::RESOLUTION;
+			//glmd::float32 posZ = (glmd::float32)(terrain->getGridZ()*constants::CHUNK_SIZE) * constants::RESOLUTION;
 			
 			// Note: We don't need to set position, as the model vertices already have the correct positions
-			// TODO: Do we want to remove the positions from the vertices, and instead store the 'relative origin' position in the scene node (i.e. this TerrainSceneNode object)?
+			// TODO: Do we want to remove the positions from the vertices, and instead store the 'relative origin' position in the scene node (i.e. this Terrain object)?
 			//std::cout << posX << ", " << posY << ", " << posZ << std::endl;
 			//this->setPosition(posX, posY, posZ);
 			
 			// Center the node
-			chunk->translate( glm::vec3(-(glmd::float32)(constants::CHUNK_SIZE/2), 0.0f, -(glmd::float32)(constants::CHUNK_SIZE/2)) );
+			terrain->translate( glm::vec3(-(glmd::float32)(constants::CHUNK_SIZE/2), 0.0f, -(glmd::float32)(constants::CHUNK_SIZE/2)) );
 			
-			chunk->setIsActive( true );
+			terrain->setIsActive( true );
 			auto function = [=]() {
 				LOG_DEBUG( "Pushing terrain to graphics card." );
 
@@ -378,8 +325,8 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 				
 				// Create the model
 				auto modelPtr = std::unique_ptr<models::IModel>( model );
-				chunk->attach( modelPtr.get() );
-				chunk->setModel( std::move(modelPtr) );
+				terrain->attach( modelPtr.get() );
+				terrain->setModel( std::move(modelPtr) );
 				
 				// TODO: Load material only once
 				if (material->getBufferId() == 0)
@@ -397,136 +344,140 @@ void TerrainManager::addChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 				meshPtr->pushToVideoMemory();
 				
 				std::stringstream ss;
-				ss << "terrain_" << chunk->getGridX() << "_" << chunk->getGridY() << "_" << chunk->getGridZ();
-				chunk->setName( ss.str() );
+				ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
+				terrain->setName( ss.str() );
 				
-				this->addChunk( chunk );
+				this->addTerrain( terrain );
 			};
 
 			postOpenGlWork( function );
 		}
 		else
 		{
-			delete chunk;
+			delete terrain;
 		}
-		//std::cout << "addChunk END " << std::this_thread::get_id() << std::endl;
+		//std::cout << "createTerrain END " << std::this_thread::get_id() << std::endl;
 	}
 }
 
-void TerrainManager::addChunk(TerrainSceneNode* chunk)
+void TerrainManager::addTerrain(Terrain* terrain)
 {
-	terrainChunksMutex_.lock();
-	auto up = std::unique_ptr<TerrainSceneNode>( chunk );
-	terrainChunks_.push_back( std::move(up) );
-	terrainChunksMutex_.unlock();
+	terrainMutex_.lock();
+	auto up = std::unique_ptr<Terrain>( terrain );
+	terrain_.push_back( std::move(up) );
+	terrainMutex_.unlock();
 }
 
-void TerrainManager::removeChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+void TerrainManager::removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
 	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
 	
-	removeChunk(i, j, k);
+	removeTerrain(i, j, k);
 }
 
-void TerrainManager::removeChunk(const glm::ivec3& coordinates)
+void TerrainManager::removeTerrain(const glm::ivec3& coordinates)
 {
-	removeChunk(coordinates.x, coordinates.y, coordinates.z);
+	removeTerrain(coordinates.x, coordinates.y, coordinates.z);
 }
 
-void TerrainManager::removeChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+void TerrainManager::removeTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	auto chunk = getChunk(x, y, z);
+	auto terrain = getTerrain(x, y, z);
 	
-	if (chunk != nullptr)
+	if (terrain != nullptr)
 	{
-		terrainChunksMutex_.lock();
+		terrainMutex_.lock();
 		
-		if (chunk->isActive())
+		if (terrain->isActive())
 		{			
-			chunk->setIsActive( false );
+			terrain->setIsActive( false );
 			
 			// MARK: Previous lambda function
 			{
 				//std::cout << "remove: " << x << ", " << y << ", " << z << std::endl;
-				//std::cout << "removeChunk START " << std::this_thread::get_id() << std::endl;
+				//std::cout << "removeTerrain START " << std::this_thread::get_id() << std::endl;
 				
 				auto f = [=]() {
-					chunk->freeVideoMemory();
-					this->removeChunk( chunk );
+					terrain->freeVideoMemory();
+					this->removeTerrain( terrain );
 				};
 				
 				
 				postOpenGlWork( f );
-				//std::cout << "removeChunk END " << std::this_thread::get_id() << std::endl;
-				//this->openGlLoader_->postWork( std::bind(&TerrainSceneNode::freeVideoMemory, c) );
+				//std::cout << "removeTerrain END " << std::this_thread::get_id() << std::endl;
+				//this->openGlLoader_->postWork( std::bind(&Terrain::freeVideoMemory, c) );
 			}
 		}
 		
-		terrainChunksMutex_.unlock();
+		terrainMutex_.unlock();
 	}
 }
 
-void TerrainManager::removeChunk(TerrainSceneNode* chunk)
+void TerrainManager::removeTerrain(Terrain* terrain)
 {
-	terrainChunksMutex_.lock();
+	terrainMutex_.lock();
 	
-	auto findFunction = [chunk](const std::unique_ptr<TerrainSceneNode>& node) { return node.get() == chunk; };
+	auto findFunction = [terrain](const std::unique_ptr<Terrain>& node) { return node.get() == terrain; };
 	
-	auto it = std::find_if(terrainChunks_.begin(), terrainChunks_.end(), findFunction);
+	auto it = std::find_if(terrain_.begin(), terrain_.end(), findFunction);
 	
-	if (it != terrainChunks_.end())
+	if (it != terrain_.end())
 	{
-		terrainChunks_.erase(it);
+		terrain_.erase(it);
 	}
 
-	terrainChunksMutex_.unlock();
+	terrainMutex_.unlock();
 }
 
-void TerrainManager::removeAllChunks()
+void TerrainManager::removeAllTerrain()
 {
 	// TODO: Implement
 	assert(0);
 	idManager_ = IdManager();
 }
 
-TerrainSceneNode* TerrainManager::getChunk(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+Terrain* TerrainManager::getTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
 	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
 	
-	return getChunk(i, j, k);
+	i += terrainSettings_.length/2;
+	j += terrainSettings_.width/2;
+	k += terrainSettings_.height/2;
+	
+	return getTerrain(i, j, k);
 }
 
-TerrainSceneNode* TerrainManager::getChunk(const glm::ivec3& coordinates)
+Terrain* TerrainManager::getTerrain(const glm::ivec3& coordinates)
 {	
-	return getChunk(coordinates.x, coordinates.y, coordinates.z);
+	return getTerrain(coordinates.x, coordinates.y, coordinates.z);
 }
 
-TerrainSceneNode* TerrainManager::getChunk(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+Terrain* TerrainManager::getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	//std::cout << "getChunk START " << std::this_thread::get_id() << std::endl;
-	TerrainSceneNode* retVal = nullptr;
+	//std::cout << "getTerrain START " << std::this_thread::get_id() << std::endl;
+	Terrain* retVal = nullptr;
 	
-	terrainChunksMutex_.lock();
+	terrainMutex_.lock();
 	
-	auto findFunction = [x, y, z](const std::unique_ptr<TerrainSceneNode>& node) { return (node->isActive() && node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->isActive() && node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
 	
-	auto it = std::find_if(terrainChunks_.begin(), terrainChunks_.end(), findFunction);
+	auto it = std::find_if(terrain_.begin(), terrain_.end(), findFunction);
 	
-	if (it != terrainChunks_.end())
+	if (it != terrain_.end())
 	{
 		retVal = it->get();
 	}
 
-	terrainChunksMutex_.unlock();
-	//std::cout << "getChunk END " << std::this_thread::get_id() << std::endl;
+	terrainMutex_.unlock();
+	//std::cout << "getTerrain END " << std::this_thread::get_id() << std::endl;
 	return retVal;
 }
 
-bool saved = false;
+//bool saved = false;
 void TerrainManager::update(glmd::uint32 maxUpdates)
 {
 	glmd::uint32 size = 0;
@@ -546,25 +497,27 @@ void TerrainManager::update(glmd::uint32 maxUpdates)
 		work();
 	}
 	
+	/*
 	if (!saved && size == 0)
 	{
-		// Save all chunks
+		// Save all terrains
 		serialize( std::string("testing.bin") );
 		saved = true;
 	}
+	*/
 }
 
 void TerrainManager::render()
 {
-	terrainChunksMutex_.lock();
-	for ( auto& terrain : terrainChunks_ )
+	terrainMutex_.lock();
+	for ( auto& terrain : terrain_ )
 	{
 		if (terrain.get() != nullptr && terrain->isActive())
 		{
 			terrain->render();
 		}
 	}
-	terrainChunksMutex_.unlock();
+	terrainMutex_.unlock();
 }
 
 void TerrainManager::setFollowTarget(ISceneNode* target)
@@ -582,23 +535,19 @@ ISceneNode* TerrainManager::getFollowTarget() const
 
 void TerrainManager::generate()
 {
-	/*
-	int length = 4;
-	int width = 4;
-	int height = 2;
-	for (int i=-length/2; i <= length/2; i++)
+	for (int i=0; i < terrainSettings_.length; i++)
 	{
-		for (int j=-height/2; j <= height/2; j++)
+		for (int j=0; j < terrainSettings_.width; j++)
 		{
-			for (int k=-width/2; k <= width/2; k++)
+			for (int k=0; k < terrainSettings_.height; k++)
 			{
-				addChunk( i, j, k );
+				createTerrain( i, j, k );
 			}
 		}
 		std::cout << "MARK: " << i << std::endl;
 	}
-	*/
-	// Save all chunks
+
+	// Save all terrains
 	//serialize( std::string("testing.bin") );
 }
 
@@ -623,16 +572,11 @@ void TerrainManager::serialize(const std::string& filename)
 	std::ofstream stream(filename, std::ios::out | std::ios::binary);
 	
 	{
-		std::lock_guard<std::mutex> lock(terrainChunksMutex_);
-		
-		int length = 4;
-		int width = 4;
-		int height = 2;
-		
-		for (auto& chunk : terrainChunks_)
+		std::lock_guard<std::mutex> lock(terrainMutex_);
+		for (auto& terrain : terrain_)
 		{
 			std::cout << "Saving..." << std::endl;
-			auto mesh = chunk->getData();
+			auto mesh = terrain->getData();
 			glr::terrain::serialize(stream, *mesh);
 		}
 	}
@@ -642,28 +586,24 @@ void TerrainManager::deserialize(const std::string& filename)
 {
 }
 
-glm::detail::float32 TerrainManager::getWidth() const
+glm::detail::int32 TerrainManager::getLength() const
 {
-	// TODO: Implement
-	return 0.0f;
+	return terrainSettings_.length;
 }
 
-glm::detail::float32 TerrainManager::getHeight() const
+glm::detail::int32 TerrainManager::getWidth() const
 {
-	// TODO: Implement
-	return 0.0f;
+	return terrainSettings_.width;
 }
 
-glm::detail::float32 TerrainManager::getLength() const
+glm::detail::int32 TerrainManager::getHeight() const
 {
-	// TODO: Implement
-	return 0.0f;
+	return terrainSettings_.height;
 }
 
 glm::detail::int32 TerrainManager::getBlockSize() const
 {
-	// TODO: Implement
-	return 0;
+	constants::CHUNK_SIZE;
 }
 
 }

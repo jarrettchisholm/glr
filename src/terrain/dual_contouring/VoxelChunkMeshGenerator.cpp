@@ -110,7 +110,7 @@ bool VoxelChunkMeshGenerator::isEmptyOrSolid(const Points& points) const
 /**
  * Get noise at the point x, y, z on the grid with the given coordinates.
  */
-glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, glmd::float32 x, glmd::float32 y, glmd::float32 z) const
+glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, glmd::float32 x, glmd::float32 y, glmd::float32 z) const
 {
 	return fieldFunction_->getNoise(x, y, z);
 
@@ -206,12 +206,12 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 /**
  * Calculate the normal for the provided point.
  */
-glm::vec3 VoxelChunkMeshGenerator::calculateNormal(const glm::vec3& point, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+glm::vec3 VoxelChunkMeshGenerator::calculateNormal(const glm::vec3& point, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {
-	glmd::float32 d = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y, point.z);
-	glmd::float32 nx = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x + glr::terrain::constants::EPSILON_VALUE, point.y, point.z) - d;
-	glmd::float32 ny = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y + glr::terrain::constants::EPSILON_VALUE, point.z) - d;
-	glmd::float32 nz = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, point.x, point.y, point.z + glr::terrain::constants::EPSILON_VALUE) - d;
+	glmd::float32 d = getInterpolatedNoise(densityValues, gridCoords, dimensions, point.x, point.y, point.z);
+	glmd::float32 nx = getInterpolatedNoise(densityValues, gridCoords, dimensions, point.x + glr::terrain::constants::EPSILON_VALUE, point.y, point.z) - d;
+	glmd::float32 ny = getInterpolatedNoise(densityValues, gridCoords, dimensions, point.x, point.y + glr::terrain::constants::EPSILON_VALUE, point.z) - d;
+	glmd::float32 nz = getInterpolatedNoise(densityValues, gridCoords, dimensions, point.x, point.y, point.z + glr::terrain::constants::EPSILON_VALUE) - d;
 	
 	glm::vec3 normal = glm::vec3(nx, ny, nz);
 
@@ -224,7 +224,7 @@ glm::vec3 VoxelChunkMeshGenerator::calculateNormal(const glm::vec3& point, glmd:
 /**
  * Find the intersection along the x-axis where the line segment between p0 and p1 would intersect with the isosurface.
  */
-void VoxelChunkMeshGenerator::intersectXAxis(Point& p0, Point& p1, Point& out, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+void VoxelChunkMeshGenerator::intersectXAxis(Point& p0, Point& p1, Point& out, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {
 	glmd::float32 fa, fb;
 	glmd::float32 xa, xb;
@@ -255,7 +255,7 @@ void VoxelChunkMeshGenerator::intersectXAxis(Point& p0, Point& p1, Point& out, g
 	{
 		xm = xb - (fb * (xb - xa) / (fb - fa));
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, xm, y, z);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, xm, y, z);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// Needed to add this check to the previous density.
@@ -285,7 +285,7 @@ void VoxelChunkMeshGenerator::intersectXAxis(Point& p0, Point& p1, Point& out, g
 
 		xm = (xa + xb) * 0.5f;
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, xm, y, z);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, xm, y, z);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// pm < 0
@@ -310,7 +310,7 @@ void VoxelChunkMeshGenerator::intersectXAxis(Point& p0, Point& p1, Point& out, g
 /**
  * Find the intersection along the y-axis where the line segment between p0 and p1 would intersect with the isosurface.
  */
-void VoxelChunkMeshGenerator::intersectYAxis(Point& p0, Point& p1, Point& out, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+void VoxelChunkMeshGenerator::intersectYAxis(Point& p0, Point& p1, Point& out, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {
 	glmd::float32 fa, fb;
 	glmd::float32 ya, yb;
@@ -341,7 +341,7 @@ void VoxelChunkMeshGenerator::intersectYAxis(Point& p0, Point& p1, Point& out, g
 	{
 		ym = yb - (fb * (yb - ya) / (fb - fa));
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, x, ym, z);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, x, ym, z);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// Needed to add this check to the previous density.
@@ -371,7 +371,7 @@ void VoxelChunkMeshGenerator::intersectYAxis(Point& p0, Point& p1, Point& out, g
 
 		ym = (ya + yb) * 0.5f;
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, x, ym, z);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, x, ym, z);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// pm < 0
@@ -396,7 +396,7 @@ void VoxelChunkMeshGenerator::intersectYAxis(Point& p0, Point& p1, Point& out, g
 /**
  * Find the intersection along the z-axis where the line segment between p0 and p1 would intersect with the isosurface.
  */
-void VoxelChunkMeshGenerator::intersectZAxis(Point& p0, Point& p1, Point& out, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+void VoxelChunkMeshGenerator::intersectZAxis(Point& p0, Point& p1, Point& out, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {
 	glmd::float32 fa, fb;
 	glmd::float32 za, zb;
@@ -427,7 +427,7 @@ void VoxelChunkMeshGenerator::intersectZAxis(Point& p0, Point& p1, Point& out, g
 	{
 		zm = zb - (fb * (zb - za) / (fb - fa));
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, x, y, zm);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, x, y, zm);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// Needed to add this check to the previous density.
@@ -457,7 +457,7 @@ void VoxelChunkMeshGenerator::intersectZAxis(Point& p0, Point& p1, Point& out, g
 
 		zm = (za + zb) * 0.5f;
 
-		density = getInterpolatedNoise(densityValues, gridX, gridY, gridZ, x, y, zm);
+		density = getInterpolatedNoise(densityValues, gridCoords, dimensions, x, y, zm);
 		density += glr::terrain::constants::EPSILON_DENSITY;
 		
 		// pm < 0
@@ -481,7 +481,7 @@ void VoxelChunkMeshGenerator::intersectZAxis(Point& p0, Point& p1, Point& out, g
 /**
  * Generate the vertex for the given block at position x, y, z.
  */
-void VoxelChunkMeshGenerator::generateVertex(Blocks& blocks, glmd::int32 x, glmd::int32 y, glmd::int32 z, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+void VoxelChunkMeshGenerator::generateVertex(Blocks& blocks, glmd::int32 x, glmd::int32 y, glmd::int32 z, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {
 	//
 	// Part 1: Compute intersection points and their normals.
@@ -528,14 +528,14 @@ void VoxelChunkMeshGenerator::generateVertex(Blocks& blocks, glmd::int32 x, glmd
 			glm::vec3 vDiff = blocks[x][y][z].points[n1[0]][n1[1]][n1[2]].pos - blocks[x][y][z].points[n2[0]][n2[1]][n2[2]].pos;\
 			vDiff = glm::vec3( fabs(vDiff.x), fabs(vDiff.y), fabs(vDiff.z) );\
 			if (vDiff.x > glr::terrain::constants::EPSILON_VALUE)\
-				intersectXAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridX, gridY, gridZ, densityValues);\
+				intersectXAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridCoords, dimensions, densityValues);\
 			else if (vDiff.y > glr::terrain::constants::EPSILON_VALUE)\
-				intersectYAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridX, gridY, gridZ, densityValues);\
+				intersectYAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridCoords, dimensions, densityValues);\
 			else if (vDiff.z > glr::terrain::constants::EPSILON_VALUE)\
-				intersectZAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridX, gridY, gridZ, densityValues);\
+				intersectZAxis(blocks[x][y][z].points[n1[0]][n1[1]][n1[2]], blocks[x][y][z].points[n2[0]][n2[1]][n2[2]], points[n], gridCoords, dimensions, densityValues);\
 		}\
 \
-		normals[n] = calculateNormal(points[n].pos, gridX, gridY, gridZ, densityValues);\
+		normals[n] = calculateNormal(points[n].pos, gridCoords, dimensions, densityValues);\
 \
 		massPoint += points[n].pos;\
 		numIntersections++;\
@@ -609,7 +609,7 @@ CORNER(7,  0,1,1);
 /**
  * Determine if the cubes along the xz plane at point y have an intersection.  If a cube does, generate the vertex for that block.
  */
-void VoxelChunkMeshGenerator::computeCubes(Blocks& blocks, glmd::int32 y, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ, const Points& densityValues) const
+void VoxelChunkMeshGenerator::computeCubes(Blocks& blocks, glmd::int32 y, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {	
 	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE+1; x++)
 	{
@@ -640,7 +640,7 @@ void VoxelChunkMeshGenerator::computeCubes(Blocks& blocks, glmd::int32 y, glmd::
 			}
 			
 			blocks[x][y][z].index = index;
-			generateVertex(blocks, x, y, z, gridX, gridY, gridZ, densityValues);
+			generateVertex(blocks, x, y, z, gridCoords, dimensions, densityValues);
 		}
 
 	}
@@ -729,12 +729,18 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 /**
  * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.
  */
-void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const
+void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, const glm::ivec3& gridCoords, const glm::ivec3& dimensions) const
 {
+	const glmd::int32 pointsPerDimension = glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION;
+	
 	// Set the starting x, y, z
-	glmd::float32 fx = (glmd::float32)(gridX * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-	glmd::float32 fy = (glmd::float32)(gridY * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-	glmd::float32 fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
+	glmd::float32 fx = (glmd::float32)(gridCoords.x * pointsPerDimension);
+	glmd::float32 fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
+	glmd::float32 fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+	
+	fx -= (glmd::float32)(pointsPerDimension * dimensions.x/2);
+	fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
+	fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 
 #define SET_DENSITY(x, y, z, i, j, k) blocks[x][y][z].points[i][j][k].density = points[x+i+constants::POINT_FIELD_OFFSET][y+j+constants::POINT_FIELD_OFFSET][z+k+constants::POINT_FIELD_OFFSET];
 #define SET_POSITION(x, y, z, i, j, k)\
@@ -770,11 +776,16 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
 				fz += glr::terrain::constants::RESOLUTION;
 			}
 			fy += glr::terrain::constants::RESOLUTION;
-			fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
+			
+			fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+			fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 		}
 		fx += glr::terrain::constants::RESOLUTION;
-		fy = (glmd::float32)(gridY * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-		fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
+		
+		fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
+		fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+		fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
+		fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 	}
 }
 
@@ -794,7 +805,7 @@ void VoxelChunkMeshGenerator::resizeBlocks(Blocks& blocks) const
 	}
 }
 
-void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const
+void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, glm::detail::int32 length, glm::detail::int32 width, glm::detail::int32 height, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const
 {	
 	const Points& points = chunk.points;
 	glmd::int32 gridX = chunk.gridX;
@@ -803,19 +814,22 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	
 	if (isEmptyOrSolid(points))
 		return;
+		
+	glm::ivec3 gridCoords = glm::ivec3(gridX, gridY, gridZ);
+	glm::ivec3 dimensions = glm::ivec3(length, width, height);
 	
 	// Make our blocks array the proper size
 	auto blocks = Blocks();
 	
 	resizeBlocks(blocks);
 	
-	setDensitiesAndPositions(blocks, points, gridX, gridY, gridZ);
+	setDensitiesAndPositions(blocks, points, gridCoords, dimensions);
 
-	computeCubes(blocks, 0, gridX, gridY, gridZ, points);
+	computeCubes(blocks, 0, gridCoords, dimensions, points);
 	
 	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
 	{
-		computeCubes(blocks, y, gridX, gridY, gridZ, points);
+		computeCubes(blocks, y, gridCoords, dimensions, points);
 		
 		generateTriangles(blocks, vertices, normals, y-1);
 	}

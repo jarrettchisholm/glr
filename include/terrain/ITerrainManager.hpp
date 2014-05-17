@@ -23,6 +23,15 @@ public:
 	;
 
 	virtual ITerrain* getTerrain(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) const = 0;
+	
+	/**
+	 * Call this to get the terrain manager to update its internal structures and terrain.  Depending on the position
+	 * of the follow target, the terrain manager may flag items for updating.
+	 * 
+	 * This method IS thread safe - you can call it outside of the OpenGL thread.
+	 * 
+	 * Note: You don't need to call this method every frame - calling once a second should be sufficient.
+	 */
 	virtual void tick() = 0;
 	
 	/**
@@ -60,9 +69,9 @@ public:
 	virtual void serialize(const std::string& filename) = 0;
 	virtual void deserialize(const std::string& filename) = 0;
 	
-	virtual glm::detail::float32 getWidth() const = 0;
-	virtual glm::detail::float32 getHeight() const = 0;
-	virtual glm::detail::float32 getLength() const = 0;
+	virtual glm::detail::int32 getWidth() const = 0;
+	virtual glm::detail::int32 getHeight() const = 0;
+	virtual glm::detail::int32 getLength() const = 0;
 	
 	virtual glm::detail::int32 getBlockSize() const = 0;
 };

@@ -30,7 +30,8 @@ struct TerrainSettings
 {
 	TerrainSettings() 
 		: smoothingAlgorithm(ALGORITHM_MARCHING_CUBES), length(4), width(4), height(2),
-		maxViewDistance(256), maxLevelOfDetail(LOD_HIGHEST), minLevelOfDetail(LOD_LOWEST)
+		maxViewDistance(256.0f), maxLevelOfDetail(LOD_HIGHEST), minLevelOfDetail(LOD_LOWEST),
+		lodHighestRadius(32.0f), lodHighRadius(64.0f), lodMediumRadius(128.0f), lodLowRadius(256.0f)
 	{
 	}
 	
@@ -38,9 +39,14 @@ struct TerrainSettings
 	glm::detail::int32 length;
 	glm::detail::int32 width;
 	glm::detail::int32 height;
-	glm::detail::int32 maxViewDistance;
+	glm::detail::float32 maxViewDistance;
 	LevelOfDetail maxLevelOfDetail;
 	LevelOfDetail minLevelOfDetail;
+	
+	glm::detail::float32 lodHighestRadius;
+	glm::detail::float32 lodHighRadius;
+	glm::detail::float32 lodMediumRadius;
+	glm::detail::float32 lodLowRadius;
 };
 
 }

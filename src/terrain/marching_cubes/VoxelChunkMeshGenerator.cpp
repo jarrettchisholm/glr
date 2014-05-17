@@ -669,13 +669,19 @@ glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, 
 /**
  * Set the densities and positions for the blocks, using the provided points (density values) and the grid coordinates.
  */
-void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ) const
+void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, const glm::ivec3& gridCoords, const glm::ivec3& dimensions) const
 {
+	const glmd::int32 pointsPerDimension = glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION;
+	
 	// Set the starting x, y, z
-	glmd::float32 fx = (glmd::float32)(gridX * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-	glmd::float32 fy = (glmd::float32)(gridY * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-	glmd::float32 fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-
+	glmd::float32 fx = (glmd::float32)(gridCoords.x * pointsPerDimension);
+	glmd::float32 fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
+	glmd::float32 fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+	
+	fx -= (glmd::float32)(pointsPerDimension * dimensions.x/2);
+	fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
+	fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
+	
 #define SET_DENSITY(x, y, z, i, j, k) blocks[x][y][z].points[i][j][k].density = points[x+i+constants::POINT_FIELD_OFFSET][y+j+constants::POINT_FIELD_OFFSET][z+k+constants::POINT_FIELD_OFFSET];
 #define SET_POSITION(x, y, z, i, j, k)\
 	blocks[x][y][z].points[i][j][k].pos.x = fx + (glmd::float32)(i * glr::terrain::constants::RESOLUTION);\
@@ -710,11 +716,16 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
 				fz += glr::terrain::constants::RESOLUTION;
 			}
 			fy += glr::terrain::constants::RESOLUTION;
-			fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
+			
+			fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+			fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 		}
 		fx += glr::terrain::constants::RESOLUTION;
-		fy = (glmd::float32)(gridY * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
-		fz = (glmd::float32)(gridZ * glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION);
+		
+		fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
+		fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
+		fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
+		fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 	}
 }
 
@@ -734,7 +745,7 @@ void VoxelChunkMeshGenerator::resizeBlocks(Blocks& blocks) const
 	}
 }
 
-void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const
+void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, glm::detail::int32 length, glm::detail::int32 width, glm::detail::int32 height, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec4>& textureBlendingValues) const
 {	
 	const Points& points = chunk.points;
 	glmd::int32 gridX = chunk.gridX;
@@ -744,12 +755,15 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, std::vector<glm::v
 	if (isEmptyOrSolid(points))
 		return;
 	
+	glm::ivec3 gridCoords = glm::ivec3(gridX, gridY, gridZ);
+	glm::ivec3 dimensions = glm::ivec3(length, width, height);
+	
 	// Make our blocks array the proper size
 	auto blocks = Blocks();
 	
 	resizeBlocks(blocks);
 	
-	setDensitiesAndPositions(blocks, points, gridX, gridY, gridZ);
+	setDensitiesAndPositions(blocks, points, gridCoords, dimensions);
 
 	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
 	{
