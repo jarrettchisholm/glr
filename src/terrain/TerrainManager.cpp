@@ -582,6 +582,7 @@ ISceneNode* TerrainManager::getFollowTarget() const
 
 void TerrainManager::generate()
 {
+	/*
 	int length = 4;
 	int width = 4;
 	int height = 2;
@@ -596,7 +597,7 @@ void TerrainManager::generate()
 		}
 		std::cout << "MARK: " << i << std::endl;
 	}
-	
+	*/
 	// Save all chunks
 	//serialize( std::string("testing.bin") );
 }
