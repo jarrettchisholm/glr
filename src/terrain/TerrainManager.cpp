@@ -434,7 +434,7 @@ void TerrainManager::removeTerrain(Terrain* terrain)
 void TerrainManager::removeAllTerrain()
 {
 	// TODO: Implement
-	assert(0);
+	//assert(0);
 	idManager_ = IdManager();
 }
 
@@ -535,6 +535,8 @@ ISceneNode* TerrainManager::getFollowTarget() const
 
 void TerrainManager::generate()
 {
+	removeAllTerrain();
+	
 	for (int i=0; i < terrainSettings_.length; i++)
 	{
 		for (int j=0; j < terrainSettings_.height; j++)
