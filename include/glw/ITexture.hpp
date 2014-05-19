@@ -41,6 +41,11 @@ public:
 	}
 	;
 	
+	/**
+	 * Binds the data in OpenGL, making it ready to use.
+	 * 
+	 * @param texturePosition The texture position to bind to.  This must be a value between 0 - 9.
+	 */
 	virtual void bind(GLuint texturePosition = 0) const = 0;
 	
 	/**

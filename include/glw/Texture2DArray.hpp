@@ -36,11 +36,13 @@ public:
 	
 	void setData(const std::vector<utilities::Image*>& images);
 	std::vector<utilities::Image>& getData();
+	
+	virtual void allocateVideoMemory();
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
-	virtual void freeLocalData();
 	virtual void freeVideoMemory();
-	virtual void allocateVideoMemory();
+	virtual void loadLocalData();
+	virtual void freeLocalData();
 
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);

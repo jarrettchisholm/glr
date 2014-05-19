@@ -43,11 +43,12 @@ public:
 	virtual GLuint getBufferId() const;
 	GLuint getBindPoint() const;
 
+	virtual void allocateVideoMemory();
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
-	virtual void freeLocalData();
 	virtual void freeVideoMemory();
-	virtual void allocateVideoMemory();
+	virtual void loadLocalData();
+	virtual void freeLocalData();
 
 	void setAmbient(const glm::vec4& ambient);
 	void setDiffuse(const glm::vec4& diffuse);

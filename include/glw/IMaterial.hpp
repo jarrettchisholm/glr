@@ -18,8 +18,16 @@ public:
 	}
 	;
 
+	/**
+	 * Binds the data in OpenGL, making it ready to use.
+	 */
 	virtual void bind() const = 0;
 	
+	/**
+	 * Returns the OpenGL Buffer Id for this resource.
+	 * 
+	 * @return The OpenGL Buffer Id.
+	 */
 	virtual GLuint getBufferId() const = 0;
 	
 	/**

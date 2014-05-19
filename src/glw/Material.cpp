@@ -88,6 +88,10 @@ void Material::pullFromVideoMemory()
 	// TODO: Implement
 }
 
+void Material::loadLocalData()
+{
+}
+
 void Material::freeLocalData()
 {
 }

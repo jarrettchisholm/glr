@@ -44,13 +44,14 @@ public:
 	 * @param image
 	 */
 	void setData(utilities::Image* image);
-	
 	utilities::Image* getData();
+	
+	virtual void allocateVideoMemory();
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
-	virtual void freeLocalData();
 	virtual void freeVideoMemory();
-	virtual void allocateVideoMemory();
+	virtual void loadLocalData();
+	virtual void freeLocalData();
 
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);

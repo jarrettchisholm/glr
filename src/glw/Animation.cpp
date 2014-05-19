@@ -116,6 +116,11 @@ void Animation::pullFromVideoMemory()
 	// TODO: Implement
 }
 
+void Animation::loadLocalData()
+{
+	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+}
+
 void Animation::freeLocalData()
 {
 	currentTransforms_ = std::vector< glm::mat4 >( 0 );

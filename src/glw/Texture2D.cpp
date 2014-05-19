@@ -116,6 +116,10 @@ void Texture2D::pullFromVideoMemory()
 	*/
 }
 
+void Texture2D::loadLocalData()
+{
+}
+
 void Texture2D::freeLocalData()
 {
 	// Clear up the data, but leave the width, height, and format unchanged

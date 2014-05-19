@@ -22,8 +22,42 @@ public:
 	}
 	;
 
+	/**
+	 * Returns the material with the given name.  If a material with the given name doesn't exist, it returns
+	 * nullptr.
+	 * 
+	 * @param name The name of the material to retrieve.
+	 * 
+	 * @return The Material object with name 'name', or nullptr if no material exists with that name.
+	 */
 	virtual Material* getMaterial(const std::string& name) const = 0;
+	
+	/**
+	 * Creates a material with the given name.
+	 * 
+	 * If a material already exists with the given name, it will return that material.
+	 * 
+	 * @param name The name to use for the new material.
+	 * 
+	 * @return A Material object.
+	 */
 	virtual Material* addMaterial(const std::string& name) = 0;
+	
+	/**
+	 * Creates a material with the given name and using the provided material data.
+	 * 
+	 * If a material already exists with the given name, it will return that material.
+	 * 
+	 * @param name The name to use for the new material.
+	 * @param ambient
+	 * @param diffuse
+	 * @param specular
+	 * @param emission
+	 * @param shininess
+	 * @param strength
+	 * 
+	 * @return A Material object.
+	 */
 	virtual Material* addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,

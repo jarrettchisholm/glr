@@ -155,6 +155,10 @@ void Mesh::pullFromVideoMemory()
 	// TODO: Implement
 }
 
+void Mesh::loadLocalData()
+{
+}
+
 void Mesh::freeLocalData()
 {
 	vertices_ = std::vector< glm::vec3 >();

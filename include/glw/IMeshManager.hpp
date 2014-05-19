@@ -22,8 +22,41 @@ public:
 	}
 	;
 
+	/**
+	 * Returns the mesh with the given name.  If a mesh with the given name doesn't exist, it returns
+	 * nullptr.
+	 * 
+	 * @param name The name of the mesh to retrieve.
+	 * 
+	 * @return The Mesh object with name 'name', or nullptr if no mesh exists with that name.
+	 */
 	virtual Mesh* getMesh(const std::string& name) const = 0;
+	
+	/**
+	 * Creates a mesh with the given name.
+	 * 
+	 * If a mesh already exists with the given name, it will return that mesh.
+	 * 
+	 * @param name The name to use for the new mesh.
+	 * 
+	 * @return A Mesh object.
+	 */
 	virtual Mesh* addMesh(const std::string& name) = 0;
+	
+	/**
+	 * Creates a mesh with the given name and using the provided mesh data.
+	 * 
+	 * If a mesh already exists with the given name, it will return that mesh.
+	 * 
+	 * @param name The name to use for the new mesh.
+	 * @param vertices
+	 * @param normals
+	 * @param textureCoordinates
+	 * @param colors
+	 * @param bones
+	 * 
+	 * @return A Mesh object.
+	 */
 	virtual Mesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
@@ -34,6 +67,19 @@ public:
 		BoneData boneData
 	) = 0;
 	
+	/**
+	 * Creates a mesh with the given name and using the provided mesh data.
+	 * 
+	 * If a mesh already exists with the given name, it will return that mesh.
+	 * 
+	 * @param name The name to use for the new mesh.
+	 * @param vertices
+	 * @param normals
+	 * @param textureCoordinates
+	 * @param colors
+	 * 
+	 * @return A Mesh object.
+	 */
 	virtual Mesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 

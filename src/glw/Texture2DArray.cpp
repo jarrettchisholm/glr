@@ -135,6 +135,10 @@ void Texture2DArray::pullFromVideoMemory()
 	*/
 }
 
+void Texture2DArray::loadLocalData()
+{
+}
+
 void Texture2DArray::freeLocalData()
 {
 	// Clear up the data, but leave the width, height, and format unchanged

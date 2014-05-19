@@ -14,7 +14,12 @@ public:
 	}
 	;
 
-	virtual void bind() = 0;
+	/**
+	 * Will bind the current resource for use in an OpenGL shader program.
+	 * 
+	 * **Note**: This method is *not* thread safe - it should only be called from the OpenGL thread.
+	 */
+	virtual void bind() const = 0;
 };
 
 }

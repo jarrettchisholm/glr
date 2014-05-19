@@ -79,6 +79,11 @@ public:
 	virtual void pushToVideoMemory(const std::vector< glm::mat4 >& transformations) = 0;
 
 	// TODO: Should we have this in the interface?
+	/**
+	 * Returns the OpenGL Buffer Id for this resource.
+	 * 
+	 * @return The OpenGL Buffer Id.
+	 */
 	virtual GLuint getBufferId() const = 0;
 
 	// TODO: Should we have this in the interface?

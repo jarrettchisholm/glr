@@ -72,11 +72,12 @@ public:
 	
 	virtual BoneData& getBoneData();
 	
+	virtual void allocateVideoMemory();
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
-	virtual void freeLocalData();
 	virtual void freeVideoMemory();
-	virtual void allocateVideoMemory();
+	virtual void loadLocalData();
+	virtual void freeLocalData();
 	
 	virtual const std::string& getName() const;
 	void setName(std::string name);
