@@ -17,14 +17,25 @@ Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), buf
 	openGlDevice_ = nullptr;
 	name_ = std::string();
 	settings_ = TextureSettings();
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
 	if ( image == nullptr )
 	{
 		std::string message = std::string("No image data sent into Texture2D constructor - use different constructor if no image data is available.");
@@ -168,6 +179,21 @@ void Texture2D::allocateVideoMemory()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings_.textureWrapT);
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat_,  image_.width, image_.height, 0, internalFormat_, GL_UNSIGNED_BYTE, nullptr);
+}
+
+bool Texture2D::isVideoMemoryAllocated() const
+{
+	return isVideoMemoryAllocated_;
+}
+
+bool Texture2D::isLocalDataLoaded() const
+{
+	return isLocalDataLoaded_;
+}
+
+bool Texture2D::isDirty() const
+{
+	return isDirty_;
 }
 
 const std::string& Texture2D::getName() const

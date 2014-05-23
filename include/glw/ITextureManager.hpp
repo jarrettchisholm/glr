@@ -84,8 +84,8 @@ public:
 	 * 
 	 * @param name
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return The empty Texture2D object.
 	 */
@@ -105,8 +105,8 @@ public:
 	 * @param name
 	 * @param filename
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return A Texture2D object.
 	 */
@@ -126,8 +126,8 @@ public:
 	 * @param name
 	 * @param image
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return A Texture2D object.
 	 */
@@ -145,8 +145,8 @@ public:
 	 * 
 	 * @param name
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return The empty Texture2DArray object.
 	 */
@@ -166,8 +166,8 @@ public:
 	 * @param name
 	 * @param filenames
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return A Texture2DArray object.
 	 */
@@ -187,8 +187,8 @@ public:
 	 * @param name
 	 * @param images
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
+	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return A Texture2DArray object.
 	 */

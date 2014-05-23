@@ -35,8 +35,10 @@ public:
 	Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
 	
 	/**
-	 * Standard constructor.  Once called, the Mesh will be ready for rendering (with no further action
-	 * required by the creator).
+	 * Standard constructor.  
+	 * 
+	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
+	 * just create the mesh and return it (without initializing it).
 	 */
 	Mesh(IOpenGlDevice* openGlDevice,
 		std::string name,
@@ -50,15 +52,20 @@ public:
 	);
 	
 	/**
-	 * Standard constructor.  Once called, the Mesh will be ready for rendering (with no further action
-	 * required by the creator).  This type of Mesh does not have any bone data set by default.
+	 * Standard constructor.
+	 * 
+	 * This type of Mesh does not have any bone data set by default.
+	 * 
+	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
+	 * just create the mesh and return it (without initializing it).
 	 */
 	Mesh(IOpenGlDevice* openGlDevice,
 		std::string name,
 		std::vector< glm::vec3 > vertices,
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors
+		std::vector< glm::vec4 > colors,
+		bool initialize = true
 	);
 	virtual ~Mesh();
 
@@ -70,8 +77,11 @@ public:
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
 	virtual void freeVideoMemory();
+	virtual bool isVideoMemoryAllocated() const;
 	virtual void loadLocalData();
 	virtual void freeLocalData();
+	virtual bool isLocalDataLoaded() const;
+	virtual bool isDirty() const;
 	
 	virtual const std::string& getName() const;
 	void setName(std::string name);
@@ -107,7 +117,11 @@ protected:
 
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[5];
-
+	
+	bool isVideoMemoryAllocated_;
+	bool isLocalDataLoaded_;
+	bool isDirty_;
+	
 	std::string textureFileName_;
 
 private:

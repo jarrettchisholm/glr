@@ -31,7 +31,9 @@ Animation::Animation()
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	//allocateVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Animation::Animation(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name))
@@ -48,7 +50,14 @@ Animation::Animation(IOpenGlDevice* openGlDevice, std::string name, bool initial
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	allocateVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
+	if (initialize)
+	{
+		allocateVideoMemory();
+	}
 }
 
 Animation::Animation(
@@ -74,10 +83,17 @@ Animation::Animation(
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	allocateVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
+	if (initialize)
+	{
+		allocateVideoMemory();
+	}
 }
 
-Animation::Animation(const Animation& other)
+Animation::Animation(const Animation& other, bool initialize)
 {
 	bufferId_ = 0;
 	
@@ -94,7 +110,14 @@ Animation::Animation(const Animation& other)
 	
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
 	
-	allocateVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
+	if (initialize)
+	{
+		allocateVideoMemory();
+	}
 }
 
 Animation::~Animation()
@@ -194,6 +217,21 @@ void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformation
 			throw exception::GlException( msg );
 		}
 	}
+}
+
+bool Animation::isVideoMemoryAllocated() const
+{
+	return isVideoMemoryAllocated_;
+}
+
+bool Animation::isLocalDataLoaded() const
+{
+	return isLocalDataLoaded_;
+}
+
+bool Animation::isDirty() const
+{
+	return isDirty_;
 }
 
 GLuint Animation::getBufferId() const

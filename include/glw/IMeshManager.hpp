@@ -41,8 +41,8 @@ public:
 	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
 	 * 
 	 * @param name The name to use for the new mesh.
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
+	 * just create the mesh and return it (without initializing it).
 	 * 
 	 * @return A Mesh object.
 	 */
@@ -62,8 +62,8 @@ public:
 	 * @param textureCoordinates
 	 * @param colors
 	 * @param bones
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
+	 * just create the mesh and return it (without initializing it).
 	 * 
 	 * @return A Mesh object.
 	 */

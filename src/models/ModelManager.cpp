@@ -93,7 +93,7 @@ Model* ModelManager::getModel(const std::string& name) const
 	return nullptr;
 }
 
-void ModelManager::loadModel(const std::string& name, const std::string& filename)
+void ModelManager::loadModel(const std::string& name, const std::string& filename, bool initialize)
 {
 	LOG_DEBUG( "Loading model '" + filename + "'." );
 

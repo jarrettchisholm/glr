@@ -41,8 +41,11 @@ public:
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
 	virtual void freeVideoMemory();
+	virtual bool isVideoMemoryAllocated() const;
 	virtual void loadLocalData();
 	virtual void freeLocalData();
+	virtual bool isLocalDataLoaded() const;
+	virtual bool isDirty() const;
 
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);
@@ -67,6 +70,10 @@ private:
 	GLuint bindPoint_;
 	
 	std::vector<utilities::Image> images_;
+	
+	bool isVideoMemoryAllocated_;
+	bool isLocalDataLoaded_;
+	bool isDirty_;
 	
 	/**
 	 * Helper method - returns true if all of the images in the vector are the same internal format, and false otherwise.

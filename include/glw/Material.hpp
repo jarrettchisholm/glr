@@ -48,8 +48,11 @@ public:
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
 	virtual void freeVideoMemory();
+	virtual bool isVideoMemoryAllocated() const;
 	virtual void loadLocalData();
 	virtual void freeLocalData();
+	virtual bool isLocalDataLoaded() const;
+	virtual bool isDirty() const;
 
 	void setAmbient(const glm::vec4& ambient);
 	void setDiffuse(const glm::vec4& diffuse);
@@ -83,6 +86,10 @@ private:
 	
 	GLuint bufferId_;
 	GLuint bindPoint_;
+	
+	bool isVideoMemoryAllocated_;
+	bool isLocalDataLoaded_;
+	bool isDirty_;
 	
 	friend class boost::serialization::access;
 	

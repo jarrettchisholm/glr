@@ -17,10 +17,17 @@ Material::Material() : bufferId_(0)
 {
 	openGlDevice_ = nullptr;
 	name_ = std::string();
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Material::Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
-{	
+{
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Material::Material(
@@ -38,22 +45,29 @@ Material::Material(
 {
 	LOG_DEBUG( "loading material..." );
 	
-	allocateVideoMemory();
-	pushToVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 	
-	GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
+	if (initialize)
 	{
-		std::stringstream ss;
-		ss << "Error while loading material '" << name_ << "' in OpenGl: " << err.name;
-		LOG_ERROR( ss.str() );
-		throw exception::GlException( ss.str() );
-	}
-	else
-	{
-		std::stringstream ss;
-		ss << "Successfully loaded material.  Buffer id: " << bufferId_;
-		LOG_DEBUG( ss.str() );
+		allocateVideoMemory();
+		pushToVideoMemory();
+		
+		GlError err = openGlDevice_->getGlError();
+		if (err.type != GL_NONE)
+		{
+			std::stringstream ss;
+			ss << "Error while loading material '" << name_ << "' in OpenGl: " << err.name;
+			LOG_ERROR( ss.str() );
+			throw exception::GlException( ss.str() );
+		}
+		else
+		{
+			std::stringstream ss;
+			ss << "Successfully loaded material.  Buffer id: " << bufferId_;
+			LOG_DEBUG( ss.str() );
+		}
 	}
 }
 
@@ -113,6 +127,21 @@ void Material::freeVideoMemory()
 void Material::allocateVideoMemory()
 {
 	// TODO: Implement
+}
+
+bool Material::isVideoMemoryAllocated() const
+{
+	return isVideoMemoryAllocated_;
+}
+
+bool Material::isLocalDataLoaded() const
+{
+	return isLocalDataLoaded_;
+}
+
+bool Material::isDirty() const
+{
+	return isDirty_;
 }
 
 Material::~Material()

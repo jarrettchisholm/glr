@@ -21,6 +21,10 @@ Mesh::Mesh()
 	boneData_ = BoneData();
 	
 	vaoId_ = 0;
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name))
@@ -29,6 +33,10 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : ope
 	boneData_ = BoneData();
 	
 	vaoId_ = 0;
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
@@ -45,8 +53,15 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 {
 	vaoId_ = 0;
 	
-	allocateVideoMemory();
-	pushToVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
+	if (initialize)
+	{
+		allocateVideoMemory();
+		pushToVideoMemory();
+	}
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
@@ -54,7 +69,8 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors
+		std::vector< glm::vec4 > colors,
+		bool initialize
 	)
 	: openGlDevice_(openGlDevice), name_(std::move(name)), vertices_(std::move(vertices)), normals_(std::move(normals)), textureCoordinates_(std::move(textureCoordinates)), colors_(std::move(colors))
 {
@@ -62,8 +78,15 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	boneData_ = BoneData();
 	vaoId_ = 0;
 	
-	allocateVideoMemory();
-	pushToVideoMemory();
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
+	
+	if (initialize)
+	{
+		allocateVideoMemory();
+		pushToVideoMemory();
+	}
 }
 
 Mesh::~Mesh()
@@ -301,6 +324,21 @@ void Mesh::allocateVideoMemory()
 	{
 		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
 	}
+}
+
+bool Mesh::isVideoMemoryAllocated() const
+{
+	return isVideoMemoryAllocated_;
+}
+
+bool Mesh::isLocalDataLoaded() const
+{
+	return isLocalDataLoaded_;
+}
+
+bool Mesh::isDirty() const
+{
+	return isDirty_;
 }
 
 void Mesh::render()

@@ -43,6 +43,13 @@ public:
 	virtual void freeVideoMemory() = 0;
 	
 	/**
+	 * Tells us whether the video memory has been allocated.
+	 * 
+	 * @return true if the video memory has been allocated, and false otherwise.
+	 */
+	virtual bool isVideoMemoryAllocated() const = 0;
+	
+	/**
 	 * Will load any resources required for this graphics object into memory.
 	 * 
 	 * **Note**: This method *is* thread safe - it is safe to call outside the OpenGL thread.
@@ -55,6 +62,20 @@ public:
 	 * **Note**: This method *is* thread safe - it is safe to call outside the OpenGL thread.
 	 */
 	virtual void freeLocalData() = 0;
+	
+	/**
+	 * Tells us whether the local data has been loaded into memory.
+	 * 
+	 * @return true if the local data has been loaded into memory, and false otherwise.
+	 */
+	virtual bool isLocalDataLoaded() const = 0;
+	
+	/**
+	 * Tells us whether the local data has changed and the data in OpenGL needs updating.
+	 * 
+	 * @return true if the local data has changed since it was last loaded into OpenGL, and false otherwise.
+	 */
+	virtual bool isDirty() const = 0;
 };
 
 }

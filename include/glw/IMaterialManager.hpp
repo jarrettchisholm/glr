@@ -41,8 +41,8 @@ public:
 	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
 	 * 
 	 * @param name The name to use for the new material.
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this material.  Otherwise, it will
+	 * just create the material and return it (without initializing it).
 	 * 
 	 * @return A Material object.
 	 */
@@ -63,8 +63,8 @@ public:
 	 * @param emission
 	 * @param shininess
 	 * @param strength
-	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
-	 * just create the animation and return it (without initializing it).
+	 * @param initialize If true, will initialize all of the resources required for this material.  Otherwise, it will
+	 * just create the material and return it (without initializing it).
 	 * 
 	 * @return A Material object.
 	 */

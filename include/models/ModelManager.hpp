@@ -38,7 +38,7 @@ public:
 	virtual IModel* getModelTemplate(Id id) const;
 	virtual IModel* getModelTemplate(const std::string& name) const;
 
-	virtual void loadModel(const std::string& name, const std::string& filename);
+	virtual void loadModel(const std::string& name, const std::string& filename, bool initialize = true);
 
 	virtual void destroyModelTemplate(Id id);
 	virtual void destroyModelTemplate(const std::string& name);

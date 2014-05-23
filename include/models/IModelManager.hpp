@@ -54,10 +54,15 @@ public:
 	 * 
 	 * When you want to get this loaded model, you will need to refer to it by this name.
 	 * 
+	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
+	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * 
 	 * @param name
 	 * @param filename
+	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
+	 * just create the animation and return it (without initializing it).
 	 */
-	virtual void loadModel(const std::string& name, const std::string& filename) = 0;
+	virtual void loadModel(const std::string& name, const std::string& filename, bool initialize = true) = 0;
 	
 	/**
 	 * Destroys the template of the IModel object with id 'id'.  Any pointers or references to this model will

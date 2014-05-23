@@ -18,16 +18,28 @@ Texture2DArray::Texture2DArray() : bufferId_(0)
 	openGlDevice_ = nullptr;
 	name_ = std::string();
 	settings_ = TextureSettings();
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 }
 
 Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
+	
+	isVideoMemoryAllocated_ = false;
+	isLocalDataLoaded_ = false;
+	isDirty_ = false;
 	
 	if (images.size() == 0)
 	{
@@ -216,6 +228,21 @@ void Texture2DArray::allocateVideoMemory()
 	}
 	
 	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internalFormat,  image.width, image.height, images_.size(), 0, internalFormat, GL_UNSIGNED_BYTE, nullptr);
+}
+
+bool Texture2DArray::isVideoMemoryAllocated() const
+{
+	return isVideoMemoryAllocated_;
+}
+
+bool Texture2DArray::isLocalDataLoaded() const
+{
+	return isLocalDataLoaded_;
+}
+
+bool Texture2DArray::isDirty() const
+{
+	return isDirty_;
 }
 
 bool Texture2DArray::areImagesSameFormat()

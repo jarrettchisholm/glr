@@ -50,8 +50,11 @@ public:
 	virtual void pushToVideoMemory();
 	virtual void pullFromVideoMemory();
 	virtual void freeVideoMemory();
+	virtual bool isVideoMemoryAllocated() const;
 	virtual void loadLocalData();
 	virtual void freeLocalData();
+	virtual bool isLocalDataLoaded() const;
+	virtual bool isDirty() const;
 
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);
@@ -77,6 +80,10 @@ private:
 	
 	GLuint bufferId_;
 	GLuint bindPoint_;
+	
+	bool isVideoMemoryAllocated_;
+	bool isLocalDataLoaded_;
+	bool isDirty_;
 	
 	friend class boost::serialization::access;
 	
