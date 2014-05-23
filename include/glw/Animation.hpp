@@ -26,8 +26,8 @@ namespace glmd = glm::detail;
 class Animation : public IAnimation
 {
 public:
-	Animation(IOpenGlDevice* openGlDevice, std::string name);
-	Animation(IOpenGlDevice* openGlDevice, std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
+	Animation(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
+	Animation(IOpenGlDevice* openGlDevice, std::string name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true);
 	Animation(const Animation& other);
 	virtual ~Animation();
 

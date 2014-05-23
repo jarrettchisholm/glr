@@ -45,7 +45,7 @@ Animation* AnimationManager::getAnimation(const std::string& name) const
 	return nullptr;
 }
 
-Animation* AnimationManager::addAnimation(const std::string& name)
+Animation* AnimationManager::addAnimation(const std::string& name, bool initialize)
 {
 	LOG_DEBUG( "Loading animation..." );
 
@@ -62,7 +62,7 @@ Animation* AnimationManager::addAnimation(const std::string& name)
 	return animations_[name].get();
 }
 
-Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes)
+Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize)
 {
 	LOG_DEBUG( "Loading animation..." );
 

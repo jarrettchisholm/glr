@@ -26,7 +26,7 @@ class IOpenGlDevice;
 class Material : public IMaterial
 {
 public:
-	Material(IOpenGlDevice* openGlDevice, std::string name);
+	Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
 	Material(
 		IOpenGlDevice* openGlDevice,
 		std::string name,
@@ -35,7 +35,8 @@ public:
 		glm::vec4 specular,
 		glm::vec4 emission,
 		glm::detail::float32 shininess,
-		glm::detail::float32 strength
+		glm::detail::float32 strength,
+		bool initialize = true
 	);
 	virtual ~Material();
 

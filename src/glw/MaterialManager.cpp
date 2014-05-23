@@ -39,7 +39,7 @@ Material* MaterialManager::getMaterial(const std::string& name) const
 	return nullptr;
 }
 
-Material* MaterialManager::addMaterial(const std::string& name)
+Material* MaterialManager::addMaterial(const std::string& name, bool initialize)
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
@@ -62,7 +62,8 @@ Material* MaterialManager::addMaterial(
 		glm::vec4 specular,
 		glm::vec4 emission,
 		glm::detail::float32 shininess,
-		glm::detail::float32 strength
+		glm::detail::float32 strength,
+		bool initialize
 	)
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );

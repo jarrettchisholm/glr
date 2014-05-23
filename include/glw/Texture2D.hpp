@@ -24,8 +24,8 @@ class IOpenGlDevice;
 class Texture2D : public ITexture
 {
 public:
-	Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
-	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings());
+	Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings(), bool initialize = true);
+	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings(), bool initialize = true);
 	virtual ~Texture2D();
 
 	virtual void bind(GLuint texturePosition = 0) const;

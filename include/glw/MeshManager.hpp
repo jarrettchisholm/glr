@@ -25,7 +25,7 @@ public:
 	virtual ~MeshManager();
 
 	virtual Mesh* getMesh(const std::string& name) const;
-	virtual Mesh* addMesh(const std::string& name);
+	virtual Mesh* addMesh(const std::string& name, bool initialize = true);
 	virtual Mesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
@@ -33,14 +33,16 @@ public:
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< VertexBoneData > bones,
-		BoneData boneData
+		BoneData boneData,
+		bool initialize = true
 	);
 	virtual Mesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors
+		std::vector< glm::vec4 > colors,
+		bool initialize = true
 	);
 	
 	virtual void serialize(const std::string& filename);

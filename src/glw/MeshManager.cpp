@@ -39,7 +39,7 @@ Mesh* MeshManager::getMesh(const std::string& name) const
 	return nullptr;
 }
 
-Mesh* MeshManager::addMesh(const std::string& name)
+Mesh* MeshManager::addMesh(const std::string& name, bool initialize)
 {
 	LOG_DEBUG( "Loading mesh..." );
 
@@ -63,7 +63,8 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< VertexBoneData > bones,
-		BoneData boneData
+		BoneData boneData,
+		bool initialize
 	)
 {
 	LOG_DEBUG( "Loading mesh..." );
@@ -86,7 +87,8 @@ Mesh* MeshManager::addMesh(
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
 		std::vector< glm::vec2 > textureCoordinates,
-		std::vector< glm::vec4 > colors
+		std::vector< glm::vec4 > colors,
+		bool initialize
 	)
 {
 	LOG_DEBUG( "Loading mesh..." );

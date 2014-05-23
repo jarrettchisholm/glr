@@ -5,6 +5,7 @@
 
 #include "exceptions/GlException.hpp"
 #include "exceptions/FormatException.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 namespace glr
 {
@@ -18,16 +19,24 @@ Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), buf
 	settings_ = TextureSettings();
 }
 
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings ) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 }
 
-Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
-	if ( image != nullptr )
+	if ( image == nullptr )
 	{
-		// Copy image data
-		setData( image );
+		std::string message = std::string("No image data sent into Texture2D constructor - use different constructor if no image data is available.");
+		LOG_ERROR(message);
+		throw exception::InvalidArgumentException(message);
+	}
+	
+	// Copy image data
+	setData( image );
+	
+	if (initialize)
+	{
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}

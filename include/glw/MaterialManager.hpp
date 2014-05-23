@@ -27,7 +27,7 @@ public:
 	virtual ~MaterialManager();
 
 	virtual Material* getMaterial(const std::string& name) const;
-	virtual Material* addMaterial(const std::string& name);
+	virtual Material* addMaterial(const std::string& name, bool initialize = true);
 	virtual Material* addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,
@@ -35,7 +35,8 @@ public:
 		glm::vec4 specular,
 		glm::vec4 emission,
 		glm::detail::float32 shininess,
-		glm::detail::float32 strength
+		glm::detail::float32 strength,
+		bool initialize = true
 	);
 	
 	virtual void serialize(const std::string& filename);

@@ -69,7 +69,7 @@ Texture2DArray* TextureManager::getTexture2DArray(const std::string& name) const
 	return nullptr;
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSettings settings)
+Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d '" + name + "'." );
 
@@ -86,7 +86,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSe
 	return textures2D_[name].get();
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings)
+Texture2D* TextureManager::addTexture2D(const std::string& name, const std::string& filename, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d '" + name + "'." );
 
@@ -113,7 +113,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const std::stri
 	return addTexture2D( name, image.get(), settings );
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings)
+Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d '" + name + "' from image." );
 
@@ -141,7 +141,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	return textures2D_[name].get();
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const TextureSettings settings)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
@@ -158,7 +158,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	return textures2DArray_[name].get();
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string>& filenames, const TextureSettings settings)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<std::string>& filenames, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d array '" + name + "'." );
 
@@ -199,7 +199,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	return addTexture2DArray( name, imagesAsPointers, settings );
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*>& images, const TextureSettings settings)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*>& images, const TextureSettings settings, bool initialize)
 {
 	LOG_DEBUG( "Loading texture 2d array '" + name + "' from images." );
 

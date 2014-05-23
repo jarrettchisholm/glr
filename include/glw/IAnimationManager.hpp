@@ -37,25 +37,35 @@ public:
 	 * 
 	 * If an animation already exists with the given name, it will return that animation.
 	 * 
+	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
+	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * 
 	 * @param name The name to use for the new animation.
+	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
+	 * just create the animation and return it (without initializing it).
 	 * 
 	 * @return An Animation object.
 	 */
-	virtual Animation* addAnimation(const std::string& name) = 0;
+	virtual Animation* addAnimation(const std::string& name, bool initialize = true) = 0;
 	
 	/**
 	 * Creates an animation with the given name and using the provided animation data.
 	 * 
 	 * If an animation already exists with the given name, it will return that animation.
 	 * 
+	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
+	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * 
 	 * @param name The name to use for the new animation.
 	 * @param duration The duration of the new animation.
 	 * @param ticksPerSecond The number of ticks per second.
 	 * @param animatedBoneNodes The animated bone nodes.
+	 * @param initialize If true, will initialize all of the resources required for this animation.  Otherwise, it will
+	 * just create the animation and return it (without initializing it).
 	 * 
 	 * @return An Animation object.
 	 */
-	virtual Animation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes) = 0;
+	virtual Animation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true) = 0;
 };
 
 }

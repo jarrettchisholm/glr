@@ -29,17 +29,10 @@ class Mesh : public IMesh
 {
 public:
 	/**
-	 * Required by serialization.
-	 * 
-	 * Made public for testing!
-	 */
-	Mesh();
-
-	/**
 	 * Basic constructor.  The creator of the Mesh will have to set the data, and then call
 	 * 'allocateVideoMemory()' and 'pushToVideoMemory()' before this mesh will render properly.
 	 */
-	Mesh(IOpenGlDevice* openGlDevice, std::string name);
+	Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
 	
 	/**
 	 * Standard constructor.  Once called, the Mesh will be ready for rendering (with no further action
@@ -52,7 +45,8 @@ public:
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< VertexBoneData > vertexBoneData,
-		BoneData boneData
+		BoneData boneData,
+		bool initialize = true
 	);
 	
 	/**
@@ -117,6 +111,11 @@ protected:
 	std::string textureFileName_;
 
 private:
+	/**
+	 * Required by serialization.
+	 */
+	Mesh();
+
 	friend class boost::serialization::access;
 	
 	template<class Archive> void inline serialize(Archive& ar, const unsigned int version);

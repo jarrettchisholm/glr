@@ -23,7 +23,7 @@ Mesh::Mesh()
 	vaoId_ = 0;
 }
 
-Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
+Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	vertexBoneData_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
@@ -38,7 +38,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector<VertexBoneData > vertexBoneData,
-		BoneData boneData)
+		BoneData boneData,
+		bool initialize
+	)
 	: openGlDevice_(openGlDevice), name_(std::move(name)), vertices_(std::move(vertices)), normals_(std::move(normals)), textureCoordinates_(std::move(textureCoordinates)), colors_(std::move(colors)), vertexBoneData_(std::move(vertexBoneData)), boneData_(std::move(boneData))
 {
 	vaoId_ = 0;

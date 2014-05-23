@@ -19,7 +19,7 @@ Material::Material() : bufferId_(0)
 	name_ = std::string();
 }
 
-Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
+Material::Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
 {	
 }
 
@@ -31,7 +31,8 @@ Material::Material(
 		glm::vec4 specular,
 		glm::vec4 emission,
 		glm::detail::float32 shininess,
-		glm::detail::float32 strength
+		glm::detail::float32 strength,
+		bool initialize
 		)
 	: openGlDevice_(openGlDevice), name_(std::move(name)), ambient_(ambient), diffuse_(diffuse), specular_(specular), emission_(emission), shininess_(shininess), strength_(strength), bufferId_(0)
 {

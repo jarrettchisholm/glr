@@ -5,6 +5,7 @@
 
 #include "exceptions/GlException.hpp"
 #include "exceptions/FormatException.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 
 namespace glr
@@ -19,20 +20,27 @@ Texture2DArray::Texture2DArray() : bufferId_(0)
 	settings_ = TextureSettings();
 }
 
-Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
+Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
 }
 
-Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
+Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
 	
-	
-	if ( images.size() > 0 )
+	if (images.size() == 0)
 	{
-		// Copy image data
-		setData( images );
+		std::string message = std::string("No image data sent into Texture2DArray constructor - use different constructor if no image data is available.");
+		LOG_ERROR(message);
+		throw exception::InvalidArgumentException(message);
+	}
+	
+	// Copy image data
+	setData( images );
+	
+	if (initialize)
+	{
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
@@ -69,6 +77,7 @@ void Texture2DArray::setData(const std::vector<utilities::Image*>& images)
 
 	for ( auto image : images )
 	{
+		// Copy the image data
 		utilities::Image img = utilities::Image(*image);
 		images_.push_back( img );
 	}
