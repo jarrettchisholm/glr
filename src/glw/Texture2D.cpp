@@ -18,21 +18,18 @@ Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), buf
 	name_ = std::string();
 	settings_ = TextureSettings();
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
 
 Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
 
 Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
@@ -183,7 +180,7 @@ void Texture2D::allocateVideoMemory()
 
 bool Texture2D::isVideoMemoryAllocated() const
 {
-	return isVideoMemoryAllocated_;
+	return (bufferId_ != 0);
 }
 
 bool Texture2D::isLocalDataLoaded() const

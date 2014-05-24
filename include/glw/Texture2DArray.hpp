@@ -71,7 +71,6 @@ private:
 	
 	std::vector<utilities::Image> images_;
 	
-	bool isVideoMemoryAllocated_;
 	bool isLocalDataLoaded_;
 	bool isDirty_;
 	

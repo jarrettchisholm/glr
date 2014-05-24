@@ -118,7 +118,6 @@ protected:
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[5];
 	
-	bool isVideoMemoryAllocated_;
 	bool isLocalDataLoaded_;
 	bool isDirty_;
 	

@@ -18,14 +18,12 @@ Material::Material() : bufferId_(0)
 	openGlDevice_ = nullptr;
 	name_ = std::string();
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
 
 Material::Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
 {
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
@@ -45,7 +43,6 @@ Material::Material(
 {
 	LOG_DEBUG( "loading material..." );
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
@@ -131,7 +128,7 @@ void Material::allocateVideoMemory()
 
 bool Material::isVideoMemoryAllocated() const
 {
-	return isVideoMemoryAllocated_;
+	return (bufferId_ != 0);
 }
 
 bool Material::isLocalDataLoaded() const

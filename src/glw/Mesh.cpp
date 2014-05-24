@@ -22,7 +22,6 @@ Mesh::Mesh()
 	
 	vaoId_ = 0;
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
@@ -34,7 +33,6 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : ope
 	
 	vaoId_ = 0;
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 }
@@ -53,7 +51,6 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 {
 	vaoId_ = 0;
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
@@ -78,7 +75,6 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	boneData_ = BoneData();
 	vaoId_ = 0;
 	
-	isVideoMemoryAllocated_ = false;
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
@@ -328,7 +324,7 @@ void Mesh::allocateVideoMemory()
 
 bool Mesh::isVideoMemoryAllocated() const
 {
-	return isVideoMemoryAllocated_;
+	return (vaoId_ != 0);
 }
 
 bool Mesh::isLocalDataLoaded() const

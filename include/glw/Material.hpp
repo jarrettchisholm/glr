@@ -87,7 +87,6 @@ private:
 	GLuint bufferId_;
 	GLuint bindPoint_;
 	
-	bool isVideoMemoryAllocated_;
 	bool isLocalDataLoaded_;
 	bool isDirty_;
 	

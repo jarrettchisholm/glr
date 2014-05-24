@@ -37,7 +37,7 @@ public:
 	/**
 	 * Will render the terrain to scene.
 	 * 
-	 * Note: This method is NOT thread safe.  Only call it from the OpenGL thread.
+	 * **Note**: This method is *not* thread safe.  Only call it from the OpenGL thread.
 	 */
 	virtual void render() = 0;
 	
@@ -50,7 +50,7 @@ public:
 	/**
 	 * Will do up to maxUpdates number of updates to/from the graphics card.
 	 * 
-	 * Note: This method is NOT thread safe.  Only call it from the OpenGL thread.
+	 * **Note**: This method is *not* thread safe.  Only call it from the OpenGL thread.
 	 */
 	virtual void update() = 0;
 	
