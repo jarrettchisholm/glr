@@ -605,7 +605,7 @@ glm::detail::int32 TerrainManager::getHeight() const
 
 glm::detail::int32 TerrainManager::getBlockSize() const
 {
-	constants::CHUNK_SIZE;
+	return constants::CHUNK_SIZE;
 }
 
 }
