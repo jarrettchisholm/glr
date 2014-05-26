@@ -50,7 +50,7 @@ public:
 	virtual bool isVideoMemoryAllocated() const = 0;
 	
 	/**
-	 * Will load any resources required for this graphics object into memory.
+	 * Will load any resources required for this graphics object into local memory.
 	 * 
 	 * **Note**: This method *is* thread safe - it is safe to call outside the OpenGL thread.
 	 */
