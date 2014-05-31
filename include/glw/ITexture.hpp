@@ -44,6 +44,9 @@ public:
 	/**
 	 * Binds the data in OpenGL, making it ready to use.
 	 * 
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
+	 * 
 	 * @param texturePosition The texture position to bind to.  This must be a value between 0 - 9.
 	 */
 	virtual void bind(GLuint texturePosition = 0) const = 0;

@@ -36,6 +36,9 @@ public:
 
 	/**
 	 * Will render this mesh in the scene.
+	 * 
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void render() = 0;
 	

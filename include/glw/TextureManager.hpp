@@ -4,6 +4,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <mutex>
 
 #include "IOpenGlDevice.hpp"
 
@@ -49,6 +50,8 @@ private:
 
 	std::map< std::string, std::unique_ptr<Texture2D> > textures2D_;
 	std::map< std::string, std::unique_ptr<Texture2DArray> > textures2DArray_;
+	
+	mutable std::mutex accessMutex_;
 	
 	friend class boost::serialization::access;
 	

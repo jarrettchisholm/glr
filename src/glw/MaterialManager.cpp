@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Configure.hpp"
 
 #ifdef OS_WINDOWS
@@ -27,6 +29,8 @@ MaterialManager::~MaterialManager()
 
 Material* MaterialManager::getMaterial(const std::string& name) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = materials_.find(name);
 	if ( it != materials_.end() )
 	{
@@ -43,6 +47,8 @@ Material* MaterialManager::addMaterial(const std::string& name, bool initialize)
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = materials_.find(name);
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
@@ -50,9 +56,12 @@ Material* MaterialManager::addMaterial(const std::string& name, bool initialize)
 		return it->second.get();
 	}
 
-	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name));
+	auto material = std::unique_ptr<Material>(new Material(openGlDevice_, name));
+	auto materialPointer = material.get();
+	
+	materials_[name] = std::move(material);
 
-	return materials_[name].get();
+	return materialPointer;
 }
 
 Material* MaterialManager::addMaterial(
@@ -68,16 +77,21 @@ Material* MaterialManager::addMaterial(
 {
 	LOG_DEBUG( "Loading material '" + name + "'." );
 
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = materials_.find(name);
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
 		LOG_DEBUG( "Material '" + name + "' already exists." );
 		return it->second.get();
 	}
+	
+	auto material = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength));
+	auto materialPointer = material.get();
+	
+	materials_[name] = std::move(material);
 
-	materials_[name] = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength));
-
-	return materials_[name].get();
+	return materialPointer;
 }
 
 void MaterialManager::serialize(const std::string& filename)

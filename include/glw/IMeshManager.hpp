@@ -26,6 +26,8 @@ public:
 	 * Returns the mesh with the given name.  If a mesh with the given name doesn't exist, it returns
 	 * nullptr.
 	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * 
 	 * @param name The name of the mesh to retrieve.
 	 * 
 	 * @return The Mesh object with name 'name', or nullptr if no mesh exists with that name.
@@ -37,8 +39,8 @@ public:
 	 * 
 	 * If a mesh already exists with the given name, it will return that mesh.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name The name to use for the new mesh.
 	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
@@ -53,8 +55,8 @@ public:
 	 * 
 	 * If a mesh already exists with the given name, it will return that mesh.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name The name to use for the new mesh.
 	 * @param vertices
@@ -83,8 +85,8 @@ public:
 	 * 
 	 * If a mesh already exists with the given name, it will return that mesh.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name The name to use for the new mesh.
 	 * @param vertices

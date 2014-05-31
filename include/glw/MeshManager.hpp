@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <mutex>
 
 #include "IMeshManager.hpp"
 
@@ -60,6 +61,8 @@ private:
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Mesh> > meshes_;
+	
+	mutable std::mutex accessMutex_;
 	
 	friend class boost::serialization::access;
 	

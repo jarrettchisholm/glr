@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <mutex>
 
 #include <GL/glew.h>
 
@@ -54,6 +55,8 @@ private:
 	IOpenGlDevice* openGlDevice_;
 
 	std::map< std::string, std::unique_ptr<Material> > materials_;
+	
+	mutable std::mutex accessMutex_;
 	
 	friend class boost::serialization::access;
 	

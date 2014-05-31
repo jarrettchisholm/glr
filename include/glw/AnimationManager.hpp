@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <mutex>
 
 #include "IAnimationManager.hpp"
 
@@ -43,6 +44,8 @@ private:
 	IOpenGlDevice* openGlDevice_;
 	
 	std::map< std::string, std::unique_ptr<Animation> > animations_;
+	
+	mutable std::mutex accessMutex_;
 	
 	friend class boost::serialization::access;
 	

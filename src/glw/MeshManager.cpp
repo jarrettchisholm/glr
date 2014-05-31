@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Configure.hpp"
 
 #ifdef OS_WINDOWS
@@ -27,6 +29,8 @@ MeshManager::~MeshManager()
 
 Mesh* MeshManager::getMesh(const std::string& name) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() )
 	{
@@ -42,7 +46,9 @@ Mesh* MeshManager::getMesh(const std::string& name) const
 Mesh* MeshManager::addMesh(const std::string& name, bool initialize)
 {
 	LOG_DEBUG( "Loading mesh..." );
-
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
@@ -51,9 +57,12 @@ Mesh* MeshManager::addMesh(const std::string& name, bool initialize)
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
-	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name));
+	auto mesh = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name));
+	auto meshPointer = mesh.get();
+	
+	meshes_[name] = std::move(mesh);
 
-	return meshes_[name].get();
+	return meshPointer;
 }
 
 Mesh* MeshManager::addMesh(
@@ -68,7 +77,9 @@ Mesh* MeshManager::addMesh(
 	)
 {
 	LOG_DEBUG( "Loading mesh..." );
-
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
@@ -77,9 +88,12 @@ Mesh* MeshManager::addMesh(
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
-	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData));
+	auto mesh = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData));
+	auto meshPointer = mesh.get();
+	
+	meshes_[name] = std::move(mesh);
 
-	return meshes_[name].get();
+	return meshPointer;
 }
 
 Mesh* MeshManager::addMesh(
@@ -93,6 +107,8 @@ Mesh* MeshManager::addMesh(
 {
 	LOG_DEBUG( "Loading mesh..." );
 
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )
 	{
@@ -101,9 +117,12 @@ Mesh* MeshManager::addMesh(
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
-	meshes_[name] = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors));
+	auto mesh = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors));
+	auto meshPointer = mesh.get();
+	
+	meshes_[name] = std::move(mesh);
 
-	return meshes_[name].get();
+	return meshPointer;
 }
 
 void MeshManager::serialize(const std::string& filename)

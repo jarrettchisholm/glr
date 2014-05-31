@@ -17,33 +17,39 @@ public:
 	/**
 	 * Will free the local data used by this graphics object.
 	 * 
-	 * **Note**: This method is *not* thread safe - it should only be called from the OpenGL thread.
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void allocateVideoMemory() = 0;
 
 	/**
 	 * Will stream the latest graphics data into opengl memory.
 	 * 
-	 * **Note**: This method is *not* thread safe - it should only be called from the OpenGL thread.
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void pushToVideoMemory() = 0;
 	
 	/**
 	 * Will stream the graphics data from opengl memory to local memory.
 	 * 
-	 * **Note**: This method is *not* thread safe - it should only be called from the OpenGL thread.
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void pullFromVideoMemory() = 0;
 	
 	/**
 	 * Will free the local data used by this graphics object.
 	 * 
-	 * **Note**: This method is *not* thread safe - it should only be called from the OpenGL thread.
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void freeVideoMemory() = 0;
 	
 	/**
 	 * Tells us whether the video memory has been allocated.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @return true if the video memory has been allocated, and false otherwise.
 	 */
@@ -52,19 +58,21 @@ public:
 	/**
 	 * Will load any resources required for this graphics object into local memory.
 	 * 
-	 * **Note**: This method *is* thread safe - it is safe to call outside the OpenGL thread.
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 */
 	virtual void loadLocalData() = 0;
 	
 	/**
 	 * Will free the local data used by this graphics object.
 	 * 
-	 * **Note**: This method *is* thread safe - it is safe to call outside the OpenGL thread.
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 */
 	virtual void freeLocalData() = 0;
 	
 	/**
 	 * Tells us whether the local data has been loaded into memory.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @return true if the local data has been loaded into memory, and false otherwise.
 	 */
@@ -72,6 +80,8 @@ public:
 	
 	/**
 	 * Tells us whether the local data has changed and the data in OpenGL needs updating.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @return true if the local data has changed since it was last loaded into OpenGL, and false otherwise.
 	 */

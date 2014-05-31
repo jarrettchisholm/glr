@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Configure.hpp"
 
 #ifdef OS_WINDOWS
@@ -33,6 +35,8 @@ AnimationManager::~AnimationManager()
 
 Animation* AnimationManager::getAnimation(const std::string& name) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = animations_.find(name);
 	if ( it != animations_.end() )
 	{
@@ -47,6 +51,8 @@ Animation* AnimationManager::getAnimation(const std::string& name) const
 
 Animation* AnimationManager::addAnimation(const std::string& name, bool initialize)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Loading animation..." );
 
 	auto it = animations_.find(name);
@@ -57,15 +63,20 @@ Animation* AnimationManager::addAnimation(const std::string& name, bool initiali
 	}
 
 	LOG_DEBUG( "Creating Animation." );
-	animations_[name] = std::unique_ptr<Animation>(new Animation(openGlDevice_, name));
+	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name));
+	auto animationPointer = animation.get();
+	
+	animations_[name] = std::move(animation);
 
-	return animations_[name].get();
+	return animationPointer;
 }
 
 Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize)
 {
 	LOG_DEBUG( "Loading animation..." );
-
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto it = animations_.find(name);
 	if ( it != animations_.end() && it->second.get() != nullptr )
 	{
@@ -74,9 +85,12 @@ Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::
 	}
 
 	LOG_DEBUG( "Creating Animation." );
-	animations_[name] = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, duration, ticksPerSecond, animatedBoneNodes));
+	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, duration, ticksPerSecond, animatedBoneNodes));
+	auto animationPointer = animation.get();
+	
+	animations_[name] = std::move(animation);
 
-	return animations_[name].get();
+	return animationPointer;
 }
 
 void AnimationManager::serialize(const std::string& filename)

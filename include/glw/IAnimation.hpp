@@ -63,6 +63,9 @@ public:
 
 	/**
 	 * Binds the data in OpenGL, making it ready to use.
+	 * 
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
 	 */
 	virtual void bind() const = 0;
 	
@@ -72,7 +75,10 @@ public:
 	/**
 	 * Will stream the provided transformation matrices into opengl memory.
 	 * 
-	 * NOTE: You should only use this method if you know what you are doing!
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
+	 * 
+	 * **NOTE**: You should only use this method if you know what you are doing!
 	 * 
 	 * @param transformations
 	 */
@@ -154,7 +160,7 @@ public:
 	/**
 	 * Set the animation to run only between the given start and end frame.
 	 * 
-	 * Note: A value of 0 for the start and end frame will run through all frames of the animation.
+	 * **Note**: A value of 0 for the start and end frame will run through all frames of the animation.
 	 * 
 	 * endFrame must be larger than or equal to startFrame.  
 	 * 

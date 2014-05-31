@@ -40,6 +40,8 @@ public:
 	 * Note that texture names are unique across all different types of textures (for example, you cannot have
 	 * a Texture2D and Texture2DArray objects with the same name).
 	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * 
 	 * @param name
 	 * 
 	 * @return The Texture object with name 'name', or nullptr if no texture exists with that name.
@@ -52,6 +54,8 @@ public:
 	 * 
 	 * Note that texture names are unique across all different types of textures (for example, you cannot have
 	 * a Texture2D and Texture2DArray objects with the same name).
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @param name
 	 * 
@@ -66,6 +70,8 @@ public:
 	 * Note that texture names are unique across all different types of textures (for example, you cannot have
 	 * a Texture2D and Texture2DArray objects with the same name).
 	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * 
 	 * @param name
 	 * 
 	 * @return The Texture2DArray object with name 'name', or nullptr if no texture array exists with that name.
@@ -79,8 +85,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param settings
@@ -99,8 +105,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param filename
@@ -120,8 +126,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param image
@@ -140,8 +146,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param settings
@@ -160,8 +166,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param filenames
@@ -181,8 +187,8 @@ public:
 	 * 
 	 * If any other type of texture already exists with the given name, nullptr is returned.
 	 * 
-	 * **Note**: If initialize is true, this method is *not* thread safe (i.e. it should only be called from the OpenGL thread).  If it is
-	 * false, then this method *is* thread safe (i.e. it is safe to call outside the OpenGL thread).
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name
 	 * @param images
