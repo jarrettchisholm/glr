@@ -61,6 +61,8 @@ IModel* ModelManager::getModelTemplate(const std::string& name) const
 
 Model* ModelManager::getModel(Id id) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto findFunction = [&id](const std::unique_ptr<Model>& node) { return node->getId() == id; };
 
 	auto it = std::find_if(models_.begin(), models_.end(), findFunction);
@@ -78,6 +80,8 @@ Model* ModelManager::getModel(Id id) const
 
 Model* ModelManager::getModel(const std::string& name) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto findFunction = [&name](const std::unique_ptr<Model>& node) { return node->getName() == name; };
 
 	auto it = std::find_if(models_.begin(), models_.end(), findFunction);
@@ -105,7 +109,10 @@ void ModelManager::loadModel(const std::string& name, const std::string& filenam
 		return;
 	}
 
-	models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
+	{
+		std::lock_guard<std::mutex> lock(accessMutex_);
+		models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
+	}
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
 }
@@ -130,6 +137,8 @@ IModel* ModelManager::createInstance(const std::string& name)
 	
 	if ( model != nullptr )
 	{
+		std::lock_guard<std::mutex> lock(accessMutex_);
+		
 		LOG_DEBUG( "Model template found." );
 		
 		std::string newName = name + std::string("_") + std::to_string(modelInstances_.size());
@@ -154,6 +163,8 @@ void ModelManager::destroyInstance(IModel* model)
 
 IModel* ModelManager::getInstance(Id id) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Retrieving model instance with id '" << id << "'." );
 
 	auto findFunction = [&id](const std::unique_ptr<IModel>& node) { return node->getId() == id; };

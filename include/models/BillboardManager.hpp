@@ -1,6 +1,8 @@
 #ifndef BILLBOARDMANAGER_H_
 #define BILLBOARDMANAGER_H_
 
+#include <mutex>
+
 #include "models/IBillboardManager.hpp"
 
 #include "glw/IOpenGlDevice.hpp"
@@ -36,6 +38,8 @@ private:
 	std::vector< std::unique_ptr<IBillboard> > billboards_;
 	
 	IdManager idManager_;
+	
+	mutable std::mutex accessMutex_;
 };
 
 }

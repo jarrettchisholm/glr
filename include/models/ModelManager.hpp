@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <mutex>
 
 #include <GL/glew.h>
 
@@ -73,6 +74,8 @@ private:
 	std::unique_ptr<ModelLoader> modelLoader_;
 	
 	IdManager idManager_;
+	
+	mutable std::mutex accessMutex_;
 	
 	Model* getModel(Id id) const;
 	Model* getModel(const std::string& name) const;

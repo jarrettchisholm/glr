@@ -20,6 +20,8 @@ BillboardManager::~BillboardManager()
 
 IBillboard* BillboardManager::createBillboard(const std::string& name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Creating billboard using name '" << name << "'." );
 	
 	billboards_.push_back( std::unique_ptr<IBillboard>( new Billboard(idManager_.createId(), name, mesh, texture, material, openGlDevice_) ) );
@@ -29,8 +31,10 @@ IBillboard* BillboardManager::createBillboard(const std::string& name, glw::IMes
 
 IBillboard* BillboardManager::getBillboard(Id id) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Retrieving billboard with id '" << id << "'." );
-
+	
 	auto findFunction = [id](const std::unique_ptr<IBillboard>& node) { return node->getId() == id; };
 	
 	auto it = std::find_if(billboards_.begin(), billboards_.end(), findFunction);
@@ -47,6 +51,8 @@ IBillboard* BillboardManager::getBillboard(Id id) const
 
 IBillboard* BillboardManager::getBillboard(const std::string& name) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Retrieving billboard with name '" << name << "'." );
 
 	auto findFunction = [&name](const std::unique_ptr<IBillboard>& node) { return node->getName() == name; };
@@ -65,6 +71,8 @@ IBillboard* BillboardManager::getBillboard(const std::string& name) const
 
 void BillboardManager::destroyBillboard(Id id)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Destroying billboard with id '" << id << "'." );
 	
 	auto findFunction = [id](const std::unique_ptr<IBillboard>& node) { return node->getId() == id; };
@@ -77,6 +85,8 @@ void BillboardManager::destroyBillboard(Id id)
 
 void BillboardManager::destroyBillboard(const std::string& name)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Destroying billboard with name '" << name << "'." );
 	
 	auto findFunction = [&name](const std::unique_ptr<IBillboard>& node) { return node->getName() == name; };
@@ -89,6 +99,8 @@ void BillboardManager::destroyBillboard(const std::string& name)
 
 void BillboardManager::destroyBillboard(IBillboard* billboard)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Destroying billboard by pointer with id '" << billboard->getId() << "'." );
 	
 	auto findFunction = [billboard](const std::unique_ptr<IBillboard>& node) { return node.get() == billboard; };
