@@ -41,8 +41,10 @@ ModelLoader::ModelLoader(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openG
 	// it to the logging system. It remains active for all further
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
 	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
+#ifdef DEBUG
 	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
 	aiAttachLogStream(&stream);
+#endif
 }
 
 ModelLoader::~ModelLoader()
@@ -50,7 +52,9 @@ ModelLoader::~ModelLoader()
 	// We added a log stream to the library, it's our job to disable it
 	// again. This will definitely release the last resources allocated
 	// by Assimp.
+#ifdef DEBUG
 	aiDetachAllLogStreams();
+#endif
 }
 
 std::unique_ptr<Model> ModelLoader::loadModel(const std::string& filename, IdManager& idManager)

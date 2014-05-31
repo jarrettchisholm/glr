@@ -15,11 +15,19 @@ Model::Model()
 {
 	id_ = Id::INVALID;
 	name_ = std::string();
+	filename_ = std::string();
 	openGlDevice_ = nullptr;
 	initialize();
 }
 
 Model::Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
+{
+	initialize();
+	filename_ = std::string();
+	isLocalDataLoaded_ = true;
+}
+
+Model::Model(Id id, std::string name, std::string filename, glw::IOpenGlDevice* openGlDevice) : id_(id), name_(std::move(name)), filename_(std::move(filename)), openGlDevice_(openGlDevice)
 {
 	initialize();
 }
@@ -28,6 +36,8 @@ Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, 
 	: id_(id), name_(std::move(name)), rootBoneNode_(std::move(rootBoneNode)), globalInverseTransformation_(std::move(globalInverseTransformation)), openGlDevice_(openGlDevice)
 {
 	initialize();
+	filename_ = std::string();
+	isLocalDataLoaded_ = true;
 	
 	meshes_.push_back(mesh);
 	textures_.push_back(texture);
@@ -53,6 +63,8 @@ Model::Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vect
 	}
 	
 	initialize();
+	filename_ = std::string();
+	isLocalDataLoaded_ = true;
 	
 	// Add animations to map
 	for (auto animation : animations)
@@ -68,6 +80,8 @@ Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, 
 	globalInverseTransformation_ = glm::mat4();
 	
 	initialize();
+	filename_ = std::string();
+	isLocalDataLoaded_ = true;
 	
 	meshes_.push_back(mesh);
 	textures_.push_back(texture);
@@ -100,6 +114,8 @@ Model::~Model()
 void Model::copy(const Model& other)
 {
 	name_ = other.name_;
+	filename_ = other.filename_;
+	isLocalDataLoaded_ = other.isLocalDataLoaded_;
 	
 	openGlDevice_ = other.openGlDevice_;
 	
@@ -150,6 +166,8 @@ void Model::initialize()
 	endFrame_ = 0;
 	indexCache_ = std::vector<glmd::uint32>( 3 );
 	
+	isLocalDataLoaded_ = false;
+	
 	emptyAnimation_ = openGlDevice_->getAnimationManager()->getAnimation( glw::Constants::GLR_IDENTITY_BONES );
 }
 
@@ -159,11 +177,15 @@ void Model::destroy()
 
 glw::IMesh* Model::getMesh(glmd::uint32 index) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return meshes_[index];
 }
 
 void Model::removeMesh(glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	meshes_.erase(meshes_.begin() + index);
 	materials_.erase(materials_.begin() + index);
 	textures_.erase(textures_.begin() + index);
@@ -172,6 +194,8 @@ void Model::removeMesh(glmd::uint32 index)
 void Model::removeMesh(glw::IMesh* mesh)
 {
 	glmd::int32 index = getIndexOf(mesh);
+		
+	std::lock_guard<std::mutex> lock(accessMutex_);
 	
 	meshes_.erase(meshes_.begin() + index);
 	materials_.erase(materials_.begin() + index);
@@ -180,6 +204,8 @@ void Model::removeMesh(glw::IMesh* mesh)
 
 void Model::addMesh(glw::IMesh* mesh)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	assert( mesh != nullptr );
 	
 	meshes_.push_back(mesh);
@@ -189,6 +215,8 @@ void Model::addMesh(glw::IMesh* mesh)
 
 void Model::addMesh(glw::IMesh* mesh, glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	assert( mesh != nullptr );
 	
 	meshes_.insert(meshes_.begin() + index, mesh);
@@ -198,17 +226,24 @@ void Model::addMesh(glw::IMesh* mesh, glmd::uint32 index)
 
 glmd::uint32 Model::getNumberOfMeshes() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return meshes_.size();
 }
 
 glw::ITexture* Model::getTexture(glmd::uint32 index) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return textures_[index];
 }
 
 glw::ITexture* Model::getTexture(glw::IMesh* mesh) const
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		return textures_[i];
 	
@@ -217,12 +252,17 @@ glw::ITexture* Model::getTexture(glw::IMesh* mesh) const
 
 void Model::removeTexture(glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	textures_[index] = nullptr;
 }
 
 void Model::removeTexture(glw::ITexture* texture)
 {
 	glmd::int32 i = getIndexOf(texture);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		textures_[i] = nullptr;
 }
@@ -230,12 +270,17 @@ void Model::removeTexture(glw::ITexture* texture)
 void Model::removeTexture(glw::IMesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		textures_[i] = nullptr;
 }
 
 void Model::addTexture(glw::ITexture* texture, glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	assert( texture != nullptr );
 	//assert( index < meshes_.size() );
 	
@@ -245,23 +290,33 @@ void Model::addTexture(glw::ITexture* texture, glmd::uint32 index)
 void Model::addTexture(glw::ITexture* texture, glw::Mesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		textures_[i] = texture;
 }
 
 glmd::uint32 Model::getNumberOfTextures() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return textures_.size();
 }
 
 glw::IMaterial* Model::getMaterial(glmd::uint32 index) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return materials_[index];
 }
 
 glw::IMaterial* Model::getMaterial(glw::IMesh* mesh) const
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		return materials_[i];
 	
@@ -270,12 +325,17 @@ glw::IMaterial* Model::getMaterial(glw::IMesh* mesh) const
 
 void Model::removeMaterial(glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	materials_[index] = nullptr;
 }
 
 void Model::removeMaterial(glw::IMaterial* material)
 {
 	glmd::int32 i = getIndexOf(material);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		materials_[i] = nullptr;
 }
@@ -283,12 +343,17 @@ void Model::removeMaterial(glw::IMaterial* material)
 void Model::removeMaterial(glw::IMesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		materials_[i] = nullptr;
 }
 
 void Model::addMaterial(glw::IMaterial* material, glmd::uint32 index)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	assert( material != nullptr );
 	//assert( index < meshes_.size() );
 	
@@ -298,12 +363,17 @@ void Model::addMaterial(glw::IMaterial* material, glmd::uint32 index)
 void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
+	
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	if (i >= 0)
 		materials_[i] = material;
 }
 
 glmd::uint32 Model::getNumberOfMaterials() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return materials_.size();
 }
 
@@ -320,6 +390,8 @@ const std::string& Model::getName() const
 // TODO: Implement loop
 void Model::playAnimation(glw::IAnimation* animation, glm::detail::float32 animationTime, bool loop)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	currentAnimation_ = animation;
 	animationTime_ = animationTime;
 	startFrame_ = 0;
@@ -331,6 +403,8 @@ void Model::playAnimation(glw::IAnimation* animation, glm::detail::float32 anima
 // TODO: Implement loop
 void Model::playAnimation(glw::IAnimation* animation, glm::detail::uint32 startFrame, glm::detail::uint32 endFrame, glm::detail::float32 animationTime, bool loop)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	currentAnimation_ = animation;
 	animationTime_ = animationTime;
 	startFrame_ = startFrame;
@@ -341,21 +415,29 @@ void Model::playAnimation(glw::IAnimation* animation, glm::detail::uint32 startF
 
 void Model::setAnimationTime(glm::detail::float32 animationTime)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	animationTime_ = animationTime;
 }
 
 void Model::stopAnimation()
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	currentAnimation_ = nullptr;
 }
 
 glw::IAnimation* Model::getPlayingAnimation() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return currentAnimation_;
 }
 
 std::vector<glw::IAnimation*> Model::getAnimations() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	auto list = std::vector<glw::IAnimation*>();
 	
 	for ( auto& a : animations_ )
@@ -368,23 +450,30 @@ std::vector<glw::IAnimation*> Model::getAnimations() const
 
 void Model::removeAnimation(const std::string& name)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
 }
 
 void Model::removeAnimation(glw::IAnimation* animation)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
 }
 
 void Model::addAnimation(glw::IAnimation* animation)
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
 }
 
 glmd::uint32 Model::getNumberOfAnimations() const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	return animations_.size();
 }
 
 glmd::int32 Model::getIndexOf(glw::IMesh* mesh) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	for (glmd::uint32 i=0; i < meshes_.size(); i++)
 	{
 		if (meshes_[i] == mesh)
@@ -396,6 +485,8 @@ glmd::int32 Model::getIndexOf(glw::IMesh* mesh) const
 
 glmd::int32 Model::getIndexOf(glw::ITexture* texture) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	for (glmd::uint32 i=0; i < textures_.size(); i++)
 	{
 		if (textures_[i] == texture)
@@ -407,6 +498,8 @@ glmd::int32 Model::getIndexOf(glw::ITexture* texture) const
 
 glmd::int32 Model::getIndexOf(glw::IMaterial* material) const
 {
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	for (glmd::uint32 i=0; i < materials_.size(); i++)
 	{
 		if (materials_[i] == material)
@@ -416,10 +509,11 @@ glmd::int32 Model::getIndexOf(glw::IMaterial* material) const
 	return -1;
 }
 
-void Model::render(shaders::IShaderProgram* shader)
+void Model::render(shaders::IShaderProgram& shader)
 {
-	assert(shader != nullptr);
-
+	// QUESTION: Do I want to lock this????
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
 	for ( glm::detail::uint32 i = 0; i < meshes_.size(); i++ )
 	{
 		if ( textures_[i] != nullptr )
@@ -440,7 +534,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		
 		if ( materials_[i] != nullptr )
 		{
-			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
+			GLint bindPoint = shader.getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
 			if (bindPoint >= 0)
 			{
 				materials_[i]->bind();
@@ -451,7 +545,7 @@ void Model::render(shaders::IShaderProgram* shader)
 		
 		if (currentAnimation_ != nullptr)
 		{
-			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			GLint bindPoint = shader.getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
 			if (bindPoint >= 0)
 			{
 				currentAnimation_->setAnimationTime( animationTime_ );
@@ -467,7 +561,7 @@ void Model::render(shaders::IShaderProgram* shader)
 			// Zero out the animation data
 			// TODO: Do we need to do this?
 			// TODO: find a better way to load 'empty' bone data in the shader
-			GLint bindPoint = shader->getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
+			GLint bindPoint = shader.getBindPointByBindingName( shaders::IShader::BIND_TYPE_BONE );
 			if (bindPoint >= 0)
 			{
 				emptyAnimation_->pushToVideoMemory();
@@ -480,6 +574,357 @@ void Model::render(shaders::IShaderProgram* shader)
 	}
 }
 
+void Model::pushToVideoMemory()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			m->pushToVideoMemory();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			m->pushToVideoMemory();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			t->pushToVideoMemory();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		a.second->pushToVideoMemory();
+	}
+}
+
+void Model::pullFromVideoMemory()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			m->pullFromVideoMemory();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			m->pullFromVideoMemory();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			t->pullFromVideoMemory();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		a.second->pullFromVideoMemory();
+	}
+}
+
+void Model::loadLocalData()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	// TODO: Load local data
+	isLocalDataLoaded_ = true;
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isLocalDataLoaded())
+				m->loadLocalData();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isLocalDataLoaded())
+				m->loadLocalData();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (!t->isLocalDataLoaded())
+				t->loadLocalData();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (!a.second->isLocalDataLoaded())
+			a.second->loadLocalData();
+	}
+}
+
+void Model::freeLocalData()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	// TODO: Free local data
+	if (!filename_.empty())
+		isLocalDataLoaded_ = false;
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isLocalDataLoaded())
+				m->freeLocalData();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isLocalDataLoaded())
+				m->freeLocalData();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (t->isLocalDataLoaded())
+				t->freeLocalData();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (a.second->isLocalDataLoaded())
+			a.second->freeLocalData();
+	}
+}
+
+void Model::freeVideoMemory()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isVideoMemoryAllocated())
+				m->freeVideoMemory();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isVideoMemoryAllocated())
+				m->freeVideoMemory();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (t->isVideoMemoryAllocated())
+				t->freeVideoMemory();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (a.second->isVideoMemoryAllocated())
+			a.second->freeVideoMemory();
+	}
+}
+
+void Model::allocateVideoMemory()
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isVideoMemoryAllocated())
+				m->allocateVideoMemory();
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isVideoMemoryAllocated())
+				m->allocateVideoMemory();
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (!t->isVideoMemoryAllocated())
+				t->allocateVideoMemory();
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (!a.second->isVideoMemoryAllocated())
+			a.second->allocateVideoMemory();
+	}
+}
+
+bool Model::isVideoMemoryAllocated() const
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isVideoMemoryAllocated())
+				return false;
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isVideoMemoryAllocated())
+				return false;
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (!t->isVideoMemoryAllocated())
+				return false;
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (!a.second->isVideoMemoryAllocated())
+			return false;
+	}
+	
+	return true;
+}
+
+bool Model::isLocalDataLoaded() const
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isLocalDataLoaded())
+				return false;
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (!m->isLocalDataLoaded())
+				return false;
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (!t->isLocalDataLoaded())
+				return false;
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (!a.second->isLocalDataLoaded())
+			return false;
+	}
+	
+	return isLocalDataLoaded_;
+}
+
+bool Model::isDirty() const
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	for ( auto m : meshes_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isDirty())
+				return true;
+		}
+	}
+	
+	for ( auto m : materials_ )
+	{
+		if (m != nullptr)
+		{
+			if (m->isDirty())
+				return true;
+		}
+	}
+	
+	for ( auto t : textures_ )
+	{
+		if (t != nullptr)
+		{
+			if (t->isDirty())
+				return true;
+		}
+	}
+	
+	for ( auto& a : animations_ )
+	{
+		if (a.second->isDirty())
+			return true;
+	}
+
+	return false;
+}
+
+
+///////////////////////////////
+//// SERIALIZATION METHODS ////
+///////////////////////////////
 
 void Model::serialize(const std::string& filename)
 {

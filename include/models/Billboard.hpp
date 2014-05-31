@@ -26,7 +26,7 @@ public:
 	virtual const Id& getId() const;
 	virtual const std::string& getName() const;
 
-	virtual void render(shaders::IShaderProgram* shader);
+	virtual void render(shaders::IShaderProgram& shader);
 
 private:
 	Id id_;

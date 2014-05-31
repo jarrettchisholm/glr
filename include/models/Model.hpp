@@ -4,6 +4,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <mutex>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -39,6 +40,8 @@ public:
 	 * Used by serialization.
 	 */
 	Model(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
+	
+	Model(Id id, std::string name, std::string filename, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, std::vector<glw::IMesh*> meshes, std::vector<glw::ITexture*> textures, std::vector<glw::IMaterial*> materials, std::vector<glw::IAnimation*> animations, glw::BoneNode rootBoneNode, glm::mat4 globalInverseTransformation, glw::IOpenGlDevice* openGlDevice);
 	Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, glw::IMaterial* material, glw::IOpenGlDevice* openGlDevice);
@@ -85,6 +88,16 @@ public:
 	virtual void stopAnimation();
 	virtual glw::IAnimation* getPlayingAnimation() const;
 	virtual std::vector<glw::IAnimation*> getAnimations() const;
+	
+	virtual void allocateVideoMemory();
+	virtual void pushToVideoMemory();
+	virtual void pullFromVideoMemory();
+	virtual void freeVideoMemory();
+	virtual bool isVideoMemoryAllocated() const;
+	virtual void loadLocalData();
+	virtual void freeLocalData();
+	virtual bool isLocalDataLoaded() const;
+	virtual bool isDirty() const;
 
 	/**
 	 * Will render the model through OpenGL.
@@ -94,7 +107,7 @@ public:
 	 * 
 	 * @param shader The shader to use to render this model.
 	 */
-	virtual void render(shaders::IShaderProgram* shader);
+	virtual void render(shaders::IShaderProgram& shader);
 	
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);
@@ -105,6 +118,7 @@ public:
 protected:
 	Id id_;
 	std::string name_;
+	std::string filename_;
 
 	std::vector<glw::IMesh*> meshes_;
 	std::vector<glw::ITexture*> textures_;
@@ -126,6 +140,10 @@ protected:
 	// Only play frames within this range
 	glmd::uint32 startFrame_;
 	glmd::uint32 endFrame_;
+	
+	bool isLocalDataLoaded_;
+	
+	mutable std::mutex accessMutex_;
 	
 	glw::IAnimation* currentAnimation_;
 	glw::Animation* emptyAnimation_;

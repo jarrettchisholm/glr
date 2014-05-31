@@ -45,6 +45,8 @@ public:
 	 * Returns a pointer to an IBillboard object that has id 'id'.  If an IBillboard object with id 'id' is not found, this
 	 * method returns nullptr.
 	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * 
 	 * @param id The id of the IBillboard template you want to get.
 	 * 
 	 * @return The raw pointer to an IBillboard object, or nullptr if it was not found.
@@ -58,6 +60,8 @@ public:
 	 * If you have created billboards with duplicate names, this method will return the first instance of an IBillboard object it can find
 	 * with a name that matches the 'name' parameter passed in.  Note that there is no guarantee in which order this method will search the IBillboard
 	 * objects.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @param name The name of the IBillboard template you want to get.
 	 * 

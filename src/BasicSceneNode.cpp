@@ -248,7 +248,7 @@ void BasicSceneNode::render()
 
 			glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &newModel[0][0]);
 			
-			renderable_->render(shaderProgram_);
+			renderable_->render(*shaderProgram_);
 		}
 	}
 }

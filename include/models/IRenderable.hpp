@@ -21,7 +21,7 @@ public:
 	 * 
 	 * @param shader The shader to use to render this object to the scene.
 	 */
-	virtual void render(shaders::IShaderProgram* shader) = 0;
+	virtual void render(shaders::IShaderProgram& shader) = 0;
 };
 
 }

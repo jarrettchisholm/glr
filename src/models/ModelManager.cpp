@@ -111,7 +111,16 @@ void ModelManager::loadModel(const std::string& name, const std::string& filenam
 
 	{
 		std::lock_guard<std::mutex> lock(accessMutex_);
-		models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
+		
+		if (initialize)
+		{
+			models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
+		}
+		else
+		{
+			models_.push_back( std::unique_ptr< Model >( new Model(idManager_.createId(), name, filename, openGlDevice_) ) );
+		}
+			
 	}
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );

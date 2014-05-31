@@ -31,6 +31,8 @@ public:
 	 * Returns a pointer to an IModel object.  This object is the 'template' that is used when creating
 	 * instances of this model.
 	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * 
 	 * @param id The id of the IModel template you want to get.
 	 * 
 	 * @return The raw pointer to an IModel object.  The caller does not own the pointer - it is managed by
@@ -41,6 +43,8 @@ public:
 	/**
 	 * Returns a pointer to an IModel object.  This object is the 'template' that is used when creating
 	 * instances of this model.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @param name The name of the IModel template you want to get.
 	 * 
@@ -135,6 +139,8 @@ public:
 	 * Gets the instance of the model with id 'id'.
 	 * 
 	 * If no IModel instance with id 'id' is found, this method returns nullptr.
+	 * 
+	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
 	 * @param id The id of the IModel instance you want to get.
 	 * 

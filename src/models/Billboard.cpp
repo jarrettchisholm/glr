@@ -26,7 +26,7 @@ const std::string& Billboard::getName() const
 	return name_;
 }
 
-void Billboard::render(shaders::IShaderProgram* shader)
+void Billboard::render(shaders::IShaderProgram& shader)
 {
 	// TODO: Implement
 }
