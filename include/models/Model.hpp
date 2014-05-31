@@ -94,8 +94,17 @@ public:
 	virtual void pullFromVideoMemory();
 	virtual void freeVideoMemory();
 	virtual bool isVideoMemoryAllocated() const;
+	
+	/**
+	 * **Note**: If this Model has a filename set, this method will release all pointers to meshes, textures, etc. that it held previously.
+	 * It will then attempt to load the data from disk.
+	 */
 	virtual void loadLocalData();
 	virtual void freeLocalData();
+	/**
+	 * **Note**: If no filename was set for this Model, this method will only check the use graphics resources (i.e. meshes, textures, etc)
+	 * to see if they had their local data loaded.
+	 */
 	virtual bool isLocalDataLoaded() const;
 	virtual bool isDirty() const;
 

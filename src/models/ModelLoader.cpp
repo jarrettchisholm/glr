@@ -66,6 +66,17 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 {
 	LOG_DEBUG( "Loading model '" << name << "' - " << filename << "." );
 
+	auto modelData = loadModelData(name, filename);
+
+	LOG_DEBUG( "Done loading model '" << name << "'." );
+
+	return generateModel(name, modelData.first, modelData.second, idManager);
+}
+
+std::pair<std::vector< ModelData >, AnimationSet> ModelLoader::loadModelData(const std::string& name, const std::string& filename)
+{
+	LOG_DEBUG( "Loading model data from file '" << filename << "'." );
+
 	auto modelData = std::vector< ModelData >();
 
 	// We don't currently support aiProcess_JoinIdenticalVertices or aiProcess_FindInvalidData
@@ -81,7 +92,10 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 		throw exception::Exception(msg);
 	}
 	else if ( scene->HasTextures() )
-	{		
+	{
+		// Cleanup
+		aiReleaseImport(scene);
+		
 		std::string msg = std::string("Support for meshes with embedded textures is not implemented.");
 		LOG_ERROR( msg );
 		throw exception::Exception(msg);
@@ -95,7 +109,6 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	msg << "Model has " << modelData.size() << " meshes.";
 	LOG_DEBUG( msg.str() );
 	
-	int NumVertices = 0;
 	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
 	{
 		modelData[i] = ModelData();
@@ -104,9 +117,6 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 		modelData[i].meshData = loadMesh( name, filename, i, scene->mMeshes[i], modelData[i].boneData.boneIndexMap );
 		modelData[i].textureData = loadTexture( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 		modelData[i].materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
-		
-		std::cout << "NumVertices: " << NumVertices << std::endl;
-		NumVertices += scene->mMeshes[i]->mNumVertices;
 	}
 	
 
@@ -116,9 +126,9 @@ std::unique_ptr<Model> ModelLoader::loadModel(const std::string& name, const std
 	// TODO: Should I use raw pointer instead of wrapping it in shared_ptr???
 	aiReleaseImport(scene);
 
-	LOG_DEBUG( "Done loading model '" << filename << "'." );
-
-	return generateModel(name, modelData, animationSet, idManager);
+	LOG_DEBUG( "Done loading model data for file '" << filename << "'." );
+	
+	return std::pair<std::vector< ModelData >, AnimationSet>( std::move(modelData), std::move(animationSet) );
 }
 
 std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, const std::vector<ModelData>& modelData, const AnimationSet& animationSet, IdManager& idManager)

@@ -1,6 +1,7 @@
 #include <utility>
 
 #include "models/Model.hpp"
+#include "models/ModelLoader.hpp"
 
 #include "glw/Constants.hpp"
 
@@ -40,7 +41,6 @@ Model::Model(Id id, std::string name, glw::IMesh* mesh, glw::ITexture* texture, 
 	isLocalDataLoaded_ = true;
 	
 	meshes_.push_back(mesh);
-	textures_.push_back(texture);
 	textures_.push_back(texture);
 	materials_.push_back(material);
 	
@@ -646,7 +646,94 @@ void Model::loadLocalData()
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
-	// TODO: Load local data
+	if (!filename_.empty())
+	{
+		ModelLoader modelLoader = ModelLoader(openGlDevice_);
+		auto data = modelLoader.loadModelData(name_, filename_);
+		auto& modelData = data.first;
+		auto& animationSet = data.second;
+		
+		auto meshManager = openGlDevice_->getMeshManager();
+		auto materialManager = openGlDevice_->getMaterialManager();
+		auto textureManager = openGlDevice_->getTextureManager();
+		auto animationManager = openGlDevice_->getAnimationManager();
+		
+		meshes_ = std::vector<glw::IMesh*>();
+		textures_ = std::vector<glw::ITexture*>();
+		materials_ = std::vector<glw::IMaterial*>();
+		animations_ = std::map<std::string, glw::IAnimation*>();
+		
+		for ( auto& d : modelData )
+		{
+			auto mesh = meshManager->getMesh(d.meshData.name);
+			if (mesh == nullptr)
+				mesh = meshManager->addMesh(d.meshData.name, d.meshData.vertices, d.meshData.normals, d.meshData.textureCoordinates, d.meshData.colors, d.meshData.bones, d.boneData, false);
+			
+			meshes_.push_back( mesh );
+			
+			
+			if ( !d.textureData.filename.empty() )
+			{
+				auto texture = textureManager->getTexture2D(d.textureData.filename);
+				if (texture == nullptr)
+					texture = textureManager->addTexture2D(d.textureData.filename, d.textureData.filename, d.textureData.settings, false);
+				
+				textures_.push_back( texture );
+			}
+			else
+			{
+				textures_.push_back( nullptr );
+			}
+	
+	
+			auto material = materialManager->getMaterial(d.materialData.name);
+			if (material == nullptr)
+				material = materialManager->addMaterial(d.materialData.name, d.materialData.ambient, d.materialData.diffuse, d.materialData.specular, d.materialData.emission, d.materialData.shininess, d.materialData.strength, false);
+			
+			materials_.push_back( material );
+		}
+		
+		// Create bone structure (tree structure)
+		auto rootBoneNode = animationSet.rootBoneNode;
+		
+		// Set the global inverse transformation
+		auto globalInverseTransformation = animationSet.globalInverseTransformation;
+		
+		// Load the animation information
+		for ( auto& kv : animationSet.animations)
+		{
+			auto animation = animationManager->getAnimation( kv.first );
+			
+			if (animation == nullptr)
+			{	
+				// Create animated bone node information
+				auto animatedBoneNodes = std::map< std::string, glw::AnimatedBoneNode >();
+				for ( auto& kvAnimatedBoneNode : kv.second.animatedBoneNodes )
+				{
+					animatedBoneNodes[ kvAnimatedBoneNode.first ] = glw::AnimatedBoneNode( 
+						kvAnimatedBoneNode.second.name, 
+						kvAnimatedBoneNode.second.positionTimes, 
+						kvAnimatedBoneNode.second.rotationTimes, 
+						kvAnimatedBoneNode.second.scalingTimes, 
+						kvAnimatedBoneNode.second.positions, 
+						kvAnimatedBoneNode.second.rotations, 
+						kvAnimatedBoneNode.second.scalings
+					);
+				}
+				
+				// Actually create the animation
+				animation = animationManager->addAnimation( kv.second.name, kv.second.duration, kv.second.ticksPerSecond, animatedBoneNodes, false );
+			}
+			
+			assert(animation != nullptr);
+			
+			animations_[animation->getName()] = animation;
+			
+			// TODO: add animations properly (i.e. with names specifying the animation i guess?)
+			//std::cout << "anim: " << animation->getName() << std::endl;
+		}
+	}
+	
 	isLocalDataLoaded_ = true;
 	
 	for ( auto m : meshes_ )

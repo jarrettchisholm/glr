@@ -40,6 +40,11 @@ public:
 	 */
 	std::unique_ptr<Model> loadModel(const std::string& filename, IdManager& idManager);
 	
+	/**
+	 * 
+	 */
+	std::pair<std::vector< ModelData >, AnimationSet> loadModelData(const std::string& name, const std::string& filename);
+	
 private:
 	aiLogStream stream;
 	
