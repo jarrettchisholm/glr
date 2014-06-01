@@ -75,7 +75,7 @@ private:
 	
 	IdManager idManager_;
 	
-	mutable std::mutex accessMutex_;
+	mutable std::recursive_mutex accessMutex_;
 	
 	Model* getModel(Id id) const;
 	Model* getModel(const std::string& name) const;

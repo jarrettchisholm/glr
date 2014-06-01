@@ -61,7 +61,7 @@ IModel* ModelManager::getModelTemplate(const std::string& name) const
 
 Model* ModelManager::getModel(Id id) const
 {
-	std::lock_guard<std::mutex> lock(accessMutex_);
+	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
 	
 	auto findFunction = [&id](const std::unique_ptr<Model>& node) { return node->getId() == id; };
 
@@ -80,7 +80,7 @@ Model* ModelManager::getModel(Id id) const
 
 Model* ModelManager::getModel(const std::string& name) const
 {
-	std::lock_guard<std::mutex> lock(accessMutex_);
+	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
 	
 	auto findFunction = [&name](const std::unique_ptr<Model>& node) { return node->getName() == name; };
 
@@ -99,6 +99,8 @@ Model* ModelManager::getModel(const std::string& name) const
 
 void ModelManager::loadModel(const std::string& name, const std::string& filename, bool initialize)
 {
+	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Loading model '" + filename + "'." );
 
 	auto model = getModelTemplate(name);
@@ -108,19 +110,14 @@ void ModelManager::loadModel(const std::string& name, const std::string& filenam
 		LOG_DEBUG( "Model found...No need to load." );
 		return;
 	}
-
+	
+	if (initialize)
 	{
-		std::lock_guard<std::mutex> lock(accessMutex_);
-		
-		if (initialize)
-		{
-			models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
-		}
-		else
-		{
-			models_.push_back( std::unique_ptr< Model >( new Model(idManager_.createId(), name, filename, openGlDevice_) ) );
-		}
-			
+		models_.push_back( modelLoader_->loadModel( name, filename, idManager_ ) );
+	}
+	else
+	{
+		models_.push_back( std::unique_ptr< Model >( new Model(idManager_.createId(), name, filename, openGlDevice_) ) );
 	}
 
 	LOG_DEBUG( "Done loading model '" + filename + "'." );
@@ -140,14 +137,14 @@ void ModelManager::destroyModelTemplate(IModel* model)
 
 IModel* ModelManager::createInstance(const std::string& name)
 {
+	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
+	
 	LOG_DEBUG( "Creating model instance from model template with name '" + name + "'." );
 	
 	auto model = getModel(name);
 	
 	if ( model != nullptr )
 	{
-		std::lock_guard<std::mutex> lock(accessMutex_);
-		
 		LOG_DEBUG( "Model template found." );
 		
 		std::string newName = name + std::string("_") + std::to_string(modelInstances_.size());
@@ -172,7 +169,7 @@ void ModelManager::destroyInstance(IModel* model)
 
 IModel* ModelManager::getInstance(Id id) const
 {
-	std::lock_guard<std::mutex> lock(accessMutex_);
+	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
 	
 	LOG_DEBUG( "Retrieving model instance with id '" << id << "'." );
 

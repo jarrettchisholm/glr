@@ -16,7 +16,18 @@ public:
 	}
 	;
 	
+	/**
+	 * Is called when a new terrain is added to the Terrain Manager.
+	 * 
+	 * @param terrain The new terrain that was added.
+	 */
 	virtual void terrainAdded(ITerrain* terrain) = 0;
+	
+	/**
+	 * Is called when a terrain is removed from the Terrain Manager.
+	 * 
+	 * @param terrain The terrain that was removed.
+	 */
 	virtual void terrainRemoved(ITerrain* terrain) = 0;
 };
 

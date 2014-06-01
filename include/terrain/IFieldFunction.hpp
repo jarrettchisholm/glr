@@ -17,6 +17,9 @@ public:
 	}
 	;
 
+	/**
+	 * 
+	 */
 	virtual glm::detail::float32 getNoise(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 };
 

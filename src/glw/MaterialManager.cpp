@@ -45,10 +45,10 @@ Material* MaterialManager::getMaterial(const std::string& name) const
 
 Material* MaterialManager::addMaterial(const std::string& name, bool initialize)
 {
-	LOG_DEBUG( "Loading material '" + name + "'." );
-
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
+	LOG_DEBUG( "Loading material '" + name + "'." );
+
 	auto it = materials_.find(name);
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{
@@ -75,10 +75,10 @@ Material* MaterialManager::addMaterial(
 		bool initialize
 	)
 {
-	LOG_DEBUG( "Loading material '" + name + "'." );
-
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
+	LOG_DEBUG( "Loading material '" + name + "'." );
+
 	auto it = materials_.find(name);
 	if ( it != materials_.end() && it->second.get() != nullptr )
 	{

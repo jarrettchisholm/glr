@@ -45,9 +45,9 @@ Mesh* MeshManager::getMesh(const std::string& name) const
 
 Mesh* MeshManager::addMesh(const std::string& name, bool initialize)
 {
-	LOG_DEBUG( "Loading mesh..." );
-	
 	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Loading mesh..." );
 	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )
@@ -76,9 +76,9 @@ Mesh* MeshManager::addMesh(
 		bool initialize
 	)
 {
-	LOG_DEBUG( "Loading mesh..." );
-	
 	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Loading mesh..." );
 	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )
@@ -105,9 +105,9 @@ Mesh* MeshManager::addMesh(
 		bool initialize
 	)
 {
-	LOG_DEBUG( "Loading mesh..." );
-
 	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Loading mesh..." );
 	
 	auto it = meshes_.find(name);
 	if ( it != meshes_.end() && it->second.get() != nullptr )

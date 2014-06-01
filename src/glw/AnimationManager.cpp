@@ -73,9 +73,9 @@ Animation* AnimationManager::addAnimation(const std::string& name, bool initiali
 
 Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize)
 {
-	LOG_DEBUG( "Loading animation..." );
-	
 	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Loading animation..." );
 	
 	auto it = animations_.find(name);
 	if ( it != animations_.end() && it->second.get() != nullptr )
