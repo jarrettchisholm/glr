@@ -26,7 +26,7 @@ Mesh::Mesh()
 	isDirty_ = false;
 }
 
-Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name))
+Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
 {
 	vertexBoneData_ = std::vector< VertexBoneData >();
 	boneData_ = BoneData();
@@ -56,6 +56,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
@@ -80,6 +81,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
@@ -169,6 +171,8 @@ void Mesh::pushToVideoMemory()
 		
 		glBindVertexArray(0);
 	}
+	
+	isDirty_ = false;
 }
 
 void Mesh::pullFromVideoMemory()
@@ -178,6 +182,7 @@ void Mesh::pullFromVideoMemory()
 
 void Mesh::loadLocalData()
 {
+	isLocalDataLoaded_ = true;
 }
 
 void Mesh::freeLocalData()
@@ -187,6 +192,8 @@ void Mesh::freeLocalData()
 	textureCoordinates_ = std::vector< glm::vec2 >();
 	colors_ = std::vector< glm::vec4 >();
 	vertexBoneData_ = std::vector< VertexBoneData >();
+	
+	isLocalDataLoaded_ = false;
 }
 
 void Mesh::freeVideoMemory()
@@ -372,26 +379,31 @@ void Mesh::setName(std::string name)
 void Mesh::setVertices(std::vector< glm::vec3 > vertices)
 {
 	vertices_ = std::move(vertices);
+	isDirty_ = true;
 }
 
 void Mesh::setNormals(std::vector< glm::vec3 > normals)
 {
 	normals_ = std::move(normals);
+	isDirty_ = true;
 }
 
 void Mesh::setTextureCoordinates(std::vector< glm::vec2 > textureCoordinates)
 {
 	textureCoordinates_ = std::move(textureCoordinates);
+	isDirty_ = true;
 }
 
 void Mesh::setColors(std::vector< glm::vec4 > colors)
 {
 	colors_ = std::move(colors);
+	isDirty_ = true;
 }
 
 void Mesh::setVertexBoneData(std::vector< VertexBoneData > vertexBoneData)
 {
 	vertexBoneData_ = std::move(vertexBoneData);
+	isDirty_ = true;
 }
 
 std::vector< glm::vec3 >& Mesh::getVertices()
@@ -441,6 +453,7 @@ void Mesh::deserialize(const std::string& filename)
 void Mesh::deserialize(serialize::TextInArchive& inArchive)
 {
 	inArchive >> *this;
+	loadLocalData();
 }
 
 }

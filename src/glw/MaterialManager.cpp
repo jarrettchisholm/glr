@@ -43,7 +43,7 @@ Material* MaterialManager::getMaterial(const std::string& name) const
 	return nullptr;
 }
 
-Material* MaterialManager::addMaterial(const std::string& name, bool initialize)
+Material* MaterialManager::addMaterial(const std::string& name)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -86,7 +86,7 @@ Material* MaterialManager::addMaterial(
 		return it->second.get();
 	}
 	
-	auto material = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength));
+	auto material = std::unique_ptr<Material>(new Material(openGlDevice_, name, ambient, diffuse, specular, emission, shininess, strength, initialize));
 	auto materialPointer = material.get();
 	
 	materials_[name] = std::move(material);

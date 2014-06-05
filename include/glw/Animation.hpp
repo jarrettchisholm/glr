@@ -67,6 +67,10 @@ public:
 	
 	void generateIdentityBoneTransforms(glmd::uint32 numBones);
 	
+	void setDuration(glm::detail::float64 duration);
+	void setTicksPerSecond(glm::detail::float64 ticksPerSecond);
+	void setAnimatedBoneNodes(std::map< std::string, AnimatedBoneNode > animatedBoneNodes);
+	
 	virtual const std::string& getName() const;
 	
 	virtual void serialize(const std::string& filename);

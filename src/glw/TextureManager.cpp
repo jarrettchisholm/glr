@@ -74,7 +74,7 @@ Texture2DArray* TextureManager::getTexture2DArray(const std::string& name) const
 	return nullptr;
 }
 
-Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSettings settings, bool initialize)
+Texture2D* TextureManager::addTexture2D(const std::string& name, const TextureSettings settings)
 {
 	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
 	
@@ -124,7 +124,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, const std::stri
 		throw exception::Exception( msg );
 	}
 
-	return addTexture2D( name, image.get(), settings );
+	return addTexture2D( name, image.get(), settings, initialize );
 }
 
 Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Image* image, const TextureSettings settings, bool initialize)
@@ -152,7 +152,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	LOG_DEBUG( msg.str() );
 
 	LOG_DEBUG( "Creating texture 2d." );
-	auto texture = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name, settings));
+	auto texture = std::unique_ptr<Texture2D>(new Texture2D(image, openGlDevice_, name, settings, initialize));
 	auto texturePointer = texture.get();
 	
 	textures2D_[name] = std::move(texture);
@@ -160,7 +160,7 @@ Texture2D* TextureManager::addTexture2D(const std::string& name, utilities::Imag
 	return texturePointer;
 }
 
-Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const TextureSettings settings, bool initialize)
+Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const TextureSettings settings)
 {
 	std::lock_guard<std::recursive_mutex> lock(accessMutex_);
 	
@@ -223,7 +223,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 		imagesAsPointers.push_back( image.get() );
 	}
 
-	return addTexture2DArray( name, imagesAsPointers, settings );
+	return addTexture2DArray( name, imagesAsPointers, settings, initialize );
 }
 
 Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const std::vector<utilities::Image*>& images, const TextureSettings settings, bool initialize)
@@ -244,7 +244,7 @@ Texture2DArray* TextureManager::addTexture2DArray(const std::string& name, const
 	LOG_DEBUG( msg.str() );
 
 	LOG_DEBUG( "Creating texture 2d array." );
-	auto texture = std::unique_ptr<Texture2DArray>(new Texture2DArray(images, openGlDevice_, name, settings));
+	auto texture = std::unique_ptr<Texture2DArray>(new Texture2DArray(images, openGlDevice_, name, settings, initialize));
 	auto texturePointer = texture.get();
 	
 	textures2DArray_[name] = std::move(texture);

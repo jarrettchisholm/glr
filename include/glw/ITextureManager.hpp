@@ -90,12 +90,10 @@ public:
 	 * 
 	 * @param name
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
-	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return The empty Texture2D object.
 	 */
-	virtual Texture2D* addTexture2D(const std::string& name, const TextureSettings settings = TextureSettings(), bool initialize = true) = 0;
+	virtual Texture2D* addTexture2D(const std::string& name, const TextureSettings settings = TextureSettings()) = 0;
 	
 	/**
 	 * Creates a texture with the given name and using the provided texture settings.  It will fill the texture with the data
@@ -151,12 +149,10 @@ public:
 	 * 
 	 * @param name
 	 * @param settings
-	 * @param initialize If true, will initialize all of the resources required for this texture.  Otherwise, it will
-	 * just create the texture and return it (without initializing it).
 	 * 
 	 * @return The empty Texture2DArray object.
 	 */
-	virtual Texture2DArray* addTexture2DArray(const std::string& name, const TextureSettings settings = TextureSettings(), bool initialize = true) = 0;
+	virtual Texture2DArray* addTexture2DArray(const std::string& name, const TextureSettings settings = TextureSettings()) = 0;
 	
 	/**
 	 * Creates a texture 2d array with the given name and using the provided texture settings.  It will fill the texture array with the data

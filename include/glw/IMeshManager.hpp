@@ -43,12 +43,10 @@ public:
 	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name The name to use for the new mesh.
-	 * @param initialize If true, will initialize all of the resources required for this mesh.  Otherwise, it will
-	 * just create the mesh and return it (without initializing it).
 	 * 
 	 * @return A Mesh object.
 	 */
-	virtual Mesh* addMesh(const std::string& name, bool initialize = true) = 0;
+	virtual Mesh* addMesh(const std::string& name) = 0;
 	
 	/**
 	 * Creates a mesh with the given name and using the provided mesh data.

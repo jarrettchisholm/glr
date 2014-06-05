@@ -43,7 +43,7 @@ Mesh* MeshManager::getMesh(const std::string& name) const
 	return nullptr;
 }
 
-Mesh* MeshManager::addMesh(const std::string& name, bool initialize)
+Mesh* MeshManager::addMesh(const std::string& name)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -88,7 +88,7 @@ Mesh* MeshManager::addMesh(
 	}
 
 	LOG_DEBUG( "Creating Mesh." );
-	auto mesh = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData));
+	auto mesh = std::unique_ptr<Mesh>(new Mesh(openGlDevice_, name, vertices, normals, textureCoordinates, colors, bones, boneData, initialize));
 	auto meshPointer = mesh.get();
 	
 	meshes_[name] = std::move(mesh);

@@ -32,7 +32,7 @@ public:
 	 * Basic constructor.  The creator of the Mesh will have to set the data, and then call
 	 * 'allocateVideoMemory()' and 'pushToVideoMemory()' before this mesh will render properly.
 	 */
-	Mesh(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
+	Mesh(IOpenGlDevice* openGlDevice, std::string name);
 	
 	/**
 	 * Standard constructor.  

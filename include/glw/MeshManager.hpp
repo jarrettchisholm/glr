@@ -26,7 +26,7 @@ public:
 	virtual ~MeshManager();
 
 	virtual Mesh* getMesh(const std::string& name) const;
-	virtual Mesh* addMesh(const std::string& name, bool initialize = true);
+	virtual Mesh* addMesh(const std::string& name);
 	virtual Mesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 

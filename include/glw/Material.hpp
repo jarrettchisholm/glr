@@ -26,7 +26,7 @@ class IOpenGlDevice;
 class Material : public IMaterial
 {
 public:
-	Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize = true);
+	Material(IOpenGlDevice* openGlDevice, std::string name);
 	Material(
 		IOpenGlDevice* openGlDevice,
 		std::string name,

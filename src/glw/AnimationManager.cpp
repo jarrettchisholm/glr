@@ -63,7 +63,7 @@ Animation* AnimationManager::addAnimation(const std::string& name, bool initiali
 	}
 
 	LOG_DEBUG( "Creating Animation." );
-	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name));
+	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, initialize));
 	auto animationPointer = animation.get();
 	
 	animations_[name] = std::move(animation);
@@ -85,7 +85,7 @@ Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::
 	}
 
 	LOG_DEBUG( "Creating Animation." );
-	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, duration, ticksPerSecond, animatedBoneNodes));
+	auto animation = std::unique_ptr<Animation>(new Animation(openGlDevice_, name, duration, ticksPerSecond, animatedBoneNodes, initialize));
 	auto animationPointer = animation.get();
 	
 	animations_[name] = std::move(animation);

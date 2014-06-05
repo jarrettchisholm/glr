@@ -22,7 +22,7 @@ Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), buf
 	isDirty_ = false;
 }
 
-Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
+Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
@@ -45,6 +45,7 @@ Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
@@ -79,6 +80,8 @@ void Texture2D::setData(utilities::Image* image)
 {
 	image_ = *image;
 	internalFormat_ = utilities::getOpenGlImageFormat(image_.format);
+	
+	isDirty_ = true;
 }
 
 utilities::Image* Texture2D::getData()
@@ -114,6 +117,8 @@ void Texture2D::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully loaded texture." );
 	}
+	
+	isDirty_ = false;
 }
 
 void Texture2D::pullFromVideoMemory()
@@ -135,12 +140,15 @@ void Texture2D::pullFromVideoMemory()
 
 void Texture2D::loadLocalData()
 {
+	isLocalDataLoaded_ = true;
 }
 
 void Texture2D::freeLocalData()
 {
 	// Clear up the data, but leave the width, height, and format unchanged
 	image_.data = std::vector<char>();
+	
+	isLocalDataLoaded_ = false;
 }
 
 void Texture2D::freeVideoMemory()
@@ -235,6 +243,7 @@ void Texture2D::deserialize(const std::string& filename)
 void Texture2D::deserialize(serialize::TextInArchive& inArchive)
 {
 	inArchive >> *this;
+	loadLocalData();
 }
 
 /*

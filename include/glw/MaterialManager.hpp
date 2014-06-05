@@ -28,7 +28,7 @@ public:
 	virtual ~MaterialManager();
 
 	virtual Material* getMaterial(const std::string& name) const;
-	virtual Material* addMaterial(const std::string& name, bool initialize = true);
+	virtual Material* addMaterial(const std::string& name);
 	virtual Material* addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,

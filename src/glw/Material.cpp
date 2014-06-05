@@ -22,7 +22,7 @@ Material::Material() : bufferId_(0)
 	isDirty_ = false;
 }
 
-Material::Material(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
+Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
 {
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
@@ -94,6 +94,8 @@ void Material::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully pushed data for material '" + name_ + "' to video memory.  Buffer id: " << bufferId_ );
 	}
+	
+	isDirty_ = false;
 }
 
 void Material::pullFromVideoMemory()
@@ -251,6 +253,7 @@ void Material::deserialize(const std::string& filename)
 void Material::deserialize(serialize::TextInArchive& inArchive)
 {
 	inArchive >> *this;
+	loadLocalData();
 }
 
 }

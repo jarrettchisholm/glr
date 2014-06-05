@@ -63,7 +63,11 @@ public:
 	virtual void loadLocalData() = 0;
 	
 	/**
-	 * Will free the local data used by this graphics object.
+	 * Will free local data used by this graphics object.
+	 * 
+	 * Note that some local data may be retained, at the discretion of the implementer.  Also, calling this
+	 * method does not guarantee that 'isLocalDataLoaded()' will return false (in which case, the necessary local
+	 * data for this graphics object is still loaded).
 	 * 
 	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 */

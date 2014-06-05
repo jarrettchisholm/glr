@@ -43,12 +43,10 @@ public:
 	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 * 
 	 * @param name The name to use for the new material.
-	 * @param initialize If true, will initialize all of the resources required for this material.  Otherwise, it will
-	 * just create the material and return it (without initializing it).
 	 * 
 	 * @return A Material object.
 	 */
-	virtual Material* addMaterial(const std::string& name, bool initialize = true) = 0;
+	virtual Material* addMaterial(const std::string& name) = 0;
 	
 	/**
 	 * Creates a material with the given name and using the provided material data.

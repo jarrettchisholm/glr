@@ -1,4 +1,5 @@
 #include <sstream>
+#include <utility>
 
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,10 +30,12 @@ Animation::Animation()
 	startFrame_ = 0;
 	endFrame_ = 0;
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
+	
+	loadLocalData();
 }
 
 Animation::Animation(IOpenGlDevice* openGlDevice, std::string name, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name))
@@ -47,14 +50,16 @@ Animation::Animation(IOpenGlDevice* openGlDevice, std::string name, bool initial
 	startFrame_ = 0;
 	endFrame_ = 0;
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
+		pushToVideoMemory();
 	}
 }
 
@@ -79,14 +84,16 @@ Animation::Animation(
 	// Error check - default to 25 ticks per second
 	ticksPerSecond_ = ( ticksPerSecond_ != 0.0f ? ticksPerSecond_ : 25.0f );
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
+		pushToVideoMemory();
 	}
 }
 
@@ -105,14 +112,16 @@ Animation::Animation(const Animation& other, bool initialize)
 	duration_ = other.duration_;
 	animatedBoneNodes_ = other.animatedBoneNodes_;
 	
-	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
+		pushToVideoMemory();
 	}
 }
 
@@ -139,11 +148,14 @@ void Animation::pullFromVideoMemory()
 void Animation::loadLocalData()
 {
 	currentTransforms_ = std::vector< glm::mat4 >( Constants::MAX_NUMBER_OF_BONES_PER_MESH, glm::mat4(1.0f) );
+	isLocalDataLoaded_ = true;
+	isDirty_ = true;
 }
 
 void Animation::freeLocalData()
 {
 	currentTransforms_ = std::vector< glm::mat4 >( 0 );
+	isLocalDataLoaded_ = false;
 }
 
 void Animation::freeVideoMemory()
@@ -198,6 +210,8 @@ void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformation
 			throw exception::GlException( msg );
 		}
 	}
+	
+	isDirty_ = false;
 }
 
 bool Animation::isVideoMemoryAllocated() const
@@ -237,6 +251,21 @@ void Animation::setFrameClampping(glm::detail::uint32 startFrame, glm::detail::u
 
 	startFrame_ = startFrame;
 	endFrame_ = endFrame;
+}
+
+void Animation::setDuration(glm::detail::float64 duration)
+{
+	duration_ = duration;
+}
+
+void Animation::setTicksPerSecond(glm::detail::float64 ticksPerSecond)
+{
+	ticksPerSecond_ = ticksPerSecond;
+}
+
+void Animation::setAnimatedBoneNodes(std::map< std::string, AnimatedBoneNode > animatedBoneNodes)
+{
+	animatedBoneNodes_ = std::move(animatedBoneNodes);
 }
 
 const std::string& Animation::getName() const
@@ -519,6 +548,7 @@ void Animation::deserialize(const std::string& filename)
 void Animation::deserialize(serialize::TextInArchive& inArchive)
 {
 	inArchive >> *this;
+	loadLocalData();
 }
 
 /*

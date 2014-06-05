@@ -23,7 +23,7 @@ Texture2DArray::Texture2DArray() : bufferId_(0)
 	isDirty_ = false;
 }
 
-Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
+Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
 {
 	bufferId_ = 0;
 	
@@ -50,6 +50,7 @@ Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOp
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
@@ -90,6 +91,8 @@ void Texture2DArray::setData(const std::vector<utilities::Image*>& images)
 		utilities::Image img = utilities::Image(*image);
 		images_.push_back( img );
 	}
+	
+	isDirty_ = true;
 }
 
 std::vector<utilities::Image>& Texture2DArray::getData()
@@ -135,6 +138,8 @@ void Texture2DArray::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully loaded texture 2d array." );
 	}
+	
+	isDirty_ = false;
 }
 
 void Texture2DArray::pullFromVideoMemory()
@@ -155,6 +160,7 @@ void Texture2DArray::pullFromVideoMemory()
 
 void Texture2DArray::loadLocalData()
 {
+	isLocalDataLoaded_ = true;
 }
 
 void Texture2DArray::freeLocalData()
@@ -164,6 +170,8 @@ void Texture2DArray::freeLocalData()
 	{
 		image.data = std::vector<char>();
 	}
+	
+	isLocalDataLoaded_ = false;
 }
 
 void Texture2DArray::freeVideoMemory()
@@ -300,6 +308,7 @@ void Texture2DArray::deserialize(const std::string& filename)
 void Texture2DArray::deserialize(serialize::TextInArchive& inArchive)
 {
 	inArchive >> *this;
+	loadLocalData();
 }
 
 }
