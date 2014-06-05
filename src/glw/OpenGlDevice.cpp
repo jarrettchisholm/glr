@@ -135,6 +135,17 @@ GLuint OpenGlDevice::createBufferObject(GLenum target, glmd::uint32 totalSize, c
 	glBufferData(target, totalSize, dataPointer, usage);
 	glBindBuffer(target, 0);
 	
+	GlError err = getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		releaseBufferObject( bufferId );
+		
+		std::string msg = std::string("Error while creating buffer object in OpenGl: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	
 	bufferIds_.push_back(bufferId);
 	
 	return bufferId;
@@ -147,6 +158,7 @@ void OpenGlDevice::releaseBufferObject(GLuint bufferId)
 	if (it == bufferIds_.end())
 	{
 		// warning - buffer object not present
+		LOG_WARN("Buffer object with id " << bufferId << " not present - cannot release it.");
 		return;
 	}	
 	
@@ -154,6 +166,14 @@ void OpenGlDevice::releaseBufferObject(GLuint bufferId)
 	
 	bufferIds_.erase(it);
 	glDeleteBuffers(1, &bufferId);
+	
+	GlError err = getGlError();
+	if (err.type != GL_NONE)
+	{
+		std::string msg = std::string("Error while releasing buffer object in OpenGl: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
 }
 
 GLuint OpenGlDevice::createFrameBufferObject(GLenum target, glmd::uint32 totalSize, const void* dataPointer)
@@ -164,6 +184,17 @@ GLuint OpenGlDevice::createFrameBufferObject(GLenum target, glmd::uint32 totalSi
 
 	//glBufferData(target, totalSize, dataPointer, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_FRAMEBUFFER, 0);
+	
+	GlError err = getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		releaseBufferObject( bufferId );
+		
+		std::string msg = std::string("Error while creating frame buffer object in OpenGl: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
 	
 	bufferIds_.push_back(bufferId);
 	
@@ -186,6 +217,14 @@ void OpenGlDevice::releaseFrameBufferObject(GLuint bufferId)
 	bufferIds_.erase(it);
 	glDeleteBuffers(1, &bufferId);
 	*/
+	
+	GlError err = getGlError();
+	if (err.type != GL_NONE)
+	{
+		std::string msg = std::string("Error while releasing frame buffer object in OpenGl: ") + err.name;
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
 }
 
 /**

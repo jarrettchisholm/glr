@@ -48,6 +48,7 @@ Material::Material(
 	
 	if (initialize)
 	{
+		loadLocalData();
 		allocateVideoMemory();
 		pushToVideoMemory();
 		
@@ -61,16 +62,14 @@ Material::Material(
 		}
 		else
 		{
-			std::stringstream ss;
-			ss << "Successfully loaded material.  Buffer id: " << bufferId_;
-			LOG_DEBUG( ss.str() );
+			LOG_DEBUG( "Successfully loaded material.  Buffer id: " << bufferId_ );
 		}
 	}
 }
 
 void Material::pushToVideoMemory()
 {
-	LOG_DEBUG( "loading material '" + name_ +"' into video memory." );
+	LOG_DEBUG( "loading material '" + name_ + "' into video memory." );
 	
 	MaterialData md = MaterialData();
 	md.ambient = ambient_;
@@ -80,18 +79,20 @@ void Material::pushToVideoMemory()
 	//md.shininess = shininess_;
 	//md.strength = strength_;
 	
-	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
+	glBindBuffer(GL_UNIFORM_BUFFER, bufferId_);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(MaterialData), &md);
 	
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
-	{		
-		std::string msg = std::string( "Error while push data for material '" + name_ + "' to video memory in OpenGL: " + err.name);
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
+	{
+		std::stringstream ss;
+		ss << "Error while pushing data for material '" << name_ << "' to video memory: " << err.name;
+		LOG_ERROR( ss.str() );
+		throw exception::GlException( ss.str() );
 	}
 	else
 	{
-		LOG_DEBUG( "Successfully pushed data for material '" + name_ + "' to video memory." );
+		LOG_DEBUG( "Successfully pushed data for material '" + name_ + "' to video memory.  Buffer id: " << bufferId_ );
 	}
 }
 
@@ -102,10 +103,12 @@ void Material::pullFromVideoMemory()
 
 void Material::loadLocalData()
 {
+	isLocalDataLoaded_ = true;
 }
 
 void Material::freeLocalData()
 {
+	isLocalDataLoaded_ = false;
 }
 
 void Material::freeVideoMemory()
@@ -123,7 +126,10 @@ void Material::freeVideoMemory()
 
 void Material::allocateVideoMemory()
 {
-	// TODO: Implement
+	MaterialData md = MaterialData();
+	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
+	
+	LOG_DEBUG( "Successfully allocated material memory.  Buffer id: " << bufferId_ );
 }
 
 bool Material::isVideoMemoryAllocated() const
@@ -180,31 +186,37 @@ GLuint Material::getBindPoint() const
 void Material::setAmbient(const glm::vec4& ambient)
 {
 	ambient_ = ambient;
+	isDirty_ = true;
 }
 
 void Material::setDiffuse(const glm::vec4& diffuse)
 {
 	diffuse_ = diffuse;
+	isDirty_ = true;
 }
 
 void Material::setSpecular(const glm::vec4& specular)
 {
 	specular_ = specular;
+	isDirty_ = true;
 }
 
 void Material::setEmission(const glm::vec4& emission)
 {
 	emission_ = emission;
+	isDirty_ = true;
 }
 
 void Material::setShininess(glm::detail::float32 shininess)
 {
 	shininess_ = shininess;
+	isDirty_ = true;
 }
 
 void Material::setStrength(glm::detail::float32 strength)
 {
 	strength_ = strength;
+	isDirty_ = true;
 }
 
 const std::string& Material::getName() const

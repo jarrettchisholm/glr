@@ -155,22 +155,7 @@ void Animation::allocateVideoMemory()
 {
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0], GL_STREAM_DRAW);
 	
-	GlError err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// Cleanup
-		openGlDevice_->releaseBufferObject( bufferId_ );
-		
-		std::string msg = std::string("Error while loading animation '") + name_ + std::string("' in OpenGl: ") + err.name;
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
-	}
-	else
-	{
-		std::stringstream ss;
-		ss << "Successfully loaded animation.  Buffer id: " << bufferId_;
-		LOG_DEBUG( ss.str() );
-	}
+	LOG_DEBUG( "Successfully loaded animation.  Buffer id: " << bufferId_ );
 }
 
 // TODO: Look at making this more efficient?

@@ -225,6 +225,21 @@ void Texture2DArray::allocateVideoMemory()
 	}
 	
 	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internalFormat,  image.width, image.height, images_.size(), 0, internalFormat, GL_UNSIGNED_BYTE, nullptr);
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		freeVideoMemory();
+		
+		std::string msg = std::string( "Error while allocating memory for texture '" + name_ + "' in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		LOG_DEBUG( "Successfully allocated memory for texture." );
+	}
 }
 
 bool Texture2DArray::isVideoMemoryAllocated() const

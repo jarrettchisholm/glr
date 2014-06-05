@@ -176,6 +176,21 @@ void Texture2D::allocateVideoMemory()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, settings_.textureWrapT);
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat_,  image_.width, image_.height, 0, internalFormat_, GL_UNSIGNED_BYTE, nullptr);
+	
+	GlError err = openGlDevice_->getGlError();
+	if (err.type != GL_NONE)
+	{
+		// Cleanup
+		freeVideoMemory();
+		
+		std::string msg = std::string( "Error while allocating memory for texture '" + name_ + "' in OpenGL: " + err.name);
+		LOG_ERROR( msg );
+		throw exception::GlException( msg );
+	}
+	else
+	{
+		LOG_DEBUG( "Successfully allocated memory for texture." );
+	}
 }
 
 bool Texture2D::isVideoMemoryAllocated() const
