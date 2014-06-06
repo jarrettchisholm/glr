@@ -33,6 +33,7 @@ Animation::Animation()
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	loadLocalData();
@@ -53,6 +54,7 @@ Animation::Animation(IOpenGlDevice* openGlDevice, std::string name, bool initial
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
@@ -87,6 +89,7 @@ Animation::Animation(
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
@@ -115,6 +118,7 @@ Animation::Animation(const Animation& other, bool initialize)
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
@@ -167,6 +171,8 @@ void Animation::allocateVideoMemory()
 {
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0], GL_STREAM_DRAW);
 	
+	isVideoMemoryAllocated_ = true;
+	
 	LOG_DEBUG( "Successfully loaded animation.  Buffer id: " << bufferId_ );
 }
 
@@ -216,7 +222,7 @@ void Animation::pushToVideoMemory(const std::vector< glm::mat4 >& transformation
 
 bool Animation::isVideoMemoryAllocated() const
 {
-	return (bufferId_ != 0);
+	return isVideoMemoryAllocated_;
 }
 
 bool Animation::isLocalDataLoaded() const

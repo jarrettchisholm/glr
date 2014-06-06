@@ -20,6 +20,7 @@ Texture2DArray::Texture2DArray() : bufferId_(0)
 	settings_ = TextureSettings();
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 }
 
@@ -28,6 +29,7 @@ Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, Te
 	bufferId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 }
 
@@ -36,6 +38,7 @@ Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOp
 	bufferId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (images.size() == 0)
@@ -248,11 +251,13 @@ void Texture2DArray::allocateVideoMemory()
 	{
 		LOG_DEBUG( "Successfully allocated memory for texture." );
 	}
+	
+	isVideoMemoryAllocated_ = true;
 }
 
 bool Texture2DArray::isVideoMemoryAllocated() const
 {
-	return (bufferId_ != 0);
+	return isVideoMemoryAllocated_;
 }
 
 bool Texture2DArray::isLocalDataLoaded() const

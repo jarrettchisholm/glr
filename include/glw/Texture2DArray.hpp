@@ -1,6 +1,8 @@
 #ifndef TEXTURE2DARRAY_H_
 #define TEXTURE2DARRAY_H_
 
+#include <atomic>
+
 #include <GL/glew.h>
 
 #define GLM_FORCE_RADIANS
@@ -71,8 +73,9 @@ private:
 	
 	std::vector<utilities::Image> images_;
 	
-	bool isLocalDataLoaded_;
-	bool isDirty_;
+	std::atomic<bool> isLocalDataLoaded_;
+	std::atomic<bool> isVideoMemoryAllocated_;
+	std::atomic<bool> isDirty_;
 	
 	/**
 	 * Helper method - returns true if all of the images in the vector are the same internal format, and false otherwise.

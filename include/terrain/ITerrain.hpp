@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "ISceneNode.hpp"
+#include "../models/IModel.hpp"
 #include "TerrainSettings.hpp"
 
 namespace glr
@@ -68,6 +69,11 @@ public:
 	virtual glm::detail::int32 getGridX() const = 0;
 	virtual glm::detail::int32 getGridY() const = 0;
 	virtual glm::detail::int32 getGridZ() const = 0;
+	
+	/**
+	 * Returns the model associated with this terrain.
+	 */
+	virtual models::IModel* getModel() const = 0;
 };
 
 }

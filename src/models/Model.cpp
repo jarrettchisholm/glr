@@ -115,7 +115,7 @@ void Model::copy(const Model& other)
 {
 	name_ = other.name_;
 	filename_ = other.filename_;
-	isLocalDataLoaded_ = other.isLocalDataLoaded_;
+	isLocalDataLoaded_ = other.isLocalDataLoaded_.load();
 	
 	openGlDevice_ = other.openGlDevice_;
 	

@@ -1,6 +1,8 @@
 #ifndef MATERIAL_H_
 #define MATERIAL_H_
 
+#include <atomic>
+
 #include <GL/glew.h>
 
 #include <assimp/cimport.h>
@@ -87,8 +89,9 @@ private:
 	GLuint bufferId_;
 	GLuint bindPoint_;
 	
-	bool isLocalDataLoaded_;
-	bool isDirty_;
+	std::atomic<bool> isLocalDataLoaded_;
+	std::atomic<bool> isVideoMemoryAllocated_;
+	std::atomic<bool> isDirty_;
 	
 	friend class boost::serialization::access;
 	

@@ -42,10 +42,15 @@ Terrain::~Terrain()
 
 void Terrain::freeVideoMemory()
 {
-	meshData_ = std::unique_ptr<TerrainMesh>( nullptr );
+	//meshData_ = std::unique_ptr<TerrainMesh>( nullptr );
 		
-	modelPtr_ = std::unique_ptr<models::IModel>( nullptr );
-	this->attach( (models::IModel*)nullptr );
+	//modelPtr_ = std::unique_ptr<models::IModel>( nullptr );
+	//this->attach( (models::IModel*)nullptr );
+	
+	if (modelPtr_.get() != nullptr)
+	{
+		modelPtr_->freeVideoMemory();
+	}
 }
 
 void Terrain::initialize()
@@ -134,6 +139,11 @@ void Terrain::setModel(std::unique_ptr<models::IModel> model)
 TerrainMesh* Terrain::getData()
 {
 	return meshData_.get();
+}
+
+models::IModel* Terrain::getModel() const
+{
+	return modelPtr_.get();
 }
 
 }

@@ -1,6 +1,8 @@
 #ifndef TERRAIN_H_
 #define TERRAIN_H_
 
+#include <atomic>
+
 #include "ITerrain.hpp"
 #include "BasicSceneNode.hpp"
 #include "TerrainMesh.hpp"
@@ -47,17 +49,20 @@ public:
 	void setModel(std::unique_ptr<models::IModel> model);
 	
 	TerrainMesh* getData();
+	virtual models::IModel* getModel() const;
 
 private:
-	bool isDirty_;
-	
 	glmd::int32 gridX_, gridY_, gridZ_;
 	
-	bool isActive_;
-	bool isEmptyOrSolid_;
+	std::atomic<bool> isActive_;
+	std::atomic<bool> isEmptyOrSolid_;
 	LevelOfDetail levelOfDetail_;
 
+	std::atomic<bool> isDirty_;
+
+	// The terrain object manages the memory for it's mesh
 	std::unique_ptr<glr::terrain::TerrainMesh> meshData_;
+	// The terrain object manages the memory for it's model
 	std::unique_ptr<models::IModel> modelPtr_;
 	
 	glm::detail::uint32 vaoId_;

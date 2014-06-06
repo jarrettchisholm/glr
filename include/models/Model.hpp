@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <mutex>
+#include <atomic>
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -150,7 +151,7 @@ protected:
 	glmd::uint32 startFrame_;
 	glmd::uint32 endFrame_;
 	
-	bool isLocalDataLoaded_;
+	std::atomic<bool> isLocalDataLoaded_;
 	
 	mutable std::mutex accessMutex_;
 	

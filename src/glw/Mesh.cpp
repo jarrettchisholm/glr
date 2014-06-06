@@ -23,6 +23,7 @@ Mesh::Mesh()
 	vaoId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 }
 
@@ -34,6 +35,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGl
 	vaoId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 }
 
@@ -52,6 +54,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	vaoId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
@@ -77,6 +80,7 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	vaoId_ = 0;
 	
 	isLocalDataLoaded_ = false;
+	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
 	
 	if (initialize)
@@ -327,11 +331,13 @@ void Mesh::allocateVideoMemory()
 	{
 		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
 	}
+	
+	isVideoMemoryAllocated_ = true;
 }
 
 bool Mesh::isVideoMemoryAllocated() const
 {
-	return (vaoId_ != 0);
+	return isVideoMemoryAllocated_;
 }
 
 bool Mesh::isLocalDataLoaded() const

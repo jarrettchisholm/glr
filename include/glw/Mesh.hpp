@@ -2,6 +2,7 @@
 #define MESH_H_
 
 #include <vector>
+#include <atomic>
 
 #include <GL/glew.h>
 
@@ -118,8 +119,9 @@ protected:
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboIds_[5];
 	
-	bool isLocalDataLoaded_;
-	bool isDirty_;
+	std::atomic<bool> isLocalDataLoaded_;
+	std::atomic<bool> isVideoMemoryAllocated_;
+	std::atomic<bool> isDirty_;
 	
 	std::string textureFileName_;
 

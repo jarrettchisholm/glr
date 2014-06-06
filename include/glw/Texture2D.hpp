@@ -1,6 +1,8 @@
 #ifndef TEXTURE2D_H_
 #define TEXTURE2D_H_
 
+#include <atomic>
+
 #include <GL/glew.h>
 
 #define GLM_FORCE_RADIANS
@@ -81,8 +83,9 @@ private:
 	GLuint bufferId_;
 	GLuint bindPoint_;
 	
-	bool isLocalDataLoaded_;
-	bool isDirty_;
+	std::atomic<bool> isLocalDataLoaded_;
+	std::atomic<bool> isVideoMemoryAllocated_;
+	std::atomic<bool> isDirty_;
 	
 	friend class boost::serialization::access;
 	
