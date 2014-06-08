@@ -36,9 +36,9 @@ public:
 
 	virtual void setFollowTarget(ISceneNode* target);
 	virtual ISceneNode* getFollowTarget() const;
-	virtual void generate();
-	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z);
-	virtual void generate(ITerrain* terrain);
+	virtual void generate(bool initialize = true);
+	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize = true);
+	virtual void generate(ITerrain* terrain, bool initialize = true);
 	
 	virtual void addTerrainManagerEventListener(ITerrainManagerEventListener* listener);
 	virtual void removeTerrainManagerEventListener(ITerrainManagerEventListener* listener);

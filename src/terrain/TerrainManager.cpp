@@ -533,7 +533,7 @@ ISceneNode* TerrainManager::getFollowTarget() const
 	return followTarget_;
 }
 
-void TerrainManager::generate()
+void TerrainManager::generate(bool initialize)
 {
 	removeAllTerrain();
 	
@@ -553,11 +553,11 @@ void TerrainManager::generate()
 	//serialize( std::string("testing.bin") );
 }
 
-void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z)
+void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize)
 {
 }
 
-void TerrainManager::generate(ITerrain* terrain)
+void TerrainManager::generate(ITerrain* terrain, bool initialize)
 {
 }
 
