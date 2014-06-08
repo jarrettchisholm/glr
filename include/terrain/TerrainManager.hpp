@@ -36,9 +36,9 @@ public:
 
 	virtual void setFollowTarget(ISceneNode* target);
 	virtual ISceneNode* getFollowTarget() const;
-	virtual void generate();
-	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z);
-	virtual void generate(ITerrain* terrain);
+	virtual void generate(bool initialize = true);
+	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize = true);
+	virtual void generate(ITerrain* terrain, bool initialize = true);
 	
 	virtual void addTerrainManagerEventListener(ITerrainManagerEventListener* listener);
 	virtual void removeTerrainManagerEventListener(ITerrainManagerEventListener* listener);
@@ -79,9 +79,9 @@ private:
 	LevelOfDetail getNewTerrainLod(Terrain& t);
 	bool isWithinRadius(Terrain& t, ISceneNode& n, glmd::float32 radius);
 
-	void createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
-	void createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
-	void createTerrain(const glm::ivec3& coordinates);
+	void createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z, bool initialize = true);
+	void createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z, bool initialize = true);
+	void createTerrain(const glm::ivec3& coordinates, bool initialize = true);
 	void addTerrain(Terrain* terrain);
 	void removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
 	void removeTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);

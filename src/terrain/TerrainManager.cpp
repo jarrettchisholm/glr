@@ -162,28 +162,28 @@ void TerrainManager::postOpenGlWork(std::function<void()> work)
 	openGlWorkMutex_.unlock();
 }
 
-void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z, bool initialize)
 {
 	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
 	
-	createTerrain(i, j, k);
+	createTerrain(i, j, k, initialize);
 }
 
-void TerrainManager::createTerrain(const glm::ivec3& coordinates)
+void TerrainManager::createTerrain(const glm::ivec3& coordinates, bool initialize)
 {
-	createTerrain(coordinates.x, coordinates.y, coordinates.z);
+	createTerrain(coordinates.x, coordinates.y, coordinates.z, initialize);
 }
 
-void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z, bool initialize)
 {
 	auto terrain = getTerrain(x, y, z);
 	
 	if (terrain == nullptr)
 	{
 		//std::cout << "add: " << x << ", " << y << ", " << z << std::endl;
-		terrain = new Terrain(idManager_.createId(), openGlDevice_, x, y, z);
+		terrain = new Terrain(idManager_.createId(), openGlDevice_, x, y, z, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, fieldFunction_);
 		//terrain_.push_back( std::unique_ptr<Terrain>(  ) );
 		//terrain = terrain_.back().get();
 	}
@@ -198,15 +198,142 @@ void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 
 	// MARK: Previous lambda function
 	{
-		//std::cout << "createTerrain START 1 " << std::this_thread::get_id() << std::endl;
+		auto shader = openGlDevice_->getShaderProgramManager()->getShaderProgram( std::string("voxel") );
+		assert( shader != nullptr );
 		
+		std::stringstream ss;
+		ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
+		ss << "_model";
+		
+		auto mesh = std::unique_ptr<TerrainMesh>( new TerrainMesh(openGlDevice_, ss.str()) );
+		terrain->attach(shader);
+		
+		auto meshPtr = mesh.get();
+		terrain->setMesh( std::move(mesh) );
+		terrain->translate( glm::vec3(-(glmd::float32)(constants::CHUNK_SIZE/2), 0.0f, -(glmd::float32)(constants::CHUNK_SIZE/2)) );
+		terrain->setIsActive( true );
+		
+		std::stringstream ss;
+		ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
+		terrain->setName( ss.str() );
+		
+		// in Terrain -> generate
 		VoxelChunk voxelChunk = VoxelChunk(terrain->getGridX(), terrain->getGridY(), terrain->getGridZ());
 	
-		generateNoise(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, *fieldFunction_);
+		glr::terrain::generateNoise(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, *fieldFunction_);
 		
-		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk);
+		this->isEmptyOrSolid = glr::terrain::determineIfEmptyOrSolid(voxelChunk);
+		
+		if (this->isEmptyOrSolid)
+			return;
+		
+		const std::string materialName = std::string("terrain_material_1");
+		auto material = openGlDevice_->getMaterialManager()->getMaterial(materialName);
+		if (material == nullptr)
+		{
+			material = openGlDevice_->getMaterialManager()->addMaterial(materialName);
+			assert(material != nullptr);
+			
+			auto materialData = models::MaterialData();
+			materialData.name = materialName;
+			materialData.ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+			materialData.diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+			// None of these are actually used (yet)
+			materialData.specular = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			materialData.emission = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			materialData.shininess = 1.0f;
+			materialData.strength = 1.0f;
+			
+			material->setAmbient(materialData.ambient);
+			material->setDiffuse(materialData.diffuse);
+			material->setSpecular(materialData.specular);
+			material->setEmission(materialData.emission);
+			material->setShininess(materialData.shininess);
+			material->setStrength(materialData.strength);
+		}
+		
+		auto texture = openGlDevice_->getTextureManager()->getTexture2DArray(std::string("terrain_textures_2d_array"));
+		if (texture == nullptr)
+		{
+			auto textureFilenames = std::vector<std::string>();
+			textureFilenames.push_back( std::string("terrain/cgrass2.jpg") );
+			textureFilenames.push_back( std::string("terrain/co_stone.jpg") );
+			
+			auto textureSettings = glr::glw::TextureSettings();
+			textureSettings.textureWrapS = GL_REPEAT;
+			textureSettings.textureWrapT = GL_REPEAT;
+			
+			texture = openGlDevice_->getTextureManager()->addTexture2DArray(std::string("terrain_textures_2d_array"), textureFilenames, textureSettings, false);
+			assert(texture != nullptr);
+		}
+		
+		// We wrap this pointer in a unique ptr eventually
+		auto model = new models::Model(glr::Id(), std::string(""), meshPtr, texture, material, std::vector<glw::IAnimation*>(), glw::BoneNode(), glm::mat4(), openGlDevice_, false);
+		
+		// Create the model
+		auto modelPtr = std::unique_ptr<models::IModel>( model );
+		this->attach( modelPtr.get() );
+		this->setModel( std::move(modelPtr) );
+		
+		GLint loc = shader->getVertexAttributeLocationByName( std::string("in_texBlend") );
+		assert(loc >= 0);
+		
+		meshPtr->setShaderVariableLocation( loc );
+		
+		
+		
+		// Terrain -> allocate video memory
+		if (terrain->getModel() != nullptr)
+			terrain->getModel()->allocateVideoMemory();
+		
+		// Terrain -> push to graphics
+		if (terrain->getModel() != nullptr)
+			terrain->getModel()->pushToVideoMemory();
+			
+		// Do a check after 'generate' called on terrain
+		if (terrain->isEmptyOrSolid())
+		{
+			// We don't want this terrain
+			terrainManager_->removeTerrain(terrain);
+		}
+		
+		
+		
+		// terrain manager stuff
+		if (initialize)
+		{
+			terrain->generate();
+			
+			if (!terrain->isEmptyOrSolid())
+			{
+				// TODO: We may need to split up between terrain that is 'render ready' and terrain that still needs loading...
+				this->addTerrain( terrain );
+				
+				auto function = [=] {
+					terrain->getModel()->allocateVideoMemory();
+					terrain->getModel()->pushToVideoMemory();
+				};
+				
+				postOpenGlWork( function );
+			}
+			else
+			{
+				delete terrain;
+			}
+		}
+		else
+		{
+			this->addTerrain( terrain );
+		}
+		
+		// What to do with this stuff now...?
+		/*
+		VoxelChunk voxelChunk = VoxelChunk(terrain->getGridX(), terrain->getGridY(), terrain->getGridZ());
+	
+		glr::terrain::generateNoise(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, *fieldFunction_);
+		
+		bool isEmptyOrSolid = glr::terrain::determineIfEmptyOrSolid(voxelChunk);
 
-		//std::cout << "createTerrain START 2 " << std::this_thread::get_id() << std::endl;
 		if (!isEmptyOrSolid)
 		{
 			auto vertices = std::vector< glm::vec3 >();
@@ -356,7 +483,7 @@ void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 		{
 			delete terrain;
 		}
-		//std::cout << "createTerrain END " << std::this_thread::get_id() << std::endl;
+		*/
 	}
 }
 
@@ -533,7 +660,7 @@ ISceneNode* TerrainManager::getFollowTarget() const
 	return followTarget_;
 }
 
-void TerrainManager::generate()
+void TerrainManager::generate(bool initialize)
 {
 	removeAllTerrain();
 	
@@ -543,7 +670,7 @@ void TerrainManager::generate()
 		{
 			for (int k=0; k < terrainSettings_.width; k++)
 			{
-				createTerrain( i, j, k );
+				createTerrain( i, j, k, initialize );
 			}
 		}
 		std::cout << "MARK: " << i << std::endl;
@@ -553,11 +680,11 @@ void TerrainManager::generate()
 	//serialize( std::string("testing.bin") );
 }
 
-void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z)
+void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize)
 {
 }
 
-void TerrainManager::generate(ITerrain* terrain)
+void TerrainManager::generate(ITerrain* terrain, bool initialize)
 {
 }
 

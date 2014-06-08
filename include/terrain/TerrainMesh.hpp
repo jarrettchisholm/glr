@@ -31,7 +31,8 @@ public:
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< glm::vec4 > texBlendingData,
-		GLint shaderVariableLocation
+		GLint shaderVariableLocation,
+		bool initialize = true
 	);
 	virtual ~TerrainMesh();
 	

@@ -80,9 +80,9 @@ public:
 	 * 
 	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 */
-	virtual void generate() = 0;
-	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z) = 0;
-	virtual void generate(ITerrain* terrain) = 0;
+	virtual void generate(bool initialize = true) = 0;
+	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize = true) = 0;
+	virtual void generate(ITerrain* terrain, bool initialize = true) = 0;
 	
 	virtual void addTerrainManagerEventListener(ITerrainManagerEventListener* listener) = 0;
 	virtual void removeTerrainManagerEventListener(ITerrainManagerEventListener* listener) = 0;
