@@ -480,15 +480,14 @@ void TerrainManager::update(glmd::uint32 maxUpdates)
 void TerrainManager::render()
 {
 	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
+	//int numV = 0;
 	for ( auto& terrain : terrain_ )
 	{
-		//if (terrain.get() != nullptr)
-		//{
-		//	terrain->render();
-		//}
-		
 		terrain->render();
+		//numV += terrain->getData()->getVertices().size();
 	}
+	//std::cout << "DONE: " << numV << std::endl;
 }
 
 void TerrainManager::setFollowTarget(ISceneNode* target)

@@ -224,7 +224,7 @@ void BasicSceneNode::render()
 	{
 		if (shaderProgram_ != nullptr)
 		{
-			GLint bindPoint = shaderProgram_->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
+			//GLint bindPoint = shaderProgram_->getBindPointByBindingName( shaders::IShader::BIND_TYPE_MATERIAL );
 			shaderProgram_->bind();
 
 			int modelMatrixLocation = glGetUniformLocation(shaderProgram_->getGLShaderProgramId(), "modelMatrix");
