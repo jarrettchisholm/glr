@@ -87,6 +87,8 @@ public:
 	virtual void addTerrainManagerEventListener(ITerrainManagerEventListener* listener) = 0;
 	virtual void removeTerrainManagerEventListener(ITerrainManagerEventListener* listener) = 0;
 	
+	virtual void moveTerrainFromProcessedToReady(ITerrain* terrain) = 0;
+	
 	virtual void serialize(const std::string& filename) = 0;
 	virtual void deserialize(const std::string& filename) = 0;
 	

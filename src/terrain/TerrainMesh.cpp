@@ -23,7 +23,8 @@ TerrainMesh::TerrainMesh(glw::IOpenGlDevice* openGlDevice,
 		std::vector< glm::vec2 > textureCoordinates,
 		std::vector< glm::vec4 > colors,
 		std::vector< glm::vec4 > texBlendingData,
-		GLint shaderVariableLocation
+		GLint shaderVariableLocation,
+		bool initialize
 	)
 	: Mesh(openGlDevice, std::move(name)), texBlendingData_(std::move(texBlendingData)), shaderVariableLocation_(shaderVariableLocation)
 {
@@ -36,8 +37,12 @@ TerrainMesh::TerrainMesh(glw::IOpenGlDevice* openGlDevice,
 	
 	texBlendVboId_ = 0;
 	
-	allocateVideoMemory();
-	pushToVideoMemory();
+	if (initialize)
+	{
+		loadLocalData();
+		allocateVideoMemory();
+		pushToVideoMemory();
+	}
 }
 
 TerrainMesh::~TerrainMesh()
@@ -138,6 +143,7 @@ void TerrainMesh::allocateVideoMemory()
 void TerrainMesh::setTextureBlendingData(std::vector< glm::vec4 > texBlendingData)
 {
 	texBlendingData_ = std::move(texBlendingData);
+	isDirty_ = true;
 }
 
 void TerrainMesh::setShaderVariableLocation(GLint shaderVariableLocation)

@@ -63,6 +63,8 @@ void TerrainManager::initialize()
 	}
 	
 	terrain_ = std::vector< std::unique_ptr<Terrain> >();
+	terrainToBeProcessed_ = std::vector< std::unique_ptr<Terrain> >();
+	eventListeners_ = std::vector< ITerrainManagerEventListener* >();
 	
 	idManager_ = IdManager();
 
@@ -162,210 +164,99 @@ void TerrainManager::postOpenGlWork(std::function<void()> work)
 	openGlWorkMutex_.unlock();
 }
 
-void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z, bool initialize)
 {
 	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
 	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
 	
-	createTerrain(i, j, k);
+	createTerrain(i, j, k, initialize);
 }
 
-void TerrainManager::createTerrain(const glm::ivec3& coordinates)
+void TerrainManager::createTerrain(const glm::ivec3& coordinates, bool initialize)
 {
-	createTerrain(coordinates.x, coordinates.y, coordinates.z);
+	createTerrain(coordinates.x, coordinates.y, coordinates.z, initialize);
 }
 
-void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z, bool initialize)
 {
+	// Make sure this terrain doesn't already exist in the render list
 	auto terrain = getTerrain(x, y, z);
 	
-	if (terrain == nullptr)
+	if (terrain != nullptr)
 	{
-		//std::cout << "add: " << x << ", " << y << ", " << z << std::endl;
-		terrain = new Terrain(idManager_.createId(), openGlDevice_, x, y, z);
-		//terrain_.push_back( std::unique_ptr<Terrain>(  ) );
-		//terrain = terrain_.back().get();
-	}
-	else
-	{
-		terrainMutex_.lock();
-		if (!terrain->isActive())
-			terrain->setIsActive( true );
-		terrainMutex_.unlock();
+		LOG_DEBUG("Terrain already exists in render list: " << x << ", " << y << ", " << z);
 		return;
 	}
-
-	// MARK: Previous lambda function
-	{
-		//std::cout << "createTerrain START 1 " << std::this_thread::get_id() << std::endl;
-		
-		VoxelChunk voxelChunk = VoxelChunk(terrain->getGridX(), terrain->getGridY(), terrain->getGridZ());
 	
-		generateNoise(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, *fieldFunction_);
-		
-		bool isEmptyOrSolid = determineIfEmptyOrSolid(voxelChunk);
-
-		//std::cout << "createTerrain START 2 " << std::this_thread::get_id() << std::endl;
-		if (!isEmptyOrSolid)
+	// Check to see if it exists in the 'to be processed' list
+	terrain = getTerrainToBeProcessed(x, y, z);
+	
+	// If it doesn't, then we create it
+	if (terrain == nullptr)
+	{
 		{
-			auto vertices = std::vector< glm::vec3 >();
-			auto normals = std::vector< glm::vec3 >();
-			auto textureBlendingValues = std::vector< glm::vec4 >();
+			std::lock_guard<std::mutex> lock(terrainToBeProcessedMutex_);
+			terrainToBeProcessed_.push_back( 
+				std::unique_ptr<Terrain>( new Terrain(idManager_.createId(), openGlDevice_, x, y, z, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, fieldFunction_, voxelChunkMeshGenerator_.get()) )
+			);
 			
-			voxelChunkMeshGenerator_->generateMesh(voxelChunk, terrainSettings_.length, terrainSettings_.width, terrainSettings_.height, vertices, normals, textureBlendingValues);
-
-			auto shader = openGlDevice_->getShaderProgramManager()->getShaderProgram( std::string("voxel") );
-			assert( shader != nullptr );
+			terrain = terrainToBeProcessed_.back().get();
+		}
+		
+		auto shader = openGlDevice_->getShaderProgramManager()->getShaderProgram( std::string("voxel") );
+		assert( shader != nullptr );
+		
+		terrain->attach(shader);
+		
+		std::stringstream ss;
+		ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
+		terrain->setName( ss.str() );
+		
+		// terrain manager stuff
+		if (initialize)
+		{
+			terrain->generate();
 			
-			std::stringstream ss;
-			ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
-			ss << "_model";
-			
-			auto mesh = std::unique_ptr<TerrainMesh>( new TerrainMesh(openGlDevice_, ss.str()) );
-			mesh->setVertices( vertices );
-			mesh->setNormals( normals );
-			mesh->setTextureBlendingData( textureBlendingValues );
-			
-			const std::string materialName = std::string("terrain_material_1");
-			auto material = openGlDevice_->getMaterialManager()->getMaterial(materialName);
-			if (material == nullptr)
+			if (!terrain->isEmptyOrSolid())
 			{
-				material = openGlDevice_->getMaterialManager()->addMaterial(materialName);
-				assert(material != nullptr);
+				auto function = [=] {
+					terrain->makeReadyForRender();
+					this->moveTerrainFromProcessedToReady( terrain );
+				};
 				
-				auto materialData = models::MaterialData();
-				materialData.name = materialName;
-				materialData.ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-				materialData.diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-				// None of these are actually used (yet)
-				materialData.specular = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-				materialData.emission = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-				materialData.shininess = 1.0f;
-				materialData.strength = 1.0f;
+				postOpenGlWork( function );
 				
-				material->setAmbient(materialData.ambient);
-				material->setDiffuse(materialData.diffuse);
-				material->setSpecular(materialData.specular);
-				material->setEmission(materialData.emission);
-				material->setShininess(materialData.shininess);
-				material->setStrength(materialData.strength);
+				sendAddedTerrainEventToEventListeners(terrain);
 			}
-			
-			terrain->attach(shader);
-			
-			auto meshPtr = mesh.get();
-			terrain->setMesh( std::move(mesh) );
-			
-			//glmd::float32 posX = (glmd::float32)(terrain->getGridX()*constants::CHUNK_SIZE) * constants::RESOLUTION;
-			//glmd::float32 posY = (glmd::float32)(terrain->getGridY()*constants::CHUNK_SIZE) * constants::RESOLUTION;
-			//glmd::float32 posZ = (glmd::float32)(terrain->getGridZ()*constants::CHUNK_SIZE) * constants::RESOLUTION;
-			
-			// Note: We don't need to set position, as the model vertices already have the correct positions
-			// TODO: Do we want to remove the positions from the vertices, and instead store the 'relative origin' position in the scene node (i.e. this Terrain object)?
-			//std::cout << posX << ", " << posY << ", " << posZ << std::endl;
-			//this->setPosition(posX, posY, posZ);
-			
-			// Center the node
-			terrain->translate( glm::vec3(-(glmd::float32)(constants::CHUNK_SIZE/2), 0.0f, -(glmd::float32)(constants::CHUNK_SIZE/2)) );
-			
-			terrain->setIsActive( true );
-			auto function = [=]() {
-				LOG_DEBUG( "Pushing terrain to graphics card." );
-
-				auto texture = openGlDevice_->getTextureManager()->getTexture2DArray(std::string("terrain_textures_2d_array"));
-				if (texture == nullptr)
-				{
-					auto textureFilenames = std::vector<std::string>();
-					textureFilenames.push_back( std::string("terrain/cgrass2.jpg") );
-					textureFilenames.push_back( std::string("terrain/co_stone.jpg") );
-					
-					auto textureSettings = glr::glw::TextureSettings();
-					textureSettings.textureWrapS = GL_REPEAT;
-					textureSettings.textureWrapT = GL_REPEAT;
-					
-					texture = openGlDevice_->getTextureManager()->addTexture2DArray(std::string("terrain_textures_2d_array"), textureSettings);
-					
-					assert(texture != nullptr);
-					
-					const std::string& basepath = openGlDevice_->getOpenGlDeviceSettings().defaultTextureDir;
-				
-					utilities::ImageLoader il = utilities::ImageLoader();
-					
-					auto images = std::vector< std::unique_ptr<utilities::Image> >();
-					for (auto& s : textureFilenames)
-					{
-						auto image = il.loadImageData(basepath + s);
-						if (image.get() == nullptr)
-						{
-							// Cleanup
-							images.clear();
-							std::string msg = std::string( "Unable to load texture for texture 2d array: " + s );
-							LOG_ERROR( msg );
-							throw exception::Exception( msg );
-						}
-						
-						images.push_back( std::move(image) );
-					}
-					
-					auto imagesAsPointers = std::vector<utilities::Image*>();
-					for (auto& image : images)
-					{
-						imagesAsPointers.push_back( image.get() );
-					}
-					
-					texture->setData( imagesAsPointers );
-					
-					texture->allocateVideoMemory();
-					texture->pushToVideoMemory();
-				}
-				
-				// We wrap this pointer in a unique ptr eventually
-				auto model = new models::Model(glr::Id(), std::string(""), meshPtr, texture, material, std::vector<glw::IAnimation*>(), glw::BoneNode(), glm::mat4(), openGlDevice_);
-				
-				// Create the model
-				auto modelPtr = std::unique_ptr<models::IModel>( model );
-				terrain->attach( modelPtr.get() );
-				terrain->setModel( std::move(modelPtr) );
-				
-				// TODO: Load material only once
-				if (material->getBufferId() == 0)
-				{
-					material->allocateVideoMemory();
-					material->pushToVideoMemory();
-				}
-				
-				GLint loc = shader->getVertexAttributeLocationByName( std::string("in_texBlend") );
-				assert(loc >= 0);
-				
-				meshPtr->setShaderVariableLocation( loc );
-				
-				meshPtr->allocateVideoMemory();
-				meshPtr->pushToVideoMemory();
-				
-				std::stringstream ss;
-				ss << "terrain_" << terrain->getGridX() << "_" << terrain->getGridY() << "_" << terrain->getGridZ();
-				terrain->setName( ss.str() );
-				
-				this->addTerrain( terrain );
-			};
-
-			postOpenGlWork( function );
+			else
+			{
+				this->removeTerrainToBeProcessedAndReturn( terrain );
+			}
 		}
 		else
 		{
-			delete terrain;
+			sendAddedTerrainEventToEventListeners(terrain);
 		}
-		//std::cout << "createTerrain END " << std::this_thread::get_id() << std::endl;
+	}
+	else
+	{
+		LOG_DEBUG("Terrain already exists in 'to be processed' list: " << x << ", " << y << ", " << z);
 	}
 }
 
 void TerrainManager::addTerrain(Terrain* terrain)
 {
-	terrainMutex_.lock();
-	auto up = std::unique_ptr<Terrain>( terrain );
-	terrain_.push_back( std::move(up) );
-	terrainMutex_.unlock();
+	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
+	terrain_.push_back( std::unique_ptr<Terrain>( terrain ) );
+}
+
+void TerrainManager::addTerrain(std::unique_ptr<Terrain> terrain)
+{
+	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
+	terrain_.push_back( std::move(terrain) );
 }
 
 void TerrainManager::removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
@@ -382,42 +273,49 @@ void TerrainManager::removeTerrain(const glm::ivec3& coordinates)
 	removeTerrain(coordinates.x, coordinates.y, coordinates.z);
 }
 
+// Immediately removes the terrain from the render list and ensures its video memory is freed before it is destroyed
 void TerrainManager::removeTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	auto terrain = getTerrain(x, y, z);
+	auto terrain = removeTerrainAndReturn(x, y, z);
 	
-	if (terrain != nullptr)
+	// Removes the terrain from the render list and ensures its video memory is freed before it is destroyed
+	if (terrain.get() != nullptr)
 	{
-		terrainMutex_.lock();
+		auto p = terrain.release();
 		
-		if (terrain->isActive())
-		{			
-			terrain->setIsActive( false );
-			
-			// MARK: Previous lambda function
-			{
-				//std::cout << "remove: " << x << ", " << y << ", " << z << std::endl;
-				//std::cout << "removeTerrain START " << std::this_thread::get_id() << std::endl;
-				
-				auto f = [=]() {
-					terrain->freeVideoMemory();
-					this->removeTerrain( terrain );
-				};
-				
-				
-				postOpenGlWork( f );
-				//std::cout << "removeTerrain END " << std::this_thread::get_id() << std::endl;
-				//this->openGlLoader_->postWork( std::bind(&Terrain::freeVideoMemory, c) );
-			}
-		}
+		auto f = [=]() {
+			auto t = std::unique_ptr<Terrain>( p );
+			t->freeVideoMemory();
+		};
 		
-		terrainMutex_.unlock();
+		postOpenGlWork( f );
 	}
 }
 
-void TerrainManager::removeTerrain(Terrain* terrain)
+std::unique_ptr<Terrain> TerrainManager::removeTerrainAndReturn(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	terrainMutex_.lock();
+	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
+	auto retVal = std::unique_ptr<Terrain>();
+	
+	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	
+	auto it = std::find_if(terrain_.begin(), terrain_.end(), findFunction);
+	
+	if (it != terrain_.end())
+	{
+		retVal = std::move(*it);
+		terrain_.erase(it);
+	}
+	
+	return std::move(retVal);
+}
+
+std::unique_ptr<Terrain> TerrainManager::removeTerrainAndReturn(Terrain* terrain)
+{
+	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
+	auto retVal = std::unique_ptr<Terrain>();
 	
 	auto findFunction = [terrain](const std::unique_ptr<Terrain>& node) { return node.get() == terrain; };
 	
@@ -425,10 +323,49 @@ void TerrainManager::removeTerrain(Terrain* terrain)
 	
 	if (it != terrain_.end())
 	{
+		retVal = std::move(*it);
 		terrain_.erase(it);
 	}
+	
+	return std::move(retVal);
+}
 
-	terrainMutex_.unlock();
+std::unique_ptr<Terrain> TerrainManager::removeTerrainToBeProcessedAndReturn(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+{
+	std::lock_guard<std::mutex> lock(terrainToBeProcessedMutex_);
+	
+	auto retVal = std::unique_ptr<Terrain>();
+	
+	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	
+	auto it = std::find_if(terrainToBeProcessed_.begin(), terrainToBeProcessed_.end(), findFunction);
+	
+	if (it != terrainToBeProcessed_.end())
+	{
+		retVal = std::move(*it);
+		terrainToBeProcessed_.erase(it);
+	}
+	
+	return std::move(retVal);
+}
+
+std::unique_ptr<Terrain> TerrainManager::removeTerrainToBeProcessedAndReturn(Terrain* terrain)
+{
+	std::lock_guard<std::mutex> lock(terrainToBeProcessedMutex_);
+	
+	auto retVal = std::unique_ptr<Terrain>();
+	
+	auto findFunction = [terrain](const std::unique_ptr<Terrain>& node) { return node.get() == terrain; };
+	
+	auto it = std::find_if(terrainToBeProcessed_.begin(), terrainToBeProcessed_.end(), findFunction);
+	
+	if (it != terrainToBeProcessed_.end())
+	{
+		retVal = std::move(*it);
+		terrainToBeProcessed_.erase(it);
+	}
+	
+	return std::move(retVal);
 }
 
 void TerrainManager::removeAllTerrain()
@@ -436,6 +373,16 @@ void TerrainManager::removeAllTerrain()
 	// TODO: Implement
 	//assert(0);
 	idManager_ = IdManager();
+}
+
+void TerrainManager::moveTerrainFromProcessedToReady(ITerrain* terrain)
+{
+	auto t = removeTerrainToBeProcessedAndReturn( dynamic_cast<Terrain*>( terrain ) );
+	
+	if (t.get() != nullptr)
+	{
+		addTerrain( std::move(t) );
+	}
 }
 
 Terrain* TerrainManager::getTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
@@ -458,12 +405,11 @@ Terrain* TerrainManager::getTerrain(const glm::ivec3& coordinates)
 
 Terrain* TerrainManager::getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 {
-	//std::cout << "getTerrain START " << std::this_thread::get_id() << std::endl;
+	std::lock_guard<std::mutex> lock(terrainMutex_);
+	
 	Terrain* retVal = nullptr;
 	
-	terrainMutex_.lock();
-	
-	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->isActive() && node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
 	
 	auto it = std::find_if(terrain_.begin(), terrain_.end(), findFunction);
 	
@@ -472,12 +418,45 @@ Terrain* TerrainManager::getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 		retVal = it->get();
 	}
 
-	terrainMutex_.unlock();
-	//std::cout << "getTerrain END " << std::this_thread::get_id() << std::endl;
 	return retVal;
 }
 
-//bool saved = false;
+Terrain* TerrainManager::getTerrainToBeProcessed(glmd::float32 x, glmd::float32 y, glmd::float32 z)
+{
+	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
+	
+	i += terrainSettings_.length/2;
+	j += terrainSettings_.width/2;
+	k += terrainSettings_.height/2;
+	
+	return getTerrainToBeProcessed(i, j, k);
+}
+
+Terrain* TerrainManager::getTerrainToBeProcessed(const glm::ivec3& coordinates)
+{
+	return getTerrainToBeProcessed(coordinates.x, coordinates.y, coordinates.z);
+}
+
+Terrain* TerrainManager::getTerrainToBeProcessed(glmd::int32 x, glmd::int32 y, glmd::int32 z)
+{
+	std::lock_guard<std::mutex> lock(terrainToBeProcessedMutex_);
+	
+	Terrain* retVal = nullptr;
+	
+	auto findFunction = [x, y, z](const std::unique_ptr<Terrain>& node) { return (node->getGridX() == x && node->getGridY() == y && node->getGridZ() == z); };
+	
+	auto it = std::find_if(terrainToBeProcessed_.begin(), terrainToBeProcessed_.end(), findFunction);
+	
+	if (it != terrainToBeProcessed_.end())
+	{
+		retVal = it->get();
+	}
+
+	return retVal;
+}
+
 void TerrainManager::update(glmd::uint32 maxUpdates)
 {
 	glmd::uint32 size = 0;
@@ -496,28 +475,20 @@ void TerrainManager::update(glmd::uint32 maxUpdates)
 
 		work();
 	}
-	
-	/*
-	if (!saved && size == 0)
-	{
-		// Save all terrains
-		serialize( std::string("testing.bin") );
-		saved = true;
-	}
-	*/
 }
 
 void TerrainManager::render()
 {
-	terrainMutex_.lock();
+	std::lock_guard<std::mutex> lock(terrainMutex_);
 	for ( auto& terrain : terrain_ )
 	{
-		if (terrain.get() != nullptr && terrain->isActive())
-		{
-			terrain->render();
-		}
+		//if (terrain.get() != nullptr)
+		//{
+		//	terrain->render();
+		//}
+		
+		terrain->render();
 	}
-	terrainMutex_.unlock();
 }
 
 void TerrainManager::setFollowTarget(ISceneNode* target)
@@ -543,14 +514,11 @@ void TerrainManager::generate(bool initialize)
 		{
 			for (int k=0; k < terrainSettings_.width; k++)
 			{
-				createTerrain( i, j, k );
+				createTerrain( i, j, k, initialize );
 			}
 		}
 		std::cout << "MARK: " << i << std::endl;
 	}
-
-	// Save all terrains
-	//serialize( std::string("testing.bin") );
 }
 
 void TerrainManager::generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize)
@@ -561,12 +529,30 @@ void TerrainManager::generate(ITerrain* terrain, bool initialize)
 {
 }
 
+void TerrainManager::sendRemovedTerrainEventToEventListeners(ITerrain* terrain)
+{
+	for ( auto l : eventListeners_ )
+	{
+		l->terrainRemoved(terrain);
+	}
+}
+
+void TerrainManager::sendAddedTerrainEventToEventListeners(ITerrain* terrain)
+{
+	for ( auto l : eventListeners_ )
+	{
+		l->terrainAdded(terrain);
+	}
+}
+
 void TerrainManager::addTerrainManagerEventListener(ITerrainManagerEventListener* listener)
 {
+	eventListeners_.push_back(listener);
 }
 
 void TerrainManager::removeTerrainManagerEventListener(ITerrainManagerEventListener* listener)
 {
+	eventListeners_.erase( std::remove(eventListeners_.begin(), eventListeners_.end(), listener), eventListeners_.end() );
 }
 
 void TerrainManager::serialize(const std::string& filename)
