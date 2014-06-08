@@ -17,6 +17,7 @@
 #include "terrain/IFieldFunction.hpp"
 #include "terrain/IVoxelChunkMeshGenerator.hpp"
 #include "terrain/Terrain.hpp"
+#include "terrain/ITerrainManagerEventListener.hpp"
 
 namespace glr
 {
@@ -52,6 +53,8 @@ public:
 	
 	virtual glm::detail::int32 getBlockSize() const;
 
+	virtual void moveTerrainFromProcessedToReady(ITerrain* terrain);
+
 private:	
 	glw::IOpenGlDevice* openGlDevice_;
 	ISceneNode* followTarget_;
@@ -64,7 +67,11 @@ private:
 	std::unique_ptr<IVoxelChunkMeshGenerator> voxelChunkMeshGenerator_;
 	
 	std::vector< std::unique_ptr<Terrain> > terrain_;
+	std::vector< std::unique_ptr<Terrain> > terrainToBeProcessed_;
 	std::mutex terrainMutex_;
+	std::mutex terrainToBeProcessedMutex_;
+	
+	std::vector<ITerrainManagerEventListener*> eventListeners_;
 	
 	mutable std::mutex openGlWorkMutex_;
 	std::deque< std::function<void()> > openGlWork_;
@@ -82,15 +89,33 @@ private:
 	void createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z, bool initialize = true);
 	void createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z, bool initialize = true);
 	void createTerrain(const glm::ivec3& coordinates, bool initialize = true);
+	
 	void addTerrain(Terrain* terrain);
+	void addTerrain(std::unique_ptr<Terrain> terrain);
+	
 	void removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
 	void removeTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
 	void removeTerrain(const glm::ivec3& coordinates);
 	void removeTerrain(Terrain* terrain);
+	
+	std::unique_ptr<Terrain> removeTerrainAndReturn(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	std::unique_ptr<Terrain> removeTerrainAndReturn(Terrain* terrain);
+	
+	std::unique_ptr<Terrain> removeTerrainToBeProcessedAndReturn(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	std::unique_ptr<Terrain> removeTerrainToBeProcessedAndReturn(Terrain* terrain);
+	
 	void removeAllTerrain();
+	
 	Terrain* getTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z);
 	Terrain* getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z);
 	Terrain* getTerrain(const glm::ivec3& coordinates);
+	
+	Terrain* getTerrainToBeProcessed(glmd::float32 x, glmd::float32 y, glmd::float32 z);
+	Terrain* getTerrainToBeProcessed(const glm::ivec3& coordinates);
+	Terrain* getTerrainToBeProcessed(glmd::int32 x, glmd::int32 y, glmd::int32 z);
+	
+	void sendAddedTerrainEventToEventListeners(ITerrain* terrain);
+	void sendRemovedTerrainEventToEventListeners(ITerrain* terrain);
 };
 
 }

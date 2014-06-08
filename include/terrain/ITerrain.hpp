@@ -57,6 +57,12 @@ public:
 	 */
 	virtual void update() = 0;
 	
+	virtual void generate() = 0;
+	
+	virtual bool isEmptyOrSolid() const = 0;
+	
+	virtual void makeReadyForRender() = 0;
+	
 	/**
 	 * Will set the level of detail of the terrain.
 	 * 

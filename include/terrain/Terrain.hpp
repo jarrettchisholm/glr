@@ -7,6 +7,7 @@
 #include "BasicSceneNode.hpp"
 #include "TerrainMesh.hpp"
 
+#include "IVoxelChunkMeshGenerator.hpp"
 #include "VoxelChunkNoiseGenerator.hpp"
 
 namespace glr
@@ -17,7 +18,8 @@ namespace terrain
 class Terrain : public virtual ITerrain, public BasicSceneNode
 {
 public:
-	Terrain(Id id, glw::IOpenGlDevice* openGlDevice, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ);
+	Terrain(Id id, glw::IOpenGlDevice* openGlDevice, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ,
+		glmd::int32 length, glmd::int32 width, glmd::int32 height, IFieldFunction* fieldFunction, IVoxelChunkMeshGenerator* voxelChunkMeshGenerator);
 	Terrain(Id id, std::string name, glw::IOpenGlDevice* openGlDevice, glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ);
 	Terrain(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice, 
 		glmd::int32 gridX, glmd::int32 gridY, glmd::int32 gridZ);
@@ -33,12 +35,14 @@ public:
 	virtual void setLod(LevelOfDetail lod);
 	virtual LevelOfDetail getLod() const;
 	
+	virtual void generate();
+	
 	void freeVideoMemory();
 	
 	bool isActive() const;
 	void setIsActive( bool isActive );
 	
-	bool isEmptyOrSolid() const;
+	virtual bool isEmptyOrSolid() const;
 	
 	virtual glm::detail::int32 getGridX() const;
 	virtual glm::detail::int32 getGridY() const;
@@ -50,9 +54,19 @@ public:
 	
 	TerrainMesh* getData();
 	virtual models::IModel* getModel() const;
-
+	
+	virtual void makeReadyForRender();
+	void initializeShaderLocations();
 private:
-	glmd::int32 gridX_, gridY_, gridZ_;
+	glmd::int32 gridX_;
+	glmd::int32 gridY_;
+	glmd::int32 gridZ_;
+	glmd::int32 length_;
+	glmd::int32 width_;
+	glmd::int32 height_;
+	
+	IFieldFunction* fieldFunction_;
+	IVoxelChunkMeshGenerator* voxelChunkMeshGenerator_;
 	
 	std::atomic<bool> isActive_;
 	std::atomic<bool> isEmptyOrSolid_;
