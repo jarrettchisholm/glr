@@ -15,7 +15,7 @@ public:
 	Exception(const std::string& message = std::string("Glr Exception"));
 	virtual ~Exception() throw();
 
-	virtual const char* what() throw();
+	virtual const char* what() const throw();
 
 protected:
 	std::string message_;
