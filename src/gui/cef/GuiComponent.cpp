@@ -575,6 +575,76 @@ glm::detail::int32 GuiComponent::convertUnicodeToCef3(glm::detail::int32 keyCode
 			return 65363;
 		case 274:
 			return 65364;
+		
+		// PrtScn, ScrLk, Pause, Num Lock
+		case 316:
+			return 65377;
+		case 302:
+			return 65300;
+		case 19:
+			return 65299;
+		case 144:
+			return 65407;
+		
+		// Insert, Delete
+		case 277:
+			return 65379;
+		case 127:
+			return 65535;
+		
+		// Home, End
+		case 278:
+			return 65360;
+		case 279:
+			return 65367;
+		
+		// Page Up, Page Down
+		case 280:
+			return 65365;
+		case 281:
+			return 65366;
+		
+		// Left Shift, Right Shift
+		case 304:
+			return 65505;
+		case 303:
+			return 65506;
+        // Left Ctrl, Right Ctrl
+		case 306:
+			return 65507;
+		case 305:
+			return  65508;
+        // Left Alt, Right Alt
+		case 308:
+			return 65513;
+		case 313:
+			return 65514;
+		
+		// F1-F12
+		case 282:
+			return 65470;
+		case 283:
+			return 65471;
+		case 284:
+			return 65472;
+		case 285:
+			return 65473;
+		case 286:
+			return 65474;
+		case 287:
+			return 65475;
+		case 288:
+			return 65476;
+		case 289:
+			return 65477;
+		case 290:
+			return 65478;
+		case 291:
+			return 65479;
+		case 292:
+			return 65480;
+		case 293:
+			return 65481;
 			
 		default:
 			return keyCode;
