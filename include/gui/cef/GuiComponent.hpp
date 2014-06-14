@@ -98,19 +98,30 @@ public:
 	virtual void load();
 	virtual void unload();
 
-	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
-	virtual void mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount = 1);
-	virtual void mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos);
-	virtual void mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll);
+	void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos);
+	void mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount = 1);
+	void mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos);
+	void mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll);
 
-	virtual void textEvent(const wchar_t*evt, size_t evtLength);
-	virtual void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode);
+	void textEvent(const wchar_t*evt, size_t evtLength);
+	void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 virtualKeyCode, glm::detail::int32 scanCode);
+	
+	/**
+	 * Converts the unicode character represented by keyCode to a Cef3 compatible keycode and returns it.
+	 * 
+	 * @param keyCode Integer value of a unicode character
+	 * 
+	 * @return A Cef3 compatible keycode.
+	 */
+	glm::detail::int32 convertUnicodeToCef3(glm::detail::int32 keyCode);
 
 	int setContents(std::string contents);
 	int setContentsUrl(std::string url);
 
-	virtual void update();
-	virtual void render(shaders::IShaderProgram* shader);
+	void update();
+	// Temporary method until we remove legacy OpenGL rendering code
+	void render();
+	void render(shaders::IShaderProgram& shader);
 
 	virtual void executeScript(const std::wstring& script);
 

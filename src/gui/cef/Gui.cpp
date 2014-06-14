@@ -57,7 +57,8 @@ void Gui::render()
 	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
-			views_.at(i).get()->render(nullptr);
+			//views_.at(i).get()->render(*shader);
+			views_.at(i).get()->render();
 	}
 	
 	//shaders::GlslShaderProgram::unbindAll();
@@ -107,13 +108,13 @@ void Gui::textEvent(const wchar_t* evt, size_t evtLength)
 	}
 }
 
-void Gui::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
+void Gui::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 virtualKeyCode, glm::detail::int32 scanCode)
 {
 	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
-			views_.at(i).get()->keyEvent(pressed, mods, vk_code, scancode);
+			views_.at(i).get()->keyEvent(pressed, mods, virtualKeyCode, scanCode);
 		}
 	}
 }

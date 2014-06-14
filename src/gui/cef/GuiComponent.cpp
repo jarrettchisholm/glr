@@ -546,40 +546,69 @@ int GuiComponent::sendBoundFunctionsToRenderProcess()
 	return numSent;
 }
 
-void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 vk_code, glm::detail::int32 scancode)
+glm::detail::int32 GuiComponent::convertUnicodeToCef3(glm::detail::int32 keyCode)
 {
-	//std::cout << "KEY EVENT: (" << pressed << ") " << (char)vk_code << std::endl;
-
-	CefKeyEvent keyEvent;
-	keyEvent.native_key_code = vk_code;
-	keyEvent.modifiers = getCefStateModifiers(mods);
-
-	/*
-	if (event->type == GDK_KEY_PRESS) {
-		keyEvent.type = KEYEVENT_RAWKEYDOWN;
-		host->SendKeyEvent(keyEvent);
-	} else */
+	switch (keyCode)
 	{
-		// Need to send both KEYUP and CHAR events.
-	/*
+		// Enter key
+		case 13:
+			return 65293;
+		
+		// Escape
+		case 27:
+			return 65307;
+			
+		// Tab
+		case 9:
+			return 65289;
+		
+		// Backspace
+		case 8:
+			return 65288;
+		
+		// Arrow keys: Left, Up, Right, Down
+		case 276:
+			return 65361;
+		case 273:
+			return 65362;
+		case 275:
+			return 65363;
+		case 274:
+			return 65364;
+			
+		default:
+			return keyCode;
+	}
+	
+	std::string msg = std::string("This error should never happen.");
+	LOG_ERROR(msg);
+	throw exception::Exception(msg);
+}
+
+void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 virtualKeyCode, glm::detail::int32 scanCode)
+{
+	std::cout << "KEY EVENT: (" << pressed << ") " << (char)virtualKeyCode << " | " << virtualKeyCode << std::endl;
+
+	// Translate key codes for CEF3
+	virtualKeyCode = convertUnicodeToCef3(virtualKeyCode);
+	
+	CefKeyEvent keyEvent;
+	keyEvent.native_key_code = virtualKeyCode;
+	keyEvent.modifiers = getCefStateModifiers(mods);
+	
+	if (pressed)
+	{
+		keyEvent.type = KEYEVENT_RAWKEYDOWN;
+		browser_->GetHost()->SendKeyEvent(keyEvent);
+	}
+	else
+	{
 		keyEvent.type = KEYEVENT_KEYUP;
-		host->SendKeyEvent(keyEvent);
-	*/
-		//std::cout << "HERE 2 " << vk_code << std::endl;
+		browser_->GetHost()->SendKeyEvent(keyEvent);
+		
 		keyEvent.type = KEYEVENT_CHAR;
 		browser_->GetHost()->SendKeyEvent(keyEvent);
 	}
-	//else
-	
-	//{
-		//window_->focus();
-		//wchar_t outchars[2];
-		//outchars[0] = vk_code;
-		//outchars[1] = 0;
-		////std::cout << "HERE 2 " << outchars[0] << std::endl;
-		//window_->textEvent(outchars, 1);
-		//window_->keyEvent(pressed, mods, vk_code, scancode);
-	//}
 }
 
 /**
@@ -606,11 +635,8 @@ void GuiComponent::update()
 }
 
 // TODO: Make this OpenGL 3.2 compliant
-void GuiComponent::render(shaders::IShaderProgram* shader)
+void GuiComponent::render()
 {
-	//texture_->bind();
-	//shader->bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
-	
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
@@ -635,6 +661,13 @@ void GuiComponent::render(shaders::IShaderProgram* shader)
 
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
+}
+
+void GuiComponent::render(shaders::IShaderProgram& shader)
+{
+	// TODO: Implement
+	//texture_->bind();
+	//shader.bindVariableByBindingName( shaders::IShader::BIND_TYPE_TEXTURE, texture_->getBindPoint() );
 }
 
 /*
