@@ -457,9 +457,15 @@ void GuiComponent::mouseClick(glm::detail::uint32 buttonId, glm::detail::int32 x
 	mouseButton(buttonId, xPos, yPos, false, 1);
 }
 
-void GuiComponent::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
+void GuiComponent::mouseWheel(glm::detail::int32 xPos, glm::detail::int32 yPos, glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
+	CefMouseEvent event;
 	
+	event.x = xPos;
+	event.y = yPos;
+	//event.modifiers = getCefStateModifiers(0);
+	
+	browser_->GetHost()->SendMouseWheelEvent( event, xScroll, yScroll );
 }
 
 void GuiComponent::textEvent(const wchar_t* evt, size_t evtLength)

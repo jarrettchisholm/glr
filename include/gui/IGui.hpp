@@ -24,7 +24,7 @@ public:
 
 	virtual void mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos) = 0;
 	virtual void mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm::detail::int32 yPos, bool down, glm::detail::int32 clickCount = 1) = 0;
-	virtual void mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll) = 0;
+	virtual void mouseWheel(glm::detail::int32 xPos, glm::detail::int32 yPos, glm::detail::int32 xScroll, glm::detail::int32 yScroll) = 0;
 
 	virtual void textEvent(const wchar_t* evt, size_t evtLength) = 0;
 	virtual void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 virtualKeyCode, glm::detail::int32 scanCode) = 0;

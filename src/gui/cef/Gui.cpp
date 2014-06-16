@@ -86,13 +86,13 @@ void Gui::mouseButton(glm::detail::uint32 buttonId, glm::detail::int32 xPos, glm
 	}
 }
 
-void Gui::mouseWheel(glm::detail::int32 xScroll, glm::detail::int32 yScroll)
+void Gui::mouseWheel(glm::detail::int32 xPos, glm::detail::int32 yPos, glm::detail::int32 xScroll, glm::detail::int32 yScroll)
 {
 	for ( glm::detail::uint32 i = 0; i < views_.size(); i++ )
 	{
 		if ( views_.at(i).get()->isVisible())
 		{
-			views_.at(i).get()->mouseWheel(xScroll, yScroll);
+			views_.at(i).get()->mouseWheel(xPos, yPos, xScroll, yScroll);
 		}
 	}
 }
