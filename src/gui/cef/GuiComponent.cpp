@@ -8,6 +8,8 @@
 
 #include "gui/cef/GuiObject.hpp"
 
+#include "Configure.hpp"
+
 #include "common/utilities/ImageLoader.hpp"
 #include "common/utilities/BoostAnyUtilities.hpp"
 
@@ -556,6 +558,17 @@ glm::detail::int32 GuiComponent::convertUnicodeToCef3(glm::detail::int32 keyCode
 {
 	switch (keyCode)
 	{
+#ifdef OS_WINDOWS
+		// Arrow keys: Left, Up, Right, Down
+		case 276:
+			return 37;
+		case 273:
+			return 38;
+		case 275:
+			return 39;
+		case 274:
+			return 40;
+#else
 		// Enter key
 		case 13:
 			return 65293;
@@ -651,7 +664,8 @@ glm::detail::int32 GuiComponent::convertUnicodeToCef3(glm::detail::int32 keyCode
 			return 65480;
 		case 293:
 			return 65481;
-			
+#endif
+
 		default:
 			return keyCode;
 	}
@@ -669,6 +683,7 @@ void GuiComponent::keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::
 	virtualKeyCode = convertUnicodeToCef3(virtualKeyCode);
 	
 	CefKeyEvent keyEvent;
+	keyEvent.windows_key_code = virtualKeyCode;
 	keyEvent.native_key_code = virtualKeyCode;
 	keyEvent.modifiers = getCefStateModifiers(mods);
 	
