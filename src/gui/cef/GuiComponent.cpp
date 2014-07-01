@@ -96,7 +96,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				
 				case VTYPE_BINARY:
 				{
-					std::string msg = "Error - VTYPE_BINARY not implemented as CEF3 argument type.";					
+					std::string msg = "Error - VTYPE_BINARY not implemented as CEF3 argument type.";
 					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
@@ -104,7 +104,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 					
 				case VTYPE_DICTIONARY:
 				{
-					std::string msg = "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type.";					
+					std::string msg = "Error - VTYPE_DICTIONARY not implemented as CEF3 argument type.";
 					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
@@ -112,7 +112,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				
 				case VTYPE_LIST:
 				{
-					std::string msg = "Error - VTYPE_LIST not implemented as CEF3 argument type.";					
+					std::string msg = "Error - VTYPE_LIST not implemented as CEF3 argument type.";
 					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
@@ -120,7 +120,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 				
 				case VTYPE_INVALID:
 				{
-					std::string msg = "Error - VTYPE_INVALID not implemented as CEF3 argument type.";					
+					std::string msg = "Error - VTYPE_INVALID not implemented as CEF3 argument type.";
 					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
@@ -128,7 +128,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 					
 				case VTYPE_NULL:
 				{
-					std::string msg = "Error - VTYPE_NULL not implemented as CEF3 argument type.";					
+					std::string msg = "Error - VTYPE_NULL not implemented as CEF3 argument type.";
 					LOG_ERROR( msg );
 					throw exception::Exception( msg );
 				}
@@ -198,8 +198,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			}
 			else
 			{
-				//std::cout << "ExecuteFunction Unable to determine result type." << std::endl;
-				std::string msg = "Error - ExecuteFunction unable to determine result type.";					
+				std::string msg = "Error - ExecuteFunction unable to determine result type.";
 				LOG_ERROR( msg );
 				throw exception::Exception( msg );
 			}
@@ -323,19 +322,12 @@ void GuiComponent::load()
 		LOG_ERROR( msg );
 		throw exception::Exception( msg );
 	}
-	
+
 	//browser_->GetMainFrame()->LoadURL(std::string("http://www.jarrettchisholm.com").c_str());
-	
-	// inject user-input by calling
-	// browser_->GetHost()->SendKeyEvent(...);
-	// browser_->GetHost()->SendMouseMoveEvent(...);
-	// browser_->GetHost()->SendMouseClickEvent(...);
-	// browser_->GetHost()->SendMouseWheelEvent(...);
-    
-    
-    //sendBoundFunctionsToRenderProcess();
-    
-    LOG_DEBUG( "Successfully created GuiComponent CEF components." );
+
+	//sendBoundFunctionsToRenderProcess();
+
+	LOG_DEBUG( "Successfully created GuiComponent CEF components." );
 }
 
 void GuiComponent::unload()
@@ -346,7 +338,7 @@ void GuiComponent::unload()
 		browser_->GetHost()->CloseBrowser( true );
 		//browser_ = nullptr;
 	}
-        
+		
 	setVisible(false);
 }
 
@@ -356,12 +348,12 @@ void GuiComponent::unload()
  *  \param glut_coord the coordinate value received from GLUT
  *  \param tex_size the size of the texture/Berkelium window
  *  \returns the coordinate transformed to the correct value for the texture /
- *           Berkelium window
+ *		   Berkelium window
  */
 /*
 unsigned int GuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size)
 {
-    return (glut_coord * tex_size) / glut_size;
+	return (glut_coord * tex_size) / glut_size;
 }
 */
 
@@ -389,8 +381,8 @@ void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 	////std::cout << "MOUSE MOVED EVENT: " << xPos << " " << yPos << std::endl;
 	
 	//unsigned int tex_coord_x = mapGLUTCoordToTexCoord(xPos, width_, width_);
-    //unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
-    ////std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
+	//unsigned int tex_coord_y = mapGLUTCoordToTexCoord(yPos, height_, height_);
+	////std::cout << xPos << " " << yPos << " : " << tex_coord_x << " " << tex_coord_y << std::endl;
 	//window_->mouseMoved(tex_coord_x, tex_coord_y);
 	
 	CefMouseEvent mouseEvent;
@@ -487,19 +479,19 @@ glm::detail::int32 GuiComponent::getCefStateModifiers(glm::detail::int32 state) 
   glm::detail::int32 modifiers = 0;
   /*
   if (state & GDK_SHIFT_MASK)
-    modifiers |= EVENTFLAG_SHIFT_DOWN;
+	modifiers |= EVENTFLAG_SHIFT_DOWN;
   if (state & GDK_LOCK_MASK)
-    modifiers |= EVENTFLAG_CAPS_LOCK_ON;
+	modifiers |= EVENTFLAG_CAPS_LOCK_ON;
   if (state & GDK_CONTROL_MASK)
-    modifiers |= EVENTFLAG_CONTROL_DOWN;
+	modifiers |= EVENTFLAG_CONTROL_DOWN;
   if (state & GDK_MOD1_MASK)
-    modifiers |= EVENTFLAG_ALT_DOWN;
+	modifiers |= EVENTFLAG_ALT_DOWN;
   if (state & GDK_BUTTON1_MASK)
-    modifiers |= EVENTFLAG_LEFT_MOUSE_BUTTON;
+	modifiers |= EVENTFLAG_LEFT_MOUSE_BUTTON;
   if (state & GDK_BUTTON2_MASK)
-    modifiers |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
+	modifiers |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
   if (state & GDK_BUTTON3_MASK)
-    modifiers |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
+	modifiers |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
   */
   return modifiers;
 }
@@ -628,12 +620,12 @@ glm::detail::int32 GuiComponent::convertUnicodeToCef3(glm::detail::int32 keyCode
 			return 65505;
 		case 303:
 			return 65506;
-        // Left Ctrl, Right Ctrl
+		// Left Ctrl, Right Ctrl
 		case 306:
 			return 65507;
 		case 305:
 			return  65508;
-        // Left Alt, Right Alt
+		// Left Alt, Right Alt
 		case 308:
 			return 65513;
 		case 313:
