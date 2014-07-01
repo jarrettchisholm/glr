@@ -89,7 +89,7 @@ public:
 
 
 
-class GuiComponent : public IGuiComponent, public CefClient
+class GuiComponent : public IGuiComponent, public CefClient, public CefLifeSpanHandler
 {
 public:
 	GuiComponent(glw::IOpenGlDevice* openGlDevice, glmd::uint32 width, glmd::uint32 height);
@@ -147,6 +147,11 @@ public:
 	 */
 	virtual bool OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message);
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
+	virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
+	
+	void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
 private:
 	bool isVisible_;
@@ -216,6 +221,7 @@ private:
 	// NOTE: Must be at bottom
 public:
     IMPLEMENT_REFCOUNTING(GuiComponent)
+    IMPLEMENT_LOCKING(GuiComponent)
 };
 
 }

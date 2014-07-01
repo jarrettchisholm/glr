@@ -10,6 +10,8 @@
 
 #include "common/logger/Logger.hpp"
 
+#include "exceptions/ExceptionInclude.hpp"
+
 #include "glw/shaders/GlslShaderProgram.hpp"
 
 namespace glr
@@ -21,6 +23,26 @@ namespace cef
 
 Gui::Gui(glw::IOpenGlDevice* openGlDevice, shaders::IShaderProgramManager* shaderProgramManager, glmd::uint32 width, glmd::uint32 height) : openGlDevice_(openGlDevice), shaderProgramManager_(shaderProgramManager), width_(width), height_(height)
 {
+	// Create Cef processes
+	CefMainArgs args;
+	CefSettings settings;
+
+	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
+	
+	settings.no_sandbox = true;
+	
+	LOG_DEBUG( "Initializing CEF." );
+	bool result = CefInitialize(args, settings, nullptr, nullptr);
+	
+	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
+	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
+	if (!result)
+	{
+		std::string msg = "Error loading GuiComponent - could not initialize CEF.";
+		
+		LOG_ERROR( msg );
+		throw exception::Exception( msg );		
+	}
 }
 
 Gui::~Gui()

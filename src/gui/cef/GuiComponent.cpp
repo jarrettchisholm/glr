@@ -301,41 +301,20 @@ void GuiComponent::load()
 	}
 
 	LOG_DEBUG( "Creating GuiComponent CEF components." );
-	
-	// Create Cef processes
-	CefMainArgs args;
-	CefSettings settings;
 
-	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
-	
-	settings.no_sandbox = true;
-	
-	LOG_DEBUG( "Initializing CEF." );
-	bool result = CefInitialize(args, settings, nullptr, nullptr);
-	
-	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
-	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.
-	if (!result)
-	{
-		std::string msg = "Error loading GuiComponent - could not initialize CEF.";
-		
-		LOG_ERROR( msg );
-		throw exception::Exception( msg );		
-	}
-
-	CefWindowInfo window_info;
+	CefWindowInfo windowInfo;
 	CefBrowserSettings browserSettings;
 
 	// in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
-	window_info.SetAsOffScreen(nullptr);
-	window_info.SetTransparentPainting(true);
+	windowInfo.SetAsOffScreen(nullptr);
+	windowInfo.SetTransparentPainting(true);
 	
 	renderHandler_ = new RenderHandler(webTexture, width_, height_);
 	
 	LOG_DEBUG( "Creating CEF Browser object." );
 	// Create initially with "/" appended to url to make sure CEF DOESN'T fully load the page.
 	// We just want the render process created at this point so that we can do our bindings.
-	browser_ = CefBrowserHost::CreateBrowserSync(window_info, this, url_ + "/", browserSettings, nullptr);
+	browser_ = CefBrowserHost::CreateBrowserSync(windowInfo, this, url_ + "/", browserSettings, nullptr);
 	
 	if (browser_.get() == nullptr)
 	{
@@ -366,7 +345,7 @@ void GuiComponent::unload()
 	if ( browser_ != nullptr )
 	{
 		browser_->GetHost()->CloseBrowser( true );
-		browser_ = nullptr;
+		//browser_ = nullptr;
 	}
         
 	setVisible(false);
@@ -386,6 +365,25 @@ unsigned int GuiComponent::mapGLUTCoordToTexCoord(unsigned int glut_coord, unsig
     return (glut_coord * tex_size) / glut_size;
 }
 */
+
+void GuiComponent::OnAfterCreated(CefRefPtr<CefBrowser> browser)
+{
+}
+
+bool GuiComponent::DoClose(CefRefPtr<CefBrowser> browser)
+{
+	return false;
+}
+
+void GuiComponent::OnBeforeClose(CefRefPtr<CefBrowser> browser)
+{
+	browser_ = nullptr;
+}
+
+CefRefPtr<CefLifeSpanHandler> GuiComponent::GetLifeSpanHandler()
+{
+	return this;
+}
 
 void GuiComponent::mouseMoved(glm::detail::int32 xPos, glm::detail::int32 yPos)
 {
