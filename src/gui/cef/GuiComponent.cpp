@@ -46,7 +46,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 	// Do we need this?
 	// browser == m_Browser
 	
-	if( s == cef_client::EXECUTE_FUNCTION )
+	if ( s == cef_client::EXECUTE_FUNCTION )
 	{	
 		std::wstring objName = message->GetArgumentList()->GetString(0);
 		std::wstring functionName = message->GetArgumentList()->GetString(1);
@@ -206,7 +206,7 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 			browser->SendProcessMessage(PID_RENDERER, m);
 		}
 	}
-	else if( s == cef_client::READY_FOR_BINDINGS && !bindDataSent_ )
+	else if ( s == cef_client::READY_FOR_BINDINGS && !bindDataSent_ )
 	{ 
 		glmd::uint32 numSent = sendBoundFunctionsToRenderProcess();
 		std::string messageId = "Message_" + std::to_string(numMessagesSent_);
@@ -222,18 +222,18 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		//std::cout << "ReadyForBindings finished with " << numSent << " function(s) sent to the render process." << std::endl;
 		bindDataSent_ = true;
 	}
-	else if( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_ )
+	else if ( s == cef_client::ALL_BINDINGS_RECEIVED && bindDataSent_ )
 	{
 		// Now that bindings are set, we can load the url
 		browser_->GetMainFrame()->LoadURL(url_);
 	}
-	else if( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_ )
+	else if ( s == cef_client::ALL_BINDINGS_RECEIVED && !bindDataSent_ )
 	{ 
 		std::string msg = "AllBindingsReceived message processed, but no binding data was sent.";
 		LOG_ERROR( msg );
 		throw exception::Exception( msg );
 	}
-	else if( s == cef_client::SUCCESS )
+	else if ( s == cef_client::SUCCESS )
 	{ 
 		// TODO: deal with success
 		std::string messageId = message->GetArgumentList()->GetString( 0 );
@@ -254,16 +254,20 @@ bool GuiComponent::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefP
 		msg << "GuiComponent Success: " << messageId;
 		LOG_DEBUG( msg.str() );
 	}
-	else if( s == cef_client::EXCEPTION )
+	else if ( s == cef_client::EXCEPTION )
 	{ 
 		//std::string messageId = message->GetArgumentList()->GetString( 0 );
 		cef_client::Exception e = (cef_client::Exception) message->GetArgumentList()->GetInt( 1 );
 		std::string errorMessage = message->GetArgumentList()->GetString( 2 );
+		
+		// Get string name for exception type
+		std::string errorName = cef_client::getStringName(e);
+		
 		// c++ exception doesn't seem to support wchar...
 		//std::wstring message = message->GetArgumentList()->GetWString( 2 );		
 		
 		std::stringstream msgStream;
-		msgStream << "Exception message received: " << errorMessage << " - Exception type: " << e;
+		msgStream << "Exception message received: " << errorMessage << " - Exception type: " << errorName << " (" << e << ")";
 		
 		std::string msg = msgStream.str();
 		LOG_ERROR( msg );

@@ -413,6 +413,17 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 		std::wstring messageName = arguments[0]->GetStringValue();
 		
 		int browserId = context->GetBrowser()->GetIdentifier();
+		
+		auto key = std::make_pair(messageName, browserId);
+		auto it = callbackMap_.find(key);
+		if (it != callbackMap_.end())
+		{
+			std::wstring msg = L"Cannot set message callback for name '" + messageName + L"' - callback with that name already exists.";
+			LOG_ERROR( L"cef_client - " << msg );
+			sendMessageException(context->GetBrowser(), std::string(""), Exception::JS_BIND_EXCEPTION, msg);
+			return false;
+		}
+		
 		callbackMap_.insert( std::make_pair(std::make_pair(messageName, browserId), std::make_pair(context, arguments[1])) );
 		return true;
 	}
@@ -421,7 +432,7 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 		// TODO: error
 		std::wstring msg = L"Cannot execute function '" + s + L"'.";
 		LOG_DEBUG( L"cef_client - " << msg );
-		sendMessageException(context->GetBrowser(), "", Exception::EXECUTE_EXCEPTION, msg);
+		sendMessageException(context->GetBrowser(), std::string(""), Exception::EXECUTE_EXCEPTION, msg);
 	}
 	
 	// Function does not exist.
