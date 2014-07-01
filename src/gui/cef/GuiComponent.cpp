@@ -307,8 +307,11 @@ void GuiComponent::load()
 	CefSettings settings;
 
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
+	
+	settings.no_sandbox = true;
+	
 	LOG_DEBUG( "Initializing CEF." );
-	bool result = CefInitialize(args, settings, nullptr);
+	bool result = CefInitialize(args, settings, nullptr, nullptr);
 	
 	// CefInitialize creates a sub-proccess and executes the same executeable, as calling CefInitialize, if not set different in settings.browser_subprocess_path
 	// if you create an extra program just for the childproccess you only have to call CefExecuteProcess(...) in it.

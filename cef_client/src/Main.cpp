@@ -8,5 +8,5 @@ int main(int argc, char *argv[])
 	CefMainArgs args(argc, argv);
 #endif
     CefRefPtr<glr::cef_client::ClientApp> app = new glr::cef_client::ClientApp();
-	return CefExecuteProcess(args, app.get());
+	return CefExecuteProcess(args, app.get(), nullptr);
 }

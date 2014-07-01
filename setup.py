@@ -25,39 +25,41 @@ isMac = platform.system() == 'Darwin'
 
 sharedLibraryExt = 'so'
 staticLibraryExt = 'a'
+#downloadGlrDepsUrl = 'http://dl.bintray.com/jarrettchisholm/generic/'
+downloadGlrDepsUrl = 'http://icebreakersentertainment.com/downloads/glr/deps/'
 
-boostName = 'boost_1.55_x64.tar.gz'
-freeImageName = 'freeimage_3.15.1_linux_x64.tar.gz'
-assImpName = 'assimp_3.0.1270_linux_x64.tar.gz'
-cef3Name = 'cef3_3.1650.1562_linux_x64.tar.gz'
-glmName = 'glm_0.9.5.2.tar.gz'
-glewName = 'glew_1.10.0_linux_x64.tar.gz'
-sfmlName = 'sfml_2.1_linux_x64.tar.gz'
+boostName = 'boost.tar.gz'
+freeImageName = 'freeimage.tar.gz'
+assImpName = 'assimp.tar.gz'
+cef3Name = 'cef3.tar.gz'
+glmName = 'glm.tar.gz'
+glewName = 'glew.tar.gz'
+sfmlName = 'sfml.tar.gz'
+
+if isLinux:
+	downloadGlrDepsUrl += 'linux/x64/'
 
 if isWindows:
 	sharedLibraryExt = 'dll'
 	staticLibraryExt = 'lib'
 	
-	boostName = 'boost_1.55_win32.tar.gz'
-	freeImageName = 'freeimage_3.15.1_win32.tar.gz'
-	assImpName = 'assimp_3.0.1270_win32.tar.gz'
-	cef3Name = 'cef3_3.1650.1562_win32.tar.gz'
-	glmName = 'glm_0.9.5.2_win.tar.gz'
-	glewName = 'glew_1.10.0_win32.tar.gz'
-	sfmlName = 'sfml_2.1_win32.tar.gz'
+	downloadGlrDepsUrl += 'windows/x86/'
+
+if isMac:
+	downloadGlrDepsUrl += 'macosx/x64/'
 
 files = dict()
 # Format
 # Note: The only reason for the 'Regex for Dir' is because I can't delete from bintray at the moment, so I can't rename the directory in the zipped file and reupload.
 #
-# [Display Name]			= [URL, 																		Save Filename,		Regex for Dir, 	New Name for Dir]
-files['Boost 1.55'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(boostName), 		'boost.tar.gz', 	'boost', 		'boost']
-files['FreeImage 3.15.1'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(freeImageName), 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
-files['AssImp 3.0.1270'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(assImpName), 		'assimp.tar.gz', 	'assimp', 		'assimp']
-files['CEF3 3.1650.1562'] 	= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
-files['GLM 0.9.5.2'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(glmName), 		'glm.tar.gz', 		'glm', 			'glm']
-files['GLEW 1.10.0'] 		= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(glewName), 		'glew.tar.gz', 		'glew', 		'glew']
-files['SFML 2.1'] 			= ['http://dl.bintray.com/jarrettchisholm/generic/{0}'.format(sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
+# [Display Name]			= [URL, 												Save Filename,		Regex for Dir, 	New Name for Dir]
+files['Boost 1.55'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, boostName), 		'boost.tar.gz', 	'boost', 		'boost']
+files['FreeImage 3.15.1'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, freeImageName), 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
+files['AssImp 3.1.1'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, assImpName), 	'assimp.tar.gz', 	'assimp', 		'assimp']
+files['CEF3 3.1750.1738'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
+files['GLM 0.9.5.2'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glmName), 		'glm.tar.gz', 		'glm', 			'glm']
+files['GLEW 1.10.0'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glewName), 		'glew.tar.gz', 		'glew', 		'glew']
+files['SFML 2.1'] 			= ['{0}{1}'.format(downloadGlrDepsUrl, sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
 
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
