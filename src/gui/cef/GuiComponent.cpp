@@ -5,12 +5,12 @@
 #include <cstring>
 
 #include "gui/cef/GuiComponent.hpp"
-#include "gui/cef/GuiObject.hpp"
 
 #include "Configure.hpp"
 
 #include "common/utilities/ImageLoader.hpp"
 #include "common/utilities/BoostAnyUtilities.hpp"
+#include "common/utilities/StringUtilities.hpp"
 
 #include "common/logger/Logger.hpp"
 
@@ -819,8 +819,9 @@ IGuiObject* GuiComponent::createGuiObject(const std::wstring& name)
 	auto it = guiObjects_.find(name);
 	if ( it != guiObjects_.end() )
 	{
-		// TODO: Error?
-		return nullptr;
+		std::string msg = std::string("Gui Object with name '") + utilities::toString(name) + std::string("' already exists.");
+		LOG_ERROR(msg);
+		throw exception::Exception(msg);
 	}
 	
 	auto object = std::unique_ptr<GuiObject>(new GuiObject(name));

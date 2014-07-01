@@ -5,7 +5,10 @@
 
 #include "gui/cef/GuiObject.hpp"
 
+#include "exceptions/Exception.hpp"
+
 #include "common/logger/Logger.hpp"
+#include "common/utilities/StringUtilities.hpp"
 
 namespace glr
 {
@@ -22,50 +25,82 @@ GuiObject::~GuiObject()
 {
 }
 
+namespace
+{
+
+inline void checkFunctionWithNameDoesntExist(const std::map< std::wstring, int >& functionTypeMap, const std::wstring& name)
+{
+	auto it = functionTypeMap.find(name);
+	if (it != functionTypeMap.end())
+	{
+		std::string msg = std::string("Function with name '") + utilities::toString(name) + std::string("' already exists.");
+		LOG_ERROR(msg);
+		throw exception::Exception(msg);
+	}
+}
+
+}
+
 void GuiObject::addFunction(const std::wstring& name, std::function<void()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_VOID;
 	functionMapVoid_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<int()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_INT;
 	functionMapInt_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<unsigned int()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_UNSIGNED_INT;
 	functionMapUnsignedInt_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<float()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_FLOAT;
 	functionMapFloat_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<std::wstring()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WSTRING;
 	functionMapWstring_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<std::string()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_STRING;
 	functionMapString_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<char()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_CHAR;
 	functionMapChar_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<bool()> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_BOOL;
 	functionMapBool_[name] = std::move(function);
 }
@@ -73,48 +108,64 @@ void GuiObject::addFunction(const std::wstring& name, std::function<bool()> func
 
 void GuiObject::addFunction(const std::wstring& name, std::function<void(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_VOID;
 	functionMapWithParamatersVoid_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<int(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_INT;
 	functionMapWithParamatersInt_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<unsigned int(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_UNSIGNED_INT;
 	functionMapWithParamatersUnsignedInt_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<float(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_FLOAT;
 	functionMapWithParamatersFloat_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<std::string(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_WSTRING;
 	functionMapWithParamatersString_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<std::wstring(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_STRING;
 	functionMapWithParamatersWstring_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<char(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_CHAR;
 	functionMapWithParamatersChar_[name] = std::move(function);
 }
 
 void GuiObject::addFunction(const std::wstring& name, std::function<bool(std::vector<boost::any>)> function)
 {
+	checkFunctionWithNameDoesntExist(functionTypeMap_, name);
+	
 	functionTypeMap_[name] = FunctionTypes::TYPE_WITH_PARAMETERS_BOOL;
 	functionMapWithParamatersBool_[name] = std::move(function);
 }
@@ -192,8 +243,9 @@ boost::any GuiObject::processCallback(const std::wstring& name, const std::vecto
 	auto it = functionTypeMap_.find( name );
 	if (it == functionTypeMap_.end())
 	{
-		// TODO: error???
-		assert(0);
+		std::string msg = std::string("Function with name '") + utilities::toString(name) + std::string("' doesn't exist.");
+		LOG_ERROR(msg);
+		throw exception::Exception(msg);
 	}
 	
 	const int type = it->second;
