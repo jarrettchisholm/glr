@@ -11,7 +11,6 @@
 
 #include <cef_app.h>
 #include <cef_client.h>
-#include <cef_render_handler.h>
 
 #include "glw/shaders/IShaderProgram.hpp"
 #include "glw/IOpenGlDevice.hpp"
@@ -19,6 +18,7 @@
 #include "../IGuiComponent.hpp"
 
 #include "GuiObject.hpp"
+#include "RenderHandler.hpp"
 
 namespace glmd = glm::detail;
 
@@ -28,66 +28,6 @@ namespace gui
 {
 namespace cef
 {
-
-class RenderHandler : public CefRenderHandler
-{
-public:
-	RenderHandler(glm::detail::uint32 webTexture, glm::detail::uint32 width, glm::detail::uint32 height) : webTexture(webTexture), width_(width), height_(height)
-	{
-		// TODO: error check webTexture value
-	}
-
-	// CefRenderHandler interface
-	bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect& rect)
-	{
-		rect = CefRect(0, 0, width_, height_);
-		return true;
-	};
-	
-    void OnPaint(CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height)
-    {
-		//std::cout << "painting!: " << width << " " << height << std::endl;
-		//memcpy(texBuf->getCurrentLock().data, buffer, width*height*4);
-		
-		// TODO: make this use a shader
-		// TODO: make this paint only sections that have changed (do I really want/need to do this?)
-		glBindTexture(GL_TEXTURE_2D, webTexture);
-		
-		// Finally, we perform the main update, just copying the rect that is
-		// marked as dirty but not from scrolled data.
-		/*
-		glTexSubImage2D(GL_TEXTURE_2D, 0,
-						0, 0,
-						width, height,
-						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 
-						buffer
-						);
-						*/
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	};
-	
-	void windowSizeUpdate(glm::detail::uint32 width, glm::detail::uint32 height)
-	{
-		width_ = width;
-		height_ = height;
-	}
-	
-	glm::detail::uint32 webTexture;
-	glm::detail::uint32 width_;
-	glm::detail::uint32 height_;
-    
-    // CefBase interface
-	// NOTE: Must be at bottom
-public:
-    IMPLEMENT_REFCOUNTING(RenderHandler)
-};
-
-
-
 
 class GuiComponent : public IGuiComponent, public CefClient, public CefLifeSpanHandler
 {
@@ -149,9 +89,9 @@ public:
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler();
 	virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE;
 	
-	void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-	bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-	void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
 private:
 	bool isVisible_;
@@ -164,9 +104,7 @@ private:
 	glmd::uint32 width_;
 	glmd::uint32 height_;
 	// Storage for a texture
-	glmd::uint32 webTexture;
-	// Buffer used to store data for scrolling
-	char* scroll_buffer;
+	glmd::uint32 webTexture_;
 
 	// CEF3 variables
 	CefRefPtr<CefBrowser> browser_;
@@ -183,7 +121,6 @@ private:
 	std::wstring getFunctionName(const std::wstring& name) const;
 	std::wstring getObjectName(const std::wstring& name) const;
 
-	//unsigned int mapGLUTCoordToTexCoord(unsigned int glut_coord, unsigned int glut_size, unsigned int tex_size);
 	glm::detail::int32 getCefStateModifiers(glm::detail::int32 state);
 	
 	/**
@@ -191,37 +128,11 @@ private:
 	 * @return The number of functions sent via IPC to the render process.
 	 */
 	int sendBoundFunctionsToRenderProcess();
-
-	/*
-	bool mapOnPaintToTexture(
-		Berkelium::Window*wini,
-		const unsigned char* bitmap_in, const Berkelium::Rect& bitmap_rect,
-		size_t num_copy_rects, const Berkelium::Rect*copy_rects,
-		int dx, int dy,
-		const Berkelium::Rect& scroll_rect,
-		unsigned int dest_texture,
-		unsigned int dest_texture_width,
-		unsigned int dest_texture_height,
-		bool ignore_partial,
-		char* scroll_buffer);
-
-	virtual void onPaint(Berkelium::Window* wini,
-						 const unsigned char*bitmap_in, const Berkelium::Rect&bitmap_rect,
-						 size_t num_copy_rects, const Berkelium::Rect* copy_rects,
-						 int dx, int dy, const Berkelium::Rect& scroll_rect);
-
-	virtual void onCrashed(Berkelium::Window*win);
-	virtual void onUnresponsive(Berkelium::Window*win);
-	virtual void onScriptAlert(Berkelium::Window*win, Berkelium::WideString message, Berkelium::WideString defaultValue, Berkelium::URLString url, int flags, bool&success, Berkelium::WideString&value);
-	virtual void onJavascriptCallback(Berkelium::Window*win, void* replyMsg, Berkelium::URLString url, Berkelium::WideString funcName, Berkelium::Script::Variant*args, size_t numArgs);
-	*/
-	void testLoadTexture();
-	void testDrawTest1();
 	
 	// NOTE: Must be at bottom
 public:
     IMPLEMENT_REFCOUNTING(GuiComponent)
-    IMPLEMENT_LOCKING(GuiComponent)
+    //IMPLEMENT_LOCKING(GuiComponent)
 };
 
 }
