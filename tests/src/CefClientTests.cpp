@@ -452,7 +452,10 @@ bool createCefClientTest()
 	CefSettings settings;
 
 	CefString(&settings.browser_subprocess_path).FromASCII("./cef3_client");
-	return CefInitialize(args, settings, nullptr);
+	
+	settings.no_sandbox = true;
+	
+	return CefInitialize(args, settings, nullptr, nullptr);
 }
 
 struct data
@@ -486,11 +489,15 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 	setupGuiObjects();
 	
 	if ( !createCefClientTest() )
+	{
 		BOOST_FAIL( "Could not initialize CEF client." );
+	}
 	
 	data d = createCefBrowserTest();
 	if (d.browser.get() == nullptr)
+	{
 		BOOST_FAIL( "Could not create CEF browser." );
+	}
 	
 	
 	bool doWork = true;
@@ -499,15 +506,26 @@ BOOST_AUTO_TEST_CASE(createCefClient)
 	{
 		CefDoMessageLoopWork();
 		
-		// Allow cef_client time to process the messages
-		auto end = std::chrono::system_clock::now();
-		doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5;
+		if (d.client->isAllBindingsReceived() && d.client->isAllBindingsSuccessful())
+		{
+			doWork = false;
+		}
+		else
+		{
+			// Allow cef_client time to process the messages
+			auto end = std::chrono::system_clock::now();
+			doWork = std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() < 5000;
+		}
 	}
 	
 	if ( !d.client->isAllBindingsReceived() )
+	{
 		BOOST_FAIL( "Not all bindings were received by the cef_client." );
+	}
 	if ( !d.client->isAllBindingsSuccessful() )
+	{
 		BOOST_FAIL( "Not all bindings were confirmed successful by the cef_client...it's possible they may have taken too long?" );
+	}
 	
 	// Properly dispose of the browser
 	d.browser->GetHost()->CloseBrowser( false );

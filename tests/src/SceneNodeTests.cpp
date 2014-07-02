@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 	
 	
 	// Rotation test
-	float errorMargin = 0.000025f;
+	float errorMargin = 0.00005f;
 	node->rotate( 90.0f, glm::vec3(1.0f, 0.0f, 0.0f) );
 	node->rotate( 90.0f, glm::vec3(0.0f, 1.0f, 0.0f) );
 	node->rotate( 90.0f, glm::vec3(0.0f, 0.0f, 1.0f) );

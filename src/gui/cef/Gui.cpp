@@ -57,7 +57,10 @@ void Gui::destroy()
 	CefShutdown();
 }
 
-
+void Gui::processMessages()
+{
+	CefDoMessageLoopWork();
+}
 
 void Gui::update()
 {
@@ -70,8 +73,6 @@ void Gui::update()
 
 void Gui::render()
 {
-	CefDoMessageLoopWork();
-	
 	//shaders::IShaderProgram* shader = shaderProgramManager_->getShaderProgram("glr_gui");
 
 	//shader->bind();

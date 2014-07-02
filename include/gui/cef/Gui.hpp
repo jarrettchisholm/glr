@@ -35,6 +35,7 @@ public:
 	virtual void textEvent(const wchar_t* evt, size_t evtLength);
 	virtual void keyEvent(bool pressed, glm::detail::int32 mods, glm::detail::int32 virtualKeyCode, glm::detail::int32 scanCode);
 
+	virtual void processMessages();
 	virtual void update();
 	virtual void render();
 	virtual IGuiComponent* loadFromFile(std::string filename);
