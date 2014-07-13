@@ -145,7 +145,7 @@ void GlslShader::compile()
 		glGetShaderiv(shaderId_, GL_INFO_LOG_LENGTH, &infoLogLength);
 
 		GLchar* strInfoLog = new GLchar[infoLogLength + 1];
-		glGetShaderInfoLog(shaderId_, infoLogLength, NULL, strInfoLog);
+		glGetShaderInfoLog(shaderId_, infoLogLength, nullptr, strInfoLog);
 
 		errorMsg << "\ncompiler_log: " << strInfoLog;
 

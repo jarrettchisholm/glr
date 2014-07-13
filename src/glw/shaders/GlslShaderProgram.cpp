@@ -134,7 +134,9 @@ void GlslShaderProgram::bind()
 	
 	// Notify all listeners that we have bound this shader program
 	for ( auto bindListener : bindListeners_ )
+	{
 		bindListener->shaderBindCallback( this );
+	}
 }
 
 GLint GlslShaderProgram::getBindPointByBindingName(IShader::BindType bindType) const
@@ -204,7 +206,9 @@ void GlslShaderProgram::removeBindListener(IShaderProgramBindListener* bindListe
 	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
 
 	if ( it != bindListeners_.end())
+	{
 		bindListeners_.erase(it);
+	}
 }
 
 void GlslShaderProgram::removeAllBindListeners()

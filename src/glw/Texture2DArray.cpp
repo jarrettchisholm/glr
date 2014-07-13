@@ -280,7 +280,9 @@ bool Texture2DArray::areImagesSameFormat()
 	for ( auto& image : images_ )
 	{
 		if (format != image.format)
+		{
 			return false;
+		}
 	}
 	
 	return true;

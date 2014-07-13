@@ -42,7 +42,7 @@ ModelLoader::ModelLoader(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(openG
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
 	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
 #ifdef DEBUG
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, nullptr);
 	aiAttachLogStream(&stream);
 #endif
 }

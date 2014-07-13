@@ -57,6 +57,7 @@ public:
 	
 	virtual void makeReadyForRender();
 	void initializeShaderLocations();
+
 private:
 	glmd::int32 gridX_;
 	glmd::int32 gridY_;

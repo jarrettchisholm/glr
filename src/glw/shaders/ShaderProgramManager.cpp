@@ -27,7 +27,9 @@ ShaderProgramManager::ShaderProgramManager(glw::IOpenGlDevice* openGlDevice, boo
 	defaultBindListeners_ = defaultBindListeners;
 	
 	if ( autoLoad )
+	{
 		loadStandardShaderPrograms();
+	}
 }
 
 ShaderProgramManager::~ShaderProgramManager()
@@ -48,7 +50,9 @@ void ShaderProgramManager::reloadShaders()
 	loadStandardShaderPrograms();
 	//loadShaderPrograms(constants::SHADER_DIRECTORY);
 	for ( auto& dir : loadedShaderDirectories_ )
+	{
 		load( dir );
+	}
 }
 
 IShaderProgram* ShaderProgramManager::getShaderProgram(const std::string& name) const
@@ -257,7 +261,9 @@ void ShaderProgramManager::load(std::map<std::string, std::string> dataMap, cons
 		entry.second->compile();
 
 		for ( IShaderProgramBindListener* bindListener : defaultBindListeners_)
+		{
 			entry.second->addBindListener( bindListener );
+		}
 	}
 	
 	// Clear out the temporary Glr shader / shader program maps

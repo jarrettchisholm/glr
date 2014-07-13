@@ -33,7 +33,7 @@ ModelManager::ModelManager(glw::IOpenGlDevice* openGlDevice) : openGlDevice_(ope
 	// it to the logging system. It remains active for all further
 	// calls to aiImportFile(Ex) and aiApplyPostProcessing.
 	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, NULL);
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT, nullptr);
 	aiAttachLogStream(&stream);
 }
 

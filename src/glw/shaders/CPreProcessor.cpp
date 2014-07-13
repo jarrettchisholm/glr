@@ -91,7 +91,7 @@ void CPreProcessor::process(std::map< std::string, std::string > defineMap)
 			++first;
 		}
 	}
-	catch ( boost::wave::cpp_exception const& e )
+	catch ( const boost::wave::cpp_exception& e )
 	{
 		// some preprocessing error
 		std::cerr
@@ -99,7 +99,7 @@ void CPreProcessor::process(std::map< std::string, std::string > defineMap)
 			<< e.description() << std::endl;
 		return;
 	}
-	catch ( std::exception const& e )
+	catch ( const std::exception& e )
 	{
 		// use last recognized token to retrieve the error position
 		std::cerr
@@ -159,7 +159,10 @@ bool CPreProcessor::found_unknown_directive(ContextT const& ctx, ContainerT cons
 	wave::token_id id = wave::util::impl::skip_whitespace(it, line.end());
 
 	if ( id != wave::T_IDENTIFIER )
-		return false;                                                                                                                                                                                                                                                         // nothing we could do
+	{
+		// nothing we could do
+		return false;
+	}
 
 	if ((*it).get_value() == "version" || (*it).get_value() == "extension" )
 	{
@@ -337,7 +340,9 @@ bool CPreProcessor::locate_include_file(ContextT& ctx, std::string& file_path, b
 		//std::cout << "baseDirectory_: " << baseDirectory_ << std::endl;
 		//std::cout << "locate_include_file doesn't exist 2: file_path:" << file_path << " dir_path:" << dir_path << " native_name:" << native_name << std::endl;
 		if ( !ctx.find_include_file(file_path, dir_path, is_system, current_name))
+		{
 			return false;
+		}
 		
 
 		fs::path native_path(wave::util::create_path(file_path));
