@@ -43,6 +43,7 @@ public:
 	virtual void removeBindListener(IShaderProgramBindListener* bindListener);
 	void removeAllBindListeners();
 
+	void unbind();
 	static void unbindAll();
 
 private:

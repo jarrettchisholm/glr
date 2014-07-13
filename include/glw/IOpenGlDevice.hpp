@@ -9,16 +9,18 @@
 #include "glm/glm.hpp"
 
 #include "shaders/IShaderProgramManager.hpp"
-
-#include "glw/IMaterialManager.hpp"
-#include "glw/ITextureManager.hpp"
-#include "glw/IMeshManager.hpp"
-#include "glw/IAnimationManager.hpp"
+#include "shaders/IShaderProgramBindListener.hpp"
 
 #include "glw/Constants.hpp"
 
 namespace glr
 {
+
+namespace shaders
+{
+	class IShaderProgram;
+}
+
 namespace glw
 {
 
@@ -55,7 +57,7 @@ struct OpenGlDeviceSettings
 /**
  * 
  */
-class IOpenGlDevice
+class IOpenGlDevice : public virtual glr::shaders::IShaderProgramBindListener
 {
 public:
 	virtual ~IOpenGlDevice()
@@ -87,7 +89,7 @@ public:
 	virtual GlError getGlError() = 0;
 	
 	/* Getters */
-	virtual shaders::IShaderProgramManager* getShaderProgramManager() = 0;
+	virtual glr::shaders::IShaderProgramManager* getShaderProgramManager() = 0;
 	
 	virtual IMaterialManager* getMaterialManager() = 0;
 	virtual ITextureManager* getTextureManager() = 0;
@@ -104,6 +106,9 @@ public:
 	virtual void setProjectionMatrix(const glm::mat4& projectionMatrix) = 0;
 	
 	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings() = 0;
+	
+	virtual void unbindAllShaderPrograms() = 0;
+	virtual glr::shaders::IShaderProgram* getCurrentlyBoundShaderProgram() const = 0;
 };
 
 }

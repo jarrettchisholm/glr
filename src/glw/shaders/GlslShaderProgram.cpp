@@ -6,6 +6,7 @@
 #include "common/logger/Logger.hpp"
 
 #include "exceptions/GlException.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 namespace glr
 {
@@ -16,11 +17,16 @@ GlslShaderProgram::GlslShaderProgram(std::string name, std::vector< std::unique_
 	: name_(std::move(name)), shaders_(std::move(shaders)), openGlDevice_(openGlDevice)
 {
 	programId_ = -1;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 GlslShaderProgram::~GlslShaderProgram()
 {
-	glDeleteProgram(programId_);
+	if (programId_ >= 0)
+	{
+		glDeleteProgram(programId_);
+	}
 }
 
 void GlslShaderProgram::compile()
@@ -106,6 +112,14 @@ GLuint GlslShaderProgram::getGLShaderProgramId() const
 
 void GlslShaderProgram::bind()
 {
+	assert(programId_ >= 0);
+	
+	// Don't bind if we are already bound
+	if (openGlDevice_->getCurrentlyBoundShaderProgram() == this)
+	{
+		return;
+	}
+	
 	glUseProgram(programId_);
 
 	// We need to invalidate the current bind points so that we can rebind what we need to
@@ -198,11 +212,25 @@ IShader::BindingsMap GlslShaderProgram::getBindings()
 
 void GlslShaderProgram::addBindListener(IShaderProgramBindListener* bindListener)
 {
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
 	bindListeners_.push_back(bindListener);
 }
 
 void GlslShaderProgram::removeBindListener(IShaderProgramBindListener* bindListener)
 {
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
 	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
 
 	if ( it != bindListeners_.end())
@@ -216,9 +244,15 @@ void GlslShaderProgram::removeAllBindListeners()
 	bindListeners_.clear();
 }
 
-void GlslShaderProgram::unbindAll()
+void GlslShaderProgram::unbind()
 {
-	glUseProgram(0);
+	openGlDevice_->unbindAllShaderPrograms();
+	
+	// Notify all listeners that we have bound no shader program
+	for ( auto bindListener : bindListeners_ )
+	{
+		bindListener->shaderBindCallback( nullptr );
+	}
 }
 
 }

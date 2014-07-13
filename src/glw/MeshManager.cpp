@@ -6,6 +6,8 @@
 #include <windows.h>
 #endif
 
+#include "common/logger/Logger.hpp"
+
 #include "glw/MeshManager.hpp"
 
 

@@ -180,11 +180,13 @@ void GlrProgram::render()
 	//setupUniformBufferObjectBindings(shader);
 	//bindUniformBufferObjects(shader);
 	sMgr_->drawAll();
-
-	shaders::GlslShaderProgram::unbindAll();
+	
+	openGlDevice_->unbindAllShaderPrograms();
 
 	if ( gui_ != nullptr )
+	{
 		gui_->render();
+	}
 
 	endRender();
 }

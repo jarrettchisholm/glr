@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
 
+#include "common/logger/Logger.hpp"
+
 #include "glw/Animation.hpp"
 
 #include "glw/Constants.hpp"

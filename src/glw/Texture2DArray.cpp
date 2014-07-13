@@ -3,6 +3,8 @@
 
 #include "glw/Texture2DArray.hpp"
 
+#include "common/logger/Logger.hpp"
+
 #include "exceptions/GlException.hpp"
 #include "exceptions/FormatException.hpp"
 #include "exceptions/InvalidArgumentException.hpp"

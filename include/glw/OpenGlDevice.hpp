@@ -15,6 +15,11 @@
 #include "shaders/ShaderProgramManager.hpp"
 #include "shaders/IShaderProgramBindListener.hpp"
 
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+#include "glw/IMeshManager.hpp"
+#include "glw/IAnimationManager.hpp"
+
 namespace glmd = glm::detail;
 
 namespace glr
@@ -58,6 +63,10 @@ public:
 	virtual IAnimationManager* getAnimationManager();
 	
 	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings();
+	
+	virtual void shaderBindCallback(glr::shaders::IShaderProgram* shader);
+	virtual void unbindAllShaderPrograms();
+	virtual shaders::IShaderProgram* getCurrentlyBoundShaderProgram() const;
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -80,6 +89,8 @@ private:
 	std::unique_ptr< shaders::ShaderProgramManager > shaderProgramManager_;
 	
 	OpenGlDeviceSettings settings_;
+	
+	shaders::IShaderProgram* currentlyBoundShaderProgram_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);

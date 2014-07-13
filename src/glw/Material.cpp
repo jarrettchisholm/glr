@@ -4,6 +4,8 @@
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
 
+#include "common/logger/Logger.hpp"
+
 #include "exceptions/GlException.hpp"
 
 #include "glw/Material.hpp"

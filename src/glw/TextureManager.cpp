@@ -7,6 +7,8 @@
 #include <windows.h>
 #endif
 
+#include "common/logger/Logger.hpp"
+
 #include "glw/TextureManager.hpp"
 
 #include "exceptions/Exception.hpp"

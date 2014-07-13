@@ -427,5 +427,22 @@ const OpenGlDeviceSettings& OpenGlDevice::getOpenGlDeviceSettings()
 	return settings_;
 }
 
+void OpenGlDevice::shaderBindCallback(shaders::IShaderProgram* shader)
+{
+	currentlyBoundShaderProgram_ = shader;
+}
+
+void OpenGlDevice::unbindAllShaderPrograms()
+{
+	glUseProgram(0);
+	
+	shaderBindCallback( nullptr );
+}
+
+shaders::IShaderProgram* OpenGlDevice::getCurrentlyBoundShaderProgram() const
+{
+	return currentlyBoundShaderProgram_;
+}
+
 }
 }
