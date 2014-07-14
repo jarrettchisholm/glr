@@ -7,6 +7,12 @@
 
 #include "models/Model.hpp"
 
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+
+#include "glw/IMaterial.hpp"
+#include "glw/ITexture.hpp"
+
 #include "exceptions/InvalidArgumentException.hpp"
 
 #include "common/logger/Logger.hpp"

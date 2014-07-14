@@ -8,6 +8,9 @@
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 
+#include "ITextureBindListener.hpp"
+#include "IMaterialBindListener.hpp"
+
 #include "shaders/IShaderProgramManager.hpp"
 #include "shaders/IShaderProgramBindListener.hpp"
 
@@ -57,7 +60,10 @@ struct OpenGlDeviceSettings
 /**
  * 
  */
-class IOpenGlDevice : public virtual glr::shaders::IShaderProgramBindListener
+class IOpenGlDevice 
+	: public virtual glr::shaders::IShaderProgramBindListener,
+	public virtual ITextureBindListener,
+	public virtual IMaterialBindListener
 {
 public:
 	virtual ~IOpenGlDevice()
@@ -107,8 +113,54 @@ public:
 	
 	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings() = 0;
 	
+	/**
+	 * Add a listener, which will be notified when this texture gets bound.
+	 * 
+	 * @param bindListener A pointer to an object implementing the IShaderProgramBindListener interface.
+	 */
+	virtual void addBindListener(shaders::IShaderProgramBindListener* bindListener) = 0;
+	
+	/**
+	 * Remove a bind listener.
+	 * 
+	 * @param bindListener A pointer to an IShaderProgramBindListener object that should be removed as a bind listener for this shader.
+	 */
+	virtual void removeBindListener(shaders::IShaderProgramBindListener* bindListener) = 0;
+	
+	/**
+	 * Add a listener, which will be notified when this texture gets bound.
+	 * 
+	 * @param bindListener A pointer to an object implementing the ITextureBindListener interface.
+	 */
+	virtual void addBindListener(ITextureBindListener* bindListener) = 0;
+	
+	/**
+	 * Remove a bind listener.
+	 * 
+	 * @param bindListener A pointer to an ITextureBindListener object that should be removed as a bind listener for this texture.
+	 */
+	virtual void removeBindListener(ITextureBindListener* bindListener) = 0;
+	
+	/**
+	 * Add a listener, which will be notified when this material gets bound.
+	 * 
+	 * @param bindListener A pointer to an object implementing the IMaterialBindListener interface.
+	 */
+	virtual void addBindListener(IMaterialBindListener* bindListener) = 0;
+	
+	/**
+	 * Remove a bind listener.
+	 * 
+	 * @param bindListener A pointer to an IMaterialBindListener object that should be removed as a bind listener for this material.
+	 */
+	virtual void removeBindListener(IMaterialBindListener* bindListener) = 0;
+	
 	virtual void unbindAllShaderPrograms() = 0;
-	virtual glr::shaders::IShaderProgram* getCurrentlyBoundShaderProgram() const = 0;
+	virtual void unbindAllTextures() = 0;
+	virtual void unbindAllMaterials() = 0;
+	virtual shaders::IShaderProgram* getCurrentlyBoundShaderProgram() const = 0;
+	virtual IMaterial* getCurrentlyBoundMaterial() const = 0;
+	virtual ITexture* getCurrentlyBoundTexture() const = 0;
 };
 
 }

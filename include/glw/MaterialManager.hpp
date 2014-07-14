@@ -12,8 +12,6 @@
 
 #include "IMaterialManager.hpp"
 
-#include "Material.hpp"
-
 #include "serialize/SplitMember.hpp"
 
 namespace glr
@@ -21,15 +19,17 @@ namespace glr
 namespace glw
 {
 
+class Material;
+
 class MaterialManager : public IMaterialManager
 {
 public:
 	MaterialManager(IOpenGlDevice* openGlDevice);
 	virtual ~MaterialManager();
 
-	virtual Material* getMaterial(const std::string& name) const;
-	virtual Material* addMaterial(const std::string& name);
-	virtual Material* addMaterial(
+	virtual IMaterial* getMaterial(const std::string& name) const;
+	virtual IMaterial* addMaterial(const std::string& name);
+	virtual IMaterial* addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,

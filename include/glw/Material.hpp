@@ -16,6 +16,7 @@
 #include "shaders/IShaderProgram.hpp"
 
 #include "IMaterial.hpp"
+#include "IMaterialBindListener.hpp"
 #include "MaterialData.hpp"
 
 namespace glr
@@ -42,7 +43,7 @@ public:
 	);
 	virtual ~Material();
 
-	virtual void bind() const;
+	virtual void bind();
 	virtual GLuint getBufferId() const;
 	GLuint getBindPoint() const;
 
@@ -56,12 +57,12 @@ public:
 	virtual bool isLocalDataLoaded() const;
 	virtual bool isDirty() const;
 
-	void setAmbient(const glm::vec4& ambient);
-	void setDiffuse(const glm::vec4& diffuse);
-	void setSpecular(const glm::vec4& specular);
-	void setEmission(const glm::vec4& emission);
-	void setShininess(glm::detail::float32 shininess);
-	void setStrength(glm::detail::float32 strength);
+	virtual void setAmbient(const glm::vec4& ambient);
+	virtual void setDiffuse(const glm::vec4& diffuse);
+	virtual void setSpecular(const glm::vec4& specular);
+	virtual void setEmission(const glm::vec4& emission);
+	virtual void setShininess(glm::detail::float32 shininess);
+	virtual void setStrength(glm::detail::float32 strength);
 
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);
@@ -71,6 +72,10 @@ public:
 
 	virtual const std::string& getName() const;
 	void setName(std::string name);
+	
+	virtual void addBindListener(IMaterialBindListener* bindListener);
+	virtual void removeBindListener(IMaterialBindListener* bindListener);
+	void removeAllBindListeners();
 private:
 	/**
 	 * Required by serialization.
@@ -92,6 +97,8 @@ private:
 	std::atomic<bool> isLocalDataLoaded_;
 	std::atomic<bool> isVideoMemoryAllocated_;
 	std::atomic<bool> isDirty_;
+	
+	std::vector<IMaterialBindListener*> bindListeners_;
 	
 	friend class boost::serialization::access;
 	

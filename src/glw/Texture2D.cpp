@@ -23,12 +23,16 @@ Texture2D::Texture2D() : internalFormat_(utilities::Format::FORMAT_UNKNOWN), buf
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2D::Texture2D(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
 {
 	isLocalDataLoaded_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings)), internalFormat_(utilities::Format::FORMAT_UNKNOWN), bufferId_(0)
@@ -53,16 +57,41 @@ Texture2D::Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2D::~Texture2D()
 {
+	freeVideoMemory();
+	
+	if (openGlDevice_->getCurrentlyBoundTexture() == this)
+	{
+		for ( auto bindListener : bindListeners_ )
+		{
+			bindListener->textureBindCallback( nullptr );
+		}
+	}
 }
 
-void Texture2D::bind(GLuint texturePosition) const
+void Texture2D::bind(GLuint texturePosition)
 {
+	assert(bufferId_ >= 0);
+	
+	// Don't bind if we are already bound
+	if (openGlDevice_->getCurrentlyBoundTexture() == this)
+	{
+		return;
+	}
+	
 	glActiveTexture(GL_TEXTURE0 + texturePosition);
 	glBindTexture(GL_TEXTURE_2D, bufferId_);
+	
+	// Notify all listeners that we have bound this texture
+	for ( auto bindListener : bindListeners_ )
+	{
+		bindListener->textureBindCallback( static_cast<ITexture*>( this ) );
+	}
 	
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "texture: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
@@ -227,6 +256,40 @@ const std::string& Texture2D::getName() const
 	return name_;
 }
 
+void Texture2D::addBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	bindListeners_.push_back(bindListener);
+}
+
+void Texture2D::removeBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+
+	if ( it != bindListeners_.end())
+	{
+		bindListeners_.erase(it);
+	}
+}
+
+void Texture2D::removeAllBindListeners()
+{
+	bindListeners_.clear();
+}
+
 void Texture2D::serialize(const std::string& filename)
 {
 	std::ofstream ofs(filename.c_str());
@@ -251,6 +314,7 @@ void Texture2D::deserialize(serialize::TextInArchive& inArchive)
 	inArchive >> *this;
 	loadLocalData();
 }
+
 
 /*
 template<class Archive> void Texture2D::serialize(Archive& ar, const unsigned int version)

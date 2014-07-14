@@ -12,7 +12,7 @@ namespace glr
 namespace glw
 {
 
-class Animation;
+class IAnimation;
 
 class IAnimationManager : public virtual serialize::ITextSerializable
 {
@@ -32,7 +32,7 @@ public:
 	 * 
 	 * @return The Animation object with name 'name', or nullptr if no animation exists with that name.
 	 */
-	virtual Animation* getAnimation(const std::string& name) const = 0;
+	virtual IAnimation* getAnimation(const std::string& name) const = 0;
 	
 	/**
 	 * Creates an animation with the given name.
@@ -48,7 +48,7 @@ public:
 	 * 
 	 * @return An Animation object.
 	 */
-	virtual Animation* addAnimation(const std::string& name, bool initialize = true) = 0;
+	virtual IAnimation* addAnimation(const std::string& name, bool initialize = true) = 0;
 	
 	/**
 	 * Creates an animation with the given name and using the provided animation data.
@@ -67,7 +67,7 @@ public:
 	 * 
 	 * @return An Animation object.
 	 */
-	virtual Animation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true) = 0;
+	virtual IAnimation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true) = 0;
 };
 
 }

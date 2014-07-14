@@ -25,9 +25,9 @@ public:
 	MeshManager(IOpenGlDevice* openGlDevice);
 	virtual ~MeshManager();
 
-	virtual Mesh* getMesh(const std::string& name) const;
-	virtual Mesh* addMesh(const std::string& name);
-	virtual Mesh* addMesh(
+	virtual IMesh* getMesh(const std::string& name) const;
+	virtual IMesh* addMesh(const std::string& name);
+	virtual IMesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
@@ -37,7 +37,7 @@ public:
 		BoneData boneData,
 		bool initialize = true
 	);
-	virtual Mesh* addMesh(
+	virtual IMesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,

@@ -3,6 +3,16 @@
 #include "models/Model.hpp"
 #include "models/ModelLoader.hpp"
 
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+#include "glw/IMeshManager.hpp"
+#include "glw/IAnimationManager.hpp"
+
+#include "glw/IMesh.hpp"
+#include "glw/ITexture.hpp"
+#include "glw/IMaterial.hpp"
+#include "glw/IAnimation.hpp"
+
 #include "glw/Constants.hpp"
 
 #include "exceptions/Exception.hpp"
@@ -287,7 +297,7 @@ void Model::addTexture(glw::ITexture* texture, glmd::uint32 index)
 	textures_[index] = texture;
 }
 
-void Model::addTexture(glw::ITexture* texture, glw::Mesh* mesh)
+void Model::addTexture(glw::ITexture* texture, glw::IMesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
 	
@@ -360,7 +370,7 @@ void Model::addMaterial(glw::IMaterial* material, glmd::uint32 index)
 	materials_[index] = material;
 }
 
-void Model::addMaterial(glw::IMaterial* material, glw::Mesh* mesh)
+void Model::addMaterial(glw::IMaterial* material, glw::IMesh* mesh)
 {
 	glmd::int32 i = getIndexOf(mesh);
 	

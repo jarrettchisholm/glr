@@ -7,6 +7,7 @@
 #include "common/logger/Logger.hpp"
 
 #include "exceptions/GlException.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 #include "glw/Material.hpp"
 
@@ -23,6 +24,8 @@ Material::Material() : bufferId_(0)
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name)), bufferId_(0)
@@ -30,6 +33,8 @@ Material::Material(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Material::Material(
@@ -70,6 +75,8 @@ Material::Material(
 			LOG_DEBUG( "Successfully loaded material.  Buffer id: " << bufferId_ );
 		}
 	}
+	
+	this->addBindListener(openGlDevice_);
 }
 
 void Material::pushToVideoMemory()
@@ -159,10 +166,26 @@ bool Material::isDirty() const
 Material::~Material()
 {
 	freeVideoMemory();
+	
+	if (openGlDevice_->getCurrentlyBoundMaterial() == this)
+	{
+		for ( auto bindListener : bindListeners_ )
+		{
+			bindListener->materialBindCallback( nullptr );
+		}
+	}
 }
 
-void Material::bind() const
+void Material::bind()
 {
+	assert(bufferId_ >= 0);
+	
+	// Don't bind if we are already bound
+	if (openGlDevice_->getCurrentlyBoundMaterial() == this)
+	{
+		return;
+	}
+	
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "material: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
 	/*
@@ -180,6 +203,12 @@ void Material::bind() const
 	
 	std::cout << std::endl << std::endl;
 	*/
+	
+	// Notify all listeners that we have bound this material
+	for ( auto bindListener : bindListeners_ )
+	{
+		bindListener->materialBindCallback( static_cast<IMaterial*>( this ) );
+	}
 }
 
 GLuint Material::getBufferId() const
@@ -236,6 +265,40 @@ const std::string& Material::getName() const
 void Material::setName(std::string name)
 {
 	name_ = std::move(name);
+}
+
+void Material::addBindListener(IMaterialBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	bindListeners_.push_back(bindListener);
+}
+
+void Material::removeBindListener(IMaterialBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+
+	if ( it != bindListeners_.end())
+	{
+		bindListeners_.erase(it);
+	}
+}
+
+void Material::removeAllBindListeners()
+{
+	bindListeners_.clear();
 }
 
 void Material::serialize(const std::string& filename)

@@ -11,8 +11,7 @@
 #include "shaders/IShaderProgram.hpp"
 #include "IOpenGlDevice.hpp"
 #include "ITexture.hpp"
-
-#include "common/utilities/Macros.hpp"
+#include "ITextureBindListener.hpp"
 
 namespace glr
 {
@@ -30,7 +29,7 @@ public:
 	Texture2D(utilities::Image* image, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings(), bool initialize = true);
 	virtual ~Texture2D();
 
-	virtual void bind(GLuint texturePosition = 0) const;
+	virtual void bind(GLuint texturePosition = 0);
 	
 	GLuint getBufferId() const;
 	GLuint getBindPoint() const;
@@ -67,6 +66,10 @@ public:
 	virtual const std::string& getName() const;
 	void setName(std::string name);
 
+	virtual void addBindListener(ITextureBindListener* bindListener);
+	virtual void removeBindListener(ITextureBindListener* bindListener);
+	void removeAllBindListeners();
+
 private:
 	/**
 	 * Required by serialization.
@@ -86,6 +89,8 @@ private:
 	std::atomic<bool> isLocalDataLoaded_;
 	std::atomic<bool> isVideoMemoryAllocated_;
 	std::atomic<bool> isDirty_;
+	
+	std::vector<ITextureBindListener*> bindListeners_;
 	
 	friend class boost::serialization::access;
 	

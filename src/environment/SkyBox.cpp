@@ -4,6 +4,14 @@
 
 #include "models/Model.hpp"
 
+#include "glw/IMaterialManager.hpp"
+#include "glw/ITextureManager.hpp"
+#include "glw/IMeshManager.hpp"
+
+#include "glw/IMesh.hpp"
+#include "glw/ITexture.hpp"
+#include "glw/IMaterial.hpp"
+
 namespace glr
 {
 namespace env
@@ -54,7 +62,7 @@ void SkyBox::initialize(models::IModelManager* modelManager)
 	glmd::float32 cz = 0.0f;
 	glmd::float32 cx = 1.0f;
 	
-	auto material = materialManager->addMaterial(
+	glw::IMaterial* material = materialManager->addMaterial(
 		std::string("basic"),
 		glm::vec4(0.5f, 0.5f, 0.5f, 1.0f),
 		glm::vec4(0.5f, 0.5f, 0.5f, 1.0f),
@@ -84,8 +92,8 @@ void SkyBox::initialize(models::IModelManager* modelManager)
 	textureCoordinates.push_back( glm::vec2(cz, cz) );
 	textureCoordinates.push_back( glm::vec2(cx, cz) );
 	
-	auto mesh = meshManager->addMesh( std::string("skybox_front"), vertices, std::vector< glm::vec3 >(), textureCoordinates, std::vector< glm::vec4 >() );
-	auto texture = textureManager->addTexture2D( std::string("sky_box/skybox_front.bmp"), std::string("sky_box/skybox_front.bmp") );
+	glw::IMesh* mesh = meshManager->addMesh( std::string("skybox_front"), vertices, std::vector< glm::vec3 >(), textureCoordinates, std::vector< glm::vec4 >() );
+	glw::ITexture* texture = textureManager->addTexture2D( std::string("sky_box/skybox_front.bmp"), std::string("sky_box/skybox_front.bmp") );
 	
 	assert(mesh != nullptr);
 	assert(texture != nullptr);

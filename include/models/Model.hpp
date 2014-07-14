@@ -17,20 +17,24 @@
 
 #include "glw/IOpenGlDevice.hpp"
 
-#include "glw/IMaterialManager.hpp"
-#include "glw/ITextureManager.hpp"
-#include "glw/IMeshManager.hpp"
-#include "glw/IAnimationManager.hpp"
-
-#include "glw/IMesh.hpp"
-#include "glw/ITexture.hpp"
-#include "glw/IMaterial.hpp"
-#include "glw/IAnimation.hpp"
-
 #include "serialize/SplitMember.hpp"
 
 namespace glr
 {
+
+namespace glw
+{
+class IMaterialManager;
+class ITextureManager;
+class IMeshManager;
+class IAnimationManager;
+
+class IMesh;
+class ITexture;
+class IMaterial;
+class IAnimation;
+}
+
 namespace models
 {
 
@@ -63,7 +67,7 @@ public:
 	void removeTexture(glw::ITexture* texture);
 	void removeTexture(glw::IMesh* mesh);
 	void addTexture(glw::ITexture* texture, glmd::uint32 index);
-	void addTexture(glw::ITexture* texture, glw::Mesh* mesh);
+	void addTexture(glw::ITexture* texture, glw::IMesh* mesh);
 	glmd::uint32 getNumberOfTextures() const;
 	
 	glw::IMaterial* getMaterial(glmd::uint32 index) const;
@@ -72,7 +76,7 @@ public:
 	void removeMaterial(glw::IMaterial* material);
 	void removeMaterial(glw::IMesh* mesh);
 	void addMaterial(glw::IMaterial* material, glmd::uint32 index);
-	void addMaterial(glw::IMaterial* material, glw::Mesh* mesh);
+	void addMaterial(glw::IMaterial* material, glw::IMesh* mesh);
 	glmd::uint32 getNumberOfMaterials() const;
 
 	void removeAnimation(const std::string& name);
@@ -156,7 +160,7 @@ protected:
 	mutable std::mutex accessMutex_;
 	
 	glw::IAnimation* currentAnimation_;
-	glw::Animation* emptyAnimation_;
+	glw::IAnimation* emptyAnimation_;
 
 	glw::IMeshManager* meshManager_;
 	glw::IMaterialManager* materialManager_;

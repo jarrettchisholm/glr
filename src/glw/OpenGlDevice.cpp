@@ -10,6 +10,7 @@
 #include "common/logger/Logger.hpp"
 
 #include "exceptions/GlException.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 #include "glw/MaterialManager.hpp"
 #include "glw/TextureManager.hpp"
@@ -430,6 +431,136 @@ const OpenGlDeviceSettings& OpenGlDevice::getOpenGlDeviceSettings()
 void OpenGlDevice::shaderBindCallback(shaders::IShaderProgram* shader)
 {
 	currentlyBoundShaderProgram_ = shader;
+	
+	// Notify all listeners that we have bound this shader program
+	for ( auto bindListener : bindListeners_ )
+	{
+		bindListener->shaderBindCallback( currentlyBoundShaderProgram_ );
+	}
+}
+
+void OpenGlDevice::textureBindCallback(ITexture* texture)
+{
+	currentlyBoundTexture_ = texture;
+	
+	// Notify all listeners that we have bound this texture program
+	for ( auto bindListener : textureBindListeners_ )
+	{
+		bindListener->textureBindCallback( currentlyBoundTexture_ );
+	}
+}
+
+void OpenGlDevice::materialBindCallback(IMaterial* material)
+{
+	currentlyBoundMaterial_ = material;
+	
+	// Notify all listeners that we have bound this material program
+	for ( auto bindListener : materialBindListeners_ )
+	{
+		bindListener->materialBindCallback( currentlyBoundMaterial_ );
+	}
+}
+
+void OpenGlDevice::addBindListener(shaders::IShaderProgramBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	bindListeners_.push_back(bindListener);
+}
+
+void OpenGlDevice::removeBindListener(shaders::IShaderProgramBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+
+	if ( it != bindListeners_.end())
+	{
+		bindListeners_.erase(it);
+	}
+}
+
+void OpenGlDevice::removeAllBindListeners()
+{
+	bindListeners_.clear();
+}
+
+void OpenGlDevice::addBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	textureBindListeners_.push_back(bindListener);
+}
+
+void OpenGlDevice::removeBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(textureBindListeners_.begin(), textureBindListeners_.end(), bindListener);
+
+	if ( it != textureBindListeners_.end())
+	{
+		textureBindListeners_.erase(it);
+	}
+}
+
+void OpenGlDevice::removeAllTextureBindListeners()
+{
+	textureBindListeners_.clear();
+}
+
+void OpenGlDevice::addBindListener(IMaterialBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	materialBindListeners_.push_back(bindListener);
+}
+
+void OpenGlDevice::removeBindListener(IMaterialBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(materialBindListeners_.begin(), materialBindListeners_.end(), bindListener);
+
+	if ( it != materialBindListeners_.end())
+	{
+		materialBindListeners_.erase(it);
+	}
+}
+
+void OpenGlDevice::removeAllMaterialBindListeners()
+{
+	materialBindListeners_.clear();
 }
 
 void OpenGlDevice::unbindAllShaderPrograms()
@@ -439,9 +570,34 @@ void OpenGlDevice::unbindAllShaderPrograms()
 	shaderBindCallback( nullptr );
 }
 
+void OpenGlDevice::unbindAllTextures()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	
+	textureBindCallback( nullptr );
+}
+
+void OpenGlDevice::unbindAllMaterials()
+{
+	// TODO: Implement?
+	
+	materialBindCallback( nullptr );
+}
+
 shaders::IShaderProgram* OpenGlDevice::getCurrentlyBoundShaderProgram() const
 {
 	return currentlyBoundShaderProgram_;
+}
+
+IMaterial* OpenGlDevice::getCurrentlyBoundMaterial() const
+{
+	return currentlyBoundMaterial_;
+}
+
+ITexture* OpenGlDevice::getCurrentlyBoundTexture() const
+{
+	return currentlyBoundTexture_;
 }
 
 }

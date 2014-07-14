@@ -35,7 +35,7 @@ AnimationManager::~AnimationManager()
 {
 }
 
-Animation* AnimationManager::getAnimation(const std::string& name) const
+IAnimation* AnimationManager::getAnimation(const std::string& name) const
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -51,7 +51,7 @@ Animation* AnimationManager::getAnimation(const std::string& name) const
 	return nullptr;
 }
 
-Animation* AnimationManager::addAnimation(const std::string& name, bool initialize)
+IAnimation* AnimationManager::addAnimation(const std::string& name, bool initialize)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -73,7 +73,7 @@ Animation* AnimationManager::addAnimation(const std::string& name, bool initiali
 	return animationPointer;
 }
 
-Animation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize)
+IAnimation* AnimationManager::addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	

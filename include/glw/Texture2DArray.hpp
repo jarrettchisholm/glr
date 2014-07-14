@@ -11,9 +11,9 @@
 #include "shaders/IShaderProgram.hpp"
 #include "IOpenGlDevice.hpp"
 #include "ITexture.hpp"
+#include "ITextureBindListener.hpp"
 
 #include "common/utilities/ImageLoader.hpp"
-#include "common/utilities/Macros.hpp"
 
 namespace glr
 {
@@ -31,7 +31,7 @@ public:
 	Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings = TextureSettings(), bool initialize = true);
 	virtual ~Texture2DArray();
 
-	virtual void bind(GLuint texturePosition = 0) const;
+	virtual void bind(GLuint texturePosition = 0);
 	
 	GLuint getBufferId() const;
 	GLuint getBindPoint() const;
@@ -57,6 +57,10 @@ public:
 
 	virtual const std::string& getName() const;
 	void setName(std::string name);
+	
+	virtual void addBindListener(ITextureBindListener* bindListener);
+	virtual void removeBindListener(ITextureBindListener* bindListener);
+	void removeAllBindListeners();
 
 private:
 	/**
@@ -76,6 +80,8 @@ private:
 	std::atomic<bool> isLocalDataLoaded_;
 	std::atomic<bool> isVideoMemoryAllocated_;
 	std::atomic<bool> isDirty_;
+	
+	std::vector<ITextureBindListener*> bindListeners_;
 	
 	/**
 	 * Helper method - returns true if all of the images in the vector are the same internal format, and false otherwise.

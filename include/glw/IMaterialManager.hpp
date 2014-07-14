@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "Material.hpp"
-
 #include "serialize/ITextSerializable.hpp"
 
 namespace glr
@@ -12,7 +10,7 @@ namespace glr
 namespace glw
 {
 
-class Material;
+class IMaterial;
 
 class IMaterialManager : public virtual serialize::ITextSerializable
 {
@@ -32,7 +30,7 @@ public:
 	 * 
 	 * @return The Material object with name 'name', or nullptr if no material exists with that name.
 	 */
-	virtual Material* getMaterial(const std::string& name) const = 0;
+	virtual IMaterial* getMaterial(const std::string& name) const = 0;
 	
 	/**
 	 * Creates a material with the given name.
@@ -46,7 +44,7 @@ public:
 	 * 
 	 * @return A Material object.
 	 */
-	virtual Material* addMaterial(const std::string& name) = 0;
+	virtual IMaterial* addMaterial(const std::string& name) = 0;
 	
 	/**
 	 * Creates a material with the given name and using the provided material data.
@@ -68,7 +66,7 @@ public:
 	 * 
 	 * @return A Material object.
 	 */
-	virtual Material* addMaterial(
+	virtual IMaterial* addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,

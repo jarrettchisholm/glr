@@ -24,6 +24,8 @@ Texture2DArray::Texture2DArray() : bufferId_(0)
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
@@ -33,6 +35,8 @@ Texture2DArray::Texture2DArray(IOpenGlDevice* openGlDevice, std::string name, Te
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOpenGlDevice* openGlDevice, std::string name, TextureSettings settings, bool initialize) : openGlDevice_(openGlDevice), name_(std::move(name)), settings_(std::move(settings))
@@ -59,16 +63,41 @@ Texture2DArray::Texture2DArray(const std::vector<utilities::Image*>& images, IOp
 		allocateVideoMemory();
 		pushToVideoMemory();
 	}
+	
+	this->addBindListener(openGlDevice_);
 }
 
 Texture2DArray::~Texture2DArray()
 {
+	freeVideoMemory();
+	
+	if (openGlDevice_->getCurrentlyBoundTexture() == this)
+	{
+		for ( auto bindListener : bindListeners_ )
+		{
+			bindListener->textureBindCallback( nullptr );
+		}
+	}
 }
 
-void Texture2DArray::bind(GLuint texturePosition) const
+void Texture2DArray::bind(GLuint texturePosition)
 {	
+	assert(bufferId_ >= 0);
+	
+	// Don't bind if we are already bound
+	if (openGlDevice_->getCurrentlyBoundTexture() == this)
+	{
+		return;
+	}
+	
 	//glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, bufferId_);
+	
+	// Notify all listeners that we have bound this texture
+	for ( auto bindListener : bindListeners_ )
+	{
+		bindListener->textureBindCallback( static_cast<ITexture*> ( this ) );
+	}
 	
 	//bindPoint_ = openGlDevice_->bindBuffer( bufferId_ );
 	//std::cout << "texture: " << name_ << " | " << bufferId_ << " | " << bindPoint_ << std::endl;
@@ -293,6 +322,40 @@ bool Texture2DArray::areImagesSameFormat()
 const std::string& Texture2DArray::getName() const
 {
 	return name_;
+}
+
+void Texture2DArray::addBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	bindListeners_.push_back(bindListener);
+}
+
+void Texture2DArray::removeBindListener(ITextureBindListener* bindListener)
+{
+	if (bindListener == nullptr)
+	{
+		std::string msg = std::string( "Bind listener must not be null." );
+		LOG_ERROR( msg );
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	auto it = std::find(bindListeners_.begin(), bindListeners_.end(), bindListener);
+
+	if ( it != bindListeners_.end())
+	{
+		bindListeners_.erase(it);
+	}
+}
+
+void Texture2DArray::removeAllBindListeners()
+{
+	bindListeners_.clear();
 }
 
 void Texture2DArray::serialize(const std::string& filename)

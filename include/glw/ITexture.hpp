@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 
 #include "IGraphicsObject.hpp"
+#include "ITextureBindListener.hpp"
 
 #include "common/logger/Logger.hpp"
 #include "common/utilities/ImageLoader.hpp"
@@ -49,7 +50,7 @@ public:
 	 * 
 	 * @param texturePosition The texture position to bind to.  This must be a value between 0 - 9.
 	 */
-	virtual void bind(GLuint texturePosition = 0) const = 0;
+	virtual void bind(GLuint texturePosition = 0) = 0;
 	
 	/**
 	 * Returns the name of this texture.
@@ -57,6 +58,20 @@ public:
 	 * @return The name of the texture.
 	 */
 	virtual const std::string& getName() const = 0;
+	
+	/**
+	 * Add a listener, which will be notified when this texture gets bound.
+	 * 
+	 * @param bindListener A pointer to an object implementing the ITextureBindListener interface.
+	 */
+	virtual void addBindListener(ITextureBindListener* bindListener) = 0;
+	
+	/**
+	 * Remove a bind listener.
+	 * 
+	 * @param bindListener A pointer to an ITextureBindListener object that should be removed as a bind listener for this texture.
+	 */
+	virtual void removeBindListener(ITextureBindListener* bindListener) = 0;
 };
 
 }

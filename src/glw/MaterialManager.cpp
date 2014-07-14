@@ -9,6 +9,8 @@
 #include "common/logger/Logger.hpp"
 
 #include "glw/MaterialManager.hpp"
+#include "glw/IMaterial.hpp"
+#include "glw/Material.hpp"
 
 
 namespace glr
@@ -29,7 +31,7 @@ MaterialManager::~MaterialManager()
 {
 }
 
-Material* MaterialManager::getMaterial(const std::string& name) const
+IMaterial* MaterialManager::getMaterial(const std::string& name) const
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -45,7 +47,7 @@ Material* MaterialManager::getMaterial(const std::string& name) const
 	return nullptr;
 }
 
-Material* MaterialManager::addMaterial(const std::string& name)
+IMaterial* MaterialManager::addMaterial(const std::string& name)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -66,7 +68,7 @@ Material* MaterialManager::addMaterial(const std::string& name)
 	return materialPointer;
 }
 
-Material* MaterialManager::addMaterial(
+IMaterial* MaterialManager::addMaterial(
 		const std::string& name,
 		glm::vec4 ambient,
 		glm::vec4 diffuse,

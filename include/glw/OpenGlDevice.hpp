@@ -64,9 +64,29 @@ public:
 	
 	virtual const OpenGlDeviceSettings& getOpenGlDeviceSettings();
 	
-	virtual void shaderBindCallback(glr::shaders::IShaderProgram* shader);
-	virtual void unbindAllShaderPrograms();
+	virtual void addBindListener(shaders::IShaderProgramBindListener* bindListener);
+	virtual void removeBindListener(shaders::IShaderProgramBindListener* bindListener);
+	void removeAllBindListeners();
+	
+	virtual void addBindListener(ITextureBindListener* bindListener);
+	virtual void removeBindListener(ITextureBindListener* bindListener);
+	void removeAllTextureBindListeners();
+	
+	virtual void addBindListener(IMaterialBindListener* bindListener);
+	virtual void removeBindListener(IMaterialBindListener* bindListener);
+	void removeAllMaterialBindListeners();
+	
 	virtual shaders::IShaderProgram* getCurrentlyBoundShaderProgram() const;
+	virtual IMaterial* getCurrentlyBoundMaterial() const;
+	virtual ITexture* getCurrentlyBoundTexture() const;
+	
+	virtual void unbindAllShaderPrograms();
+	virtual void unbindAllTextures();
+	virtual void unbindAllMaterials();
+	
+	virtual void shaderBindCallback(shaders::IShaderProgram* shader);
+	virtual void textureBindCallback(ITexture* texture);
+	virtual void materialBindCallback(IMaterial* material);
 
 private:	
 	std::vector<GLuint> bufferIds_;
@@ -90,7 +110,13 @@ private:
 	
 	OpenGlDeviceSettings settings_;
 	
+	std::vector<shaders::IShaderProgramBindListener*> bindListeners_;
+	std::vector<IMaterialBindListener*> materialBindListeners_;
+	std::vector<ITextureBindListener*> textureBindListeners_;
+	
 	shaders::IShaderProgram* currentlyBoundShaderProgram_;
+	IMaterial* currentlyBoundMaterial_;
+	ITexture* currentlyBoundTexture_;
 
 	void setupUniformBufferObjectBindings(shaders::IShaderProgram* shader);
 	void setupLightUbo(std::string name, shaders::IShaderProgram* shader);

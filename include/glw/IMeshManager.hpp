@@ -12,7 +12,7 @@ namespace glr
 namespace glw
 {
 
-class Mesh;
+class IMesh;
 
 class IMeshManager : public virtual serialize::ITextSerializable
 {
@@ -32,7 +32,7 @@ public:
 	 * 
 	 * @return The Mesh object with name 'name', or nullptr if no mesh exists with that name.
 	 */
-	virtual Mesh* getMesh(const std::string& name) const = 0;
+	virtual IMesh* getMesh(const std::string& name) const = 0;
 	
 	/**
 	 * Creates a mesh with the given name.
@@ -46,7 +46,7 @@ public:
 	 * 
 	 * @return A Mesh object.
 	 */
-	virtual Mesh* addMesh(const std::string& name) = 0;
+	virtual IMesh* addMesh(const std::string& name) = 0;
 	
 	/**
 	 * Creates a mesh with the given name and using the provided mesh data.
@@ -67,7 +67,7 @@ public:
 	 * 
 	 * @return A Mesh object.
 	 */
-	virtual Mesh* addMesh(
+	virtual IMesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
@@ -94,7 +94,7 @@ public:
 	 * 
 	 * @return A Mesh object.
 	 */
-	virtual Mesh* addMesh(
+	virtual IMesh* addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,

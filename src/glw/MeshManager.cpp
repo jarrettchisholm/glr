@@ -29,7 +29,7 @@ MeshManager::~MeshManager()
 {
 }
 
-Mesh* MeshManager::getMesh(const std::string& name) const
+IMesh* MeshManager::getMesh(const std::string& name) const
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -45,7 +45,7 @@ Mesh* MeshManager::getMesh(const std::string& name) const
 	return nullptr;
 }
 
-Mesh* MeshManager::addMesh(const std::string& name)
+IMesh* MeshManager::addMesh(const std::string& name)
 {
 	std::lock_guard<std::mutex> lock(accessMutex_);
 	
@@ -67,7 +67,7 @@ Mesh* MeshManager::addMesh(const std::string& name)
 	return meshPointer;
 }
 
-Mesh* MeshManager::addMesh(
+IMesh* MeshManager::addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,
@@ -98,7 +98,7 @@ Mesh* MeshManager::addMesh(
 	return meshPointer;
 }
 
-Mesh* MeshManager::addMesh(
+IMesh* MeshManager::addMesh(
 		const std::string& name, 
 		std::vector< glm::vec3 > vertices, 
 		std::vector< glm::vec3 > normals,

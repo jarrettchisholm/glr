@@ -25,16 +25,16 @@ public:
 	AnimationManager(IOpenGlDevice* openGlDevice);
 	virtual ~AnimationManager();
 
-	virtual Animation* getAnimation(const std::string& name) const;
-	virtual Animation* addAnimation(const std::string& name, bool initialize = true);
-	virtual Animation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true);
-	
+	virtual IAnimation* getAnimation(const std::string& name) const;
+	virtual IAnimation* addAnimation(const std::string& name, bool initialize = true);
+	virtual IAnimation* addAnimation(const std::string& name, glm::detail::float64 duration, glm::detail::float64 ticksPerSecond, std::map< std::string, AnimatedBoneNode > animatedBoneNodes, bool initialize = true);
+
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);
 
 	virtual void deserialize(const std::string& filename);
 	virtual void deserialize(serialize::TextInArchive& inArchive);
-	
+
 private:
 	/**
 	 * Required by serialization.
