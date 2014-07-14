@@ -2,6 +2,8 @@
 
 #include "terrain/TerrainMesh.hpp"
 
+#include "glw/IOpenGlDevice.hpp"
+
 #include "exceptions/GlException.hpp"
 
 namespace glr

@@ -9,6 +9,13 @@
 #include "terrain/TerrainMeshSerializer.hpp"
 #include "terrain/dual_contouring/VoxelChunkMeshGenerator.hpp"
 #include "terrain/marching_cubes/VoxelChunkMeshGenerator.hpp"
+#include "terrain/ITerrain.hpp"
+#include "terrain/ITerrainManagerEventListener.hpp"
+#include "terrain/IFieldFunction.hpp"
+#include "terrain/IVoxelChunkMeshGenerator.hpp"
+#include "terrain/Terrain.hpp"
+
+#include "glw/IOpenGlDevice.hpp"
 
 #include "models/Model.hpp"
 

@@ -5,7 +5,12 @@
 #include "terrain/Terrain.hpp"
 #include "terrain/Constants.hpp"
 
+#include "models/IModel.hpp"
 #include "models/Model.hpp"
+
+#include "terrain/TerrainMesh.hpp"
+#include "terrain/IVoxelChunkMeshGenerator.hpp"
+#include "terrain/VoxelChunkNoiseGenerator.hpp"
 
 #include "glw/IMaterialManager.hpp"
 #include "glw/ITextureManager.hpp"

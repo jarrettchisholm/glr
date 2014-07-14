@@ -5,15 +5,14 @@
 
 #include "ITerrain.hpp"
 #include "BasicSceneNode.hpp"
-#include "TerrainMesh.hpp"
-
-#include "IVoxelChunkMeshGenerator.hpp"
-#include "VoxelChunkNoiseGenerator.hpp"
 
 namespace glr
 {
 namespace terrain
 {
+
+class TerrainMesh;
+class IVoxelChunkMeshGenerator;
 
 class Terrain : public virtual ITerrain, public BasicSceneNode
 {

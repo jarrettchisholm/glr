@@ -13,7 +13,6 @@
 #include "IMesh.hpp"
 
 #include "shaders/IShaderProgram.hpp"
-#include "IOpenGlDevice.hpp"
 
 namespace glr
 {

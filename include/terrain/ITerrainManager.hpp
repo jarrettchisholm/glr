@@ -6,13 +6,16 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include "terrain/ITerrain.hpp"
-#include "terrain/ITerrainManagerEventListener.hpp"
-
 namespace glr
 {
+
+class ISceneNode;
+
 namespace terrain
 {
+
+class ITerrain;
+class ITerrainManagerEventListener;
 
 class ITerrainManager
 {

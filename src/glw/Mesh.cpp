@@ -3,6 +3,8 @@
 
 #include "glw/Mesh.hpp"
 
+#include "glw/IOpenGlDevice.hpp"
+
 #include "common/logger/Logger.hpp"
 
 #include "exceptions/GlException.hpp"

@@ -5,11 +5,16 @@
 #include <glm/glm.hpp>
 
 #include "ISceneNode.hpp"
-#include "../models/IModel.hpp"
 #include "TerrainSettings.hpp"
 
 namespace glr
 {
+
+namespace models
+{
+class IModel;
+}
+
 namespace terrain
 {
 
