@@ -18,6 +18,8 @@
 #include "glw/IMaterial.hpp"
 #include "glw/ITexture.hpp"
 
+#include "models/MaterialData.hpp"
+
 #include "exceptions/InvalidArgumentException.hpp"
 
 #include "common/logger/Logger.hpp"

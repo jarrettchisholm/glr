@@ -3,10 +3,6 @@
 
 #include <string>
 
-#include "models/IModel.hpp"
-
-#include "glw/Mesh.hpp"
-
 #include "Id.hpp"
 
 #include "serialize/ITextSerializable.hpp"
@@ -15,6 +11,8 @@ namespace glr
 {
 namespace models
 {
+
+class IModel;
 
 /**
  * 

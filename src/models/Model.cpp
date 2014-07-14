@@ -15,6 +15,9 @@
 
 #include "glw/Constants.hpp"
 
+#include "models/ModelData.hpp"
+#include "models/AnimationSet.hpp"
+
 #include "exceptions/Exception.hpp"
 
 namespace glr

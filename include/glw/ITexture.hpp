@@ -10,6 +10,7 @@
 
 #include "IGraphicsObject.hpp"
 #include "ITextureBindListener.hpp"
+#include "TextureSettings.hpp"
 
 #include "common/logger/Logger.hpp"
 #include "common/utilities/ImageLoader.hpp"
@@ -20,19 +21,6 @@ namespace glr
 {
 namespace glw
 {
-
-/**
- * Used to pass in TextureSettings settings (so we don't have to have a method with a whole ton of parameters).
- */
-struct TextureSettings
-{
-	TextureSettings() : textureWrapS(GL_CLAMP_TO_EDGE), textureWrapT(GL_CLAMP_TO_EDGE)
-	{
-	}
-	
-	GLint textureWrapS;
-	GLint textureWrapT;
-};
 
 class ITexture : public virtual IGraphicsObject, public virtual serialize::ITextSerializable
 {

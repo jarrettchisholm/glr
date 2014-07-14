@@ -8,18 +8,29 @@
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 
-#include "glw/IOpenGlDevice.hpp"
-
-#include "models/Model.hpp"
-
 #include "IdManager.hpp"
 
 namespace glmd = glm::detail;
 
 namespace glr
 {
+
+namespace glw
+{
+class IOpenGlDevice;
+class BoneData;
+class BoneNode;
+}
+
 namespace models
 {
+
+class Model;
+class AnimationSet;
+class ModelData;
+class MeshData;
+class TextureData;
+class MaterialData;
 
 class ModelLoader
 {

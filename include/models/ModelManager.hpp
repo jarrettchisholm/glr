@@ -15,20 +15,23 @@
 
 #include "models/IModelManager.hpp"
 
-#include "models/ModelLoader.hpp"
-
-#include "glw/IOpenGlDevice.hpp"
-
-#include "models/Model.hpp"
-
 #include "IdManager.hpp"
 
 #include "serialize/SplitMember.hpp"
 
 namespace glr
 {
+
+namespace glw
+{
+class IOpenGlDevice;
+}
+
 namespace models
 {
+
+class ModelLoader;
+class Model;
 
 class ModelManager : public IModelManager
 {

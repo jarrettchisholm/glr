@@ -25,7 +25,19 @@
 #include "glw/IMaterial.hpp"
 #include "glw/IAnimation.hpp"
 
+#include "glw/IOpenGlDevice.hpp"
+
+#include "glw/BoneNode.hpp"
+#include "glw/BoneData.hpp"
+#include "glw/AnimatedBoneNode.hpp"
 #include "models/ModelLoader.hpp"
+#include "models/Model.hpp"
+#include "models/AnimationSet.hpp"
+#include "models/AnimationData.hpp"
+#include "models/ModelData.hpp"
+#include "models/MeshData.hpp"
+#include "models/TextureData.hpp"
+#include "models/MaterialData.hpp"
 
 #include "common/utilities/AssImpUtilities.hpp"
 #include "exceptions/GlException.hpp"
@@ -512,7 +524,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 		{
 			const aiNodeAnim* pNodeAnim = scene->mAnimations[i]->mChannels[j];
 			
-			AnimatedBoneNode abn = AnimatedBoneNode();
+			glw::AnimatedBoneNode abn = glw::AnimatedBoneNode();
 			abn.name = std::string( pNodeAnim->mNodeName.C_Str() );
 
 			for (glmd::uint32 k = 0; k < pNodeAnim->mNumPositionKeys; k++)

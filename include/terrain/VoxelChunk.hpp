@@ -6,8 +6,6 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include "common/utilities/Macros.hpp"
-
 namespace glmd = glm::detail;
 
 namespace glr

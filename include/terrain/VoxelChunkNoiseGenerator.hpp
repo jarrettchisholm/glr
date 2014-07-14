@@ -1,13 +1,16 @@
 #ifndef VOXELCHUNKNOISEGENERATOR_H_
 #define VOXELCHUNKNOISEGENERATOR_H_
 
-#include "IFieldFunction.hpp"
-#include "VoxelChunk.hpp"
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
 
 namespace glr
 {
 namespace terrain
 {
+
+class IFieldFunction;
+class VoxelChunk;
 
 /**
  * Will fill the VoxelChunk with noise generated using the field function.

@@ -7,6 +7,10 @@
 #endif
 
 #include "models/ModelManager.hpp"
+#include "models/ModelLoader.hpp"
+#include "glw/IOpenGlDevice.hpp"
+#include "models/IModel.hpp"
+#include "models/Model.hpp"
 
 #include "common/utilities/ImageLoader.hpp"
 

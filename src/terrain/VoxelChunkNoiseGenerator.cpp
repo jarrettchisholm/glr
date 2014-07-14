@@ -1,4 +1,5 @@
 #include "terrain/VoxelChunkNoiseGenerator.hpp"
+#include "terrain/VoxelChunk.hpp"
 #include "terrain/Constants.hpp"
 
 #include "terrain/IFieldFunction.hpp"
