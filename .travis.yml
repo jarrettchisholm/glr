@@ -13,6 +13,6 @@ before_install:
   - if test $CC = gcc; then sudo update-alternatives --config gcc; fi
   - if test $CC = gcc; then sudo update-alternatives --config g++; fi
 install:
-  - python setup.py
+  - python setup.py release
 script: 
   - python build_and_test.py
