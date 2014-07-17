@@ -29,7 +29,7 @@ Assuming you have all the pre-requisites ready to go, you can run the automatic 
 
 from the terminal (or the developer Command Prompt for VS2013 on Windows).
 
-**Note**: debug setup is not yet implemented.  Please see issue [#30](https://github.com/jarrettchisholm/glr/issues/30)).
+**Note**: debug setup is not yet implemented.  Please see issue [#30](https://github.com/jarrettchisholm/glr/issues/30).
 
 Compile
 -------
