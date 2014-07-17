@@ -18,7 +18,7 @@ Furthermore, the goals for the code are for it to be:
 - Documented
 - Clean
 
-Setup
+Compile
 -----
 You will need several pre-requisites installed before compilation will work.  For an automated setup, check out
 the [Automatic Building](https://github.com/jarrettchisholm/glr/wiki/Automatic-Building) section of the wiki.
@@ -31,8 +31,6 @@ from the terminal (or the developer Command Prompt for VS2013 on Windows).
 
 **Note**: debug setup is not yet implemented.  Please see issue [#30](https://github.com/jarrettchisholm/glr/issues/30).
 
-Compile
--------
 Once setup is complete, you can compile by running
 
     scons
