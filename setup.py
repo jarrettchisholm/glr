@@ -22,7 +22,7 @@ isMac = platform.system() == 'Darwin'
 parser = argparse.ArgumentParser(usage = 'Usage: %(prog)s <options> release|debug', description='')
 
 parser.add_argument('-a', '--architecture', help='The architecture type')
-parser.add_argument('buildType', help='The build type to setup for - must be either "release" or "debug"')
+parser.add_argument('buildType', nargs='?', default='release', help='The build type to setup for - must be either "release" or "debug"')
 
 architecture = 'x64'
 buildType = None
