@@ -24,6 +24,7 @@ You will need several pre-requisites installed before compilation will work.  Fo
 the [Automatic Building](https://github.com/jarrettchisholm/glr/wiki/Automatic-Building) section of the wiki.
 
 **Windows**
+
 These instructions assume you are using the Git Bash terminal. You can, however, use a more visual tool for cloning if you wish.
 
 Furthermore, for compilation, you will need to use the Developer Command Prompt for VS2013.
