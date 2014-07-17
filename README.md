@@ -33,9 +33,6 @@ from the terminal (or the developer Command Prompt for VS2013 on Windows).
 
 Compile
 -------
-You will need several pre-requisites installed before compilation will work.  For an automated setup, check out
-the [Automatic Building](https://github.com/jarrettchisholm/glr/wiki/Automatic-Building) section of the wiki.
-
-You can compile by running `scons` from the terminal (or the Developer Command Prompt for VS2013 on Windows).
+Once setup is complete, you can compile by running `scons` from the terminal (or the Developer Command Prompt for VS2013 on Windows).
 
 For more details about compiling, check out the [wiki](https://github.com/jarrettchisholm/glr/wiki).
