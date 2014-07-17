@@ -7,11 +7,64 @@ import platform
 import glob
 import subprocess
 import shutil
+import argparse
+
+
 
 ### Establish our system
 isLinux = platform.system() == 'Linux'
 isWindows = os.name == 'nt'
 isMac = platform.system() == 'Darwin'
+
+
+
+### Parse command line arguments
+parser = argparse.ArgumentParser(usage = 'Usage: %(prog)s <options> release|debug', description='')
+
+parser.add_argument('-a', '--architecture', help='The architecture type')
+parser.add_argument('buildType', help='The build type to setup for - must be either "release" or "debug"')
+
+architecture = 'x64'
+buildType = None
+
+# Default to 32 bit in windows
+if isWindows:
+	architecture = 'x86'
+
+args = parser.parse_args()
+
+if args.architecture is not None:
+	architecture = args.architecture
+
+buildType = args.buildType
+
+if (buildType != 'release' and buildType != 'debug'):
+	print('Invalid buildType - must be either "release" or "debug"')
+	exit()
+if (architecture is not None and architecture != 'x86' and architecture != 'x64'):
+	print('Invalid architecture - must be either "x86" or "x64"')
+	exit()
+
+### Validate the architecture
+if (architecture == 'x86' and isLinux):
+	print('x86 architecture is not yet implemented in setup.py for Linux - sorry!')
+	exit()
+if (architecture == 'x64' and isWindows):
+	print('x64 architecture is not yet implemented in setup.py for Windows - sorry!')
+	exit()
+if (architecture == 'x86' and isMac):
+	print('x86 architecture is not yet implemented in setup.py for Mac - sorry!')
+	exit()
+
+# Mac not ready yet...
+if (isMac):
+	print('Mac is not yet implemented in setup.py - sorry!')
+	exit()
+	
+# Debug not ready yet...
+if (buildType == 'debug'):
+	print('Debug build type is not ready yet - sorry!')
+	exit()
 
 # Handling libudev.so.0 missing (happens in newer linux distros)
 # Easy way:
@@ -37,16 +90,17 @@ glewName = 'glew.tar.gz'
 sfmlName = 'sfml.tar.gz'
 
 if isLinux:
-	downloadGlrDepsUrl += 'linux/x64/'
+	
+	downloadGlrDepsUrl += 'linux/{0}/{1}/'.format(buildType, architecture)
 
 if isWindows:
 	sharedLibraryExt = 'dll'
 	staticLibraryExt = 'lib'
 	
-	downloadGlrDepsUrl += 'windows/x86/'
+	downloadGlrDepsUrl += 'windows/{0}/{1}/'.format(buildType, architecture)
 
 if isMac:
-	downloadGlrDepsUrl += 'macosx/x64/'
+	downloadGlrDepsUrl += 'macosx/{0}/{1}/'.format(buildType, architecture)
 
 files = dict()
 # Format
