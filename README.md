@@ -33,6 +33,10 @@ from the terminal (or the developer Command Prompt for VS2013 on Windows).
 
 Compile
 -------
-Once setup is complete, you can compile by running `scons` from the terminal (or the Developer Command Prompt for VS2013 on Windows).
+Once setup is complete, you can compile by running
+
+    scons
+
+from the terminal (or the Developer Command Prompt for VS2013 on Windows).
 
 For more details about compiling, check out the [wiki](https://github.com/jarrettchisholm/glr/wiki).
