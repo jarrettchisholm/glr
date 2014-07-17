@@ -19,9 +19,14 @@ Furthermore, the goals for the code are for it to be:
 - Clean
 
 Compile
------
+-------
 You will need several pre-requisites installed before compilation will work.  For an automated setup, check out
 the [Automatic Building](https://github.com/jarrettchisholm/glr/wiki/Automatic-Building) section of the wiki.
+
+**Windows**
+These instructions assume you are using the Git Bash terminal. You can, however, use a more visual tool for cloning if you wish.
+
+Furthermore, for compilation, you will need to use the Developer Command Prompt for VS2013.
 
 Assuming you have all the pre-requisites ready to go, you can run the automatic setup by running
 
