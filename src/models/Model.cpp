@@ -1,5 +1,7 @@
 #include <utility>
 
+#include "common/utilities/Macros.hpp"
+
 #include "models/Model.hpp"
 #include "models/ModelLoader.hpp"
 
@@ -19,6 +21,7 @@
 #include "models/AnimationSet.hpp"
 
 #include "exceptions/Exception.hpp"
+#include "exceptions/GlException.hpp"
 
 namespace glr
 {
@@ -595,6 +598,7 @@ void Model::pushToVideoMemory()
 	{
 		if (m != nullptr)
 		{
+			OPENGL_CHECK_ERRORS(openGlDevice_)
 			m->pushToVideoMemory();
 		}
 	}

@@ -6,6 +6,7 @@
 #include "glw/IOpenGlDevice.hpp"
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/Macros.hpp"
 
 #include "exceptions/GlException.hpp"
 
@@ -14,8 +15,6 @@ namespace glr
 namespace glw
 {
 
-GLuint vaoTemp = 0;
-GLuint vboTemp = 0;
 Mesh::Mesh()
 {
 	openGlDevice_ = nullptr;
@@ -100,28 +99,38 @@ Mesh::~Mesh()
 
 void Mesh::pushToVideoMemory()
 {
-	LOG_DEBUG( "loading mesh '" + name_ +"' into video memory." );
+	LOG_DEBUG( "loading mesh '" + name_ + "' into video memory." );
 
 	if (vaoId_ == 0)
 	{
-		std::string msg = std::string( "Mesh has not been allocated in video memory yet." );
+		std::string msg = std::string( FILE_AND_LINE_NUMBER + ": Mesh has not been allocated in video memory yet." );
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
 	
 	glBindVertexArray(vaoId_);
-
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_.size() * sizeof(glm::vec3), &vertices_[0]);
+
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[1]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, textureCoordinates_.size() * sizeof(glm::vec2), &textureCoordinates_[0]);
 
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[2]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, normals_.size() * sizeof(glm::vec3), &normals_[0]);
 	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, colors_.size() * sizeof(glm::vec4), &colors_[0]);
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << vertexBoneData_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
@@ -139,12 +148,14 @@ void Mesh::pushToVideoMemory()
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[4]);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, vertexBoneData_.size() * sizeof(VertexBoneData), &vertexBoneData_[0]);
 	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+	
 	glBindVertexArray(0);
 	
 	GlError err = openGlDevice_->getGlError();
 	if (err.type != GL_NONE)
 	{		
-		std::string msg = std::string( "Error while push data for mesh '" + name_ + "' to video memory in OpenGL: " + err.name);
+		std::string msg = FILE_AND_LINE_NUMBER + ": Error while pushing data for mesh '" + name_ + "' to video memory in OpenGL: " + err.name;
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
@@ -152,32 +163,7 @@ void Mesh::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully pushed data for mesh '" + name_ + "' to video memory." );
 	}
-	
-	// TESTING
-	if (vertices_.size() == normals_.size())
-	{
-		std::cout << "Pushing for mesh: " << name_ << std::endl;
-		
-		glBindVertexArray(vaoTemp);
-		
-		auto temp = std::vector<glm::vec3>( vertices_.size()*3 );
-		
-		int j = 0;
-		for (int i=0; i < vertices_.size(); i+=3)
-		{
-			temp[i] = vertices_[j];
-			temp[i+1] = vertices_[j] + normals_[j];
-			temp[i+2] = vertices_[j];
-			
-			j++;
-		}
-		
-		glBindBuffer(GL_ARRAY_BUFFER, vboTemp);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, temp.size() * sizeof(glm::vec3), &temp[0]);
-		
-		glBindVertexArray(0);
-	}
-	
+
 	isDirty_ = false;
 }
 
@@ -205,7 +191,9 @@ void Mesh::freeLocalData()
 void Mesh::freeVideoMemory()
 {
 	if (vaoId_ == 0)
+	{
 		return;
+	}
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -219,7 +207,7 @@ void Mesh::allocateVideoMemory()
 {
 	if (vaoId_ > 0)
 	{
-		std::string msg = std::string( "Mesh already has a vertex array object generated." );
+		std::string msg = std::string( FILE_AND_LINE_NUMBER + ": Mesh already has a vertex array object generated." );
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
@@ -229,28 +217,40 @@ void Mesh::allocateVideoMemory()
 	
 	glBindVertexArray(vaoId_);
 
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+
 	// create our vbos
 	glGenBuffers(5, &vboIds_[0]);
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[1]);
 	glBufferData(GL_ARRAY_BUFFER, textureCoordinates_.size() * sizeof(glm::vec2), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[2]);
 	glBufferData(GL_ARRAY_BUFFER, normals_.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vboIds_[3]);
 	glBufferData(GL_ARRAY_BUFFER, colors_.size() * sizeof(glm::vec4), nullptr, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	//std::cout << "SIZE: " << vertices_.size() << " " << sizeof(glm::ivec4) << " " << vertexBoneData_.size() << " " << sizeof(VertexBoneData) << std::endl;
 	
@@ -272,6 +272,8 @@ void Mesh::allocateVideoMemory()
 	glEnableVertexAttribArray(5);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(glm::ivec4)));
 
+	OPENGL_CHECK_ERRORS(openGlDevice_)
+
 	glBindVertexArray(0);
 	
 	GlError err = openGlDevice_->getGlError();
@@ -280,52 +282,7 @@ void Mesh::allocateVideoMemory()
 		// Cleanup
 		freeVideoMemory();
 		
-		std::string msg = std::string( "Error while allocating video memory for mesh '" + name_ + "' in OpenGL: " + err.name);
-		LOG_ERROR( msg );
-		throw exception::GlException( msg );
-	}
-	else
-	{
-		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
-	}
-	
-	// TESTING
-	if (vertices_.size() == normals_.size())
-	{
-		std::cout << "Calculating for mesh: " << name_ << std::endl;
-		glGenVertexArrays(1, &vaoTemp);
-		
-		glBindVertexArray(vaoTemp);
-	
-		glGenBuffers(1, &vboTemp);
-		
-		auto temp = std::vector<glm::vec3>( vertices_.size()*3 );
-		
-		int j = 0;
-		for (int i=0; i < vertices_.size(); i+=3)
-		{
-			temp[i] = vertices_[j];
-			temp[i+1] = vertices_[j] + normals_[j];
-			temp[i+2] = vertices_[j];
-			
-			j++;
-		}
-		
-		glBindBuffer(GL_ARRAY_BUFFER, vboTemp);
-		glBufferData(GL_ARRAY_BUFFER, temp.size() * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		
-		glBindVertexArray(0);
-	}
-	
-	err = openGlDevice_->getGlError();
-	if (err.type != GL_NONE)
-	{
-		// Cleanup
-		freeVideoMemory();
-		
-		std::string msg = std::string( "Error while allocating video memory for mesh '" + name_ + "' in OpenGL: " + err.name);
+		std::string msg = std::string( FILE_AND_LINE_NUMBER + ": Error while allocating video memory for mesh '" + name_ + "' in OpenGL: " + err.name);
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
 	}
@@ -359,13 +316,6 @@ void Mesh::render()
 
 	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
 	
-	/*
-	if (vaoTemp != 0)
-	{
-		glBindVertexArray(vaoTemp);
-		glDrawArrays(GL_TRIANGLES, 0, vertices_.size()*3);
-	}
-	*/
 	glBindVertexArray(0);
 }
 

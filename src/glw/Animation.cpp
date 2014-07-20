@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/Macros.hpp"
 
 #include "glw/Animation.hpp"
 
@@ -174,6 +175,8 @@ void Animation::allocateVideoMemory()
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, Constants::MAX_NUMBER_OF_BONES_PER_MESH * sizeof(glm::mat4), &currentTransforms_[0], GL_STREAM_DRAW);
 	
 	isVideoMemoryAllocated_ = true;
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	LOG_DEBUG( "Successfully loaded animation.  Buffer id: " << bufferId_ );
 }

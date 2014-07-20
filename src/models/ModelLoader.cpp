@@ -258,7 +258,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 		switch ( face->mNumIndices )
 		{
 			case 1: 
-				msg = std::string("Unable to load model...Unsupported number of indices per face (1).");
+				msg = std::string("__FILE__(__LINE__): Unable to load model...Unsupported number of indices per face (1).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 	
@@ -386,6 +386,7 @@ TextureData ModelLoader::loadTexture(const std::string& name, const std::string&
 	{
 		LOG_DEBUG( "No material specified." );
 	}
+	
 	return data;
 }
 

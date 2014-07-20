@@ -4,6 +4,7 @@
 #include "glw/Texture2DArray.hpp"
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/Macros.hpp"
 
 #include "exceptions/GlException.hpp"
 #include "exceptions/FormatException.hpp"
@@ -218,6 +219,8 @@ void Texture2DArray::freeVideoMemory()
 	
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	glDeleteTextures(images_.size(), &bufferId_);
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	bufferId_ = 0;
 }

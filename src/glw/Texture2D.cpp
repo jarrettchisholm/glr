@@ -4,6 +4,7 @@
 #include "glw/Texture2D.hpp"
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/Macros.hpp"
 
 #include "exceptions/GlException.hpp"
 #include "exceptions/FormatException.hpp"
@@ -194,6 +195,8 @@ void Texture2D::freeVideoMemory()
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDeleteTextures(1, &bufferId_);
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	bufferId_ = 0;
 }

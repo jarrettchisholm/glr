@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "common/logger/Logger.hpp"
+#include "common/utilities/Macros.hpp"
 
 #include "exceptions/GlException.hpp"
 #include "exceptions/InvalidArgumentException.hpp"
@@ -144,6 +145,8 @@ void Material::allocateVideoMemory()
 	bufferId_ = openGlDevice_->createBufferObject(GL_UNIFORM_BUFFER, sizeof(MaterialData), &md);
 	
 	isVideoMemoryAllocated_ = true;
+	
+	OPENGL_CHECK_ERRORS(openGlDevice_)
 	
 	LOG_DEBUG( "Successfully allocated material memory.  Buffer id: " << bufferId_ );
 }
