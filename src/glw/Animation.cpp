@@ -453,11 +453,11 @@ void Animation::readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glm
 	
 	{
 		auto it = animatedBoneNodes_.find( rootBoneNode.name );
-		
+
 		if ( it != animatedBoneNodes_.end() )
 		{
 			const AnimatedBoneNode& animatedBoneNode = it->second;
-			
+
 			// Clamp animation time between start and end frame
 			if ( startFrame_ > 0 || endFrame_ > 0)
 			{

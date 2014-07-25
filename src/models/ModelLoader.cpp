@@ -550,8 +550,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 				abn.scalingTimes.push_back( pNodeAnim->mScalingKeys[k].mTime );
 				abn.scalings.push_back( glm::vec3( pNodeAnim->mScalingKeys[k].mValue.x, pNodeAnim->mScalingKeys[k].mValue.y, pNodeAnim->mScalingKeys[k].mValue.z ) );
 			}
-			
-			
+
 			// Add AnimatedBoneNode to the animation
 			if( animation.animatedBoneNodes.find( abn.name ) == animation.animatedBoneNodes.end() )
 			{
@@ -571,7 +570,7 @@ AnimationSet ModelLoader::loadAnimations(const std::string& name, const std::str
 		}
 		else 
 		{
-			// Warning - animated bone node already exists!
+			// Warning - animation already exists!
 			LOG_WARN( "Animation with name '" << animation.name << "' already exists!" );
 		}
 	}

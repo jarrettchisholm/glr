@@ -568,6 +568,7 @@ void Model::render(shaders::IShaderProgram& shader)
 				currentAnimation_->setFrameClampping( startFrame_, endFrame_ );
 				currentAnimation_->calculate(globalInverseTransformation_, rootBoneNode_, meshes_[i]->getBoneData(), indexCache_);
 				currentAnimation_->pushToVideoMemory();
+				//std::cout << "animationTime_: " << animationTime_ << " startFrame_: " << startFrame_ << " endFrame_: " << endFrame_ << std::endl;
 				
 				openGlDevice_->bindBuffer( currentAnimation_->getBufferId(), bindPoint );
 			}
@@ -684,7 +685,9 @@ void Model::loadLocalData()
 		{
 			auto mesh = meshManager->getMesh(d.meshData.name);
 			if (mesh == nullptr)
+			{
 				mesh = meshManager->addMesh(d.meshData.name, d.meshData.vertices, d.meshData.normals, d.meshData.textureCoordinates, d.meshData.colors, d.meshData.bones, d.boneData, false);
+			}
 			
 			meshes_.push_back( mesh );
 			
@@ -693,7 +696,9 @@ void Model::loadLocalData()
 			{
 				auto texture = textureManager->getTexture2D(d.textureData.filename);
 				if (texture == nullptr)
+				{
 					texture = textureManager->addTexture2D(d.textureData.filename, d.textureData.filename, d.textureData.settings, false);
+				}
 				
 				textures_.push_back( texture );
 			}
@@ -705,16 +710,18 @@ void Model::loadLocalData()
 	
 			auto material = materialManager->getMaterial(d.materialData.name);
 			if (material == nullptr)
+			{
 				material = materialManager->addMaterial(d.materialData.name, d.materialData.ambient, d.materialData.diffuse, d.materialData.specular, d.materialData.emission, d.materialData.shininess, d.materialData.strength, false);
+			}
 			
 			materials_.push_back( material );
 		}
 		
 		// Create bone structure (tree structure)
-		auto rootBoneNode = animationSet.rootBoneNode;
+		rootBoneNode_ = animationSet.rootBoneNode;
 		
 		// Set the global inverse transformation
-		auto globalInverseTransformation = animationSet.globalInverseTransformation;
+		globalInverseTransformation_ = animationSet.globalInverseTransformation;
 		
 		// Load the animation information
 		for ( auto& kv : animationSet.animations)
