@@ -14,6 +14,7 @@
 #include "shaders/IShaderProgramManager.hpp"
 #include "shaders/IShaderProgramBindListener.hpp"
 
+#include "glw/OpenGlDeviceSettings.hpp"
 #include "glw/Constants.hpp"
 
 namespace glr
@@ -43,18 +44,6 @@ struct GlError
 	GlError() : type(GL_NONE), name(std::string(""))
 	{
 	}	
-};
-
-/**
- * Used to pass in OpenGlDeviceSettings settings (so we don't have to have a method with a whole ton of parameters).
- */
-struct OpenGlDeviceSettings
-{
-	OpenGlDeviceSettings() : defaultTextureDir(glr::glw::Constants::MODEL_DIRECTORY)
-	{
-	}
-	
-	std::string defaultTextureDir;
 };
 
 /**

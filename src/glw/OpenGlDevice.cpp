@@ -30,6 +30,7 @@ OpenGlDevice::OpenGlDevice(const OpenGlDeviceSettings& settings)
 OpenGlDevice::~OpenGlDevice()
 {
 }
+
 /**
  * Will setup our OpenGlDevice.
  * 

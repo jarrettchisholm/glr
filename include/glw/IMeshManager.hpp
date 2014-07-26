@@ -102,6 +102,34 @@ public:
 		std::vector< glm::vec4 > colors,
 		bool initialize = true
 	) = 0;
+	
+	/**
+	 * Destroys the mesh with the given name.
+	 * 
+	 * If no mesh exists with the given name, this method will do nothing.
+	 * 
+	 * Note that once destroyed, all references and pointers to that mesh will be invalid.
+	 * 
+	 * **Partially Thread Safe**: If the mesh being destroyed has not yet been initialized, this method is safe to call in a multi-threaded environment.  However, 
+	 * if it has been initialized, this method is *not* thread safe, and should only be called from the OpenGL thread.
+	 * 
+	 * @param name The name of the mesh to destroy.
+	 */
+	virtual void destroyMesh( const std::string& name ) = 0;
+	
+	/**
+	 * Destroys the given mesh.
+	 * 
+	 * If the mesh is null, an exception will be thrown.
+	 * 
+	 * Note that once destroyed, all references and pointers to that mesh will be invalid.
+	 * 
+	 * **Partially Thread Safe**: If the mesh being destroyed has not yet been initialized, this method is safe to call in a multi-threaded environment.  However, 
+	 * if it has been initialized, this method is *not* thread safe, and should only be called from the OpenGL thread.
+	 * 
+	 * @param mesh The mesh to destroy.
+	 */
+	virtual void destroyMesh( IMesh* mesh ) = 0;
 };
 
 }

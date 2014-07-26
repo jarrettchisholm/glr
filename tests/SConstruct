@@ -209,7 +209,7 @@ if buildFlags['beautify']:
 VariantDir('build', 'src', duplicate=0)
 
 # Set our source files
-source_files = Glob('build/*.cpp', 'build/*.h')
+source_files = Glob('build/*.cpp', 'build/*.hpp')
 
 setupDependencies()
 

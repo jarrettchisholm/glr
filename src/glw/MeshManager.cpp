@@ -6,6 +6,7 @@
 #include <windows.h>
 #endif
 
+#include "exceptions/InvalidArgumentException.hpp"
 #include "common/logger/Logger.hpp"
 
 #include "glw/MeshManager.hpp"
@@ -125,6 +126,49 @@ IMesh* MeshManager::addMesh(
 	meshes_[name] = std::move(mesh);
 
 	return meshPointer;
+}
+
+void MeshManager::destroyMesh( const std::string& name )
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Destroying mesh..." );
+	
+	auto it = meshes_.find(name);
+	if ( it != meshes_.end() )
+	{
+		meshes_.erase( it );
+	}
+	else
+	{
+		LOG_DEBUG( "Mesh does not exist." );
+	}
+}
+
+void MeshManager::destroyMesh( IMesh* mesh )
+{
+	std::lock_guard<std::mutex> lock(accessMutex_);
+	
+	LOG_DEBUG( "Destroying mesh..." );
+	
+	if (mesh == nullptr)
+	{
+		std::string msg = std::string("Mesh pointer cannot be null.");
+		LOG_ERROR(msg);
+		throw exception::InvalidArgumentException(msg);
+	}
+	
+	const auto findFunction = [mesh](const std::map<std::string, std::unique_ptr<Mesh>>::value_type& node) { return node.second.get() == mesh; };
+	auto it = std::find_if(meshes_.begin(), meshes_.end(), findFunction);
+	
+	if ( it != meshes_.end() )
+	{
+		meshes_.erase( it );
+	}
+	else
+	{
+		LOG_DEBUG( "Mesh does not exist." );
+	}
 }
 
 void MeshManager::serialize(const std::string& filename)

@@ -45,6 +45,8 @@ public:
 		std::vector< glm::vec4 > colors,
 		bool initialize = true
 	);
+	virtual void destroyMesh( const std::string& name );
+	virtual void destroyMesh( IMesh* mesh );
 	
 	virtual void serialize(const std::string& filename);
 	virtual void serialize(serialize::TextOutArchive& outArchive);

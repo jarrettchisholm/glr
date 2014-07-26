@@ -30,7 +30,7 @@ namespace glw
 class OpenGlDevice : public IOpenGlDevice
 {
 public:
-	OpenGlDevice(const OpenGlDeviceSettings& settings);
+	OpenGlDevice(const OpenGlDeviceSettings& settings = OpenGlDeviceSettings());
 	virtual ~OpenGlDevice();
 	
 	/* Implementation of IOpenGlDevice methods */

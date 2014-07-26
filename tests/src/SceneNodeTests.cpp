@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 	
 	
 	// Rotation test
-	float errorMargin = 0.00005f;
+	float errorMargin = 0.000005f;
 	node->rotate( 90.0f, glm::vec3(1.0f, 0.0f, 0.0f) );
 	node->rotate( 90.0f, glm::vec3(0.0f, 1.0f, 0.0f) );
 	node->rotate( 90.0f, glm::vec3(0.0f, 0.0f, 1.0f) );
@@ -134,10 +134,10 @@ BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 	glm::quat expectedQuat = glm::quat(0.707107f, 0.0f, 0.707107f, 0.0f);
 	auto quat = node->getOrientation();
 	
-	BOOST_CHECK_CLOSE( quat.w, expectedQuat.w, errorMargin );
-	BOOST_CHECK_CLOSE( quat.x, expectedQuat.x, errorMargin );
-	BOOST_CHECK_CLOSE( quat.y, expectedQuat.y, errorMargin );
-	BOOST_CHECK_CLOSE( quat.z, expectedQuat.z, errorMargin );
+	BOOST_CHECK_CLOSE_FRACTION( quat.w, expectedQuat.w, errorMargin );
+	BOOST_CHECK(std::fabs(expectedQuat.x - quat.x) < errorMargin);
+	BOOST_CHECK_CLOSE_FRACTION( quat.y, expectedQuat.y, errorMargin );
+	BOOST_CHECK(std::fabs(expectedQuat.z - quat.z) < errorMargin);
 	
 	// TODO: think of more tests?
 }
