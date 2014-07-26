@@ -222,7 +222,7 @@ std::unique_ptr<Model> ModelLoader::generateModel(const std::string& name, const
 		animations.push_back(animation);
 		
 		// TODO: add animations properly (i.e. with names specifying the animation i guess?)
-		std::cout << "anim: " << animation->getName() << std::endl;
+		//std::cout << "anim: " << animation->getName() << std::endl;
 	}
 	
 	std::unique_ptr<Model> model = std::unique_ptr<Model>( new Model(idManager.createId(), name, meshes, textures, materials, animations, rootBoneNode, globalInverseTransformation, openGlDevice_) );
@@ -348,7 +348,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 		}
 	}
 	
-	std::cout << "Load results: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
+	//std::cout << "Load results: " << mesh->mNumVertices << " " << mesh->mNumBones << " " << temp << " " << data.bones.size() << std::endl;
 
 	LOG_DEBUG( "done loading mesh '" << filename << "'." );
 	
