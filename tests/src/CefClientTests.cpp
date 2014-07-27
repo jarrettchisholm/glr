@@ -101,7 +101,6 @@ glm::detail::uint32 sendTestBindings(CefRefPtr<CefBrowser> browser)
 		std::string messageId = utilities::toString( it->name );
 		messageIdMap[messageId] = numSent;
 		
-		std::wcout << L"obj name: " << it->name << std::endl;
 		CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create("AddObject");
 		message->GetArgumentList()->SetString( 0, messageId );
 		message->GetArgumentList()->SetString( 1, it->name );
@@ -116,7 +115,6 @@ glm::detail::uint32 sendTestBindings(CefRefPtr<CefBrowser> browser)
 			messageId = utilities::toString( it->name + name );
 			messageIdMap[messageId] = numSent;
 			
-			std::wcout << L"func name: " << name << std::endl;
 			message->GetArgumentList()->SetString( 0, messageId );
 			message->GetArgumentList()->SetString( 1, it->name );
 			message->GetArgumentList()->SetString( 2, name );
@@ -132,7 +130,6 @@ glm::detail::uint32 sendTestBindings(CefRefPtr<CefBrowser> browser)
 			messageId = utilities::toString( it->name + attr.first );
 			messageIdMap[messageId] = numSent;
 			
-			std::wcout << L"attr name: " << attr.first << std::endl;
 			message->GetArgumentList()->SetString( 0, messageId );
 			message->GetArgumentList()->SetString( 1, it->name );
 			message->GetArgumentList()->SetString( 2, attr.first );
@@ -216,15 +213,12 @@ public:
 	{
 		
 		std::wstring s = message->GetName().ToWString();
-		std::wcout << L"CefClientTests OnProcessMessageReceived " << s << std::endl;
 		/*	
 		if( s == "ExecuteFunction" )
 		{	
 			std::wstring objName = message->GetArgumentList()->GetString(0);
 			std::wstring functionName = message->GetArgumentList()->GetString(1);
 			glmd::int32 numArguments = message->GetArgumentList()->GetInt(2);
-			
-			std::wcout << L"GuiComponent ExecuteFunction " << objName << "." << functionName << " " << numArguments << std::endl;
 			
 			std::vector< boost::any > params = std::vector< boost::any >();
 			
@@ -383,8 +377,6 @@ public:
 			m->GetArgumentList()->SetString( 0, "TESTING" );
 			m->GetArgumentList()->SetInt( 1, numSent_ );
 			browser->SendProcessMessage(PID_RENDERER, m);
-			
-			std::cout << "ReadyForBindings finished with " << numSent_ << " messages(s) sent to the render process." << std::endl;
 		}
 		else if( s == glr::cef_client::ALL_BINDINGS_RECEIVED )
 		{ 
@@ -404,7 +396,6 @@ public:
 			}
 			
 			messageIdMap.erase(it);
-			std::cout << "GuiComponent Success: " << messageId << std::endl;
 		}
 		else if( s == glr::cef_client::EXCEPTION )
 		{ 
