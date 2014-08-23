@@ -12,11 +12,15 @@
 
 #include "terrain/Constants.hpp"
 
+#include "exceptions/InvalidArgumentException.hpp"
+
+#include "common/logger/Logger.hpp"
+
 #define ABS(x) (x < 0 ? -(x) : (x))
 #define NX 200
 #define NY 160
 #define NZ 160
-#define ISOLEVEL 0
+#define ISOLEVEL 0.0f
 
 namespace glr
 {
@@ -386,39 +390,57 @@ int triTable[256][16] = {
 /**
  * Determines whether the points provided define a a fully solid space or a totally empty space.
  * 
+ * @param points The point field to test.
+ * 
  * @return True if space is totally empty or solid; false otherwise.
  */
 bool VoxelChunkMeshGenerator::isEmptyOrSolid(const Points& points) const
 {
+	if (points.size() == 0 || points[0].size() == 0 || points[0][0].size() == 0)
+	{
+		// Error
+		const std::string message = std::string("Invalid point field - must have at least 1 point in all 3 dimensions.");
+		LOG_ERROR(message);
+		throw exception::InvalidArgumentException(message);
+	}
+	
 	bool isEmpty = true;
 	bool isSolid = true;
 	
-	for (glmd::int32 x=0; x < glr::terrain::constants::SIZE+1; x++)
+	for (glmd::int32 x=0; x < points.size(); x++)
 	{
-		for (glmd::int32 y=0; y < glr::terrain::constants::SIZE+1; y++)
+		for (glmd::int32 y=0; y < points[0].size(); y++)
 		{
-			for (glmd::int32 z=0; z < glr::terrain::constants::SIZE+1; z++)
+			for (glmd::int32 z=0; z < points[0][0].size(); z++)
 			{
 				if (isEmpty)
 				{
 					if (points[x][y][z] <= 0.0f)
+					{
 						isEmpty = false;
+					}
 				}
 				
 				if (isSolid)
 				{
 					if (points[x][y][z] > 0.0f)
+					{
 						isSolid = false;
+					}
 				}
 				
 				if (!isEmpty && !isSolid)
+				{
 					return false;
+				}
 			}
 		}
 	}
 	
 	if (isEmpty && isSolid)
+	{
 		assert(0);
+	}
 	
 	return true;
 }
@@ -465,7 +487,9 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, const Points& po
 			
 			/* Cube is entirely in/out of the surface */
 			if (edgeTable[cubeindex] == 0)
+			{
 				continue;
+			}
 		
 			/* Find the vertices where the surface intersects the cube */
 			if (edgeTable[cubeindex] & 1)
@@ -573,11 +597,17 @@ glm::vec3 VoxelChunkMeshGenerator::vertexInterp(double isolevel, const glm::vec3
 	double errorMargin = 0.00001;
 
 	if (ABS(isolevel-valp1) < errorMargin)
+	{
 		return p1;
+	}
 	if (ABS(isolevel-valp2) < errorMargin)
+	{
 		return p2;
+	}
 	if (ABS(valp1-valp2) < errorMargin)
+	{
 		return p1;
+	}
 
 	double mu = (isolevel - valp1) / (valp2 - valp1);
 	
@@ -605,15 +635,23 @@ glm::vec3 VoxelChunkMeshGenerator::calculateNormal(int x1, int y1, int z1, int x
 	if (constants::POINT_FIELD_OFFSET <= 0)
 	{
 		if (x1 <=0 || y1 <= 0 || z1 <=0)
+		{
 			return glm::vec3();
+		}
 		if (x2 <=0 || y2 <= 0 || z2 <=0)
+		{
 			return glm::vec3();
+		}
 	}
 	
 	if (x1+1 >= densityValues.size() || y1+1 >= densityValues[0].size() || z1+1 >= densityValues[0][0].size())
+	{
 		return glm::vec3();
+	}
 	if (x2+1 >= densityValues.size() || y2+1 >= densityValues[0].size() || z2+1 >= densityValues[0][0].size())
+	{
 		return glm::vec3();
+	}
 	
 	glm::vec3 gradient1 = calculateGradientVector(x1, y1, z1, densityValues);
 	glm::vec3 gradient2 = calculateGradientVector(x2, y2, z2, densityValues);
@@ -638,11 +676,15 @@ glm::vec3 VoxelChunkMeshGenerator::calculateGradientVector(int x, int y, int z, 
 	if (constants::POINT_FIELD_OFFSET <= 0)
 	{
 		if (x <=0 || y <= 0 || z <=0)
+		{
 			return glm::vec3();
+		}
 	}
 	
 	if (x+1 >= densityValues.size() || y+1 >= densityValues[0].size() || z+1 >= densityValues[0][0].size())
+	{
 		return glm::vec3();
+	}
 	
 	glm::vec3 gradient = glm::vec3();
 	const glm::detail::float32 scale = 1.0f;
@@ -741,7 +783,9 @@ void VoxelChunkMeshGenerator::resizeBlocks(Blocks& blocks) const
 	{
 		blocks[i].resize(glr::terrain::constants::SIZE+1);
 		for (glmd::int32 j = 0; j < glr::terrain::constants::SIZE+1; j++)
+		{
 			blocks[i][j].resize(glr::terrain::constants::SIZE+1);
+		}
 	}
 }
 
@@ -753,7 +797,9 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, glm::detail::int32
 	glmd::int32 gridZ = chunk.gridZ;
 	
 	if (isEmptyOrSolid(points))
+	{
 		return;
+	}
 	
 	glm::ivec3 gridCoords = glm::ivec3(gridX, gridY, gridZ);
 	glm::ivec3 dimensions = glm::ivec3(length, width, height);

@@ -89,12 +89,11 @@ public:
 	virtual glw::IAnimation* getPlayingAnimation() const = 0;
 
 	/**
-	 * Sets the current animation.  If nullptr is sent in as the animation, then no animation will be used when rendering
-	 * this model.
+	 * Gets a list of animations associated with this model.
 	 * 
 	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
 	 * 
-	 * @param animation The animation to use as the current animation.
+	 * @return A list of the animations associated with this model.
 	 */
 	virtual std::vector<glw::IAnimation*> getAnimations() const = 0;
 };
