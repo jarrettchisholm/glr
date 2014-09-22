@@ -134,7 +134,7 @@ void TerrainManager::updateTerrainLod()
 				if (t != nullptr)
 				{
 					LevelOfDetail lod = getNewTerrainLod(*t);
-					t->setLod(lod);
+					t->updateLod(lod);
 				}
 			}
 		}

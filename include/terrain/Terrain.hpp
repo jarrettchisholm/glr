@@ -31,7 +31,7 @@ public:
 	
 	virtual void update();
 	
-	virtual void setLod(LevelOfDetail lod);
+	virtual void updateLod(LevelOfDetail lod);
 	virtual LevelOfDetail getLod() const;
 	
 	virtual void generate();
@@ -82,10 +82,10 @@ private:
 	glm::detail::uint32 vaoId_;
 	glm::detail::uint32 vboId_;
 
+	std::vector<glm::vec4> texBlendingValues_;
+
 	void initialize();
 	void initialize(glmd::int32 x, glmd::int32 y);
-	
-	std::vector<glm::vec4> texBlendingValues_;
 };
 
 }

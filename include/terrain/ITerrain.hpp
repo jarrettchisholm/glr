@@ -55,7 +55,7 @@ public:
 	virtual void setIsDirty(bool isDirty) = 0;
 	
 	/**
-	 * Will do up to maxUpdates number of updates to/from the graphics card.
+	 * Will update this terrain.
 	 * 
 	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
 	 * OpenGL thread.
@@ -69,12 +69,19 @@ public:
 	virtual void makeReadyForRender() = 0;
 	
 	/**
-	 * Will set the level of detail of the terrain.
+	 * Will set and update the level of detail of the terrain.  If the lod passed in is the same as the current lod, this method
+	 * will do nothing.
 	 * 
-	 * If the level of detail is different than the current value, this method will mark the terrain
-	 * as dirty.
+	 * If the level of detail is different than the current value, this method will do any preparation necessary for the lod change, and
+	 * then mark the terrain as dirty.
 	 */
-	virtual void setLod(LevelOfDetail lod) = 0;
+	virtual void updateLod(LevelOfDetail lod) = 0;
+	
+	/**
+	 * Returns the current lod value.
+	 * 
+	 * @return The current level of detail.
+	 */
 	virtual LevelOfDetail getLod() const = 0;
 	
 	virtual glm::detail::int32 getGridX() const = 0;
@@ -83,6 +90,8 @@ public:
 	
 	/**
 	 * Returns the model associated with this terrain.
+	 * 
+	 * @return The model associated with this terrain.
 	 */
 	virtual models::IModel* getModel() const = 0;
 };

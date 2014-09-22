@@ -123,12 +123,16 @@ void Terrain::update()
 {
 }
 
-void Terrain::setLod(LevelOfDetail lod)
+void Terrain::updateLod(LevelOfDetail lod)
 {
 	if (levelOfDetail_ == lod)
+	{
 		return;
+	}
 	
 	levelOfDetail_ = lod;
+	
+	// TODO: Actually prepare lod mesh, etc.
 	
 	setIsDirty(true);
 }
@@ -230,22 +234,13 @@ void Terrain::generate()
 		material = openGlDevice_->getMaterialManager()->addMaterial(materialName);
 		assert(material != nullptr);
 		
-		auto materialData = models::MaterialData();
-		materialData.name = materialName;
-		materialData.ambient = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
-		materialData.diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+		material->setAmbient( glm::vec4(0.2f, 0.2f, 0.2f, 1.0f) );
+		material->setDiffuse( glm::vec4(0.2f, 0.2f, 0.2f, 1.0f) );
 		// None of these are actually used (yet)
-		materialData.specular = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		materialData.emission = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		materialData.shininess = 1.0f;
-		materialData.strength = 1.0f;
-		
-		material->setAmbient(materialData.ambient);
-		material->setDiffuse(materialData.diffuse);
-		material->setSpecular(materialData.specular);
-		material->setEmission(materialData.emission);
-		material->setShininess(materialData.shininess);
-		material->setStrength(materialData.strength);
+		material->setSpecular( glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) );
+		material->setEmission( glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) );
+		material->setShininess( 1.0f );
+		material->setStrength( 1.0f );
 	}
 	
 	auto texture = openGlDevice_->getTextureManager()->getTexture2DArray(std::string("terrain_textures_2d_array"));
