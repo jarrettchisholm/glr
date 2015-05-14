@@ -54,7 +54,7 @@ public:
 	TerrainMesh* getData();
 	virtual models::IModel* getModel() const;
 	
-	virtual void makeReadyForRender();
+	virtual void prepareOrUpdateGraphics();
 	void initializeShaderLocations();
 
 private:

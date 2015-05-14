@@ -129,12 +129,19 @@ void TerrainManager::updateTerrainLod()
 		{
 			for (int k=0; k < terrainSettings_.width; k++)
 			{
-				auto t = getTerrain(i, j, k);
+				auto terrain = getTerrain(i, j, k);
 				
-				if (t != nullptr)
+				if (terrain != nullptr)
 				{
-					LevelOfDetail lod = getNewTerrainLod(*t);
-					t->updateLod(lod);
+					LevelOfDetail lod = getNewTerrainLod(*terrain);
+					terrain->updateLod(lod);
+					
+					auto function = [=] {
+						terrain->prepareOrUpdateGraphics();
+						//this->moveTerrainFromProcessedToReady( terrain );
+					};
+					
+					postOpenGlWork( function );
 				}
 			}
 		}
@@ -145,15 +152,25 @@ void TerrainManager::updateTerrainLod()
 LevelOfDetail TerrainManager::getNewTerrainLod(Terrain& t)
 {
 	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodHighestRadius))
+	{
 		return LOD_HIGHEST;
-	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodHighRadius))
+	}
+	else if (isWithinRadius(t, *followTarget_, terrainSettings_.lodHighRadius))
+	{
 		return LOD_HIGH;
-	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodMediumRadius))
+	}
+	else if (isWithinRadius(t, *followTarget_, terrainSettings_.lodMediumRadius))
+	{
 		return LOD_MEDIUM;
-	if (isWithinRadius(t, *followTarget_, terrainSettings_.lodLowRadius))
+	}
+	else if (isWithinRadius(t, *followTarget_, terrainSettings_.lodLowRadius))
+	{
 		return LOD_LOW;
+	}
 	else
+	{
 		return LOD_LOWEST;
+	}
 }
 
 bool TerrainManager::isWithinRadius(Terrain& t, ISceneNode& n, glmd::float32 radius)
@@ -228,7 +245,7 @@ void TerrainManager::createTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z, 
 			if (!terrain->isEmptyOrSolid())
 			{
 				auto function = [=] {
-					terrain->makeReadyForRender();
+					terrain->prepareOrUpdateGraphics();
 					this->moveTerrainFromProcessedToReady( terrain );
 				};
 				

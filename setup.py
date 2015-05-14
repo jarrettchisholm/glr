@@ -90,7 +90,6 @@ glewName = 'glew.tar.gz'
 sfmlName = 'sfml.tar.gz'
 
 if isLinux:
-	
 	downloadGlrDepsUrl += 'linux/{0}/{1}/'.format(buildType, architecture)
 
 if isWindows:

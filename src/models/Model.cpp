@@ -883,7 +883,9 @@ void Model::allocateVideoMemory()
 		if (m != nullptr)
 		{
 			if (!m->isVideoMemoryAllocated())
+			{
 				m->allocateVideoMemory();
+			}
 		}
 	}
 	
@@ -892,7 +894,9 @@ void Model::allocateVideoMemory()
 		if (m != nullptr)
 		{
 			if (!m->isVideoMemoryAllocated())
+			{
 				m->allocateVideoMemory();
+			}
 		}
 	}
 	
@@ -901,14 +905,18 @@ void Model::allocateVideoMemory()
 		if (t != nullptr)
 		{
 			if (!t->isVideoMemoryAllocated())
+			{
 				t->allocateVideoMemory();
+			}
 		}
 	}
 	
 	for ( auto& a : animations_ )
 	{
 		if (!a.second->isVideoMemoryAllocated())
+		{
 			a.second->allocateVideoMemory();
+		}
 	}
 }
 
@@ -921,7 +929,9 @@ bool Model::isVideoMemoryAllocated() const
 		if (m != nullptr)
 		{
 			if (!m->isVideoMemoryAllocated())
+			{
 				return false;
+			}
 		}
 	}
 	
@@ -930,7 +940,9 @@ bool Model::isVideoMemoryAllocated() const
 		if (m != nullptr)
 		{
 			if (!m->isVideoMemoryAllocated())
+			{
 				return false;
+			}
 		}
 	}
 	
@@ -939,14 +951,18 @@ bool Model::isVideoMemoryAllocated() const
 		if (t != nullptr)
 		{
 			if (!t->isVideoMemoryAllocated())
+			{
 				return false;
+			}
 		}
 	}
 	
 	for ( auto& a : animations_ )
 	{
 		if (!a.second->isVideoMemoryAllocated())
+		{
 			return false;
+		}
 	}
 	
 	return true;

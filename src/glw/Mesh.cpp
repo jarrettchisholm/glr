@@ -26,6 +26,9 @@ Mesh::Mesh()
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	currentNumberOfVertices_ = 0;
+	currentVerticesSpaceAllocated_ = 0;
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGlDevice), name_(std::move(name))
@@ -38,6 +41,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice, std::string name) : openGlDevice_(openGl
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	currentNumberOfVertices_ = 0;
+	currentVerticesSpaceAllocated_ = 0;
 }
 
 Mesh::Mesh(IOpenGlDevice* openGlDevice,
@@ -57,6 +63,9 @@ Mesh::Mesh(IOpenGlDevice* openGlDevice,
 	isLocalDataLoaded_ = false;
 	isVideoMemoryAllocated_ = false;
 	isDirty_ = false;
+	
+	currentNumberOfVertices_ = 0;
+	currentVerticesSpaceAllocated_ = 0;
 	
 	if (initialize)
 	{
@@ -106,6 +115,13 @@ void Mesh::pushToVideoMemory()
 		std::string msg = std::string( FILE_AND_LINE_NUMBER + ": Mesh has not been allocated in video memory yet." );
 		LOG_ERROR( msg );
 		throw exception::GlException( msg );
+	}
+	
+	// Re-allocate memory if we need more
+	if (currentVerticesSpaceAllocated_ < vertices_.size())
+	{
+		this->freeVideoMemory();
+		this->allocateVideoMemory();
 	}
 	
 	glBindVertexArray(vaoId_);
@@ -163,6 +179,9 @@ void Mesh::pushToVideoMemory()
 	{
 		LOG_DEBUG( "Successfully pushed data for mesh '" + name_ + "' to video memory." );
 	}
+
+	// Save a backup of the number of vertices (in case the user frees local data)
+	currentNumberOfVertices_ = vertices_.size();
 
 	isDirty_ = false;
 }
@@ -291,6 +310,9 @@ void Mesh::allocateVideoMemory()
 		LOG_DEBUG( "Successfully allocated memory for mesh '" + name_ + "'." );
 	}
 	
+	// Set the current number of vertices allocated (so we know how much space we've taken up)
+	currentVerticesSpaceAllocated_ = vertices_.size();
+	
 	isVideoMemoryAllocated_ = true;
 }
 
@@ -314,7 +336,7 @@ void Mesh::render()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBindVertexArray(vaoId_);
 
-	glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
+	glDrawArrays(GL_TRIANGLES, 0, currentNumberOfVertices_);
 	
 	glBindVertexArray(0);
 }

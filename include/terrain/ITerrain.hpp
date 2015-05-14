@@ -66,7 +66,14 @@ public:
 	
 	virtual bool isEmptyOrSolid() const = 0;
 	
-	virtual void makeReadyForRender() = 0;
+	/**
+	 * Will prepare or update all of the graphics for this terrain chunk.  After this function returns, the terrain will be ready to 
+	 * be rendered on the screen.
+	 * 
+	 * **Not Thread Safe**: This method is *not* safe to call in a multi-threaded environment, and should only be called from the 
+	 * OpenGL thread.
+	 */
+	virtual void prepareOrUpdateGraphics() = 0;
 	
 	/**
 	 * Will set and update the level of detail of the terrain.  If the lod passed in is the same as the current lod, this method

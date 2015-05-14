@@ -122,6 +122,9 @@ protected:
 	std::atomic<bool> isVideoMemoryAllocated_;
 	std::atomic<bool> isDirty_;
 	
+	glm::detail::uint32 currentNumberOfVertices_ = 0;
+	glm::detail::uint32 currentVerticesSpaceAllocated_ = 0;
+	
 	std::string textureFileName_;
 
 private:

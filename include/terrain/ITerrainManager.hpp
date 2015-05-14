@@ -81,7 +81,8 @@ public:
 	/**
 	 * Generates (or regenerates) the terrain using the data loaded from disk or passed in as parameters.
 	 * 
-	 * **Thread Safe**: This method is safe to call in a multi-threaded environment.
+	 * **Partially Thread Safe**: If initialize is false, this method is safe to call in a multi-threaded environment.  However, 
+	 * if initialize is true, this method is *not* thread safe, and should only be called from the OpenGL thread.
 	 */
 	virtual void generate(bool initialize = true) = 0;
 	virtual void generate(glm::detail::int32 x, glm::detail::int32 y, glm::detail::int32 z, bool initialize = true) = 0;

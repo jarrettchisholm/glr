@@ -61,12 +61,21 @@ Terrain::~Terrain()
 {
 }
 
-void Terrain::makeReadyForRender()
+void Terrain::prepareOrUpdateGraphics()
 {
-	initializeShaderLocations();
-	
-	modelPtr_->allocateVideoMemory();
-	modelPtr_->pushToVideoMemory();
+	if (isDirty_)
+	{
+		initializeShaderLocations();
+		
+		if ( !modelPtr_->isVideoMemoryAllocated() )
+		{
+			modelPtr_->allocateVideoMemory();
+		}
+		
+		modelPtr_->pushToVideoMemory();
+		
+		this->setIsDirty( false );
+	}
 }
 
 void Terrain::initializeShaderLocations()
@@ -263,6 +272,8 @@ void Terrain::generate()
 	auto model = std::unique_ptr<models::IModel>( new models::Model(glr::Id(), std::string(""), meshData_.get(), texture, material, std::vector<glw::IAnimation*>(), glw::BoneNode(), glm::mat4(), openGlDevice_) );
 	this->attach( model.get() );
 	this->setModel( std::move(model) );
+	
+	this->setIsDirty( true );
 }
 
 }
