@@ -123,6 +123,14 @@ private:
 	void calcInterpolatedScaling(glm::vec3& Out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode);
 	void readNodeHeirarchy(std::vector< glm::mat4 >& transformations, glmd::float32 animationTime, const glm::mat4& globalInverseTransform, const BoneNode& rootBoneNode, const BoneData& boneData, const glm::mat4& parentTransform);
 	
+	/**
+	 * Will validate the Animated Bone Nodes that are set for this Animation.
+	 * 
+	 * @exception Will throw a glr::exception::Exception if any errors are found with the
+	 * Animated Bone Nodes.
+	 */
+	void checkAnimatedBonesNodes() const;
+	
 	friend class boost::serialization::access;
 	
 	template<class Archive> inline void serialize(Archive& ar, const unsigned int version);

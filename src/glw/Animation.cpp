@@ -118,6 +118,8 @@ Animation::Animation(const Animation& other, bool initialize)
 	duration_ = other.duration_;
 	animatedBoneNodes_ = other.animatedBoneNodes_;
 	
+	checkAnimatedBonesNodes();
+	
 	currentTransforms_ = std::vector< glm::mat4 >();
 	
 	isLocalDataLoaded_ = false;
@@ -277,6 +279,8 @@ void Animation::setTicksPerSecond(glm::detail::float64 ticksPerSecond)
 void Animation::setAnimatedBoneNodes(std::map< std::string, AnimatedBoneNode > animatedBoneNodes)
 {
 	animatedBoneNodes_ = std::move(animatedBoneNodes);
+	
+	checkAnimatedBonesNodes();
 }
 
 const std::string& Animation::getName() const
@@ -287,7 +291,15 @@ const std::string& Animation::getName() const
 glmd::uint32 Animation::findPosition(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
 	assert(animatedBoneNode.positionTimes.size() > 0);
-	assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode.positionTimes.size() );
+	
+	//if (indexCache_[0] >= animatedBoneNode.positionTimes.size())
+	//{
+	//	indexCache_[0] = 0;
+	//}
+	
+	// Not all animated bone nodes have the same number of 'times', so sometimes the cache index value can
+	// be larger than the size, but that's ok, it will reset to a valid value once the second for loop runs.
+	//assert( indexCache_[0] >= 0 && indexCache_[0] < animatedBoneNode.positionTimes.size() );
 	
 	// Search first from cache position
 	for (glmd::uint32 i = indexCache_[0]; i < animatedBoneNode.positionTimes.size() - 1; i++)
@@ -309,15 +321,23 @@ glmd::uint32 Animation::findPosition(glmd::float32 animationTime, const Animated
 		}
 	}
 
-	assert(0);
-
-	return 0;
+	std::string msg = std::string("Unable to find appropriate position time - this shouldn't happen.");
+	LOG_ERROR( msg );
+	throw exception::Exception( msg );
 }
 
 glmd::uint32 Animation::findRotation(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
 	assert(animatedBoneNode.rotationTimes.size() > 0);
-	assert( indexCache_[1] >= 0 && indexCache_[1] < animatedBoneNode.rotationTimes.size() );
+	
+	//if (indexCache_[1] >= animatedBoneNode.rotationTimes.size())
+	//{
+	//	indexCache_[1] = 0;
+	//}
+	
+	// Not all animated bone nodes have the same number of 'times', so sometimes the cache index value can
+	// be larger than the size, but that's ok, it will reset to a valid value once the second for loop runs.
+	//assert( indexCache_[1] >= 0 && indexCache_[1] < animatedBoneNode.rotationTimes.size() );
 	
 	// Search first from cache position
 	for (glmd::uint32 i = indexCache_[1]; i < animatedBoneNode.rotationTimes.size() - 1; i++)
@@ -339,16 +359,24 @@ glmd::uint32 Animation::findRotation(glmd::float32 animationTime, const Animated
 		}
 	}
 	
-	assert(0);
-
-	return 0;
+	std::string msg = std::string("Unable to find appropriate rotation time - this shouldn't happen.");
+	LOG_ERROR( msg );
+	throw exception::Exception( msg );
 }
 
 
 glmd::uint32 Animation::findScaling(glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
 {
 	assert(animatedBoneNode.scalingTimes.size() > 0);
-	assert( indexCache_[2] >= 0 && indexCache_[2] < animatedBoneNode.scalingTimes.size() );
+	
+	//if (indexCache_[2] >= animatedBoneNode.scalingTimes.size())
+	//{
+	//	indexCache_[2] = 0;
+	//}
+	
+	// Not all animated bone nodes have the same number of 'times', so sometimes the cache index value can
+	// be larger than the size, but that's ok, it will reset to a valid value once the second for loop runs.
+	//assert( indexCache_[2] >= 0 && indexCache_[2] < animatedBoneNode.scalingTimes.size() );
 	
 	// Search first from cache position
 	for (glmd::uint32 i = indexCache_[2]; i < animatedBoneNode.scalingTimes.size() - 1; i++)
@@ -370,9 +398,9 @@ glmd::uint32 Animation::findScaling(glmd::float32 animationTime, const AnimatedB
 		}
 	}
 	
-	assert(0);
-
-	return 0;
+	std::string msg = std::string("Unable to find appropriate scaling time - this shouldn't happen.");
+	LOG_ERROR( msg );
+	throw exception::Exception( msg );
 }
 
 void Animation::calcInterpolatedPosition(glm::vec3& out, glmd::float32 animationTime, const AnimatedBoneNode& animatedBoneNode)
@@ -535,6 +563,50 @@ void Animation::calculate(std::vector< glm::mat4 >& transformations, const glm::
 	glmd::float32 animationTime = fmod(timeInTicks, (glmd::float32)duration_);
 	
 	readNodeHeirarchy( transformations, animationTime, globalInverseTransformation, rootBoneNode, boneData, glm::mat4() );
+}
+
+void Animation::checkAnimatedBonesNodes() const
+{
+	glm::uint32 numTimes = -1;
+	
+	for ( auto& pair : animatedBoneNodes_ )
+	{
+		const AnimatedBoneNode& abn = pair.second;
+		
+		const auto s1 = abn.positionTimes.size();
+		const auto s2 = abn.rotationTimes.size();
+		const auto s3 = abn.scalingTimes.size();
+		
+		if (s1 != s2)
+		{
+			std::string msg = std::string("Animated Bone Node ' " + abn.name + "' has different position and rotation time lengths.");
+			LOG_ERROR( msg );
+			throw exception::Exception( msg );
+		}
+		else if (s1 != s3)
+		{
+			std::string msg = std::string("Animated Bone Node ' " + abn.name + "' has different position and scaling time lengths.");
+			LOG_ERROR( msg );
+			throw exception::Exception( msg );
+		}
+		else if (s2 != s3)
+		{
+			std::string msg = std::string("Animated Bone Node ' " + abn.name + "' has different rotation and scaling time lengths.");
+			LOG_ERROR( msg );
+			throw exception::Exception( msg );
+		}
+		
+		if (numTimes == -1)
+		{
+			numTimes = s1;
+		}
+		
+		if (numTimes != s1) // || numTimes != s2 || numTimes != s3)
+		{
+			std::string msg = "Animated Bone Node ' " + abn.name + "' has position, rotation, and scaling time lengths the differ from the other Animated Bones Nodes in the animation.";
+			LOG_WARN( msg );
+		}
+	}
 }
 
 void Animation::serialize(const std::string& filename)
