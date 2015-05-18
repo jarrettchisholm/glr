@@ -17,6 +17,7 @@
 
 #include "glw/shaders/GlslShaderProgram.hpp"
 #include "exceptions/Exception.hpp"
+#include "exceptions/InvalidArgumentException.hpp"
 
 namespace glr
 {
@@ -44,7 +45,7 @@ BasicSceneNode::BasicSceneNode(Id id, std::string name, glw::IOpenGlDevice* open
 	shaderProgram_ = nullptr;
 }
 
-BasicSceneNode::BasicSceneNode(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
+BasicSceneNode::BasicSceneNode(Id id, std::string name, const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale, glw::IOpenGlDevice* openGlDevice)
 	 : id_(id), name_(std::move(name)), openGlDevice_(openGlDevice)
 {
 	setPosition(position);
@@ -124,7 +125,7 @@ glm::vec3& BasicSceneNode::getPosition()
 	return pos_;
 }
 
-void BasicSceneNode::setPosition(glm::vec3& newPos)
+void BasicSceneNode::setPosition(const glm::vec3& newPos)
 {
 	pos_ = newPos;
 }
@@ -177,8 +178,9 @@ void BasicSceneNode::rotate(const glm::quat& quaternion, TransformSpace relative
 			break;
 			
 		default:
-			// TODO: error
-			break;
+			std::string msg = std::string("__FILE__(__LINE__): Invalid TransformSpace type.");
+			LOG_ERROR( msg );
+			throw new exception::InvalidArgumentException( msg );
 	}		
 }
 
@@ -195,8 +197,9 @@ void BasicSceneNode::rotate(const glm::detail::float32 degrees, const glm::vec3&
 			break;
 			
 		default:
-			// TODO: error
-			break;
+			std::string msg = std::string("__FILE__(__LINE__): Invalid TransformSpace type.");
+			LOG_ERROR( msg );
+			throw new exception::InvalidArgumentException( msg );
 	}
 }
 
@@ -204,7 +207,7 @@ void BasicSceneNode::lookAt(const glm::vec3& lookAt)
 {
 	assert(lookAt != pos_);
 	
-	glm::mat4 lookAtMatrix = glm::lookAt(pos_, pos_ + lookAt, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lookAtMatrix = glm::lookAt(pos_, lookAt, glm::vec3(0.0f, 1.0f, 0.0f));
 	orientationQuaternion_ =  glm::normalize( orientationQuaternion_ * glm::quat_cast( lookAtMatrix ) );
 }
 

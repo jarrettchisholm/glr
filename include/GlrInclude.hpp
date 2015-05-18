@@ -12,6 +12,7 @@
 #include "ICamera.hpp"
 #include "Id.hpp"
 
+#include "models/IModel.hpp"
 #include "models/IModelManager.hpp"
 
 #include "gui/IGui.hpp"

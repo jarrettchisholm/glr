@@ -33,7 +33,7 @@ public:
 	virtual const std::string& getName() const = 0;
 
 	virtual glm::vec3& getPosition() = 0;
-	virtual void setPosition(glm::vec3& newPos) = 0;
+	virtual void setPosition(const glm::vec3& newPos) = 0;
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z) = 0;
 
 	virtual glm::vec3& getScale() = 0;

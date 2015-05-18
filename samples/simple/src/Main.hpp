@@ -23,6 +23,7 @@ private:
 	sf::Window* sfmlWindow_;
 	glr::gui::IGui* igui_;
 	glr::ISceneManager* smgr_;
+	glr::models::IModel* model_;
 	std::unique_ptr< glr::extras::FpsCamera > camera_;
 
 	void tick();

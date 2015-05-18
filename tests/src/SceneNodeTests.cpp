@@ -10,7 +10,7 @@
 
 #define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
-#include <glm/gtx/string_cast.hpp>
+#include "glm/gtc/quaternion.hpp"
 
 #include "GlrInclude.hpp"
 
@@ -140,6 +140,29 @@ BOOST_AUTO_TEST_CASE(sceneNodeMovement)
 	BOOST_CHECK(std::fabs(expectedQuat.z - quat.z) < errorMargin);
 	
 	// TODO: think of more tests?
+}
+
+BOOST_AUTO_TEST_CASE(sceneNodeLookAt)
+{
+	auto n = std::unique_ptr< glr::BasicSceneNode >( new glr::BasicSceneNode(glr::Id(1), nullptr) );
+
+	auto pos = n->getPosition();
+	BOOST_CHECK( pos == glm::vec3(0,0,0) );
+
+	auto q = n->getOrientation();
+	BOOST_CHECK( q == glm::quat(1,0,0,0) );
+
+	n->lookAt( glm::vec3(1,1,1) );
+	q = n->getOrientation();
+	
+	float errorMargin = 0.000005f;
+	BOOST_CHECK_CLOSE_FRACTION( q.w, 0.364705, errorMargin );
+	BOOST_CHECK_CLOSE_FRACTION( q.x, -0.115917, errorMargin );
+	BOOST_CHECK_CLOSE_FRACTION( q.y, 0.880476, errorMargin );
+	BOOST_CHECK_CLOSE_FRACTION( q.z, -0.279848, errorMargin );
+
+	pos = n->getPosition();
+	BOOST_CHECK( pos == glm::vec3(0,0,0) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

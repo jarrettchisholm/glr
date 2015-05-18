@@ -3,7 +3,7 @@
 Main::Main()
 {
 	// Setup our model directory
-	std::string modelsDir = "../../data/";
+	std::string modelsDir = std::string("../../resources/models/");
 	glr::ProgramSettings settings = glr::ProgramSettings();
 	settings.defaultTextureDir = std::string( modelsDir );
 	glrProgram_ = std::unique_ptr<glr::GlrProgram>( new glr::GlrProgram(settings) );
@@ -13,19 +13,20 @@ Main::Main()
 	
 	// Create FPS camera
 	glr::ICamera* camera = smgr_->createCamera();
-	camera->setPosition(0, 0, 0.5);
+	camera->setPosition(0, 0, 0);
+	camera->lookAt( glm::vec3(0.0f, 0.0f, 0.1f) );
 	camera_ = std::unique_ptr< glr::extras::FpsCamera >( new glr::extras::FpsCamera(camera, 0.020f) );
 
 	sfmlWindow_ = (sf::Window*)window_->getInternalWindowPointer();
 	sfmlWindow_->setKeyRepeatEnabled(false);
 
 	// Add model
-	smgr_->getModelManager()->loadModel( std::string("LuckyBunny"), std::string(modelsDir + "LuckyBunny.3ds") );
-	cubeModel_ = smgr_->getModelManager()->createInstance( std::string("LuckyBunny") );
+	glrProgram_->getModelManager()->loadModel( std::string("LuckyBunny"), std::string(modelsDir + "chair_low.x") );
+	cubeModel_ = glrProgram_->getModelManager()->createInstance( std::string("LuckyBunny") );
 	glr::ISceneNode* node = smgr_->createSceneNode("test_node");
 	node->setPosition( 0.0f, 0.0f, 0.0f );
 	node->setScale(0.1f, 0.1f, 0.1f);
-	node->attach( cubeModel_.get() );
+	node->attach( cubeModel_ );
    
    
 	// Add light

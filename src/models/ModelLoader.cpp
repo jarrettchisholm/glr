@@ -131,6 +131,21 @@ std::pair<std::vector< ModelData >, AnimationSet> ModelLoader::loadModelData(con
 		modelData[i].materialData = loadMaterial( name, filename, i, scene->mMaterials[ scene->mMeshes[i]->mMaterialIndex ] );
 	}
 	
+	bool hasTextures = false;
+	for ( glmd::uint32 i=0; i < modelData.size(); i++ )
+	{
+		if (modelData[i].textureData.filename != std::string(""))
+		{
+			hasTextures = true;
+			break;
+		}
+	}
+	
+	if (!hasTextures)
+	{
+		LOG_WARN( "Model does not have any texture - either assign it a texture, or use a shader that doesn't need textures." );
+	}
+	
 
 	// cleanup - calling 'aiReleaseImport' is important, as the library
 	// keeps internal resources until the scene is freed again. Not
@@ -263,7 +278,7 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 				throw exception::Exception(msg);
 	
 			case 2: 
-				msg = std::string("Unable to load model...Unsupported number of indices per face (2).");
+				msg = std::string("__FILE__(__LINE__): Unable to load model...Unsupported number of indices per face (2).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 	
@@ -271,12 +286,12 @@ MeshData ModelLoader::loadMesh(const std::string& name, const std::string& filen
 				break;
 	
 			case 4:
-				msg = std::string("Unable to load model...Unsupported number of indices per face (4).");
+				msg = std::string("__FILE__(__LINE__): Unable to load model...Unsupported number of indices per face (4).");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 			
 			default:
-				msg = std::string("Unable to load model...Unknown number of indices per face.");
+				msg = std::string("__FILE__(__LINE__): Unable to load model...Unknown number of indices per face.");
 				LOG_ERROR( msg );
 				throw exception::Exception(msg);
 		}
@@ -384,7 +399,7 @@ TextureData ModelLoader::loadTexture(const std::string& name, const std::string&
 	}
 	else
 	{
-		LOG_DEBUG( "No material specified." );
+		LOG_DEBUG( "No texture specified." );
 	}
 	
 	return data;

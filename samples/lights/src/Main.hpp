@@ -21,7 +21,7 @@ private:
 	glr::ISceneManager* smgr_;
 
 	std::unique_ptr< glr::extras::FpsCamera > camera_;
-	std::unique_ptr<glr::models::IModel> cubeModel_;
+	glr::models::IModel* cubeModel_;
 
 	void tick();
 	void destroy();

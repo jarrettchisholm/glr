@@ -21,7 +21,7 @@ class BasicSceneNode : public virtual ISceneNode
 public:
 	BasicSceneNode(Id id, glw::IOpenGlDevice* openGlDevice);
 	BasicSceneNode(Id id, std::string name, glw::IOpenGlDevice* openGlDevice);
-	BasicSceneNode(Id id, std::string name, glm::vec3& position, const glm::quat& orientation, glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
+	BasicSceneNode(Id id, std::string name, const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale, glw::IOpenGlDevice* openGlDevice);
 	BasicSceneNode(Id id, const BasicSceneNode& other);
 	virtual ~BasicSceneNode();
 
@@ -32,7 +32,7 @@ public:
 	virtual const std::string& getName() const;
 
 	virtual glm::vec3& getPosition();
-	virtual void setPosition(glm::vec3& newPos);
+	virtual void setPosition(const glm::vec3& newPos);
 	virtual void setPosition(glm::detail::float32 x, glm::detail::float32 y, glm::detail::float32 z);
 
 	virtual glm::vec3& getScale();

@@ -1,5 +1,5 @@
 #! /bin/python
-import os, sys
+import os, sys, glob
 import shutil
 import platform
 
@@ -18,7 +18,6 @@ def setupDependencies():
 	libPThread = 'pthread'
 	cefLib = 'cef'
 	cefDllWrapperLib = 'cef_dll_wrapper'
-	angelscriptLib = 'Angelscript'
 	boostLogLib = 'boost_log'
 	boostLogSetupLib = 'boost_log_setup'
 	boostDateTimeLib = 'boost_date_time'
@@ -26,16 +25,15 @@ def setupDependencies():
 	boostThreadLib = 'boost_thread'
 	boostWaveLib = 'boost_wave'
 	boostRegexLib = 'boost_regex'
-	boostProgramOptionsLib = 'boost_program_options'
 	boostFilesystemLib = 'boost_filesystem'
 	boostSystemLib = 'boost_system'
+	boostSerializationLib = 'boost_serialization'
 	
 	
 	if (isWindows):
 		glLib = 'opengl32'
 		glewLib = 'glew32'
 		libPThread = ''
-		angelscriptLib = 'Angelscript'
 		cefLib = 'libcef'
 		cefDllWrapperLib = 'libcef_dll_wrapper'
 		boostLogLib = 'libboost_log-vc120-mt-1_55'
@@ -45,24 +43,23 @@ def setupDependencies():
 		boostThreadLib = 'libboost_thread-vc120-mt-1_55'
 		boostWaveLib = 'libboost_wave-vc120-mt-1_55'
 		boostRegexLib = 'libboost_regex-vc120-mt-1_55'
-		boostProgramOptionsLib = 'libboost_program_options-vc120-mt-1_55'
 		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
 		boostSystemLib = 'libboost_system-vc120-mt-1_55'
+		boostSerializationLib = 'libboost_serialization-vc120-mt-1_55'
 
 
 	# Set our required libraries
 	libraries.append('glr')
-	libraries.append('sqlite3')
 	libraries.append(glLib)
 	libraries.append(glewLib)
 	libraries.append(libPThread)
-	libraries.append(cefLib)
-	libraries.append(cefDllWrapperLib)
-	libraries.append('sfml-system')
-	libraries.append('sfml-window')
+	if (buildFlags['useCef']):
+		libraries.append(cefLib)
+		libraries.append(cefDllWrapperLib)
 	libraries.append('assimp')
 	libraries.append('freeimage')
-	libraries.append(angelscriptLib)
+	libraries.append('sfml-system')
+	libraries.append('sfml-window')
 	libraries.append(boostLogLib)
 	libraries.append(boostLogSetupLib)
 	libraries.append(boostDateTimeLib)
@@ -70,9 +67,9 @@ def setupDependencies():
 	libraries.append(boostThreadLib)
 	libraries.append(boostWaveLib)
 	libraries.append(boostRegexLib)
-	libraries.append(boostProgramOptionsLib)
 	libraries.append(boostFilesystemLib)
 	libraries.append(boostSystemLib)
+	libraries.append(boostSerializationLib)
 	
 	if (not isWindows):
 		# XInput for linux
@@ -109,6 +106,25 @@ def setupEnvironment(env):
 		if (buildFlags['useCef']):
 			env.ParseConfig('pkg-config --cflags --libs gtk+-2.0')
 
+def copyAllFiles(directory, toDirectory='./build/'):
+	try:
+		for filename in glob.glob(os.path.join(directory, '*.*')):
+			shutil.copy(filename, toDirectory)
+	except:
+		#print('Failed to copy cef wrapper!')
+		pass
+
+def copyResources():
+	"""Copies over resources to the build directory.
+	"""
+
+	if (not os.path.exists('build')):
+		os.makedirs('build')
+	if (not os.path.exists('build/locales')):
+		os.makedirs('build/locales')
+	
+	copyAllFiles('../../' + dependenciesDirectory + 'cef3/Release/')
+	copyAllFiles('../../' + dependenciesDirectory + 'cef3/Resources/locales/', './build/locales/')
 
 
 # Tell SCons to create our build files in the 'build' directory
@@ -126,3 +142,6 @@ setupEnvironment(env)
 
 # Tell SCons the program to build
 env.Program('build/simple', source_files, LIBS = libraries, LIBPATH = library_paths)
+
+### Copy all of our required resources to the build directory
+copyResources()
