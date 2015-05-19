@@ -1,0 +1,5 @@
+#name mesh_only
+#type program
+
+#include "mesh_only.vert"
+#include "mesh_only.frag"

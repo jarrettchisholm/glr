@@ -20,11 +20,6 @@ public:
 private:
 	std::unique_ptr< glr::GlrProgram > glrProgram_;
 	glr::IWindow* window_;
-	sf::Window* sfmlWindow_;
-	glr::gui::IGui* igui_;
-	glr::ISceneManager* smgr_;
-	glr::models::IModel* model_;
-	std::unique_ptr< glr::extras::FpsCamera > camera_;
 
 	void tick();
 	void destroy();

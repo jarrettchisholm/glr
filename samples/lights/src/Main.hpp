@@ -17,11 +17,8 @@ public:
 private:
 	std::unique_ptr< glr::GlrProgram > glrProgram_;
 	glr::IWindow* window_;
-	sf::Window* sfmlWindow_;
-	glr::ISceneManager* smgr_;
 
 	std::unique_ptr< glr::extras::FpsCamera > camera_;
-	glr::models::IModel* cubeModel_;
 
 	void tick();
 	void destroy();
