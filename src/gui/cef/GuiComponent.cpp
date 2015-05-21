@@ -308,8 +308,8 @@ void GuiComponent::load()
 	CefBrowserSettings browserSettings;
 
 	// in linux set a gtk widget, in windows a hwnd. If not available set nullptr - may cause some render errors, in context-menu and plugins.
-	windowInfo.SetAsOffScreen(nullptr);
-	windowInfo.SetTransparentPainting(true);
+	//windowInfo.SetAsOffScreen(nullptr);
+	//windowInfo.SetTransparentPainting(true);
 	
 	renderHandler_ = new RenderHandler(webTexture_, width_, height_);
 	

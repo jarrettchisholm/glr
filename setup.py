@@ -107,12 +107,12 @@ files = dict()
 #
 # [Display Name]			= [URL, 												Save Filename,		Regex for Dir, 	New Name for Dir]
 files['Boost 1.55'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, boostName), 		'boost.tar.gz', 	'boost', 		'boost']
-files['FreeImage 3.15.1'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, freeImageName), 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
-files['AssImp 3.1.1'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, assImpName), 	'assimp.tar.gz', 	'assimp', 		'assimp']
-files['CEF3 3.1750.1738'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
+files['FreeImage 3.17.0'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, freeImageName), 	'freeimage.tar.gz', 'freeimage', 	'freeimage']
+files['AssImp 3.0'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, assImpName), 	'assimp.tar.gz', 	'assimp', 		'assimp']
+files['CEF3 3.2357.1271'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
 files['GLM 0.9.5.2'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glmName), 		'glm.tar.gz', 		'glm', 			'glm']
-files['GLEW 1.10.0'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glewName), 		'glew.tar.gz', 		'glew', 		'glew']
-files['SFML 2.1'] 			= ['{0}{1}'.format(downloadGlrDepsUrl, sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
+files['GLEW 1.12.0'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glewName), 		'glew.tar.gz', 		'glew', 		'glew']
+files['SFML 2.3'] 			= ['{0}{1}'.format(downloadGlrDepsUrl, sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
 
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'

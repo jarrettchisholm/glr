@@ -48,7 +48,7 @@ def setupDependencies():
 		boostFilesystemLib = 'libboost_filesystem-vc120-mt-1_55'
 		boostSystemLib = 'libboost_system-vc120-mt-1_55'
 		boostSerializationLib = 'libboost_serialization-vc120-mt-1_55'
-		boostUnitTestFrameworkLib = 'libboost_system-vc120-mt-1_55'
+		boostUnitTestFrameworkLib = 'libboost_unit_test_framework-vc120-mt-1_55'
 
 	# Set our required libraries
 	libraries.append('glr')
