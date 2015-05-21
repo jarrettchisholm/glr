@@ -124,12 +124,12 @@ def copyResources():
 	copyAllFiles('../../' + dependenciesDirectory + 'cef3/Release/')
 	copyAllFiles('../../' + dependenciesDirectory + 'cef3/Resources/locales/', './build/locales/')
 	
-	if (isWindows):
-		copyAllFiles('../../' + dependenciesDirectory + 'glew/lib/')
-		copyAllFiles('../../' + dependenciesDirectory + 'freeimage/lib/')
-		copyAllFiles('../../' + dependenciesDirectory + 'assimp/lib/')
-		copyAllFiles('../../' + dependenciesDirectory + 'sfml/lib/')
-		copyAllFiles('../../' + dependenciesDirectory + 'boost/lib/')
+	
+	copyAllFiles('../../' + dependenciesDirectory + 'glew/lib/')
+	copyAllFiles('../../' + dependenciesDirectory + 'freeimage/lib/')
+	copyAllFiles('../../' + dependenciesDirectory + 'assimp/lib/')
+	copyAllFiles('../../' + dependenciesDirectory + 'sfml/lib/')
+	copyAllFiles('../../' + dependenciesDirectory + 'boost/lib/')
 
 
 

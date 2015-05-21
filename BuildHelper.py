@@ -147,7 +147,7 @@ def setup(ARGUMENTS):
 				cpp_defines.append('NDEBUG')
 			
 			cpp_flags.append('-std=c++11')
-			cpp_flags.append('-pedantic-errors')
+			#cpp_flags.append('-pedantic-errors')
 			#cpp_flags.append('-Wall')
 			#cpp_flags.append('-Werror')
 			
