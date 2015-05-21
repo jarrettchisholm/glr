@@ -208,11 +208,11 @@ def install():
 	if (not os.path.exists(librariesDirectory)):
 		os.makedirs(librariesDirectory)
 
-	cef3OutputDir = '{0}cef3/out/Release/obj.target/'.format(dependenciesDirectory)
+	cef3OutputDir = '{0}cef3/libcef_dll/'.format(dependenciesDirectory)
 	if isWindows:
 		cef3OutputDir = '{0}cef3/lib/'.format(dependenciesDirectory)
 
-	copyDirectory('{0}/libcef_dll_wrapper'.format(cef3OutputDir), './{0}/libcef_dll_wrapper'.format(librariesDirectory))	
+	#copyDirectory('{0}/libcef_dll_wrapper'.format(cef3OutputDir), './{0}/libcef_dll_wrapper'.format(librariesDirectory))	
 	copyFile('{0}libcef_dll_wrapper.{1}'.format(cef3OutputDir, staticLibraryExt), './{0}/libcef_dll_wrapper.{1}'.format(librariesDirectory, staticLibraryExt))
 	copyFile('{0}libcef.{1}'.format(cef3OutputDir, sharedLibraryExt), './{0}/libcef.{1}'.format(librariesDirectory, sharedLibraryExt))
 	
