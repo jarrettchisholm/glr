@@ -112,7 +112,7 @@ files['AssImp 3.1.1'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, assImpName), 	'as
 files['CEF3 3.2357.1271'] 	= ['{0}{1}'.format(downloadGlrDepsUrl, cef3Name), 		'cef3.tar.gz', 		'cef', 			'cef3']
 files['GLM 0.9.5.2'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glmName), 		'glm.tar.gz', 		'glm', 			'glm']
 files['GLEW 1.12.0'] 		= ['{0}{1}'.format(downloadGlrDepsUrl, glewName), 		'glew.tar.gz', 		'glew', 		'glew']
-files['SFML 2.3'] 			= ['{0}{1}'.format(downloadGlrDepsUrl, sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
+files['SFML 2.1'] 			= ['{0}{1}'.format(downloadGlrDepsUrl, sfmlName), 		'sfml.tar.gz', 		'sfml', 		'sfml']
 
 dependenciesDirectory = 'deps/'
 librariesDirectory = 'lib/'
