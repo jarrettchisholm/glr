@@ -159,8 +159,15 @@ def copyResources():
 	except:
 		print("Couldn't copy libglr library");
 	
+	
 	try:
 		for filename in glob.glob(os.path.join('../' + dependenciesDirectory + 'cef3/Release/', '*.*')):
+			shutil.copy(filename, './build/')
+	except:
+		#print('Failed to copy cef wrapper!')
+		pass
+	try:
+		for filename in glob.glob(os.path.join('../' + dependenciesDirectory + 'cef3/Resources/', '*.*')):
 			shutil.copy(filename, './build/')
 	except:
 		#print('Failed to copy cef wrapper!')
