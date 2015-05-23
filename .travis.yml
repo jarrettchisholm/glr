@@ -14,11 +14,7 @@ before_install:
   - if test $CC = gcc; then sudo update-alternatives --config g++; fi
   - wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-x86_64.sh
   - sudo bash cmake-3.2.2-Linux-x86_64.sh --prefix=/usr/local/bin --skip-license
-  - echo alias cmake='/usr/local/bin/cmake' >> ~/.bashrc
-  - echo alias cmake='/usr/local/bin/cmake' >> ~/.bash_profile
-  - echo alias cmake='/usr/local/bin/cmake' >> ~/.bash_aliases
-  - echo alias cmake='/usr/local/bin/cmake' >> ~/.profile
 install:
-  - python setup.py release
+  - alias cmake='/usr/local/bin/cmake' && python setup.py release
 script: 
   - python build_and_test.py
