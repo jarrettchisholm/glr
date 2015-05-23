@@ -9,7 +9,7 @@ namespace constants
 {
 
 //---- Terrain constants ----//
-static const glm::detail::float32 RESOLUTION 			= 1.0f;
+static const glm::detail::float32 RESOLUTION 			= 0.5f;
 static const glm::detail::int32 CHUNK_SIZE 				= 16;
 static const glm::detail::int32 SIZE 					= (glm::detail::int32)(CHUNK_SIZE / RESOLUTION);
 static const glm::detail::int32 MAX_LENGTH 				= 256;
