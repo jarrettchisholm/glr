@@ -15,6 +15,9 @@ before_install:
   - wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-x86_64.sh
   - sudo bash cmake-3.2.2-Linux-x86_64.sh --prefix=/usr/local/bin --skip-license
   - echo alias cmake='/usr/local/bin/cmake' >> ~/.bashrc
+  - echo alias cmake='/usr/local/bin/cmake' >> ~/.bash_profile
+  - echo alias cmake='/usr/local/bin/cmake' >> ~/.bash_aliases
+  - echo alias cmake='/usr/local/bin/cmake' >> ~/.profile
 install:
   - python setup.py release
 script: 
