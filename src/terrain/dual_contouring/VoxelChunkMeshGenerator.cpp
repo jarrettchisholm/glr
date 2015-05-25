@@ -17,11 +17,11 @@ namespace terrain
 namespace dual_contouring
 {
 
-VoxelChunkMeshGenerator::VoxelChunkMeshGenerator()
+VoxelChunkMeshGenerator::VoxelChunkMeshGenerator(TerrainSettings settings) : settings_(settings)
 {
 }
 
-VoxelChunkMeshGenerator::VoxelChunkMeshGenerator(IFieldFunction* fieldFunction) : fieldFunction_(fieldFunction)
+VoxelChunkMeshGenerator::VoxelChunkMeshGenerator(IFieldFunction* fieldFunction, TerrainSettings settings) : fieldFunction_(fieldFunction), settings_(settings)
 {
 }
 
@@ -75,7 +75,7 @@ bool VoxelChunkMeshGenerator::isEmptyOrSolid(const Points& points) const
 	bool isSolid = true;
 	
 	const glmd::int32 min = constants::POINT_FIELD_OFFSET;
-	const glmd::int32 max = glr::terrain::constants::SIZE + 1 + constants::POINT_FIELD_OFFSET;
+	const glmd::int32 max = settings_.blockSize + 1 + constants::POINT_FIELD_OFFSET;
 	
 	for (glmd::int32 x=min; x < max; x++)
 	{
@@ -117,20 +117,20 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 	// Note: Below was an attempt at using trilinear interpolation to get the interpolated noise value
 	/*
 #define DENSITY_AT(i,j,k) points[iXStart+i+constants::POINT_FIELD_OFFSET][iYStart+j+constants::POINT_FIELD_OFFSET][iZStart+k+constants::POINT_FIELD_OFFSET]
-#define POSITION_X_AT(i) ((glmd::float32)(i*glr::terrain::constants::RESOLUTION) + (glmd::float32)(glr::terrain::constants::CHUNK_SIZE*gridX))
-#define POSITION_Y_AT(i) ((glmd::float32)(i*glr::terrain::constants::RESOLUTION) + (glmd::float32)(glr::terrain::constants::CHUNK_SIZE*gridY))
-#define POSITION_Z_AT(i) ((glmd::float32)(i*glr::terrain::constants::RESOLUTION) + (glmd::float32)(glr::terrain::constants::CHUNK_SIZE*gridZ))
+#define POSITION_X_AT(i) ((glmd::float32)(i*settings_.resolution) + (glmd::float32)(settings_.chunkSize*gridX))
+#define POSITION_Y_AT(i) ((glmd::float32)(i*settings_.resolution) + (glmd::float32)(settings_.chunkSize*gridY))
+#define POSITION_Z_AT(i) ((glmd::float32)(i*settings_.resolution) + (glmd::float32)(settings_.chunkSize*gridZ))
 	
 	if (gridX < 0)
-		gridX += glr::terrain::constants::CHUNK_SIZE;
+		gridX += settings_.chunkSize;
 	if (gridY < 0)
-		gridY += glr::terrain::constants::CHUNK_SIZE;
+		gridY += settings_.chunkSize;
 	if (gridZ < 0)
-		gridZ += glr::terrain::constants::CHUNK_SIZE;
+		gridZ += settings_.chunkSize;
 	
-	gridX %= glr::terrain::constants::CHUNK_SIZE;
-	gridY %= glr::terrain::constants::CHUNK_SIZE;
-	gridZ %= glr::terrain::constants::CHUNK_SIZE;
+	gridX %= settings_.chunkSize;
+	gridY %= settings_.chunkSize;
+	gridZ %= settings_.chunkSize;
 	
 	// Get x0 point
 	glmd::int32 iXStart = 0;
@@ -141,10 +141,10 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 		iXEnd++;
 	}
 	
-	if (iXStart > glr::terrain::constants::CHUNK_SIZE+1)
+	if (iXStart > settings_.chunkSize+1)
 	{
 		std::cout << "UH-OH: We have a wierd error here..." << iXStart << std::endl;
-		iXStart = glr::terrain::constants::CHUNK_SIZE+1;
+		iXStart = settings_.chunkSize+1;
 	}
 	
 	// Get y0 point
@@ -156,10 +156,10 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 		iYEnd++;
 	}
 	
-	if (iYStart > glr::terrain::constants::CHUNK_SIZE+1)
+	if (iYStart > settings_.chunkSize+1)
 	{
 		std::cout << "UH-OH: We have a wierd error here..." << iYStart << std::endl;
-		iYStart = glr::terrain::constants::CHUNK_SIZE+1;
+		iYStart = settings_.chunkSize+1;
 	}
 	
 	// Get z0 point
@@ -171,10 +171,10 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 		iZEnd++;
 	}
 	
-	if (iZStart > glr::terrain::constants::CHUNK_SIZE+1)
+	if (iZStart > settings_.chunkSize+1)
 	{
 		std::cout << "UH-OH: We have a wierd error here..." << iZStart << std::endl;
-		iZStart = glr::terrain::constants::CHUNK_SIZE+1;
+		iZStart = settings_.chunkSize+1;
 	}
 
 	// Determine all 8 points
@@ -196,7 +196,7 @@ glmd::float32 VoxelChunkMeshGenerator::getInterpolatedNoise(const Points& points
 	glmd::float32 zPosRel = z - POSITION_Z_AT(iZStart);
 
 	// Do interpolation	
-	glmd::float64 retVal = trilinear_interp(xPosRel, yPosRel, zPosRel, (const glmd::float64*)&dat, 2, 2, 2, 0.0f, glr::terrain::constants::RESOLUTION, 0.0f, glr::terrain::constants::RESOLUTION, 0.0f, glr::terrain::constants::RESOLUTION, 0, 0.0f);
+	glmd::float64 retVal = trilinear_interp(xPosRel, yPosRel, zPosRel, (const glmd::float64*)&dat, 2, 2, 2, 0.0f, settings_.resolution, 0.0f, settings_.resolution, 0.0f, settings_.resolution, 0, 0.0f);
 	glmd::float32 retValf = (glmd::float32) retVal;
 	
 	return retValf;
@@ -611,9 +611,9 @@ CORNER(7,  0,1,1);
  */
 void VoxelChunkMeshGenerator::computeCubes(Blocks& blocks, glmd::int32 y, const glm::ivec3& gridCoords, const glm::ivec3& dimensions, const Points& densityValues) const
 {	
-	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE+1; x++)
+	for (glmd::int32 x = 0; x < settings_.blockSize+1; x++)
 	{
-		for (glmd::int32 z = 0; z < glr::terrain::constants::SIZE+1; z++)
+		for (glmd::int32 z = 0; z < settings_.blockSize+1; z++)
 		{
 			glmd::int32 index = 0;
 
@@ -655,9 +655,9 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
 {
 	Block blocksTemp[4];
 
-	for (glmd::int32 x = 0; x < glr::terrain::constants::SIZE; x++)
+	for (glmd::int32 x = 0; x < settings_.blockSize; x++)
 	{
-		for (glmd::int32 z = 0; z < glr::terrain::constants::SIZE; z++)
+		for (glmd::int32 z = 0; z < settings_.blockSize; z++)
 		{
 			blocksTemp[0] = blocks[x][y][z];
 			glmd::int32 cube0_edgeInfo = edgeTable_[blocksTemp[0].index];
@@ -731,7 +731,7 @@ void VoxelChunkMeshGenerator::generateTriangles(Blocks& blocks, std::vector<glm:
  */
 void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Points& points, const glm::ivec3& gridCoords, const glm::ivec3& dimensions) const
 {
-	const glmd::int32 pointsPerDimension = glr::terrain::constants::SIZE * glr::terrain::constants::RESOLUTION;
+	const glmd::int32 pointsPerDimension = settings_.blockSize * settings_.resolution;
 	
 	// Set the starting x, y, z
 	glmd::float32 fx = (glmd::float32)(gridCoords.x * pointsPerDimension);
@@ -744,16 +744,16 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
 
 #define SET_DENSITY(x, y, z, i, j, k) blocks[x][y][z].points[i][j][k].density = points[x+i+constants::POINT_FIELD_OFFSET][y+j+constants::POINT_FIELD_OFFSET][z+k+constants::POINT_FIELD_OFFSET];
 #define SET_POSITION(x, y, z, i, j, k)\
-	blocks[x][y][z].points[i][j][k].pos.x = fx + (glmd::float32)(i * glr::terrain::constants::RESOLUTION);\
-	blocks[x][y][z].points[i][j][k].pos.y = fy + (glmd::float32)(j * glr::terrain::constants::RESOLUTION);\
-	blocks[x][y][z].points[i][j][k].pos.z = fz + (glmd::float32)(k * glr::terrain::constants::RESOLUTION);
+	blocks[x][y][z].points[i][j][k].pos.x = fx + (glmd::float32)(i * settings_.resolution);\
+	blocks[x][y][z].points[i][j][k].pos.y = fy + (glmd::float32)(j * settings_.resolution);\
+	blocks[x][y][z].points[i][j][k].pos.z = fz + (glmd::float32)(k * settings_.resolution);
 	
 	// Set the densities and positions
-	for (glmd::int32 x=0; x < glr::terrain::constants::SIZE+1; x++)
+	for (glmd::int32 x=0; x < settings_.blockSize+1; x++)
 	{
-		for (glmd::int32 y=0; y < glr::terrain::constants::SIZE+1; y++)
+		for (glmd::int32 y=0; y < settings_.blockSize+1; y++)
 		{
-			for (glmd::int32 z=0; z < glr::terrain::constants::SIZE+1; z++)
+			for (glmd::int32 z=0; z < settings_.blockSize+1; z++)
 			{
 				SET_DENSITY(x, y, z, 0,0,0)
 				SET_DENSITY(x, y, z, 1,0,0)
@@ -773,14 +773,14 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
 				SET_POSITION(x, y, z, 0,1,1)
 				SET_POSITION(x, y, z, 1,1,1)
 				
-				fz += glr::terrain::constants::RESOLUTION;
+				fz += settings_.resolution;
 			}
-			fy += glr::terrain::constants::RESOLUTION;
+			fy += settings_.resolution;
 			
 			fz = (glmd::float32)(gridCoords.z * pointsPerDimension);
 			fz -= (glmd::float32)(pointsPerDimension * dimensions.z/2);
 		}
-		fx += glr::terrain::constants::RESOLUTION;
+		fx += settings_.resolution;
 		
 		fy = (glmd::float32)(gridCoords.y * pointsPerDimension);
 		fy -= (glmd::float32)(pointsPerDimension * dimensions.y/2);
@@ -796,12 +796,12 @@ void VoxelChunkMeshGenerator::setDensitiesAndPositions(Blocks& blocks, const Poi
  */
 void VoxelChunkMeshGenerator::resizeBlocks(Blocks& blocks) const
 {
-	blocks.resize(glr::terrain::constants::SIZE+1);
-	for (glmd::int32 i = 0; i < glr::terrain::constants::SIZE+1; i++)
+	blocks.resize(settings_.blockSize+1);
+	for (glmd::int32 i = 0; i < settings_.blockSize+1; i++)
 	{
-		blocks[i].resize(glr::terrain::constants::SIZE+1);
-		for (glmd::int32 j = 0; j < glr::terrain::constants::SIZE+1; j++)
-			blocks[i][j].resize(glr::terrain::constants::SIZE+1);
+		blocks[i].resize(settings_.blockSize+1);
+		for (glmd::int32 j = 0; j < settings_.blockSize+1; j++)
+			blocks[i][j].resize(settings_.blockSize+1);
 	}
 }
 
@@ -827,7 +827,7 @@ void VoxelChunkMeshGenerator::generateMesh(VoxelChunk& chunk, glm::detail::int32
 
 	computeCubes(blocks, 0, gridCoords, dimensions, points);
 	
-	for (glmd::int32 y = 1; y < glr::terrain::constants::SIZE+1; y++)
+	for (glmd::int32 y = 1; y < settings_.blockSize+1; y++)
 	{
 		computeCubes(blocks, y, gridCoords, dimensions, points);
 		

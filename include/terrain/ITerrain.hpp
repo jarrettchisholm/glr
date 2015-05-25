@@ -62,7 +62,7 @@ public:
 	 */
 	virtual void update() = 0;
 	
-	virtual void generate() = 0;
+	virtual void generate(TerrainSettings settings = TerrainSettings()) = 0;
 	
 	virtual bool isEmptyOrSolid() const = 0;
 	

@@ -191,7 +191,7 @@ models::IModel* Terrain::getModel() const
 	return modelPtr_.get();
 }
 
-void Terrain::generate()
+void Terrain::generate(TerrainSettings settings)
 {
 	if (fieldFunction_ == nullptr)
 	{
@@ -229,7 +229,7 @@ void Terrain::generate()
 	ss << "_model";
 	
 	this->setMesh( std::unique_ptr<TerrainMesh>( new TerrainMesh(openGlDevice_, ss.str()) ) );
-	this->translate( glm::vec3(-(glmd::float32)(constants::CHUNK_SIZE/2), 0.0f, -(glmd::float32)(constants::CHUNK_SIZE/2)) );
+	this->translate( glm::vec3(-(glmd::float32)(settings.chunkSize/2), 0.0f, -(glmd::float32)(settings.chunkSize/2)) );
 	
 	meshData_->setVertices( vertices );
 	meshData_->setNormals( normals );

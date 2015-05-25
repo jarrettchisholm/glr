@@ -34,7 +34,7 @@ public:
 	virtual void updateLod(LevelOfDetail lod);
 	virtual LevelOfDetail getLod() const;
 	
-	virtual void generate();
+	virtual void generate(TerrainSettings settings = TerrainSettings());
 	
 	void freeVideoMemory();
 	

@@ -6,6 +6,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
+#include "../TerrainSettings.hpp"
 #include "../IVoxelChunkMeshGenerator.hpp"
 #include "../IFieldFunction.hpp"
 
@@ -23,8 +24,8 @@ namespace glmd = glm::detail;
 class VoxelChunkMeshGenerator : public IVoxelChunkMeshGenerator
 {
 public:
-	VoxelChunkMeshGenerator();
-	VoxelChunkMeshGenerator(IFieldFunction* fieldFunction);
+	VoxelChunkMeshGenerator(TerrainSettings settings = TerrainSettings());
+	VoxelChunkMeshGenerator(IFieldFunction* fieldFunction, TerrainSettings settings = TerrainSettings());
 	virtual ~VoxelChunkMeshGenerator();
 
 	/**
@@ -111,6 +112,9 @@ private:
 	 * @param blocks
 	 */
 	void resizeBlocks(Blocks& blocks) const;
+	
+	
+	TerrainSettings settings_;
 };
 
 }

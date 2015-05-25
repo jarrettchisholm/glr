@@ -48,7 +48,7 @@ void TerrainManager::initialize()
 	{
 		case ALGORITHM_MARCHING_CUBES:
 			LOG_DEBUG("Using Marching Cubes smoothing algorithm.");
-			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new marching_cubes::VoxelChunkMeshGenerator() );
+			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new marching_cubes::VoxelChunkMeshGenerator(terrainSettings_) );
 			break;
 		
 		case ALGORITHM_DUAL_CONTOURING:
@@ -60,7 +60,7 @@ void TerrainManager::initialize()
 			}
 			
 			LOG_DEBUG("Using Dual Contouring smoothing algorithm.");
-			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new dual_contouring::VoxelChunkMeshGenerator(fieldFunction_) );
+			voxelChunkMeshGenerator_ = std::unique_ptr<IVoxelChunkMeshGenerator>( new dual_contouring::VoxelChunkMeshGenerator(fieldFunction_, terrainSettings_) );
 			break;
 		
 		default:
@@ -90,7 +90,7 @@ glm::ivec3 TerrainManager::getTargetGridLocation()
 
 	if (followTarget_ != nullptr)
 	{
-		glm::vec3 pos = followTarget_->getPosition() / (glmd::float32)constants::CHUNK_SIZE; // - 0.5f * totalWorldGridSize  (?)
+		glm::vec3 pos = followTarget_->getPosition() / (glmd::float32)terrainSettings_.chunkSize; // - 0.5f * totalWorldGridSize  (?)
 		
 		pos.x -= terrainSettings_.length/2;
 		pos.y -= terrainSettings_.width/2;
@@ -190,9 +190,9 @@ void TerrainManager::postOpenGlWork(std::function<void()> work)
 
 void TerrainManager::createTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z, bool initialize)
 {
-	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 i = (glmd::int32)(x / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 j = (glmd::int32)(y / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 k = (glmd::int32)(z / (glmd::float32)terrainSettings_.chunkSize);
 	
 	createTerrain(i, j, k, initialize);
 }
@@ -285,9 +285,9 @@ void TerrainManager::addTerrain(std::unique_ptr<Terrain> terrain)
 
 void TerrainManager::removeTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
-	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 i = (glmd::int32)(x / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 j = (glmd::int32)(y / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 k = (glmd::int32)(z / (glmd::float32)terrainSettings_.chunkSize);
 	
 	removeTerrain(i, j, k);
 }
@@ -411,9 +411,9 @@ void TerrainManager::moveTerrainFromProcessedToReady(ITerrain* terrain)
 
 Terrain* TerrainManager::getTerrain(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
-	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 i = (glmd::int32)(x / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 j = (glmd::int32)(y / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 k = (glmd::int32)(z / (glmd::float32)terrainSettings_.chunkSize);
 	
 	i += terrainSettings_.length/2;
 	j += terrainSettings_.width/2;
@@ -447,9 +447,9 @@ Terrain* TerrainManager::getTerrain(glmd::int32 x, glmd::int32 y, glmd::int32 z)
 
 Terrain* TerrainManager::getTerrainToBeProcessed(glmd::float32 x, glmd::float32 y, glmd::float32 z)
 {
-	glmd::int32 i = (glmd::int32)(x / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 j = (glmd::int32)(y / (glmd::float32)constants::CHUNK_SIZE);
-	glmd::int32 k = (glmd::int32)(z / (glmd::float32)constants::CHUNK_SIZE);
+	glmd::int32 i = (glmd::int32)(x / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 j = (glmd::int32)(y / (glmd::float32)terrainSettings_.chunkSize);
+	glmd::int32 k = (glmd::int32)(z / (glmd::float32)terrainSettings_.chunkSize);
 	
 	i += terrainSettings_.length/2;
 	j += terrainSettings_.width/2;
@@ -614,7 +614,7 @@ glm::detail::int32 TerrainManager::getHeight() const
 
 glm::detail::int32 TerrainManager::getBlockSize() const
 {
-	return constants::CHUNK_SIZE;
+	return terrainSettings_.chunkSize;
 }
 
 }
